@@ -12,7 +12,7 @@ data class Record(
     @ColumnInfo(name = "money")
     val money: Int,
     @ColumnInfo(name = "memo")
-    val memo: String,
+    val memo: String?,
     @ColumnInfo(name = "cat_id")
     //category id +"_"+category type
     val cat_id: String,

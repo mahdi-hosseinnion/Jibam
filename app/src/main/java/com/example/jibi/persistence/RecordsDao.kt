@@ -3,7 +3,7 @@ package com.example.jibi.persistence
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.jibi.models.Record
-
+@Dao
 interface RecordsDao {
 
     @Query(
@@ -11,14 +11,14 @@ interface RecordsDao {
         SELECT * FROM records
     """
     )
-    fun getRecords(): LiveData<List<Record>>
+    suspend fun getRecords(): List<Record>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOrReplace(record: Record):Long
+    suspend fun insertOrReplace(record: Record): Long
 
     @Update
-    fun updateRecord(record: Record)
+    suspend fun updateRecord(record: Record)
 
     @Delete
-    fun deleteRecord(record: Record)
+    suspend fun deleteRecord(record: Record)
 }

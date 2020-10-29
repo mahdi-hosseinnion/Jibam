@@ -4,21 +4,21 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.jibi.models.Category
 import com.example.jibi.models.Record
-
+@Dao
 interface CategoriesDao {
     @Query(
         """
         SELECT * FROM categories
     """
     )
-    fun getCategories(): LiveData<List<Category>>
+    suspend fun getCategories(): List<Category>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOrReplace(category: Category): Long
+    suspend fun insertOrReplace(category: Category): Long
 
     @Update
-    fun updateCategory(category: Category)
+    suspend fun updateCategory(category: Category)
 
     @Delete
-    fun deleteCategory(category: Category)
+    suspend fun deleteCategory(category: Category)
 }
