@@ -1,6 +1,6 @@
 package com.example.jibi.di.main
 
-import com.example.jibi.MainActivity
+import com.example.jibi.ui.main.MainActivity
 import dagger.Subcomponent
 
 @MainScope

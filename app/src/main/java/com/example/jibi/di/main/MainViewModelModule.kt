@@ -1,12 +1,9 @@
 package com.example.jibi.di.main
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.jibi.MainViewModelFactory
-import com.example.jibi.di.main.keys.MainViewModelKey
+import com.example.jibi.viewmodels.MainViewModelFactory
 import dagger.Binds
 import dagger.Module
-import dagger.multibindings.IntoMap
 
 @Module
 abstract class MainViewModelModule {

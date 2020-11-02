@@ -1,4 +1,4 @@
-package com.example.jibi
+package com.example.jibi.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
