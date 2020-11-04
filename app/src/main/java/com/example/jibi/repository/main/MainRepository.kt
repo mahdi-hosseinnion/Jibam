@@ -4,6 +4,6 @@ import com.example.jibi.di.main.MainScope
 
 
 @MainScope
-interface MainRepository {
+class MainRepository {
 
 }
