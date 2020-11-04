@@ -1,39 +1,53 @@
 package com.example.jibi.util
 
 data class DataState<T>(
-    var stateMessage: StateMessage? = null,
-    var data: T? = null,
-    var stateEvent: StateEvent? = null
+    var error: Event<StateError>? = null,
+    var loading: Loading = Loading(false),
+    var data: Data<T>? = null
 ) {
 
     companion object {
 
         fun <T> error(
-            response: Response,
-            stateEvent: StateEvent?
+            response: Response
         ): DataState<T> {
             return DataState(
-                stateMessage = StateMessage(
-                    response
+                error = Event(
+                    StateError(
+                        response
+                    )
                 ),
-                data = null,
-                stateEvent = stateEvent
+                loading = Loading(false),
+                data = null
+            )
+        }
+
+        fun <T> loading(
+            isLoading: Boolean,
+            cachedData: T? = null
+        ): DataState<T> {
+            return DataState(
+                error = null,
+                loading = Loading(isLoading),
+                data = Data(
+                    Event.dataEvent(
+                        cachedData
+                    ), null
+                )
             )
         }
 
         fun <T> data(
-            response: Response?,
             data: T? = null,
-            stateEvent: StateEvent?
+            response: Response? = null
         ): DataState<T> {
             return DataState(
-                stateMessage = response?.let {
-                    StateMessage(
-                        it
-                    )
-                },
-                data = data,
-                stateEvent = stateEvent
+                error = null,
+                loading = Loading(false),
+                data = Data(
+                    Event.dataEvent(data),
+                    Event.responseEvent(response)
+                )
             )
         }
     }
