@@ -21,10 +21,12 @@ constructor(
     fun getTransactions(
         fromDate: Int,
         toDate: Int
-    ): Flow<DataState<TransactionViewState>> = flow {
-        //TODO(add limit time for fromData and to data and check if is -1 or not )
-        emit(recordsDao.getRecords())
-    }.map { recordList ->
+    ): Flow<DataState<TransactionViewState>> =
+//    ): Flow<DataState<TransactionViewState>> = flow {
+//        //TODO(add limit time for fromData and to data and check if is -1 or not )
+//        emit(recordsDao.getRecords())
+//    }
+    recordsDao.getAllRecords().map { recordList ->
         if (recordList.isEmpty()) {
             DataState.error<TransactionViewState>(
                 response = Response(

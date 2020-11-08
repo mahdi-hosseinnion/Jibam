@@ -1,17 +1,12 @@
 package com.example.jibi.persistence
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.jibi.models.Record
+import kotlinx.coroutines.flow.Flow
+
 @Dao
 interface RecordsDao {
 
-    @Query(
-        """
-        SELECT * FROM records
-    """
-    )
-    suspend fun getRecords(): List<Record>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrReplace(record: Record): Long
@@ -21,4 +16,22 @@ interface RecordsDao {
 
     @Delete
     suspend fun deleteRecord(record: Record)
+
+    //queries
+    @Query(
+        """
+        SELECT * FROM records
+    """
+    )
+    fun getAllRecords(): Flow<List<Record>>
+
+    @Query("SELECT * FROM records WHERE date BETWEEN :fromDate AND :toDate")
+    fun loadAllRecordsBetweenDates(fromDate: Int, toDate: Int): Flow<List<Record>>
+
+    @Query("SELECT * FROM records WHERE date > :minDate")
+    fun loadAllRecordsAfterThan(minDate: Int): Flow<List<Record>>
+
+    @Query("SELECT * FROM records WHERE date < :maxDate")
+    fun loadAllRecordsBeforeThan(maxDate: Int): Flow<List<Record>>
+
 }

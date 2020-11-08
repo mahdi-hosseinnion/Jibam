@@ -1,5 +1,6 @@
 package com.example.jibi.util
 
+/*
 abstract class CacheResponseHandler <ViewState, Data>(
     private val response: CacheResult<Data?>,
     private val stateEvent: StateEvent?
@@ -40,4 +41,4 @@ abstract class CacheResponseHandler <ViewState, Data>(
 
     abstract suspend fun handleSuccess(resultObj: Data): DataState<ViewState>
 
-}
+}*/
