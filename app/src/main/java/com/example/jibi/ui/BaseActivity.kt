@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.jibi.BaseApplication
+import com.example.jibi.persistence.RecordsDao
+import javax.inject.Inject
 
 abstract class BaseActivity : AppCompatActivity() {
 

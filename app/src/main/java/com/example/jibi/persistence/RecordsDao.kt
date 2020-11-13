@@ -1,5 +1,6 @@
 package com.example.jibi.persistence
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.jibi.models.Record
 import kotlinx.coroutines.flow.Flow
@@ -33,5 +34,9 @@ interface RecordsDao {
 
     @Query("SELECT * FROM records WHERE date < :maxDate")
     fun loadAllRecordsBeforeThan(maxDate: Int): Flow<List<Record>>
-
+    /*
+    //pashmama
+    //in query ro nega mitone jam bezane
+    @Query("SELECT SUM(date) FROM records WHERE date BETWEEN :fromDate AND :toDate")
+    fun loadAllRecordsBetweenDates(fromDate: Int, toDate: Int): Flow<List<Record>>*/
 }
