@@ -18,12 +18,10 @@ interface RecordsDao {
     @Delete
     suspend fun deleteRecord(record: Record)
 
-    //queries
-    @Query(
-        """
-        SELECT * FROM records
-    """
-    )
+    /*
+        get records queries
+     */
+    @Query("SELECT * FROM records")
     fun getAllRecords(): Flow<List<Record>>
 
     //fromDate and toDate count in the result >=
@@ -40,12 +38,12 @@ interface RecordsDao {
         sum queries
      */
 
-    //reutn all
+    //return all
     @Query("SELECT SUM(money) FROM records WHERE money < 0 ")
-    fun returnTheSumOfAllExpenses(fromDate: Int, toDate: Int): Flow<Int>
+    fun returnTheSumOfAllExpenses(): Flow<Int>
 
     @Query("SELECT SUM(money) FROM records WHERE money > 0 ")
-    fun returnTheSumOfAllIncome(fromDate: Int, toDate: Int): Flow<Int>
+    fun returnTheSumOfAllIncome(): Flow<Int>
 
     //between dates
     @Query("SELECT SUM(money) FROM records WHERE (date BETWEEN :minDate AND :maxDate) AND(money < 0) ")
@@ -56,15 +54,15 @@ interface RecordsDao {
 
     //after than
     @Query("SELECT SUM(money) FROM records WHERE (date > :minDate) AND (money < 0) ")
-    fun returnTheSumOfExpensesAfterThan(minDate: Int, maxDate: Int): Flow<Int>
+    fun returnTheSumOfExpensesAfterThan(minDate: Int): Flow<Int>
 
     @Query("SELECT SUM(money) FROM records WHERE (date > :minDate) AND (money > 0) ")
-    fun returnTheSumOfIncomeAfterThan(minDate: Int, maxDate: Int): Flow<Int>
+    fun returnTheSumOfIncomeAfterThan(minDate: Int): Flow<Int>
 
     //before than
-    @Query("SELECT SUM(money) FROM records WHERE (date < :minDate) AND (money < 0) ")
-    fun returnTheSumOfExpensesBeforeThan(minDate: Int, maxDate: Int): Flow<Int>
+    @Query("SELECT SUM(money) FROM records WHERE (date < :maxDate) AND (money < 0) ")
+    fun returnTheSumOfExpensesBeforeThan(maxDate: Int): Flow<Int>
 
-    @Query("SELECT SUM(money) FROM records WHERE (date < :minDate) AND (money > 0) ")
-    fun returnTheSumOfIncomeBeforeThan(minDate: Int, maxDate: Int): Flow<Int>
+    @Query("SELECT SUM(money) FROM records WHERE (date < :maxDate) AND (money > 0) ")
+    fun returnTheSumOfIncomeBeforeThan( maxDate: Int): Flow<Int>
 }

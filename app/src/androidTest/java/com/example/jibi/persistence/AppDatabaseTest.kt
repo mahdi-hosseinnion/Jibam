@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.platform.app.InstrumentationRegistry
+import com.example.jibi.util.TestUtil
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.asExecutor
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -11,7 +12,7 @@ import kotlinx.coroutines.test.TestCoroutineScope
 import org.junit.After
 import org.junit.Before
 @ExperimentalCoroutinesApi
-abstract class AppDatabaseTest {
+abstract class AppDatabaseTest :TestUtil(){
 
     //system under test
     lateinit var appDatabase: AppDatabase
