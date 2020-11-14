@@ -25,6 +25,7 @@ interface RecordsDao {
     """
     )
     fun getAllRecords(): Flow<List<Record>>
+
     //fromDate and toDate count in the result >=
     @Query("SELECT * FROM records WHERE date BETWEEN :minDate AND :maxDate")
     fun loadAllRecordsBetweenDates(minDate: Int, maxDate: Int): Flow<List<Record>>
@@ -34,9 +35,36 @@ interface RecordsDao {
 
     @Query("SELECT * FROM records WHERE date < :maxDate")
     fun loadAllRecordsBeforeThan(maxDate: Int): Flow<List<Record>>
+
     /*
-    //pashmama
-    //in query ro nega mitone jam bezane
-    @Query("SELECT SUM(date) FROM records WHERE date BETWEEN :fromDate AND :toDate")
-    fun loadAllRecordsBetweenDates(fromDate: Int, toDate: Int): Flow<List<Record>>*/
+        sum queries
+     */
+
+    //reutn all
+    @Query("SELECT SUM(money) FROM records WHERE money < 0 ")
+    fun returnTheSumOfAllExpenses(fromDate: Int, toDate: Int): Flow<Int>
+
+    @Query("SELECT SUM(money) FROM records WHERE money > 0 ")
+    fun returnTheSumOfAllIncome(fromDate: Int, toDate: Int): Flow<Int>
+
+    //between dates
+    @Query("SELECT SUM(money) FROM records WHERE (date BETWEEN :minDate AND :maxDate) AND(money < 0) ")
+    fun returnTheSumOfExpensesBetweenDates(minDate: Int, maxDate: Int): Flow<Int>
+
+    @Query("SELECT SUM(money) FROM records WHERE (date BETWEEN :minDate AND :maxDate) AND(money > 0) ")
+    fun returnTheSumOfIncomeBetweenDates(minDate: Int, maxDate: Int): Flow<Int>
+
+    //after than
+    @Query("SELECT SUM(money) FROM records WHERE (date > :minDate) AND (money < 0) ")
+    fun returnTheSumOfExpensesAfterThan(minDate: Int, maxDate: Int): Flow<Int>
+
+    @Query("SELECT SUM(money) FROM records WHERE (date > :minDate) AND (money > 0) ")
+    fun returnTheSumOfIncomeAfterThan(minDate: Int, maxDate: Int): Flow<Int>
+
+    //before than
+    @Query("SELECT SUM(money) FROM records WHERE (date < :minDate) AND (money < 0) ")
+    fun returnTheSumOfExpensesBeforeThan(minDate: Int, maxDate: Int): Flow<Int>
+
+    @Query("SELECT SUM(money) FROM records WHERE (date < :minDate) AND (money > 0) ")
+    fun returnTheSumOfIncomeBeforeThan(minDate: Int, maxDate: Int): Flow<Int>
 }
