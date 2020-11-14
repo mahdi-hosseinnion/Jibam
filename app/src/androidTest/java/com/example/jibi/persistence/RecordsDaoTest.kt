@@ -129,6 +129,89 @@ class RecordsDaoTest : AppDatabaseTest() {
 
     }
 
+    @Test
+    fun testQuery_loadAllRecordsAfterThan() = runBlockingTest {
+        val minDate = 3
+        val count = 10
+
+        //setup getter for all inserted row
+        var filteredRecordsList: List<Record>? = null
+        var recordsList: List<Record>? = null
+        val job = launch {
+            ensureActive()
+            launch {
+                recordsDao.loadAllRecordsAfterThan(minDate).collect {
+                    ensureActive()
+                    printList(it, "Filtered Value")
+                    filteredRecordsList = it
+                }
+            }
+            launch {
+                recordsDao.getAllRecords().collect {
+                    ensureActive()
+                    printList(it, "Main Value")
+                    recordsList = it
+                }
+            }
+        }
+        //insert sum dummy data
+        for (i in 1..count) {
+            recordsDao.insertOrReplace(RECORD1.copy(id = i + 100, date = i))
+        }
+        //update with an out range date into in range of fromData to toData
+        val updatedDate = RECORD1.copy(id = 101, date = Random.nextInt(minDate, (count - 1)))
+        recordsDao.updateRecord(updatedDate)
+        //assert
+        val lastValue = recordsList
+        val expectedValues = lastValue?.filter { (it.date > minDate) }
+        printList(expectedValues, "expectedValues")
+        printList(filteredRecordsList, "outPutValue")
+        assertArrayEquals(expectedValues?.toTypedArray(), filteredRecordsList?.toTypedArray())
+        job.cancel()
+
+    }
+
+    @Test
+    fun testQuery_loadAllRecordsBeforeThan() = runBlockingTest {
+        val maxDate = 5
+        val range = 10
+
+        //setup getter for all inserted row
+        var filteredRecordsList: List<Record>? = null
+        var recordsList: List<Record>? = null
+        val job = launch {
+            ensureActive()
+            launch {
+                recordsDao.loadAllRecordsBeforeThan(maxDate).collect {
+                    ensureActive()
+                    printList(it, "Filtered Value")
+                    filteredRecordsList = it
+                }
+            }
+            launch {
+                recordsDao.getAllRecords().collect {
+                    ensureActive()
+                    printList(it, "Main Value")
+                    recordsList = it
+                }
+            }
+        }
+        //insert sum dummy data
+        for (i in 1..range) {
+            recordsDao.insertOrReplace(RECORD1.copy(id = i + 100, date = i))
+        }
+        //update with an out range date into in range of fromData to toData
+        val updatedDate = RECORD1.copy(id = 105, date = Random.nextInt(1, maxDate))
+        recordsDao.updateRecord(updatedDate)
+        //assert
+        val lastValue = recordsList
+        val expectedValues = lastValue?.filter { (it.date < maxDate) }
+        printList(expectedValues, "expectedValues")
+        printList(filteredRecordsList, "outPutValue")
+        assertArrayEquals(expectedValues?.toTypedArray(), filteredRecordsList?.toTypedArray())
+        job.cancel()
+
+    }
 
     private fun <T> printList(
         data: List<T>?,

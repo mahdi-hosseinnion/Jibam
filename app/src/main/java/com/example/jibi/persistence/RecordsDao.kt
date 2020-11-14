@@ -25,9 +25,9 @@ interface RecordsDao {
     """
     )
     fun getAllRecords(): Flow<List<Record>>
-
-    @Query("SELECT * FROM records WHERE date BETWEEN :fromDate AND :toDate")
-    fun loadAllRecordsBetweenDates(fromDate: Int, toDate: Int): Flow<List<Record>>
+    //fromDate and toDate count in the result >=
+    @Query("SELECT * FROM records WHERE date BETWEEN :minDate AND :maxDate")
+    fun loadAllRecordsBetweenDates(minDate: Int, maxDate: Int): Flow<List<Record>>
 
     @Query("SELECT * FROM records WHERE date > :minDate")
     fun loadAllRecordsAfterThan(minDate: Int): Flow<List<Record>>
