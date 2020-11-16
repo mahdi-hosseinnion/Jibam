@@ -11,6 +11,7 @@ import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import kotlin.math.min
 import kotlin.random.Random
 
 
@@ -267,16 +268,24 @@ class RecordsDaoTest : AppDatabaseTest() {
         val tempRecordForUpdatingIncome = insertedList[0]
         recordsDao.updateRecord(
             tempRecordForUpdatingIncome
-                .copy(money=(tempRecordForUpdatingIncome.money + 60))
+                .copy(money = (tempRecordForUpdatingIncome.money + 60))
         )
         val tempRecordForUpdatingExpenses = insertedList[1]
         recordsDao.updateRecord(
             tempRecordForUpdatingExpenses
-                .copy(money=(tempRecordForUpdatingExpenses.money + (-60)))
+                .copy(money = (tempRecordForUpdatingExpenses.money + (-60)))
         )
         assertEquals(expectedIncome + 60, sumOfAllIncome)
         assertEquals(expectedExpenses + (-60), sumOfAllExpenses)
 
+        val row = recordsDao.insertOrReplace(Record(152, 1000, "memo32", "sdds", 947243))
+
+        assertEquals(152, row)
+        assertEquals((expectedIncome + 1060), sumOfAllIncome)
+        recordsDao.insertOrReplace(Record(152, 2000, "memo32", "sdds", 947243))
+        assertEquals((expectedIncome + 2060), sumOfAllIncome)
+        recordsDao.updateRecord(Record(152, 3000, "memo32", "sdds", 947243))
+        assertEquals((expectedIncome + 3060), sumOfAllIncome)
         job.cancel()
     }
 
@@ -345,15 +354,23 @@ class RecordsDaoTest : AppDatabaseTest() {
         val tempRecordForUpdatingIncome = outOfRangeRecordIncome
         recordsDao.updateRecord(
             tempRecordForUpdatingIncome!!
-                .copy(money=(tempRecordForUpdatingIncome.money + 60))
+                .copy(
+                    money = (tempRecordForUpdatingIncome.money + 60),
+                    date = (minDate + 1)
+                )
         )
         val tempRecordForUpdatingExpenses = outOfRangeRecordExpenses
         recordsDao.updateRecord(
             tempRecordForUpdatingExpenses!!
-                .copy(money=(tempRecordForUpdatingExpenses.money + (-60)))
+                .copy(
+                    money = (tempRecordForUpdatingExpenses.money + (-60)),
+                    date = (minDate + 1)
+                )
         )
-        assertEquals(expectedIncome + 60, sumOfAllIncome)
-        assertEquals(expectedExpenses + (-60), sumOfAllExpenses)
+        assertEquals(expectedIncome + 60+tempRecordForUpdatingIncome.money,
+            sumOfAllIncome)
+        assertEquals(expectedExpenses + (-60)+tempRecordForUpdatingExpenses.money,
+            sumOfAllExpenses)
         job.cancel()
     }
 
@@ -423,15 +440,28 @@ class RecordsDaoTest : AppDatabaseTest() {
         val tempRecordForUpdatingIncome = outOfRangeRecordIncome
         recordsDao.updateRecord(
             tempRecordForUpdatingIncome!!
-                .copy(money=(tempRecordForUpdatingIncome.money + 60))
+                .copy(
+                    money = (tempRecordForUpdatingIncome.money + 60),
+                    date = (minDate + 1)
+                )
         )
+
         val tempRecordForUpdatingExpenses = outOfRangeRecordExpenses
         recordsDao.updateRecord(
             tempRecordForUpdatingExpenses!!
-                .copy(money=(tempRecordForUpdatingExpenses.money + (-60)))
+                .copy(
+                    money = (tempRecordForUpdatingExpenses.money + (-60)),
+                    date = (minDate + 1)
+                )
         )
-        assertEquals(expectedIncome + 60, sumOfAllIncome)
-        assertEquals(expectedExpenses + (-60), sumOfAllExpenses)
+        assertEquals(
+            expectedIncome + 60 + tempRecordForUpdatingIncome.money,
+            sumOfAllIncome
+        )
+        assertEquals(
+            expectedExpenses + (-60) + tempRecordForUpdatingExpenses.money,
+            sumOfAllExpenses
+        )
         job.cancel()
     }
 
@@ -464,7 +494,7 @@ class RecordsDaoTest : AppDatabaseTest() {
             launch {
                 recordsDao.getAllRecords().collect {
                     ensureActive()
-                    printList(it, "Main Value")
+                    printList(it, "1.Main Value")
                     recordsList = it
                 }
             }
@@ -501,15 +531,31 @@ class RecordsDaoTest : AppDatabaseTest() {
         val tempRecordForUpdatingIncome = outOfRangeRecordIncome
         recordsDao.updateRecord(
             tempRecordForUpdatingIncome!!
-                .copy(money=(tempRecordForUpdatingIncome.money + 60))
+                .copy(
+                    money = (tempRecordForUpdatingIncome.money + 60),
+                    date = (maxDate - 5)
+                )
+        )
+        printOnLog("RECORD 1 = ${tempRecordForUpdatingIncome.toString()}")
+        printOnLog(
+            "RECORD 1 C = ${
+                tempRecordForUpdatingIncome!!
+                    .copy(money = (tempRecordForUpdatingIncome.money + 60), date = (maxDate - 5))
+            }"
         )
         val tempRecordForUpdatingExpenses = outOfRangeRecordExpenses
         recordsDao.updateRecord(
             tempRecordForUpdatingExpenses!!
-                .copy(money=(tempRecordForUpdatingExpenses.money + (-60)))
+                .copy(money = (tempRecordForUpdatingExpenses.money + (-60)), date = (maxDate - 5))
         )
-        assertEquals(expectedIncome + 60, sumOfAllIncome)
-        assertEquals(expectedExpenses + (-60), sumOfAllExpenses)
+
+
+        assertEquals(
+            expectedIncome + 60 + tempRecordForUpdatingIncome.money, sumOfAllIncome
+        )
+        assertEquals(
+            expectedExpenses + (-60) + tempRecordForUpdatingExpenses.money, sumOfAllExpenses
+        )
 
         job.cancel()
     }
@@ -547,8 +593,9 @@ class RecordsDaoTest : AppDatabaseTest() {
                 0, i, "memo income", "13_3",
                 i * Random.nextInt(100)
             )
-            recordsDao.insertOrReplace(tempRecord)
-            result.add(tempRecord)
+            val row = recordsDao.insertOrReplace(tempRecord)
+            printOnLog("row1 = $row")
+            result.add(tempRecord.copy(id = (row.toInt())))
             if (i <= 50) {
                 //insert expenses
                 //total sum of money: -1275
@@ -556,8 +603,9 @@ class RecordsDaoTest : AppDatabaseTest() {
                     0, (i * -1), "memo income", "13_3",
                     i * Random.nextInt(100)
                 )
-                recordsDao.insertOrReplace(tempRecord)
-                result.add(tempRecord)
+                val row = recordsDao.insertOrReplace(tempRecord)
+                printOnLog("row2 = $row")
+                result.add(tempRecord.copy(id = (row.toInt())))
             }
 
         }
