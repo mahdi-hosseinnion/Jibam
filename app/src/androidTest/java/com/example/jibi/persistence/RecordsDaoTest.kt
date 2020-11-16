@@ -330,11 +330,13 @@ class RecordsDaoTest : AppDatabaseTest() {
         var expectedExpenses = 0
         var outOfRangeRecordExpenses: Record? = null
         var outOfRangeRecordIncome: Record? = null
+        var inRangeRecordIncome: Record? = null
         for (item in insertedRecords!!) {
             if (
                 item.date in minDate..maxDate
             ) {
                 if (item.money > 0) {
+                    inRangeRecordIncome = item
                     expectedIncome += item.money
                 } else {
                     expectedExpenses += item.money
@@ -367,10 +369,19 @@ class RecordsDaoTest : AppDatabaseTest() {
                     date = (minDate + 1)
                 )
         )
-        assertEquals(expectedIncome + 60+tempRecordForUpdatingIncome.money,
-            sumOfAllIncome)
-        assertEquals(expectedExpenses + (-60)+tempRecordForUpdatingExpenses.money,
-            sumOfAllExpenses)
+        expectedIncome += 60 + tempRecordForUpdatingIncome.money
+        expectedExpenses += +(-60) + tempRecordForUpdatingExpenses.money
+        assertEquals(expectedIncome, sumOfAllIncome)
+        assertEquals(expectedExpenses, sumOfAllExpenses)
+
+        recordsDao.updateRecord(
+            inRangeRecordIncome!!.copy(
+                money = inRangeRecordIncome.money + 100
+            )
+        )
+        expectedIncome += 100
+        assertEquals(expectedIncome,sumOfAllIncome)
+
         job.cancel()
     }
 
@@ -413,13 +424,15 @@ class RecordsDaoTest : AppDatabaseTest() {
         val insertedRecords = recordsList
         var expectedExpenses = 0
         var expectedIncome = 0
-        //for update
+        //for update with outRange row
         var outOfRangeRecordExpenses: Record? = null
         var outOfRangeRecordIncome: Record? = null
+        var inRangeRecordIncome: Record? = null
         for (item in insertedRecords!!) {
             if (item.date > minDate
             ) {
                 if (item.money > 0) {
+                    inRangeRecordIncome=item
                     expectedIncome += item.money
                 } else {
                     expectedExpenses += item.money
@@ -436,7 +449,7 @@ class RecordsDaoTest : AppDatabaseTest() {
         assertEquals(expectedIncome, sumOfAllIncome)
         assertEquals(expectedExpenses, sumOfAllExpenses)
 
-        //update
+        //update with outRange row
         val tempRecordForUpdatingIncome = outOfRangeRecordIncome
         recordsDao.updateRecord(
             tempRecordForUpdatingIncome!!
@@ -454,14 +467,18 @@ class RecordsDaoTest : AppDatabaseTest() {
                     date = (minDate + 1)
                 )
         )
-        assertEquals(
-            expectedIncome + 60 + tempRecordForUpdatingIncome.money,
-            sumOfAllIncome
+        expectedIncome += 60 + tempRecordForUpdatingIncome.money
+        expectedExpenses += (-60) + tempRecordForUpdatingExpenses.money
+        assertEquals(expectedIncome , sumOfAllIncome)
+        assertEquals(expectedExpenses , sumOfAllExpenses)
+        //update with in range row
+        recordsDao.updateRecord(
+            inRangeRecordIncome!!.copy(
+                money = inRangeRecordIncome.money + 100
+            )
         )
-        assertEquals(
-            expectedExpenses + (-60) + tempRecordForUpdatingExpenses.money,
-            sumOfAllExpenses
-        )
+        expectedIncome += 100
+        assertEquals(expectedIncome,sumOfAllIncome)
         job.cancel()
     }
 
@@ -507,10 +524,12 @@ class RecordsDaoTest : AppDatabaseTest() {
         //for update
         var outOfRangeRecordExpenses: Record? = null
         var outOfRangeRecordIncome: Record? = null
+        var inRangeRecordIncome: Record? = null
         for (item in insertedRecords!!) {
             if (item.date < maxDate
             ) {
                 if (item.money > 0) {
+                    inRangeRecordIncome=item
                     expectedIncome += item.money
                 } else {
                     expectedExpenses += item.money
@@ -527,7 +546,7 @@ class RecordsDaoTest : AppDatabaseTest() {
         assertEquals(expectedIncome, sumOfAllIncome)
         assertEquals(expectedExpenses, sumOfAllExpenses)
 
-        //update
+        //update with outRange row
         val tempRecordForUpdatingIncome = outOfRangeRecordIncome
         recordsDao.updateRecord(
             tempRecordForUpdatingIncome!!
@@ -536,27 +555,25 @@ class RecordsDaoTest : AppDatabaseTest() {
                     date = (maxDate - 5)
                 )
         )
-        printOnLog("RECORD 1 = ${tempRecordForUpdatingIncome.toString()}")
-        printOnLog(
-            "RECORD 1 C = ${
-                tempRecordForUpdatingIncome!!
-                    .copy(money = (tempRecordForUpdatingIncome.money + 60), date = (maxDate - 5))
-            }"
-        )
+
         val tempRecordForUpdatingExpenses = outOfRangeRecordExpenses
         recordsDao.updateRecord(
             tempRecordForUpdatingExpenses!!
                 .copy(money = (tempRecordForUpdatingExpenses.money + (-60)), date = (maxDate - 5))
         )
 
+        expectedIncome += 60 + tempRecordForUpdatingIncome.money
+        expectedExpenses += (-60) + tempRecordForUpdatingExpenses.money
 
-        assertEquals(
-            expectedIncome + 60 + tempRecordForUpdatingIncome.money, sumOfAllIncome
+        assertEquals(expectedIncome, sumOfAllIncome)
+        assertEquals(expectedExpenses, sumOfAllExpenses)
+        recordsDao.updateRecord(
+            inRangeRecordIncome!!.copy(
+                money = inRangeRecordIncome.money + 100
+            )
         )
-        assertEquals(
-            expectedExpenses + (-60) + tempRecordForUpdatingExpenses.money, sumOfAllExpenses
-        )
-
+        expectedIncome += 100
+        assertEquals(expectedIncome,sumOfAllIncome)
         job.cancel()
     }
 
