@@ -6,7 +6,7 @@ sealed class TransactionStateEvent : StateEvent {
     //get the sum of all transaction, income and expenses
     class getSummaryMoney() : TransactionStateEvent() {
 
-        override fun errorInfo():String{
+        override fun errorInfo(): String {
             return "Error get sum of all money ->balance, income and expenses"
         }
 
@@ -16,13 +16,12 @@ sealed class TransactionStateEvent : StateEvent {
     }
 
     class getTrasaction(
-        //-1 means no filter for date apply in repository
-        val fromDate:Int = -1,
-        val toDate:Int = -1
-    ):TransactionStateEvent(){
+        val minDate: Int? = null,
+        val maxDate: Int? = null
+    ) : TransactionStateEvent() {
 
         override fun errorInfo(): String {
-            return "Error get all Transaction from $fromDate to $toDate"
+            return "Error get all Transaction from $minDate to $maxDate"
         }
 
         override fun toString(): String {
@@ -31,11 +30,11 @@ sealed class TransactionStateEvent : StateEvent {
     }
 
     class getSumOfMoney(
-        val fromDate:Int = -1,
-        val toDate:Int = -1
-    ):TransactionStateEvent(){
+        val minDate: Int? = null,
+        val maxDate: Int? = null
+    ) : TransactionStateEvent() {
         override fun errorInfo(): String {
-            return "Error get sum of money from $fromDate to $toDate"
+            return "Error get sum of money from $minDate to $maxDate"
         }
 
         override fun toString(): String {
@@ -43,7 +42,7 @@ sealed class TransactionStateEvent : StateEvent {
         }
     }
 
-    class None():TransactionStateEvent(){
+    class None() : TransactionStateEvent() {
         override fun errorInfo(): String {
             return "ERROR NONE"
         }
