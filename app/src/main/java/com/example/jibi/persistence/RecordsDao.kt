@@ -12,6 +12,9 @@ interface RecordsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrReplace(record: Record): Long
 
+    @Query("SELECT * FROM records WHERE rId = :id")
+    suspend fun getRecordById(id: Int): Record
+
     @Update
     suspend fun updateRecord(record: Record)
 
@@ -64,5 +67,5 @@ interface RecordsDao {
     fun returnTheSumOfExpensesBeforeThan(maxDate: Int): Flow<Int>
 
     @Query("SELECT SUM(money) FROM records WHERE (date < :maxDate) AND (money > 0) ")
-    fun returnTheSumOfIncomeBeforeThan( maxDate: Int): Flow<Int>
+    fun returnTheSumOfIncomeBeforeThan(maxDate: Int): Flow<Int>
 }
