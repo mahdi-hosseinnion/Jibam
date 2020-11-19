@@ -15,11 +15,16 @@ interface RecordsDao {
     @Query("SELECT * FROM records WHERE rId = :id")
     suspend fun getRecordById(id: Int): Record
 
-    @Update
-    suspend fun updateRecord(record: Record)
 
+
+    /**
+     * To delete one or more products.
+     * Returns number of rows deleted. 0 if no row deleted.
+     */
+    @Update
+    suspend fun updateRecord(vararg record: Record):Int
     @Delete
-    suspend fun deleteRecord(record: Record)
+    suspend fun deleteRecord(vararg record: Record):Int
 
     /*
         get records queries

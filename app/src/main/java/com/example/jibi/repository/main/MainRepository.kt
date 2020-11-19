@@ -5,8 +5,9 @@ import com.example.jibi.models.Record
 import com.example.jibi.persistence.*
 import com.example.jibi.repository.JobManager
 import com.example.jibi.repository.asDataState
-import com.example.jibi.repository.safeFlowCall
+import com.example.jibi.repository.safeCacheCall
 import com.example.jibi.util.DataState
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -30,9 +31,7 @@ constructor(
     fun getSumOfExpenses(
         minDate: Int? = null,
         maxDate: Int? = null
-    ): Flow<DataState<Int?>> = safeFlowCall(4000) {
-        recordsDao.getSumOfExpenses(minDate, maxDate)
-    }
+    ): Flow<DataState<Int?>> = recordsDao.getSumOfExpenses(minDate, maxDate).asDataState()
 
 
 //    recordsDao.getSumOfExpenses(minDate, maxDate)
@@ -41,15 +40,29 @@ constructor(
     fun getTransactionList(
         minDate: Int? = null,
         maxDate: Int? = null
-    ): Flow<DataState<List<Record>?>> = safeFlowCall {
-        recordsDao.getRecords(minDate, maxDate)
-    }
+    ): Flow<DataState<List<Record>?>> = recordsDao.getRecords(minDate, maxDate).asDataState()
+
 
     //dataBase main dao
-    suspend fun insertTransaction(record: Record): Long = recordsDao.insertOrReplace(record)
-    suspend fun getTransaction(transactionId: Int): Record = recordsDao.getRecordById(transactionId)
-    suspend fun updateTransaction(record: Record) = recordsDao.updateRecord(record)
-    suspend fun deleteTransaction(record: Record) = recordsDao.deleteRecord(record)
+    suspend fun insertTransaction(record: Record): Flow<DataState<Long>> =
+        safeCacheCall(IO, "Insert Transaction") {
+            recordsDao.insertOrReplace(record)
+        }
+
+    suspend fun getTransaction(transactionId: Int): Flow<DataState<Record>> =
+        safeCacheCall(IO, "Get Transaction") {
+            recordsDao.getRecordById(transactionId)
+        }
+
+    suspend fun updateTransaction(record: Record): Flow<DataState<Int>> =
+        safeCacheCall(IO, "Update Transaction") {
+            recordsDao.updateRecord(record)
+        }
+
+    suspend fun deleteTransaction(record: Record): Flow<DataState<Int>> =
+        safeCacheCall(IO, "Delete Transaction") {
+            recordsDao.deleteRecord(record)
+        }
 
 
 /*    fun getSummaryMoney(): Flow<TransactionViewState> = flow {
