@@ -8,6 +8,8 @@ import com.example.jibi.util.ErrorHandling.Companion.UNKNOWN_ERROR
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
+private const val TAG = "RepositoryExtensions"
+
 /*@ExperimentalCoroutinesApi
 fun <T> safeFlowCall(
     timeOut: Long = Constants.CACHE_TIMEOUT,
@@ -75,7 +77,7 @@ fun <T> Flow<T>.asDataState(): Flow<DataState<T>> =
             DataState.loading(true)
         )
     }.catch { cause ->
-        Log.e("FLOW_ERROR", "safeFlowCall: message = ${cause.message}", cause)
+        Log.e(TAG, "safeFlowCall: message = ${cause.message}", cause)
         emit(
             DataState.error<T>(
                 Response(
@@ -89,20 +91,21 @@ fun <T> Flow<T>.asDataState(): Flow<DataState<T>> =
 
 //TODO("handle loading here")
 @ExperimentalCoroutinesApi
-suspend fun <T> safeCacheCall(
+fun <T> safeCacheCall(
     dispatcher: CoroutineDispatcher = Dispatchers.IO,
     transactionName: String,
     cacheCall: suspend () -> T
 ): Flow<DataState<T>> = flow {
-    emit(DataState.loading(true))
     try {
+        emit(DataState.loading(true))
         // throws TimeoutCancellationException
         withTimeout(CACHE_TIMEOUT) {
             //if result in update and delete ==0 it means error
             //and if result in insert == 0 or -1 it means error
             val result = cacheCall.invoke()
             if (result is Int || result is Long) {
-                if ((result as Long) < 1) {
+
+                if ((convertToLong(result)) < 1) {
                     //error case in insert or update or delete
                     emit(
                         DataState.error<T>(
@@ -128,6 +131,7 @@ suspend fun <T> safeCacheCall(
             }
         }
     } catch (throwable: Throwable) {
+        Log.e(TAG, "safeCacheCall: ${throwable.message}", throwable)
         when (throwable) {
             is TimeoutCancellationException -> {
                 emit(
@@ -153,5 +157,13 @@ suspend fun <T> safeCacheCall(
         }
     }
 }.flowOn(dispatcher)
-
+private fun <T> convertToLong(value:T):Long{
+    if (value is Long){
+        return value
+    }
+    if (value is Int){
+        return value.toLong()
+    }
+    throw Exception("this method only support long or int")
+}
 

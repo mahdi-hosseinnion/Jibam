@@ -44,22 +44,22 @@ constructor(
 
 
     //dataBase main dao
-    suspend fun insertTransaction(record: Record): Flow<DataState<Long>> =
+    fun insertTransaction(record: Record): Flow<DataState<Long>> =
         safeCacheCall(IO, "Insert Transaction") {
             recordsDao.insertOrReplace(record)
         }
 
-    suspend fun getTransaction(transactionId: Int): Flow<DataState<Record>> =
+    fun getTransaction(transactionId: Int): Flow<DataState<Record>> =
         safeCacheCall(IO, "Get Transaction") {
             recordsDao.getRecordById(transactionId)
         }
 
-    suspend fun updateTransaction(record: Record): Flow<DataState<Int>> =
+    fun updateTransaction(record: Record): Flow<DataState<Int>> =
         safeCacheCall(IO, "Update Transaction") {
             recordsDao.updateRecord(record)
         }
 
-    suspend fun deleteTransaction(record: Record): Flow<DataState<Int>> =
+    fun deleteTransaction(record: Record): Flow<DataState<Int>> =
         safeCacheCall(IO, "Delete Transaction") {
             recordsDao.deleteRecord(record)
         }
