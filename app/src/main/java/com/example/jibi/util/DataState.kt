@@ -1,53 +1,48 @@
 package com.example.jibi.util
 
 data class DataState<T>(
-    var error: Event<StateError>? = null,
-    var loading: Loading = Loading(false),
-    var data: Data<T>? = null
+    var stateMessage: StateMessage? = null,
+    var data: T? = null,
+    var stateEvent: StateEvent? = null,
+    var isLoading: Boolean
 ) {
 
     companion object {
 
         fun <T> error(
-            response: Response
+            response: Response,
+            stateEvent: StateEvent? = null
         ): DataState<T> {
             return DataState(
-                error = Event(
-                    StateError(
-                        response
-                    )
+                stateMessage = StateMessage(
+                    response
                 ),
-                loading = Loading(false),
-                data = null
-            )
-        }
-
-        fun <T> loading(
-            isLoading: Boolean,
-            cachedData: T? = null
-        ): DataState<T> {
-            return DataState(
-                error = null,
-                loading = Loading(isLoading),
-                data = Data(
-                    Event.dataEvent(
-                        cachedData
-                    ), null
-                )
+                data = null,
+                stateEvent = stateEvent,
+                isLoading = false
             )
         }
 
         fun <T> data(
+            response: Response? = null,
             data: T? = null,
-            response: Response? = null
+            stateEvent: StateEvent? = null
         ): DataState<T> {
             return DataState(
-                error = null,
-                loading = Loading(false),
-                data = Data(
-                    Event.dataEvent(data),
-                    Event.responseEvent(response)
-                )
+                stateMessage = response?.let {
+                    StateMessage(
+                        it
+                    )
+                },
+                data = data,
+                stateEvent = stateEvent,
+                isLoading = false
+            )
+        }
+
+        fun <T> loading(isLoading: Boolean): DataState<T> {
+            return DataState(
+                isLoading = isLoading
             )
         }
     }

@@ -71,7 +71,7 @@ fun <T> Flow<T>.asDataState(): Flow<DataState<T>> =
 //    map {
 //    mapNotNull {
     map {
-        DataState.data(it)
+        DataState.data(data = it)
     }.onStart {
         emit(
             DataState.loading(true)
@@ -82,7 +82,8 @@ fun <T> Flow<T>.asDataState(): Flow<DataState<T>> =
             DataState.error<T>(
                 Response(
                     cause.message,
-                    ResponseType.Dialog()
+                    UIComponentType.Dialog,
+                    MessageType.Error
                 )
             )
         )
@@ -94,7 +95,8 @@ fun <T> Flow<T>.asDataState(): Flow<DataState<T>> =
 fun <T> safeCacheCall(
     dispatcher: CoroutineDispatcher = Dispatchers.IO,
     transactionName: String,
-    cacheCall: suspend () -> T
+    cacheCall: suspend () -> T,
+    stateEvent: StateEvent?
 ): Flow<DataState<T>> = flow {
     try {
         emit(DataState.loading(true))
@@ -111,22 +113,25 @@ fun <T> safeCacheCall(
                         DataState.error<T>(
                             Response(
                                 "Error: $transactionName fail.",
-                                ResponseType.Dialog()
+                                UIComponentType.Dialog,
+                                MessageType.Error
                             )
                         )
                     )
                 } else {
                     emit(
                         DataState.data<T>(
-                            result as T,
-                            Response(
-                                "Successfully  $transactionName",
-                                ResponseType.None()
+                            data = result as T,
+                            response = Response(
+                                "Successfully  ${stateEvent?.toString()}",
+                                UIComponentType.Toast,
+                                MessageType.Success
                             )
                         )
                     )
                 }
             } else {
+                //only get Transaction
                 emit(DataState.data(data = result))
             }
         }
@@ -138,7 +143,8 @@ fun <T> safeCacheCall(
                     DataState.error<T>(
                         Response(
                             CACHE_ERROR_TIMEOUT,
-                            ResponseType.Dialog()
+                            UIComponentType.Dialog,
+                            MessageType.Error
                         )
                     )
                 )
@@ -149,7 +155,8 @@ fun <T> safeCacheCall(
                     DataState.error<T>(
                         Response(
                             UNKNOWN_ERROR,
-                            ResponseType.Dialog()
+                            UIComponentType.Dialog,
+                            MessageType.Error
                         )
                     )
                 )
@@ -157,11 +164,12 @@ fun <T> safeCacheCall(
         }
     }
 }.flowOn(dispatcher)
-private fun <T> convertToLong(value:T):Long{
-    if (value is Long){
+
+private fun <T> convertToLong(value: T): Long {
+    if (value is Long) {
         return value
     }
-    if (value is Int){
+    if (value is Int) {
         return value.toLong()
     }
     throw Exception("this method only support long or int")

@@ -5,15 +5,15 @@ data class Data<T>(val data: Event<T>?, val response: Event<Response>?)
 data class StateError(val response: Response)
 
 
-data class Response(val message: String?, val responseType: ResponseType)
-sealed class ResponseType{
-
-    class Toast: ResponseType()
-
-    class Dialog: ResponseType()
-
-    class None: ResponseType()
-}
+//data class Response(val message: String?, val responseType: ResponseType)
+//sealed class ResponseType{
+//
+//    class Toast: ResponseType()
+//
+//    class Dialog: ResponseType()
+//
+//    class None: ResponseType()
+//}
 
 
 /**
