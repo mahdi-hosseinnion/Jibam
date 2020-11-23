@@ -20,6 +20,7 @@ abstract class BaseViewModel<StateEvent, ViewState> : ViewModel() {
     protected val _activeJobStack = ActiveJobStack()
 
     private val handler = CoroutineExceptionHandler { _, throwable ->
+        //should we remove job from _activeJobStack?
         addToMessageStack(throwable = throwable)
     }
 
@@ -126,9 +127,7 @@ abstract class BaseViewModel<StateEvent, ViewState> : ViewModel() {
     }
 
     fun getCurrentViewStateOrNew(): ViewState {
-        val value = viewState.value?.let {
-            it
-        } ?: initNewViewState()
+        val value = viewState.value ?: initNewViewState()
         return value
     }
 
