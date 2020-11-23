@@ -1,23 +1,27 @@
 package com.example.jibi.ui
 
 import android.util.Log
-import androidx.lifecycle.*
-import com.example.jibi.util.DataState
-import com.example.jibi.util.MessageStack
-import com.example.jibi.util.StateMessage
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.jibi.util.*
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 abstract class BaseViewModel<StateEvent, ViewState> : ViewModel() {
 
     val TAG: String = "AppDebug"
 
-    protected val _stateEvent: MutableSharedFlow<StateEvent> = MutableSharedFlow()
+    //    protected val _stateEvent: MutableSharedFlow<StateEvent> = MutableSharedFlow()
     protected val _viewState: MutableLiveData<ViewState> = MutableLiveData()
-    protected val _laoding: MutableLiveData<Int> = MutableLiveData()
     protected val _messageStack = MessageStack()
+    protected val _activeJobStack = ActiveJobStack()
+
+    private val handler = CoroutineExceptionHandler { _, throwable ->
+        addToMessageStack(throwable = throwable)
+    }
 
 
     val viewState: LiveData<ViewState>
@@ -27,75 +31,98 @@ abstract class BaseViewModel<StateEvent, ViewState> : ViewModel() {
         get() = _messageStack.stateMessage
 
     //    val loading: LiveData<Boolean> = liveData { TODO("OR")
-    val loading: LiveData<Int>
-        get() = _laoding
+    val countOfActiveJobs: LiveData<Int>
+        get() = _activeJobStack.countOfActiveJobs
 
-    //    val dataState: Flow<DataState<ViewState>>
-//    =_stateEvent.collect {
-//        handleStateEvent(it)
-//    }
-    //worked code
-/*    val dataState: Flow<DataState<ViewState>> = flow {
-        _stateEvent.onEach { stateEvent ->
-            emitAll(handleStateEvent(stateEvent))
+
+    fun launchNewJob(stateEvent: StateEvent) {
+        if (_activeJobStack.containsKey(stateEvent.toString())) {
+            //if already job is active
+            return
         }
-    }   */
-    val dataState: Flow<ViewState> = flow {
-        viewModelScope.launch(Main) {
-            _stateEvent.collect { stateEvent ->
-                handleStateEvent(stateEvent).collect { dataState ->
-                    dataState.data?.let { viewState ->
-//                        it.getContentIfNotHandled()?.let { viewState ->TODO ("OR")
-                        handleNewData(viewState)
-                    }
-                    dataState.stateMessage.let { stateMessage ->
-//                        it.getContentIfNotHandled()?.let { viewState ->TODO ("OR")
-                        stateMessage?.let {
-                            _messageStack.add(it)
-                        }
+        val job = viewModelScope.launch(IO + handler) {
+            ensureActive()
+            val dataState = getResultByStateEvent(stateEvent)
+            ensureActive()
+            handleNewDataState(dataState)
+        }
+        //add job to active job stack
+        _activeJobStack.put(stateEvent.toString(), job)
 
-                    }
-                    handleLoading(dataState.isLoading)
+        job.invokeOnCompletion { throwable ->
+            _activeJobStack.remove(stateEvent.toString())
+            if (throwable == null) {
+                Log.d(TAG, "launchNewJob: Job: ${stateEvent.toString()} completed normally")
+                return@invokeOnCompletion
+            }
+            if (throwable is CancellationException) {
+                Log.d(TAG, "launchNewJob: Job: ${stateEvent.toString()} cancelled normally")
+                return@invokeOnCompletion
+            }
+            addToMessageStack(throwable = throwable)
+        }
+    }
+
+    private fun addToMessageStack(
+        message: String? = null,
+        throwable: Throwable? = null,
+        uiComponentType: UIComponentType = UIComponentType.Toast,
+        messageType: MessageType = MessageType.Error
+    ) {
+        if (message == null && throwable == null) {
+            return
+        }
+        var message = message
+        if (message == null && throwable != null) {
+            message = throwable.message
+        }
+        Log.e(TAG, "launchNewJob: invoke on completion error: $message ", throwable)
+        _messageStack.add(
+            StateMessage(
+                Response(
+                    message = message,
+                    uiComponentType = uiComponentType,
+                    messageType = messageType
+                )
+            )
+        )
+
+    }
+
+    private suspend fun handleNewDataState(dataState: DataState<ViewState>) {
+        withContext(Main) {
+            ensureActive()
+            //        handleStateEvent(stateEvent).onEach{ dataState -> TODO("OR")
+            dataState.data?.let { viewState ->
+//                        it.getContentIfNotHandled()?.let { viewState ->TODO ("OR")
+                ensureActive()
+                handleNewData(viewState)
+            }
+            dataState.stateMessage.let { stateMessage ->
+//                        it.getContentIfNotHandled()?.let { viewState ->TODO ("OR")
+                stateMessage?.let {
+                    ensureActive()
+                    _messageStack.add(it)
                 }
 
             }
+            ensureActive()
         }
     }
 
-
-    private fun handleLoading(isLoading: Boolean) {
-        Log.d(TAG, "handleLoading: isLoading: $isLoading")
-        val currentValue: Int = _laoding.value ?: 0
-        if (isLoading) {
-            _laoding.value = currentValue.plus(1)
-        } else {
-            if (currentValue > 0) {
-                _laoding.value = currentValue.minus(1)
-            } else {
-                _laoding.value = 0
-            }
+    fun cancelActiveJob(stateEventName: String) {
+        val job = _activeJobStack[stateEventName]
+        if (job == null) {
+            Log.d(TAG, "cancelActiveJob: Job: $stateEventName is null")
+            return
         }
+        job.cancel()
     }
 
-/*        _stateEvent.collect{ stateEvent ->
-            return handleStateEvent(stateEvent = stateEvent)
-//            stateEvent?.let {
-//                return@map handleStateEvent(stateEvent)
-//            } ?: handleStateEvent(stateEvent)
+    fun cancelAllActiveJobs() {
+        for ((k, v) in _activeJobStack) {
+            cancelActiveJob(k)
         }
-    }*/
-    /*Transformations
-    .switchMap(_stateEvent) { stateEvent ->
-        stateEvent?.let {
-            handleStateEvent(stateEvent)
-        }
-    }*/
-
-    fun setStateEvent(event: StateEvent) {
-        viewModelScope.launch {
-            _stateEvent.emit(event)
-        }
-//        _stateEvent.tryEmit(event)
     }
 
     fun getCurrentViewStateOrNew(): ViewState {
@@ -109,9 +136,14 @@ abstract class BaseViewModel<StateEvent, ViewState> : ViewModel() {
         _viewState.value = viewState
     }
 
-    abstract fun handleStateEvent(stateEvent: StateEvent): Flow<DataState<ViewState>>
+    abstract suspend fun getResultByStateEvent(stateEvent: StateEvent): DataState<ViewState>
 
     abstract fun initNewViewState(): ViewState
 
     abstract fun handleNewData(viewState: ViewState)
+
+    override fun onCleared() {
+        _activeJobStack.clear()
+        super.onCleared()
+    }
 }

@@ -3,8 +3,7 @@ package com.example.jibi.util
 data class DataState<T>(
     var stateMessage: StateMessage? = null,
     var data: T? = null,
-    var stateEvent: StateEvent? = null,
-    var isLoading: Boolean
+    var stateEvent: StateEvent? = null
 ) {
 
     companion object {
@@ -18,8 +17,7 @@ data class DataState<T>(
                     response
                 ),
                 data = null,
-                stateEvent = stateEvent,
-                isLoading = false
+                stateEvent = stateEvent
             )
         }
 
@@ -35,15 +33,13 @@ data class DataState<T>(
                     )
                 },
                 data = data,
-                stateEvent = stateEvent,
-                isLoading = false
+                stateEvent = stateEvent
             )
         }
 
-        fun <T> loading(isLoading: Boolean): DataState<T> {
+/*        fun <T> loading(isLoading: Boolean): DataState<T> {
             return DataState(
-                isLoading = isLoading
             )
-        }
+        }*/
     }
 }
