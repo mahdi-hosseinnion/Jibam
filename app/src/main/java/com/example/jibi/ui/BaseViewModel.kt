@@ -10,7 +10,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 
-abstract class BaseViewModel<StateEvent, ViewState> : ViewModel() {
+abstract class BaseViewModel<ViewState> : ViewModel() {
 
     val TAG: String = "AppDebug"
 
@@ -37,7 +37,7 @@ abstract class BaseViewModel<StateEvent, ViewState> : ViewModel() {
 
 
     fun launchNewJob(stateEvent: StateEvent) {
-        if (_activeJobStack.containsKey(stateEvent.toString())) {
+        if (_activeJobStack.containsKey(stateEvent.getId())) {
             //if already job is active
             return
         }
@@ -48,16 +48,16 @@ abstract class BaseViewModel<StateEvent, ViewState> : ViewModel() {
             handleNewDataState(dataState)
         }
         //add job to active job stack
-        _activeJobStack.put(stateEvent.toString(), job)
+        _activeJobStack.put(stateEvent.getId(), job)
 
         job.invokeOnCompletion { throwable ->
-            _activeJobStack.remove(stateEvent.toString())
+            _activeJobStack.remove(stateEvent.getId())
             if (throwable == null) {
-                Log.d(TAG, "launchNewJob: Job: ${stateEvent.toString()} completed normally")
+                Log.d(TAG, "launchNewJob: Job: ${stateEvent.getId()} completed normally")
                 return@invokeOnCompletion
             }
             if (throwable is CancellationException) {
-                Log.d(TAG, "launchNewJob: Job: ${stateEvent.toString()} cancelled normally")
+                Log.d(TAG, "launchNewJob: Job: ${stateEvent.getId()} cancelled normally")
                 return@invokeOnCompletion
             }
             addToMessageStack(throwable = throwable)
@@ -112,7 +112,7 @@ abstract class BaseViewModel<StateEvent, ViewState> : ViewModel() {
     }
 
     fun cancelActiveJob(stateEventName: String) {
-        val job = _activeJobStack[stateEventName]
+        val job = _activeJobStack.get(stateEventName)
         if (job == null) {
             Log.d(TAG, "cancelActiveJob: Job: $stateEventName is null")
             return
@@ -127,8 +127,7 @@ abstract class BaseViewModel<StateEvent, ViewState> : ViewModel() {
     }
 
     fun getCurrentViewStateOrNew(): ViewState {
-        val value = viewState.value ?: initNewViewState()
-        return value
+        return viewState.value ?: initNewViewState()
     }
 
     fun setViewState(viewState: ViewState) {

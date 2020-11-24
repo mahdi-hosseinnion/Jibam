@@ -13,6 +13,8 @@ sealed class TransactionStateEvent : StateEvent {
         override fun toString(): String {
             return "getSummeryTrans"
         }
+
+        override fun getId(): String ="Get sum of all transaction hashCode: ${this.hashCode()}"
     }
 
     class getTrasaction(
@@ -27,6 +29,8 @@ sealed class TransactionStateEvent : StateEvent {
         override fun toString(): String {
             return "getTrasaction"
         }
+
+        override fun getId(): String = "getTransaction minDate: $minDate maxDate: $maxDate hashCode: ${this.hashCode()}"
     }
 
     class getSumOfMoney(
@@ -40,9 +44,10 @@ sealed class TransactionStateEvent : StateEvent {
         override fun toString(): String {
             return "getSumOfMoney"
         }
+        override fun getId(): String = "getSumOfMoney minDate: $minDate maxDate: $maxDate hashCode: ${this.hashCode()}"
     }
 
-    class None() : TransactionStateEvent() {
+    object None : TransactionStateEvent() {
         override fun errorInfo(): String {
             return "ERROR NONE"
         }
@@ -50,5 +55,7 @@ sealed class TransactionStateEvent : StateEvent {
         override fun toString(): String {
             return "None"
         }
+        override fun getId(): String = "NONE  hashCode: ${this.hashCode()}"
+
     }
 }
