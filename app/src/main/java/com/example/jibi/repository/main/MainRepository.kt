@@ -44,25 +44,17 @@ constructor(
 
 
     //dataBase main dao
-    fun insertTransaction(record: Record): Flow<DataState<Long>> =
-        safeCacheCall(IO, "Insert Transaction") {
-            recordsDao.insertOrReplace(record)
-        }
+    suspend fun insertTransaction(record: Record): DataState<Long> =
+        safeCacheCall { recordsDao.insertOrReplace(record) }
 
-    fun getTransaction(transactionId: Int): Flow<DataState<Record>> =
-        safeCacheCall(IO, "Get Transaction") {
-            recordsDao.getRecordById(transactionId)
-        }
+    suspend fun getTransaction(transactionId: Int): DataState<Record> =
+        safeCacheCall { recordsDao.getRecordById(transactionId) }
 
-    fun updateTransaction(record: Record): Flow<DataState<Int>> =
-        safeCacheCall(IO, "Update Transaction") {
-            recordsDao.updateRecord(record)
-        }
+    suspend fun updateTransaction(record: Record): DataState<Int> =
+        safeCacheCall { recordsDao.updateRecord(record) }
 
-    fun deleteTransaction(record: Record): Flow<DataState<Int>> =
-        safeCacheCall(IO, "Delete Transaction") {
-            recordsDao.deleteRecord(record)
-        }
+    suspend fun deleteTransaction(record: Record): DataState<Int> =
+        safeCacheCall { recordsDao.deleteRecord(record) }
 
 
 /*    fun getSummaryMoney(): Flow<TransactionViewState> = flow {
