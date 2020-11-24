@@ -5,12 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 
-abstract class BaseViewModel<ViewState> : ViewModel() {
+abstract class BaseViewModel<OneShotOperationsStateEvent,ViewState> : ViewModel() {
 
     val TAG: String = "AppDebug"
 
@@ -36,7 +37,12 @@ abstract class BaseViewModel<ViewState> : ViewModel() {
         get() = _activeJobStack.countOfActiveJobs
 
 
-    fun launchNewJob(stateEvent: StateEvent) {
+    fun launchNewJob(stateEvent: OneShotOperationsStateEvent) {
+        if (stateEvent !is StateEvent){
+            addToMessageStack("Unknown State Event")
+            Log.e(TAG, "launchNewJob: YOU FORGOT TO EXTEND FROM STATE EVENT")
+            return
+        }
         if (_activeJobStack.containsKey(stateEvent.getId())) {
             //if already job is active
             return
@@ -134,7 +140,7 @@ abstract class BaseViewModel<ViewState> : ViewModel() {
         _viewState.value = viewState
     }
 
-    abstract suspend fun getResultByStateEvent(stateEvent: StateEvent): DataState<ViewState>
+    abstract suspend fun getResultByStateEvent(stateEvent: OneShotOperationsStateEvent): DataState<ViewState>
 
     abstract fun initNewViewState(): ViewState
 

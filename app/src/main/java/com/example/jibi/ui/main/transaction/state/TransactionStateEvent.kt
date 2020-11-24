@@ -1,5 +1,7 @@
 package com.example.jibi.ui.main.transaction.state
 
+import android.icu.text.AlphabeticIndex
+import com.example.jibi.models.Record
 import com.example.jibi.util.StateEvent
 
 sealed class TransactionStateEvent : StateEvent {
@@ -14,7 +16,7 @@ sealed class TransactionStateEvent : StateEvent {
             return "getSummeryTrans"
         }
 
-        override fun getId(): String ="Get sum of all transaction hashCode: ${this.hashCode()}"
+        override fun getId(): String = "Get sum of all transaction hashCode: ${this.hashCode()}"
     }
 
     class getTrasaction(
@@ -30,7 +32,8 @@ sealed class TransactionStateEvent : StateEvent {
             return "getTrasaction"
         }
 
-        override fun getId(): String = "getTransaction minDate: $minDate maxDate: $maxDate hashCode: ${this.hashCode()}"
+        override fun getId(): String =
+            "getTransaction minDate: $minDate maxDate: $maxDate hashCode: ${this.hashCode()}"
     }
 
     class getSumOfMoney(
@@ -44,7 +47,9 @@ sealed class TransactionStateEvent : StateEvent {
         override fun toString(): String {
             return "getSumOfMoney"
         }
-        override fun getId(): String = "getSumOfMoney minDate: $minDate maxDate: $maxDate hashCode: ${this.hashCode()}"
+
+        override fun getId(): String =
+            "getSumOfMoney minDate: $minDate maxDate: $maxDate hashCode: ${this.hashCode()}"
     }
 
     object None : TransactionStateEvent() {
@@ -55,7 +60,41 @@ sealed class TransactionStateEvent : StateEvent {
         override fun toString(): String {
             return "None"
         }
+
         override fun getId(): String = "NONE  hashCode: ${this.hashCode()}"
+
+    }
+
+    sealed class OneShotOperationsTransactionStateEvent : TransactionStateEvent() {
+        data class InsertTransaction(
+            val record: Record
+        ) : OneShotOperationsTransactionStateEvent() {
+            override fun errorInfo(): String = "ERROR: inserting record! recordMoney = ${record.money}"
+
+            override fun getId(): String = "InsertTransaction $record ${this.hashCode()}"
+        }
+
+        data class GetSpecificTransaction(
+            val transactionId: Int
+        ) : OneShotOperationsTransactionStateEvent() {
+            override fun errorInfo(): String = "ERROR: getting record! recordId = ${transactionId}"
+
+            override fun getId(): String = "GetSpecificTransaction id: $transactionId ${this.hashCode()}"
+        }
+        data class UpdateTransaction(
+            val record: Record
+        ) : OneShotOperationsTransactionStateEvent() {
+            override fun errorInfo(): String = "ERROR: updating record! recordMoney = ${record.money}"
+
+            override fun getId(): String = "UpdateTransaction $record ${this.hashCode()}"
+        }
+        data class DeleteTransaction(
+            val record: Record
+        ) : OneShotOperationsTransactionStateEvent() {
+            override fun errorInfo(): String = "ERROR: deleting record! recordMoney = ${record.money}"
+
+            override fun getId(): String = "DeleteTransaction $record ${this.hashCode()}"
+        }
 
     }
 }
