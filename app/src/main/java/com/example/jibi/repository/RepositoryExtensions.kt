@@ -166,70 +166,27 @@ fun <T> safeFlowCacheCall(
     }
 }.flowOn(dispatcher)
 
-private fun <T> convertToLong(value: T): Long {
-    if (value is Long) {
-        return value
-    }
-    if (value is Int) {
-        return value.toLong()
-    }
-    throw Exception("this method only support long or int")
-}
-//TODO ADD STATE EVENT NAME FOR BETTER ERROR HANDLING
 suspend fun <T> safeCacheCall(
     dispatcher: CoroutineDispatcher = Dispatchers.IO,
     cacheCall: suspend () -> T?
-): DataState<T> {
+): CacheResult<T?> {
     return withContext(dispatcher) {
         try {
             // throws TimeoutCancellationException
             withTimeout(CACHE_TIMEOUT) {
-                handleReturnedResult(result = cacheCall.invoke())
+                CacheResult.Success(cacheCall.invoke())
             }
         } catch (throwable: Throwable) {
             when (throwable) {
                 is TimeoutCancellationException -> {
-                    DataState.error(
-                        buildResponse(
-                            message = CACHE_ERROR_TIMEOUT
-                        )
-                    )
+                    CacheResult.GenericError(CACHE_ERROR_TIMEOUT)
                 }
                 else -> {
-                    DataState.error(
-                        buildResponse(
-                            message = UNKNOWN_ERROR
-                        )
-                    )
+                    CacheResult.GenericError(UNKNOWN_ERROR)
                 }
             }
         }
     }
-}
-
-fun <T> handleReturnedResult(result: T?): DataState<T> {
-    if (result == null) {
-        return DataState.error(
-            buildResponse(message = "fail \n Reason Data is NULL!")
-        )
-    }
-    if (result is Long || result is Int) {//for insert or update or delete
-        return if ((convertToLong(result)) < 1) {
-            //error case in insert or update or delete
-            DataState.error(
-                buildResponse(message = "fail \n UNKNOWN ERROR!")
-            )
-        } else {
-            //success case in insert or update or delete
-            DataState.data(
-                response = buildResponse(
-                    message = "Success!", UIComponentType.Toast, MessageType.Success
-                ),
-                data = result
-            )
-        }
-    }
-    return DataState.data(data = result)
 }
 
 fun <ViewState> buildError(
@@ -257,3 +214,12 @@ fun buildResponse(
     uiComponentType = uiComponentType,
     messageType = messageType
 )
+private fun <T> convertToLong(value: T): Long {
+    if (value is Long) {
+        return value
+    }
+    if (value is Int) {
+        return value.toLong()
+    }
+    throw Exception("this method only support long or int")
+}

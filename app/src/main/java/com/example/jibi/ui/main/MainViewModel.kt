@@ -1,38 +1,43 @@
 package com.example.jibi.ui.main
 
-import android.widget.Toast
 import com.example.jibi.di.main.MainScope
-import com.example.jibi.repository.buildError
 import com.example.jibi.repository.buildResponse
 import com.example.jibi.repository.main.MainRepository
 import com.example.jibi.ui.BaseViewModel
-import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent.*
 import com.example.jibi.ui.main.transaction.state.TransactionViewState
 import com.example.jibi.util.DataState
-import com.example.jibi.util.StateEvent
 import com.example.jibi.util.UIComponentType
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
-import javax.inject.Singleton
 
+@ExperimentalCoroutinesApi
 @MainScope
 class MainViewModel
 @Inject
 constructor(
     private val mainRepository: MainRepository
 ) : BaseViewModel<OneShotOperationsTransactionStateEvent, TransactionViewState>() {
+
     override suspend fun getResultByStateEvent(stateEvent: OneShotOperationsTransactionStateEvent): DataState<TransactionViewState> {
         return when (stateEvent) {
-            is InsertTransaction -> {
-                mainRepository.insertTransaction(stateEvent.record)
-            }
-            is GetSpecificTransaction -> mainRepository.getRecordById(stateEvent.transactionId)
+            is InsertTransaction ->
+                mainRepository.insertTransaction(
+                    stateEvent.record, stateEvent
+                )
 
-            is UpdateTransaction -> mainRepository.updateRecord(stateEvent.record)
+            is GetSpecificTransaction -> mainRepository.getTransaction(
+                stateEvent.transactionId, stateEvent
+            )
 
-            is DeleteTransaction -> mainRepository.deleteRecord(stateEvent.record)
+            is UpdateTransaction -> mainRepository.updateTransaction(
+                stateEvent.record, stateEvent
+            )
+
+            is DeleteTransaction -> mainRepository.deleteTransaction(
+                stateEvent.record, stateEvent
+            )
 
 
             else -> {

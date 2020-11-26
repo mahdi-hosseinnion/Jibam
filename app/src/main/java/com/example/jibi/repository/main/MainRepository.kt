@@ -5,8 +5,10 @@ import com.example.jibi.models.Record
 import com.example.jibi.persistence.*
 import com.example.jibi.repository.JobManager
 import com.example.jibi.repository.asDataState
+import com.example.jibi.repository.buildResponse
 import com.example.jibi.repository.safeCacheCall
-import com.example.jibi.util.DataState
+import com.example.jibi.ui.main.transaction.state.TransactionViewState
+import com.example.jibi.util.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -44,17 +46,100 @@ constructor(
 
 
     //dataBase main dao
-    suspend fun insertTransaction(record: Record): DataState<Long> =
-        safeCacheCall { recordsDao.insertOrReplace(record) }
+    suspend fun insertTransaction(
+        record: Record,
+        stateEvent: StateEvent
+    ): DataState<TransactionViewState> {
+        val cacheResult = safeCacheCall {
+            recordsDao.insertOrReplace(record)
+        }
 
-    suspend fun getTransaction(transactionId: Int): DataState<Record> =
-        safeCacheCall { recordsDao.getRecordById(transactionId) }
+        return object : CacheResponseHandler<TransactionViewState, Long>(
+            response = cacheResult,
+            stateEvent = stateEvent
+        ) {
+            override suspend fun handleSuccess(resultObj: Long): DataState<TransactionViewState> {
+                return DataState.data(
+                    response = buildResponse(
+                        message = "Transaction Successfully inserted",
+                        UIComponentType.Toast,
+                        MessageType.Success
+                    )
+                )
+            }
+        }.getResult()
+    }
+//        safeCacheCall { recordsDao.insertOrReplace(record) }
 
-    suspend fun updateTransaction(record: Record): DataState<Int> =
-        safeCacheCall { recordsDao.updateRecord(record) }
+    suspend fun getTransaction(
+        transactionId: Int,
+        stateEvent: StateEvent
+    ): DataState<TransactionViewState> {
+        val cacheResult = safeCacheCall {
+            recordsDao.getRecordById(transactionId)
+        }
 
-    suspend fun deleteTransaction(record: Record): DataState<Int> =
-        safeCacheCall { recordsDao.deleteRecord(record) }
+        return object : CacheResponseHandler<TransactionViewState, Record>(
+            response = cacheResult,
+            stateEvent = stateEvent
+        ) {
+            override suspend fun handleSuccess(resultObj: Record): DataState<TransactionViewState> {
+                return DataState.data(
+                    response = buildResponse(
+                        message = "Transaction Successfully returned",
+                        UIComponentType.None,
+                        MessageType.Success
+                    )
+                )
+            }
+        }.getResult()
+    }
+
+    suspend fun updateTransaction(
+        record: Record,
+        stateEvent: StateEvent
+    ): DataState<TransactionViewState> {
+        val cacheResult = safeCacheCall {
+            recordsDao.updateRecord(record)
+        }
+        return object : CacheResponseHandler<TransactionViewState, Int>(
+            response = cacheResult,
+            stateEvent = stateEvent
+        ) {
+            override suspend fun handleSuccess(resultObj: Int): DataState<TransactionViewState> {
+                return DataState.data(
+                    response = buildResponse(
+                        message = "Transaction Successfully Updated",
+                        UIComponentType.Toast,
+                        MessageType.Success
+                    )
+                )
+            }
+        }.getResult()
+    }
+
+    suspend fun deleteTransaction(
+        record: Record,
+        stateEvent: StateEvent
+    ): DataState<TransactionViewState> {
+        val cacheResult = safeCacheCall {
+            recordsDao.deleteRecord(record)
+        }
+        return object : CacheResponseHandler<TransactionViewState, Int>(
+            response = cacheResult,
+            stateEvent = stateEvent
+        ) {
+            override suspend fun handleSuccess(resultObj: Int): DataState<TransactionViewState> {
+                return DataState.data(
+                    response = buildResponse(
+                        message = "Transaction Successfully Deleted",
+                        UIComponentType.Toast,
+                        MessageType.Success
+                    )
+                )
+            }
+        }.getResult()
+    }
 
 
 /*    fun getSummaryMoney(): Flow<TransactionViewState> = flow {
