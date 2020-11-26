@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
@@ -70,7 +69,7 @@ abstract class BaseViewModel<OneShotOperationsStateEvent,ViewState> : ViewModel(
         }
     }
 
-    private fun addToMessageStack(
+    fun addToMessageStack(
         message: String? = null,
         throwable: Throwable? = null,
         uiComponentType: UIComponentType = UIComponentType.Toast,
@@ -79,15 +78,15 @@ abstract class BaseViewModel<OneShotOperationsStateEvent,ViewState> : ViewModel(
         if (message == null && throwable == null) {
             return
         }
-        var message = message
-        if (message == null && throwable != null) {
-            message = throwable.message
+        var mMessage = message
+        if (mMessage == null && throwable != null) {
+            mMessage = throwable.message
         }
-        Log.e(TAG, "launchNewJob: invoke on completion error: $message ", throwable)
+        Log.e(TAG, "launchNewJob: invoke on completion error: $mMessage ", throwable)
         _messageStack.add(
             StateMessage(
                 Response(
-                    message = message,
+                    message = mMessage,
                     uiComponentType = uiComponentType,
                     messageType = messageType
                 )
@@ -130,6 +129,16 @@ abstract class BaseViewModel<OneShotOperationsStateEvent,ViewState> : ViewModel(
         for ((k, v) in _activeJobStack) {
             cancelActiveJob(k)
         }
+    }
+
+    fun increaseLoading(jobName: String){
+        //TODO DELETE THIS JOB ONE IT'S NOT EFFISHENT
+        _activeJobStack.put(jobName, Job())
+    }
+    fun decreaseLoading(jobName:String){
+        //TODO DELETE THIS JOB ONE IT'S NOT EFFISHENT
+        _activeJobStack.remove(jobName)
+
     }
 
     fun getCurrentViewStateOrNew(): ViewState {

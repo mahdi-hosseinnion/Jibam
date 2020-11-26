@@ -27,13 +27,13 @@ constructor(
     fun getSumOfIncome(
         minDate: Int? = null,
         maxDate: Int? = null
-    ): Flow<DataState<Int?>> = recordsDao.getSumOfIncome(minDate, maxDate).asDataState()
+    ): Flow<Int?> = recordsDao.getSumOfIncome(minDate, maxDate)
 
 
     fun getSumOfExpenses(
         minDate: Int? = null,
         maxDate: Int? = null
-    ): Flow<DataState<Int?>> = recordsDao.getSumOfExpenses(minDate, maxDate).asDataState()
+    ): Flow<Int?> = recordsDao.getSumOfExpenses(minDate, maxDate)
 
 
 //    recordsDao.getSumOfExpenses(minDate, maxDate)
@@ -42,7 +42,7 @@ constructor(
     fun getTransactionList(
         minDate: Int? = null,
         maxDate: Int? = null
-    ): Flow<DataState<List<Record>?>> = recordsDao.getRecords(minDate, maxDate).asDataState()
+    ): Flow<List<Record>?> = recordsDao.getRecords(minDate, maxDate)
 
 
     //dataBase main dao
