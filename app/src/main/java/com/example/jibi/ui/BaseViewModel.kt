@@ -13,7 +13,10 @@ import kotlinx.coroutines.Dispatchers.Main
 abstract class BaseViewModel<OneShotOperationsStateEvent,ViewState> : ViewModel() {
 
     val TAG: String = "AppDebug"
+    init {
+        Log.d("BaseViewModel", "mahdi init called: ")
 
+    }
     //    protected val _stateEvent: MutableSharedFlow<StateEvent> = MutableSharedFlow()
     protected val _viewState: MutableLiveData<ViewState> = MutableLiveData()
     protected val _messageStack = MessageStack()
@@ -159,4 +162,7 @@ abstract class BaseViewModel<OneShotOperationsStateEvent,ViewState> : ViewModel(
         _activeJobStack.clear()
         super.onCleared()
     }
+
+    private fun now() = System.currentTimeMillis()
+
 }

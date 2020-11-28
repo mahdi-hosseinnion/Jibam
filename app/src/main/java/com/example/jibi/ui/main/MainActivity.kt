@@ -2,56 +2,57 @@ package com.example.jibi.ui.main
 
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.example.jibi.BaseApplication
 import com.example.jibi.R
 import com.example.jibi.models.Record
 import com.example.jibi.persistence.RecordsDao
 import com.example.jibi.ui.BaseActivity
-import kotlinx.coroutines.CoroutineScope
+import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
+import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.random.Random
 
+@ExperimentalCoroutinesApi
 class MainActivity : BaseActivity() {
     @Inject
-    lateinit var recordsDao: RecordsDao
+    lateinit var providerFactory: ViewModelProvider.Factory
+
+    val viewModel: MainViewModel by viewModels {
+        providerFactory
+    }
     val scope = CoroutineScope(IO)
     private val TAG = "MainActivity"
+
+    @Inject
+    lateinit var recordsDao: RecordsDao
     override fun onCreate(savedInstanceState: Bundle?) {
         inject()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-/*
-        recordsDao.loadAllRecordsBetweenDates(30, 80).observe(this, Observer {
+        var randomRecord = Record(0, Random.nextInt(100_000), "32", "324", Random.nextInt())
+        viewModel.countOfActiveJobs.observe(this, Observer {
+                printOnLog("trigger Count: $it")
+
+            })
+        viewModel.viewState.observe(this) { viewState ->
+            viewState?.let {
+                printOnLog("transactionList: ${it.transactionList}")
+                printOnLog("summeryMoney: ${it.summeryMoney}")
+            }
+        }
+        viewModel.stateMessage.observe(this){
             it?.let {
-                printList(it, "RETURNED ROW")
-            }
-        })
-        scope.launch {
-            recordsDao.getAllRecords().collect {
-                it?.let {
-                    printList(it, "All")
-                }
+                printOnLog("stateMessage:$it")
             }
         }
         scope.launch {
-            delay(3000)
-            recordsDao.insertOrReplace(Record(11,23,",","12",5))
+            recordsDao.insertOrReplace(Record(0,-83,"ds","sdf",232223))
         }
-//        scope.launch {
-//            for (i in 1..10) {
-//                recordsDao.insertOrReplace(Record(i, 2323, "memo", "32", i*10))
-//
-//            }
-//        }
-
-
-*/
-
     }
 
     override fun inject() {
@@ -66,7 +67,7 @@ class MainActivity : BaseActivity() {
     ) {
         printOnLog("$msg +++++++++++++++++ size = ${data.size}")
         for (item in data) {
-//            printOnLog(msg + item.toString())
+            printOnLog(msg + item.toString())
         }
     }
 

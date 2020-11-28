@@ -1,5 +1,6 @@
 package com.example.jibi.ui.main
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Record
@@ -7,6 +8,7 @@ import com.example.jibi.models.SummaryMoney
 import com.example.jibi.repository.buildResponse
 import com.example.jibi.repository.main.MainRepository
 import com.example.jibi.ui.BaseViewModel
+import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent.*
 import com.example.jibi.ui.main.transaction.state.TransactionViewState
@@ -31,44 +33,51 @@ constructor(
     val GET_LIST_OF_TRANSACTION = "getting the list of transaction"
 
     init {
+        Log.d("MainViewModel", "mahdi init called: ")
         //flow stuff
         viewModelScope.launch {
-            //TODO HANDLE WHERE TO INCREMENT AND WHEN TO DECREMENT LOADING
-            mainRepository.getSumOfExpenses()
-                //loading stuff
-                .onStart { increaseLoading(GET_SUM_OF_ALL_EXPENSES) }
-                .catch { cause -> addToMessageStack(throwable = cause) }
-                .collect {
-                    it?.let {
-                        //loading stuff
-                        decreaseLoading(GET_SUM_OF_ALL_EXPENSES)
-                        setAllTransactionExpenses(it)
+            launch {
+                //TODO HANDLE WHERE TO INCREMENT AND WHEN TO DECREMENT LOADING
+                mainRepository.getSumOfExpenses()
+                    //loading stuff
+                    .onStart { increaseLoading(GET_SUM_OF_ALL_EXPENSES) }
+                    .catch { cause -> addToMessageStack(throwable = cause) }
+                    .collect {
+                        it?.let {
+                            //loading stuff
+                            decreaseLoading(GET_SUM_OF_ALL_EXPENSES)
+                            setAllTransactionExpenses(it)
+                        }
                     }
-                }
+            }
             //TODO HANDLE WHERE TO INCREMENT AND WHEN TO DECREMENT LOADING
-            mainRepository.getSumOfIncome()
-                //loading stuff
-                .onStart { increaseLoading(GET_SUM_OF_ALL_INCOME) }
-                .catch { cause -> addToMessageStack(throwable = cause) }
-                .collect {
-                    it?.let {
-                        //loading stuff
-                        decreaseLoading(GET_SUM_OF_ALL_INCOME)
-                        setAllTransactionIncome(it)
+            launch {
+                mainRepository.getSumOfIncome()
+                    //loading stuff
+                    .onStart { increaseLoading(GET_SUM_OF_ALL_INCOME) }
+                    .catch { cause -> addToMessageStack(throwable = cause) }
+                    .collect {
+                        it?.let {
+                            //loading stuff
+                            decreaseLoading(GET_SUM_OF_ALL_INCOME)
+                            setAllTransactionIncome(it)
+                        }
                     }
-                }
-            //TODO HANDLE WHERE TO INCREMENT AND WHEN TO DECREMENT LOADING
-            mainRepository.getTransactionList()
-                //loading stuff
-                .onStart { increaseLoading(GET_LIST_OF_TRANSACTION) }
-                .catch { cause -> addToMessageStack(throwable = cause) }
-                .collect {
-                    it?.let {
-                        //loading stuff
-                        decreaseLoading(GET_LIST_OF_TRANSACTION)
-                        setListOfTransactions(it)
+                //TODO HANDLE WHERE TO INCREMENT AND WHEN TO DECREMENT LOADING
+            }
+            launch {
+                mainRepository.getTransactionList()
+                    //loading stuff
+                    .onStart { increaseLoading(GET_LIST_OF_TRANSACTION) }
+                    .catch { cause -> addToMessageStack(throwable = cause) }
+                    .collect {
+                        it?.let {
+                            //loading stuff
+                            decreaseLoading(GET_LIST_OF_TRANSACTION)
+                            setListOfTransactions(it)
+                        }
                     }
-                }
+            }
         }
     }
 
