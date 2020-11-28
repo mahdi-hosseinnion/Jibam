@@ -23,7 +23,7 @@ class ActiveJobStack : HashMap<String, Job>() {
 
     override fun put(key: String, value: Job): Job? {
         Log.d(TAG, "put: adding'+++' loading $key")
-        jobTiming.put(key,now())
+        jobTiming.put(key, now())
         if (this.containsKey(key)) {
             // prevent duplicate
             return null
@@ -35,7 +35,10 @@ class ActiveJobStack : HashMap<String, Job>() {
     override fun remove(key: String): Job? {
         if (this.containsKey(key)) {
             if (jobTiming.containsKey(key)) {
-                Log.d(TAG, "put: removing'---' loading $key it took about ${now() - jobTiming.get(key)!!} ms")
+                Log.d(
+                    TAG,
+                    "put: removing'---' loading $key it took about ${now() - jobTiming.get(key)!!} ms"
+                )
             }
             decreaseActiveCount()
             return super.remove(key)
@@ -50,18 +53,19 @@ class ActiveJobStack : HashMap<String, Job>() {
 
     private fun increaseActiveCount() {
         val currentCount: Int = _CountOfActiveJobs.value ?: 0
-        _CountOfActiveJobs.value = currentCount.plus(1)
+        _CountOfActiveJobs.postValue(  currentCount.plus(1))
     }
 
     private fun decreaseActiveCount() {
         val currentCount: Int = _CountOfActiveJobs.value ?: 0
-        _CountOfActiveJobs.value = currentCount.minus(1)
+        _CountOfActiveJobs.postValue(currentCount.minus(1))
     }
 
     private fun clearActiveCount() {
         val currentCount: Int = _CountOfActiveJobs.value ?: 0
-        _CountOfActiveJobs.value = currentCount.minus(1)
+        _CountOfActiveJobs.postValue(  currentCount.minus(1))
     }
+
     private fun now() = System.currentTimeMillis()
 
 }

@@ -2,29 +2,33 @@ package com.example.jibi.ui.main
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.jibi.BaseApplication
 import com.example.jibi.R
 import com.example.jibi.models.Record
 import com.example.jibi.persistence.RecordsDao
 import com.example.jibi.ui.BaseActivity
+import com.example.jibi.ui.main.transaction.TransactionListAdapter
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 import kotlin.random.Random
 
 @ExperimentalCoroutinesApi
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity(), TransactionListAdapter.Interaction {
     @Inject
     lateinit var providerFactory: ViewModelProvider.Factory
 
     val viewModel: MainViewModel by viewModels {
         providerFactory
     }
+    private lateinit var recyclerAdapter: TransactionListAdapter
     val scope = CoroutineScope(IO)
     private val TAG = "MainActivity"
 
@@ -34,24 +38,59 @@ class MainActivity : BaseActivity() {
         inject()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        var randomRecord = Record(0, Random.nextInt(100_000), "32", "324", Random.nextInt())
-        viewModel.countOfActiveJobs.observe(this, Observer {
-                printOnLog("trigger Count: $it")
+        initRecyclerView()
+        viewModel.countOfActiveJobs.observe(this, Observer { count ->
+            if (count != null) {
+                if (count > 0) {
+                    showProgressBar(true)
+                } else {
+                    showProgressBar(false)
+                }
+            } else {
+                showProgressBar(false)
+            }
 
-            })
+        })
         viewModel.viewState.observe(this) { viewState ->
             viewState?.let {
-                printOnLog("transactionList: ${it.transactionList}")
-                printOnLog("summeryMoney: ${it.summeryMoney}")
+                it.transactionList?.let { transactionList ->
+                    recyclerAdapter.submitList(transactionList, true)
+                }
+                it.summeryMoney?.let { summeryMoney ->
+                    txt_balance.text = "Balance: ${summeryMoney.balance}"
+                    txt_expenses.text = "Expenses: ${summeryMoney.expenses}"
+                    txt_income.text = "Income: ${summeryMoney.income}"
+                }
             }
         }
-        viewModel.stateMessage.observe(this){
+        viewModel.stateMessage.observe(this) {
             it?.let {
                 printOnLog("stateMessage:$it")
             }
         }
-        scope.launch {
-            recordsDao.insertOrReplace(Record(0,-83,"ds","sdf",232223))
+    }
+
+    private fun initRecyclerView() {
+
+        transaction_recyclerView.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            recyclerAdapter = TransactionListAdapter(
+                null,
+                this@MainActivity
+            )
+//            addOnScrollListener(object: RecyclerView.OnScrollListener(){
+//
+//                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+//                    super.onScrollStateChanged(recyclerView, newState)
+//                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+//                    val lastPosition = layoutManager.findLastVisibleItemPosition()
+//                    if (lastPosition == recyclerAdapter.itemCount.minus(1)) {
+//                        Log.d(TAG, "BlogFragment: attempting to load next page...")
+//                        viewModel.nextPage()
+//                    }
+//                }
+//            })
+            adapter = recyclerAdapter
         }
     }
 
@@ -73,4 +112,17 @@ class MainActivity : BaseActivity() {
 
     private fun printOnLog(msg: String) = Log.d(TAG, "printOnLog: mahdi -> $msg")
     private fun now() = System.currentTimeMillis()
+    override fun onItemSelected(position: Int, item: Record) {
+    }
+
+    override fun restoreListPosition() {
+    }
+
+    private fun showProgressBar(isLoading: Boolean) {
+        if (isLoading){
+            progressBar.visibility = View.VISIBLE
+        }else{
+            progressBar.visibility = View.GONE
+        }
+    }
 }

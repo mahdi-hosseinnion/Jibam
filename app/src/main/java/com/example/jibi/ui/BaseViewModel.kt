@@ -10,13 +10,15 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 
-abstract class BaseViewModel<OneShotOperationsStateEvent,ViewState> : ViewModel() {
+abstract class BaseViewModel<OneShotOperationsStateEvent, ViewState> : ViewModel() {
 
     val TAG: String = "AppDebug"
+
     init {
         Log.d("BaseViewModel", "mahdi init called: ")
 
     }
+
     //    protected val _stateEvent: MutableSharedFlow<StateEvent> = MutableSharedFlow()
     protected val _viewState: MutableLiveData<ViewState> = MutableLiveData()
     protected val _messageStack = MessageStack()
@@ -40,7 +42,7 @@ abstract class BaseViewModel<OneShotOperationsStateEvent,ViewState> : ViewModel(
 
 
     fun launchNewJob(stateEvent: OneShotOperationsStateEvent) {
-        if (stateEvent !is StateEvent){
+        if (stateEvent !is StateEvent) {
             addToMessageStack("Unknown State Event")
             Log.e(TAG, "launchNewJob: YOU FORGOT TO EXTEND FROM STATE EVENT")
             return
@@ -53,7 +55,9 @@ abstract class BaseViewModel<OneShotOperationsStateEvent,ViewState> : ViewModel(
             ensureActive()
             val dataState = getResultByStateEvent(stateEvent)
             ensureActive()
-            handleNewDataState(dataState)
+            withContext(Main) {
+                handleNewDataState(dataState)
+            }
         }
         //add job to active job stack
         _activeJobStack.put(stateEvent.getId(), job)
@@ -134,11 +138,12 @@ abstract class BaseViewModel<OneShotOperationsStateEvent,ViewState> : ViewModel(
         }
     }
 
-    fun increaseLoading(jobName: String){
+    fun increaseLoading(jobName: String) {
         //TODO DELETE THIS JOB ONE IT'S NOT EFFISHENT
         _activeJobStack.put(jobName, Job())
     }
-    fun decreaseLoading(jobName:String){
+
+    fun decreaseLoading(jobName: String) {
         //TODO DELETE THIS JOB ONE IT'S NOT EFFISHENT
         _activeJobStack.remove(jobName)
 
