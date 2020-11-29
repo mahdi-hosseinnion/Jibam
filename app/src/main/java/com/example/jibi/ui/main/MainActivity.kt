@@ -40,16 +40,7 @@ class MainActivity : BaseActivity(), TransactionListAdapter.Interaction {
         setContentView(R.layout.activity_main)
         initRecyclerView()
         viewModel.countOfActiveJobs.observe(this, Observer { count ->
-            if (count != null) {
-                if (count > 0) {
-                    showProgressBar(true)
-                } else {
-                    showProgressBar(false)
-                }
-            } else {
-                showProgressBar(false)
-            }
-
+            showProgressBar(viewModel.areAnyJobsActive())
         })
         viewModel.viewState.observe(this) { viewState ->
             viewState?.let {
@@ -67,6 +58,9 @@ class MainActivity : BaseActivity(), TransactionListAdapter.Interaction {
             it?.let {
                 printOnLog("stateMessage:$it")
             }
+        }
+        txt_balance.setOnClickListener {
+            viewModel.areAnyJobsActive()
         }
     }
 
@@ -119,9 +113,9 @@ class MainActivity : BaseActivity(), TransactionListAdapter.Interaction {
     }
 
     private fun showProgressBar(isLoading: Boolean) {
-        if (isLoading){
+        if (isLoading) {
             progressBar.visibility = View.VISIBLE
-        }else{
+        } else {
             progressBar.visibility = View.GONE
         }
     }

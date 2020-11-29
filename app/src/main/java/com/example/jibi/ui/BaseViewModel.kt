@@ -14,11 +14,6 @@ abstract class BaseViewModel<OneShotOperationsStateEvent, ViewState> : ViewModel
 
     val TAG: String = "AppDebug"
 
-    init {
-        Log.d("BaseViewModel", "mahdi init called: ")
-
-    }
-
     //    protected val _stateEvent: MutableSharedFlow<StateEvent> = MutableSharedFlow()
     protected val _viewState: MutableLiveData<ViewState> = MutableLiveData()
     protected val _messageStack = MessageStack()
@@ -28,7 +23,6 @@ abstract class BaseViewModel<OneShotOperationsStateEvent, ViewState> : ViewModel
         //should we remove job from _activeJobStack?
         addToMessageStack(throwable = throwable)
     }
-
 
     val viewState: LiveData<ViewState>
         get() = _viewState
@@ -40,6 +34,9 @@ abstract class BaseViewModel<OneShotOperationsStateEvent, ViewState> : ViewModel
     val countOfActiveJobs: LiveData<Int>
         get() = _activeJobStack.countOfActiveJobs
 
+    init {
+        Log.d("BaseViewModel", "mahdi init called: ")
+    }
 
     fun launchNewJob(stateEvent: OneShotOperationsStateEvent) {
         if (stateEvent !is StateEvent) {
@@ -122,6 +119,8 @@ abstract class BaseViewModel<OneShotOperationsStateEvent, ViewState> : ViewModel
             ensureActive()
         }
     }
+
+    fun areAnyJobsActive(): Boolean = _activeJobStack.size > 0
 
     fun cancelActiveJob(stateEventName: String) {
         val job = _activeJobStack.get(stateEventName)

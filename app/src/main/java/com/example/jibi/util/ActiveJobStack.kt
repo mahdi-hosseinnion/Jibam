@@ -28,6 +28,7 @@ class ActiveJobStack : HashMap<String, Job>() {
             // prevent duplicate
             return null
         }
+        //this method should always called before -> super.put(key, value)
         increaseActiveCount()
         return super.put(key, value)
     }
@@ -40,6 +41,7 @@ class ActiveJobStack : HashMap<String, Job>() {
                     "put: removing'---' loading $key it took about ${now() - jobTiming.get(key)!!} ms"
                 )
             }
+            //this method should always called before -> super.remove(key)
             decreaseActiveCount()
             return super.remove(key)
         }
@@ -50,20 +52,25 @@ class ActiveJobStack : HashMap<String, Job>() {
         clearActiveCount()
         super.clear()
     }
-
+    //this method should called beforeChange the size of hashMap
     private fun increaseActiveCount() {
-        val currentCount: Int = _CountOfActiveJobs.value ?: 0
-        _CountOfActiveJobs.postValue(  currentCount.plus(1))
+        //we cannot increase the value of mutable liveData by using post value
+        //so we use size
+        //if you want to increase it immediately by using last value you should use SETVALUE instead of POSTVALUE
+        _CountOfActiveJobs.postValue((this.size).plus(1))
+        //you should use plus 1 b/c this method called before -> super.put(key, value)
     }
 
     private fun decreaseActiveCount() {
-        val currentCount: Int = _CountOfActiveJobs.value ?: 0
-        _CountOfActiveJobs.postValue(currentCount.minus(1))
+        //we cannot increase the value of mutable liveData by using post value
+        //so we use size
+        //if you want to increase it immediately by using last value you should use SETVALUE instead of POSTVALUE
+        _CountOfActiveJobs.postValue((this.size).minus(1))
+        //you should use minus 1 b/c this method called before -> super.remove(key)
     }
 
     private fun clearActiveCount() {
-        val currentCount: Int = _CountOfActiveJobs.value ?: 0
-        _CountOfActiveJobs.postValue(  currentCount.minus(1))
+        _CountOfActiveJobs.postValue(0)
     }
 
     private fun now() = System.currentTimeMillis()
