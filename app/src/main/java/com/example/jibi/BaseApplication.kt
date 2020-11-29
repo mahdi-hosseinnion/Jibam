@@ -4,7 +4,9 @@ import android.app.Application
 import com.example.jibi.di.AppComponent
 import com.example.jibi.di.DaggerAppComponent
 import com.example.jibi.di.main.MainComponent
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 class BaseApplication : Application() {
 
     lateinit var appComponent: AppComponent

@@ -5,6 +5,7 @@ import com.example.jibi.di.main.MainComponent
 import com.example.jibi.ui.BaseActivity
 import dagger.BindsInstance
 import dagger.Component
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Singleton
 
 @Singleton
@@ -14,6 +15,7 @@ import javax.inject.Singleton
         SubComponentsModule::class
     ]
 )
+@ExperimentalCoroutinesApi
 interface AppComponent {
 
 //    val sessionManager: SessionManager

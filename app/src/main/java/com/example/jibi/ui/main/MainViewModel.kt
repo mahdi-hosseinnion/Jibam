@@ -15,6 +15,7 @@ import com.example.jibi.ui.main.transaction.state.TransactionViewState
 import com.example.jibi.util.DataState
 import com.example.jibi.util.UIComponentType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onStart
@@ -33,7 +34,6 @@ constructor(
     val GET_LIST_OF_TRANSACTION = "getting the list of transaction"
 
     init {
-        Log.d("MainViewModel", "mahdi init called: ")
         //flow stuff
         viewModelScope.launch {
             launch {
@@ -43,9 +43,9 @@ constructor(
                     .onStart { increaseLoading(GET_SUM_OF_ALL_EXPENSES) }
                     .catch { cause -> addToMessageStack(throwable = cause) }
                     .collect {
+                        //loading stuff
+                        decreaseLoading(GET_SUM_OF_ALL_EXPENSES)
                         it?.let {
-                            //loading stuff
-                            decreaseLoading(GET_SUM_OF_ALL_EXPENSES)
                             setAllTransactionExpenses(it)
                         }
                     }
@@ -57,9 +57,9 @@ constructor(
                     .onStart { increaseLoading(GET_SUM_OF_ALL_INCOME) }
                     .catch { cause -> addToMessageStack(throwable = cause) }
                     .collect {
+                        //loading stuff
+                        decreaseLoading(GET_SUM_OF_ALL_INCOME)
                         it?.let {
-                            //loading stuff
-                            decreaseLoading(GET_SUM_OF_ALL_INCOME)
                             setAllTransactionIncome(it)
                         }
                     }
@@ -71,9 +71,9 @@ constructor(
                     .onStart { increaseLoading(GET_LIST_OF_TRANSACTION) }
                     .catch { cause -> addToMessageStack(throwable = cause) }
                     .collect {
+                        //loading stuff
+                        decreaseLoading(GET_LIST_OF_TRANSACTION)
                         it?.let {
-                            //loading stuff
-                            decreaseLoading(GET_LIST_OF_TRANSACTION)
                             setListOfTransactions(it)
                         }
                     }

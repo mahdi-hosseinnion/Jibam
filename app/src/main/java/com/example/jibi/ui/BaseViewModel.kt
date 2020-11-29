@@ -34,9 +34,6 @@ abstract class BaseViewModel<OneShotOperationsStateEvent, ViewState> : ViewModel
     val countOfActiveJobs: LiveData<Int>
         get() = _activeJobStack.countOfActiveJobs
 
-    init {
-        Log.d("BaseViewModel", "mahdi init called: ")
-    }
 
     fun launchNewJob(stateEvent: OneShotOperationsStateEvent) {
         if (stateEvent !is StateEvent) {

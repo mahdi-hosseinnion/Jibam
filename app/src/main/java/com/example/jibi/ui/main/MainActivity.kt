@@ -48,7 +48,8 @@ class MainActivity : BaseActivity(), TransactionListAdapter.Interaction {
                     recyclerAdapter.submitList(transactionList, true)
                 }
                 it.summeryMoney?.let { summeryMoney ->
-                    txt_balance.text = "Balance: ${summeryMoney.balance}"
+                    summeryMoney.balance = (summeryMoney.income + summeryMoney.expenses)
+                    txt_balance.text = "Balance: ${(summeryMoney.balance)}"
                     txt_expenses.text = "Expenses: ${summeryMoney.expenses}"
                     txt_income.text = "Income: ${summeryMoney.income}"
                 }
@@ -58,9 +59,6 @@ class MainActivity : BaseActivity(), TransactionListAdapter.Interaction {
             it?.let {
                 printOnLog("stateMessage:$it")
             }
-        }
-        txt_balance.setOnClickListener {
-            viewModel.areAnyJobsActive()
         }
     }
 
@@ -116,7 +114,7 @@ class MainActivity : BaseActivity(), TransactionListAdapter.Interaction {
         if (isLoading) {
             progressBar.visibility = View.VISIBLE
         } else {
-            progressBar.visibility = View.GONE
+            progressBar.visibility = View.INVISIBLE
         }
     }
 }

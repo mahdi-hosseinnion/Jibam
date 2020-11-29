@@ -48,10 +48,10 @@ interface RecordsDao {
 
     //return all
     @Query("SELECT SUM(money) FROM records WHERE money < 0 ")
-    fun returnTheSumOfAllExpenses(): Flow<Int>
+    fun returnTheSumOfAllExpenses(): Flow<Int?>
 
     @Query("SELECT SUM(money) FROM records WHERE money > 0 ")
-    fun returnTheSumOfAllIncome(): Flow<Int>
+    fun returnTheSumOfAllIncome(): Flow<Int?>
 
     //between dates
     @Query("SELECT SUM(money) FROM records WHERE (date BETWEEN :minDate AND :maxDate) AND(money < 0) ")
