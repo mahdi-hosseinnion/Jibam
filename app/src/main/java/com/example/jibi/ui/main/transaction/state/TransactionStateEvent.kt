@@ -7,7 +7,7 @@ import com.example.jibi.util.StateEvent
 sealed class TransactionStateEvent : StateEvent {
     //get the sum of all transaction, income and expenses
     class getSummaryMoney() : TransactionStateEvent() {
-
+        //this will show to user
         override fun errorInfo(): String {
             return "Error get sum of all money ->balance, income and expenses"
         }

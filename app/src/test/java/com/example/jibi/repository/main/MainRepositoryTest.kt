@@ -4,13 +4,18 @@ import android.util.Log
 import com.example.jibi.models.Record
 import com.example.jibi.persistence.CategoriesDao
 import com.example.jibi.persistence.RecordsDao
+import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
+import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent
+import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent.*
 import com.example.jibi.util.Constants.Companion.CACHE_TIMEOUT
 import com.example.jibi.util.DataState
+import com.example.jibi.util.MessageType
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.runBlocking
@@ -46,7 +51,7 @@ class MainRepositoryTest {
         )
         //mock log.e for flow.catch in asDataState()
         mockkStatic(Log::class)
-        every { Log.e(any(), any(), any()) } answers{
+        every { Log.e(any(), any(), any()) } answers {
             println("Log.e from ${this.args[0]}, Message: ${this.args[1]}, Throwable: ${this.args[2]}")
             0
         }
@@ -68,18 +73,18 @@ class MainRepositoryTest {
             emit(56)
             delay(500)
             throw Exception(ERROR_MESSAGE)
+        }.catch { t ->
+            assertEquals(ERROR_MESSAGE, t.message)
         }
-        val listOfResult = ArrayList<DataState<Int?>>()
+        val listOfResult = ArrayList<Int?>()
         mainRepository.getSumOfIncome().collect {
             println(it.toString())
             listOfResult.add(it)
         }
         //assert
         println("run assertes")
-        assertEquals(listOfResult[0], DataState.loading<Int?>(isLoading = true))
-        assertEquals(50, listOfResult[1].data?.data?.peekContent())
-        assertEquals(56, listOfResult[2].data?.data?.peekContent())
-        assertEquals(ERROR_MESSAGE, listOfResult[3].error?.peekContent()?.response?.message)
+        assertEquals(50, listOfResult[0])
+        assertEquals(56, listOfResult[1])
     }
 
     @Test
@@ -94,18 +99,18 @@ class MainRepositoryTest {
             emit(56)
             delay(500)
             throw Exception(ERROR_MESSAGE)
+        }.catch { t ->
+            assertEquals(ERROR_MESSAGE, t.message)
         }
-        val listOfResult = ArrayList<DataState<Int?>>()
+        val listOfResult = ArrayList<Int?>()
         mainRepository.getSumOfExpenses(minDate, lastDate).collect {
             println(it.toString())
             listOfResult.add(it)
         }
         //assert
         println("run assertes")
-        assertEquals(listOfResult[0], DataState.loading<Int?>(isLoading = true))
-        assertEquals(50, listOfResult[1].data?.data?.peekContent())
-        assertEquals(56, listOfResult[2].data?.data?.peekContent())
-        assertEquals(ERROR_MESSAGE, listOfResult[3].error?.peekContent()?.response?.message)
+        assertEquals(50, listOfResult[0])
+        assertEquals(56, listOfResult[1])
     }
 
     /*
@@ -117,19 +122,14 @@ class MainRepositoryTest {
         //Tip: you should use coEvery instead of every for suspending functions
         coEvery { recordsDao.insertOrReplace(any()) } returns 1L
         //act
-        val listOfResult = ArrayList<DataState<Long>>()
-        mainRepository.insertTransaction(RECORD_1).collect {
-            println(it.toString())
-            listOfResult.add(it)
-        }
+        val result = mainRepository.insertTransaction(InsertTransaction(RECORD_1))
+
         //assert
-        print(listOfResult[1])
-        assertEquals(DataState.loading<Int?>(isLoading = true), listOfResult[0])
-        assertEquals(1L, listOfResult[1].data?.data?.peekContent())
+        print(result)
         //assert response message
         assertTrue(
-            listOfResult[1].data?.response?.peekContent()?.message!!
-                .contains("Successfully")
+            result.stateMessage!!.response.message
+            !!.contains("Successfully")
         )
 
     }
@@ -142,18 +142,16 @@ class MainRepositoryTest {
             //Tip: you should use coEvery instead of every for suspending functions
             coEvery { recordsDao.insertOrReplace(any()) } returns returnedValue
             //act
-            val listOfResult = ArrayList<DataState<Long>>()
-            mainRepository.insertTransaction(RECORD_1).collect {
-                println(it.toString())
-                listOfResult.add(it)
-            }
+            val result = mainRepository.insertTransaction( InsertTransaction(RECORD_1))
             //assert
-            print(listOfResult[1])
-            assertEquals(DataState.loading<Int?>(isLoading = true), listOfResult[0])
-            assertEquals(null, listOfResult[1].data?.data?.peekContent())
+            print(result)
+            assertEquals(MessageType.Error, result.stateMessage!!.response.messageType)
             //assert response message
             val actualString =
-                assertTrue(listOfResult[1].error!!.peekContent().response.message!!.contains("Error"))
+                assertTrue(
+                    result.stateMessage!!.response.message
+                    !!.contains("Error")
+                )
 
         }
 
@@ -163,18 +161,12 @@ class MainRepositoryTest {
         //Tip: you should use coEvery instead of every for suspending functions
         coEvery { recordsDao.deleteRecord(any()) } returns 1
         //act
-        val listOfResult = ArrayList<DataState<Int>>()
-        mainRepository.deleteTransaction(RECORD_1).collect {
-            println(it.toString())
-            listOfResult.add(it)
-        }
+        val result = mainRepository.deleteTransaction( DeleteTransaction(RECORD_1))
         //assert
-        assertEquals(DataState.loading<Int?>(isLoading = true), listOfResult[0])
-        assertEquals(1, listOfResult[1].data?.data?.peekContent())
         //assert response message
         assertTrue(
-            listOfResult[1].data?.response?.peekContent()?.message!!
-                .contains("Successfully")
+            result.stateMessage!!.response.message
+            !!.contains("Successfully")
         )
 
     }
@@ -187,17 +179,15 @@ class MainRepositoryTest {
             //Tip: you should use coEvery instead of every for suspending functions
             coEvery { recordsDao.deleteRecord(any()) } returns returnedValue
             //act
-            val listOfResult = ArrayList<DataState<Int>>()
-            mainRepository.deleteTransaction(RECORD_1).collect {
-                println(it.toString())
-                listOfResult.add(it)
-            }
+            val result = mainRepository.deleteTransaction(DeleteTransaction(RECORD_1))
             //assert
-            print(listOfResult[1])
-            assertEquals(DataState.loading<Int?>(isLoading = true), listOfResult[0])
-            assertEquals(null, listOfResult[1].data?.data?.peekContent())
+            print(result)
+            assertEquals(MessageType.Error, result.stateMessage!!.response.messageType)
             //assert response message
-            assertTrue(listOfResult[1].error!!.peekContent().response.message!!.contains("Error"))
+            assertTrue(
+                result.stateMessage!!.response.message
+                !!.contains("Error")
+            )
 
         }
 
@@ -210,19 +200,14 @@ class MainRepositoryTest {
             1
         }
         //act
-        val listOfResult = ArrayList<DataState<Int>>()
-        mainRepository.deleteTransaction(RECORD_1).collect {
-            println(it.toString())
-            listOfResult.add(it)
-        }
+        val result = mainRepository.deleteTransaction(DeleteTransaction(RECORD_1))
 
         //assert
-        assertEquals(DataState.loading<Int?>(isLoading = true), listOfResult[0])
-        assertEquals(null, listOfResult[1].data?.data?.peekContent())
+        assertEquals(MessageType.Error, result.stateMessage!!.response.messageType)
         //assert response message
         assertTrue(
-            listOfResult[1].error?.peekContent()?.response?.message!!
-                .contains("timeout")
+            result.stateMessage!!.response.message
+            !!.contains("timeout")
         )
 
     }

@@ -37,7 +37,7 @@ abstract class CacheResponseHandler<ViewState, Data>(
                         if ((convertToLong(response.value)) < 1) {
                             //error case in insert or update or delete
                             return DataState.error(
-                                buildResponse(message = "${stateEvent?.errorInfo()}\n\nReason: Unknown Database error!")
+                                buildResponse(message = "${stateEvent?.errorInfo()}\n\nReason: Unknown Database Error!")
                             )
                         }
                     }

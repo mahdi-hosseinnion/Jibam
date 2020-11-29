@@ -1,5 +1,6 @@
 package com.example.jibi.repository.main
 
+import androidx.room.Update
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Record
 import com.example.jibi.persistence.*
@@ -7,11 +8,15 @@ import com.example.jibi.repository.JobManager
 import com.example.jibi.repository.asDataState
 import com.example.jibi.repository.buildResponse
 import com.example.jibi.repository.safeCacheCall
+import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
+import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent
+import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent.*
 import com.example.jibi.ui.main.transaction.state.TransactionViewState
 import com.example.jibi.util.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import java.lang.Exception
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
@@ -47,11 +52,10 @@ constructor(
 
     //dataBase main dao
     suspend fun insertTransaction(
-        record: Record,
-        stateEvent: StateEvent
+        stateEvent: InsertTransaction
     ): DataState<TransactionViewState> {
         val cacheResult = safeCacheCall {
-            recordsDao.insertOrReplace(record)
+            recordsDao.insertOrReplace(stateEvent.record)
         }
 
         return object : CacheResponseHandler<TransactionViewState, Long>(
@@ -72,11 +76,10 @@ constructor(
 //        safeCacheCall { recordsDao.insertOrReplace(record) }
 
     suspend fun getTransaction(
-        transactionId: Int,
-        stateEvent: StateEvent
+        stateEvent: GetSpecificTransaction
     ): DataState<TransactionViewState> {
         val cacheResult = safeCacheCall {
-            recordsDao.getRecordById(transactionId)
+            recordsDao.getRecordById(stateEvent.transactionId)
         }
 
         return object : CacheResponseHandler<TransactionViewState, Record>(
@@ -96,11 +99,10 @@ constructor(
     }
 
     suspend fun updateTransaction(
-        record: Record,
-        stateEvent: StateEvent
+        stateEvent: UpdateTransaction
     ): DataState<TransactionViewState> {
         val cacheResult = safeCacheCall {
-            recordsDao.updateRecord(record)
+            recordsDao.updateRecord(stateEvent.record)
         }
         return object : CacheResponseHandler<TransactionViewState, Int>(
             response = cacheResult,
@@ -119,11 +121,10 @@ constructor(
     }
 
     suspend fun deleteTransaction(
-        record: Record,
-        stateEvent: StateEvent
+        stateEvent: DeleteTransaction
     ): DataState<TransactionViewState> {
         val cacheResult = safeCacheCall {
-            recordsDao.deleteRecord(record)
+            recordsDao.deleteRecord(stateEvent.record)
         }
         return object : CacheResponseHandler<TransactionViewState, Int>(
             response = cacheResult,

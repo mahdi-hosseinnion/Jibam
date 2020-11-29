@@ -84,23 +84,14 @@ constructor(
 
     override suspend fun getResultByStateEvent(stateEvent: OneShotOperationsTransactionStateEvent): DataState<TransactionViewState> {
         return when (stateEvent) {
-            is InsertTransaction ->
-                mainRepository.insertTransaction(
-                    stateEvent.record, stateEvent
-                )
 
-            is GetSpecificTransaction -> mainRepository.getTransaction(
-                stateEvent.transactionId, stateEvent
-            )
+            is InsertTransaction -> mainRepository.insertTransaction(stateEvent)
 
-            is UpdateTransaction -> mainRepository.updateTransaction(
-                stateEvent.record, stateEvent
-            )
+            is GetSpecificTransaction -> mainRepository.getTransaction(stateEvent)
 
-            is DeleteTransaction -> mainRepository.deleteTransaction(
-                stateEvent.record, stateEvent
-            )
+            is UpdateTransaction -> mainRepository.updateTransaction(stateEvent)
 
+            is DeleteTransaction -> mainRepository.deleteTransaction(stateEvent)
 
             else -> {
                 DataState.error(
