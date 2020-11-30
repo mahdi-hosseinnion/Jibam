@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav_graph"
+    app:startDestination="@id/transactionFragment">
+
+    <fragment
+        android:id="@+id/transactionFragment"
+        android:name="com.example.jibi.ui.main.transaction.TransactionFragment"
+        android:label="fragment_transaction"
+        tools:layout="@layout/fragment_transaction" >
+        <action
+            android:id="@+id/action_transactionFragment_to_createTransactionFragment"
+            app:destination="@id/createTransactionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createTransactionFragment"
+        android:name="com.example.jibi.ui.main.transaction.CreateTransactionFragment"
+        android:label="fragment_create_transaction"
+        tools:layout="@layout/fragment_create_transaction" />
+</navigation>

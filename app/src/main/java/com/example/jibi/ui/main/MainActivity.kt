@@ -38,7 +38,7 @@ class MainActivity : BaseActivity(), TransactionListAdapter.Interaction {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initRecyclerView()
-        viewModel.countOfActiveJobs.observe(this, Observer { count ->
+     /*   viewModel.countOfActiveJobs.observe(this, Observer { count ->
             showProgressBar(viewModel.areAnyJobsActive())
         })
         viewModel.viewState.observe(this) { viewState ->
@@ -56,7 +56,7 @@ class MainActivity : BaseActivity(), TransactionListAdapter.Interaction {
         }
         viewModel.stateMessage.observe(this) { stateMessage ->
             stateMessage?.let {
-                /*               if (isPaginationDone(stateMessage.response.message)) {
+                *//*               if (isPaginationDone(stateMessage.response.message)) {
                                    viewModel.setQueryExhausted(true)
                                    viewModel.clearStateMessage()
                                } else {
@@ -68,7 +68,7 @@ class MainActivity : BaseActivity(), TransactionListAdapter.Interaction {
                                            }
                                        }
                                    )
-                               }*/
+                               }*//*
                 Toast.makeText(
                     this,
                     "Message: ${it.response.message} \n Type: ${it.response.uiComponentType} \n MessageType: ${it.response.messageType}",
@@ -76,12 +76,12 @@ class MainActivity : BaseActivity(), TransactionListAdapter.Interaction {
                 ).show()
                 viewModel.clearStateMessage()
             }
-        }
+        }*/
     }
 
     private fun initRecyclerView() {
 
-        transaction_recyclerView.apply {
+      /*  transaction_recyclerView.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             recyclerAdapter = TransactionListAdapter(
                 null,
@@ -100,7 +100,7 @@ class MainActivity : BaseActivity(), TransactionListAdapter.Interaction {
 //                }
 //            })
             adapter = recyclerAdapter
-        }
+        }*/
     }
 
     override fun inject() {
@@ -128,10 +128,10 @@ class MainActivity : BaseActivity(), TransactionListAdapter.Interaction {
     }
 
     private fun showProgressBar(isLoading: Boolean) {
-        if (isLoading) {
+/*        if (isLoading) {
             progressBar.visibility = View.VISIBLE
         } else {
             progressBar.visibility = View.INVISIBLE
-        }
+        }*/
     }
 }
