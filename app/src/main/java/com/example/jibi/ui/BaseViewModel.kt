@@ -153,6 +153,10 @@ abstract class BaseViewModel<OneShotOperationsStateEvent, ViewState> : ViewModel
         _viewState.value = viewState
     }
 
+    fun clearStateMessage(index: Int = 0){
+        _messageStack.clearStateMessage(index)
+    }
+
     abstract suspend fun getResultByStateEvent(stateEvent: OneShotOperationsStateEvent): DataState<ViewState>
 
     abstract fun initNewViewState(): ViewState

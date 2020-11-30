@@ -3,6 +3,7 @@ package com.example.jibi.ui.main
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -13,12 +14,10 @@ import com.example.jibi.models.Record
 import com.example.jibi.persistence.RecordsDao
 import com.example.jibi.ui.BaseActivity
 import com.example.jibi.ui.main.transaction.TransactionListAdapter
-import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import javax.inject.Inject
-import kotlin.random.Random
 
 @ExperimentalCoroutinesApi
 class MainActivity : BaseActivity(), TransactionListAdapter.Interaction {
@@ -55,9 +54,27 @@ class MainActivity : BaseActivity(), TransactionListAdapter.Interaction {
                 }
             }
         }
-        viewModel.stateMessage.observe(this) {
-            it?.let {
-                printOnLog("stateMessage:$it")
+        viewModel.stateMessage.observe(this) { stateMessage ->
+            stateMessage?.let {
+                /*               if (isPaginationDone(stateMessage.response.message)) {
+                                   viewModel.setQueryExhausted(true)
+                                   viewModel.clearStateMessage()
+                               } else {
+                                   uiCommunicationListener.onResponseReceived(
+                                       response = it.response,
+                                       stateMessageCallback = object : StateMessageCallback {
+                                           override fun removeMessageFromStack() {
+                                               viewModel.clearStateMessage()
+                                           }
+                                       }
+                                   )
+                               }*/
+                Toast.makeText(
+                    this,
+                    "Message: ${it.response.message} \n Type: ${it.response.uiComponentType} \n MessageType: ${it.response.messageType}",
+                    Toast.LENGTH_LONG
+                ).show()
+                viewModel.clearStateMessage()
             }
         }
     }

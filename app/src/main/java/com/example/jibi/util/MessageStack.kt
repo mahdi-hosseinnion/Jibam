@@ -57,4 +57,8 @@ class MessageStack : ArrayList<StateMessage>() {
             )
         )
     }
+
+    fun clearStateMessage(index: Int = 0){
+        this.removeAt(index)
+    }
 }
