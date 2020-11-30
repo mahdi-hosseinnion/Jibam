@@ -2,24 +2,25 @@ package com.example.jibi.di.main
 
 import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.ViewModelProvider
+import com.example.jibi.fragments.main.MainFragmentFactory
 import dagger.Module
 import dagger.Provides
-import javax.inject.Named
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @Module
 object MainFragmentsModule {
 
-//    @JvmStatic
-//    @MainScope
-//    @Provides
-//    @Named("AccountFragmentFactory")
-//    fun provideAccountFragmentFactory(
-//        viewModelFactory: ViewModelProvider.Factory
-//    ): FragmentFactory {
-//        return AccountFragmentFactory(
-//            viewModelFactory
-//        )
-//    }
+    @ExperimentalCoroutinesApi
+    @JvmStatic
+    @MainScope
+    @Provides
+    fun provideMainFragmentFactory(
+        viewModelFactory: ViewModelProvider.Factory
+    ): FragmentFactory {
+        return MainFragmentFactory(
+            viewModelFactory
+        )
+    }
 
 
 }
