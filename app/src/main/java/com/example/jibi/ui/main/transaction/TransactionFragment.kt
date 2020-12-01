@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.jibi.R
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Record
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
@@ -33,6 +34,9 @@ constructor(
         }
         initRecyclerView()
         subscribeObservers()
+        fab.setOnClickListener { view ->
+            //write the onClick
+        }
     }
 
     private fun subscribeObservers() {
