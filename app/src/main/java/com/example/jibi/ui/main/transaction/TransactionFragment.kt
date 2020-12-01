@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.jibi.R
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Record
+import com.example.jibi.ui.main.MainActivity
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
@@ -26,6 +28,7 @@ constructor(
     viewModelFactory
 ), TransactionListAdapter.Interaction {
     private lateinit var recyclerAdapter: TransactionListAdapter
+    val modalBottomSheet = CreateNewTransBottomSheet()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -35,7 +38,13 @@ constructor(
         initRecyclerView()
         subscribeObservers()
         fab.setOnClickListener { view ->
-            //write the onClick
+            showBottomSheet()
+        }
+    }
+
+    private fun showBottomSheet() {
+        activity?.let {
+            modalBottomSheet.show(it.supportFragmentManager, CreateNewTransBottomSheet.TAG)
         }
     }
 
