@@ -16,10 +16,10 @@ data class Category(
      */
     @ColumnInfo(name = "type")
     val type: Int,
-    @ColumnInfo(name = "Category_Name")
+    @ColumnInfo(name = "category_Name")
     val name: String,
     @ColumnInfo(name = "img_res")
     val img_res: String,
-    @ColumnInfo(name = "cat_order")
-    val cat_order: Int
+    @ColumnInfo(name = "ordering")
+    val ordering: Int
 )

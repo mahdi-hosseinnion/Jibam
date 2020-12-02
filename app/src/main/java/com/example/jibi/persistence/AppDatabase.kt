@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import com.example.jibi.models.Category
 import com.example.jibi.models.Record
 
-@Database(entities = [Category::class, Record::class], version = 1)
+@Database(entities = [Category::class, Record::class], version = 2)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun getCategoriesDao(): CategoriesDao
