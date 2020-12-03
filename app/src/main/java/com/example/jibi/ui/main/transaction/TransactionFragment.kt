@@ -31,7 +31,6 @@ constructor(
     viewModelFactory
 ), TransactionListAdapter.Interaction {
     private lateinit var recyclerAdapter: TransactionListAdapter
-    val modalBottomSheet = CreateNewTransBottomSheet()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -41,12 +40,14 @@ constructor(
         initRecyclerView()
         subscribeObservers()
         fab.setOnClickListener { view ->
+            showBottomSheet()
+        }
+        txt_balance.setOnClickListener {
             insertRandomTransaction()
-//            showBottomSheet()
         }
     }
 
-    fun insertRandomTransaction() {
+    private fun insertRandomTransaction() {
         viewModel.launchNewJob(
             TransactionStateEvent.OneShotOperationsTransactionStateEvent.InsertTransaction(
                 Record(
@@ -62,7 +63,9 @@ constructor(
 
     private fun showBottomSheet() {
         activity?.let {
-            modalBottomSheet.show(it.supportFragmentManager, CreateNewTransBottomSheet.TAG)
+            val modalBottomSheet =
+                CreateNewTransBottomSheet(viewModel.viewState.value!!.categoryList!!)
+            modalBottomSheet.show(it.supportFragmentManager, "CreateNewTransBottomSheet")
         }
     }
 
