@@ -11,11 +11,14 @@ import com.example.jibi.R
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Record
 import com.example.jibi.ui.main.MainActivity
+import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_transaction.*
+import kotlinx.android.synthetic.main.layout_transaction_list_item.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
+import kotlin.random.Random
 
 @ExperimentalCoroutinesApi
 @MainScope
@@ -38,8 +41,23 @@ constructor(
         initRecyclerView()
         subscribeObservers()
         fab.setOnClickListener { view ->
-            showBottomSheet()
+            insertRandomTransaction()
+//            showBottomSheet()
         }
+    }
+
+    fun insertRandomTransaction() {
+        viewModel.launchNewJob(
+            TransactionStateEvent.OneShotOperationsTransactionStateEvent.InsertTransaction(
+                Record(
+                    id = 0,
+                    money = Random.nextInt(-1000, 1000),
+                    memo = "mme${(System.currentTimeMillis())}",
+                    cat_id = Random.nextInt(42),
+                    date = Random.nextInt()
+                )
+            )
+        )
     }
 
     private fun showBottomSheet() {

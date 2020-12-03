@@ -2,7 +2,9 @@ package com.example.jibi.ui.main
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.fragment.DialogFragmentNavigatorDestinationBuilder
 import com.example.jibi.di.main.MainScope
+import com.example.jibi.models.Category
 import com.example.jibi.models.Record
 import com.example.jibi.models.SummaryMoney
 import com.example.jibi.repository.buildResponse
@@ -32,6 +34,7 @@ constructor(
     val GET_SUM_OF_ALL_EXPENSES = "getting sum of all expenses"
     val GET_SUM_OF_ALL_INCOME = "getting sum of all income"
     val GET_LIST_OF_TRANSACTION = "getting the list of transaction"
+    val GET_LIST_OF_CATEGORY = "getting the list of category"
 
     init {
         //flow stuff
@@ -75,6 +78,19 @@ constructor(
                         decreaseLoading(GET_LIST_OF_TRANSACTION)
                         it?.let {
                             setListOfTransactions(it)
+                        }
+                    }
+            }
+            launch {
+                mainRepository.getCategoryList()
+                    //loading stuff
+                    .onStart { increaseLoading(GET_LIST_OF_CATEGORY) }
+                    .catch { cause -> addToMessageStack(throwable = cause) }
+                    .collect {
+                        //loading stuff
+                        decreaseLoading(GET_LIST_OF_CATEGORY)
+                        it?.let {
+                            setListOfCategories(it)
                         }
                     }
             }
@@ -144,5 +160,18 @@ constructor(
         val update = getCurrentViewStateOrNew()
             .copy(transactionList = transactionList)
         setViewState(update)
+    }
+
+    fun setListOfCategories(categoryList: List<Category>) {
+        val update = getCurrentViewStateOrNew()
+            .copy(categoryList = categoryList)
+        setViewState(update)
+        for (item in categoryList) {
+            printLogForViewModelDebug(item.name)
+        }
+    }
+
+    fun printLogForViewModelDebug(text: String) {
+        Log.d(TAG, "printLogForViewModelDebug: $text")
     }
 }

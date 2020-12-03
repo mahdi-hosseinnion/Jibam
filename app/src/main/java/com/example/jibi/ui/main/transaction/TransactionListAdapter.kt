@@ -24,7 +24,7 @@ class TransactionListAdapter (
         NO_MORE_RESULTS,
         0 ,
         "",
-        "",
+        0,
         0
     )
 
@@ -173,7 +173,7 @@ class TransactionListAdapter (
             itemView.pk.text = item.id.toString()
             itemView.money.text = item.money.toString()
             itemView.memo.text = item.memo
-            itemView.cat_id.text = item.cat_id
+            itemView.cat_id.text = item.cat_id.toString()
             itemView.date.text = item.date.toString()
 //            itemView.blog_update_date.text = DateUtils.convertLongToStringDate(item.date_updated)
         }

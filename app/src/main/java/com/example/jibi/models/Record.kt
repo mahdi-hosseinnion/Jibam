@@ -14,8 +14,8 @@ data class Record(
     @ColumnInfo(name = "memo")
     val memo: String?,
     @ColumnInfo(name = "cat_id")
-    //category id +"_"+category type
-    val cat_id: String,
+    //category id exactly id
+    val cat_id: Int,
     @ColumnInfo(name = "date")
     val date: Int
 )

@@ -2,6 +2,7 @@ package com.example.jibi.repository.main
 
 import androidx.room.Update
 import com.example.jibi.di.main.MainScope
+import com.example.jibi.models.Category
 import com.example.jibi.models.Record
 import com.example.jibi.persistence.*
 import com.example.jibi.repository.JobManager
@@ -26,7 +27,7 @@ class MainRepository
 constructor(
     val recordsDao: RecordsDao,
     val categoriesDao: CategoriesDao
-) : JobManager("MainRepository") {
+) {
 
 
     fun getSumOfIncome(
@@ -142,6 +143,12 @@ constructor(
         }.getResult()
     }
 
+    /*
+    categories transactions
+     */
+    //queries
+    fun getCategoryList(
+    ): Flow<List<Category>?> = categoriesDao.getCategories()
 
 /*    fun getSummaryMoney(): Flow<TransactionViewState> = flow {
         val result = MutableLiveData<TransactionViewState>()

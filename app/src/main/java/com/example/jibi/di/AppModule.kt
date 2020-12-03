@@ -18,7 +18,8 @@ object AppModule {
     fun provideAppDb(app: Application): AppDatabase {
         return Room
             .databaseBuilder(app, AppDatabase::class.java, DATABASE_NAME)
-            .fallbackToDestructiveMigration() // get correct db version if schema changed
+            .createFromAsset("databases/categories.db")
+//            .createFromAsset("databases\\categories.db")
             .build()
     }
 

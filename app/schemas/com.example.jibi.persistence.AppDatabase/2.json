@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "780485f980165bbbb3ee7a221ddbc6bf",
+    "identityHash": "2b8d7d3d4d6b45eb0a2b0d97f2930a70",
     "entities": [
       {
         "tableName": "categories",
@@ -50,7 +50,7 @@
       },
       {
         "tableName": "records",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`rId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `money` INTEGER NOT NULL, `memo` TEXT, `cat_id` TEXT NOT NULL, `date` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`rId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `money` INTEGER NOT NULL, `memo` TEXT, `cat_id` INTEGER NOT NULL, `date` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -73,7 +73,7 @@
           {
             "fieldPath": "cat_id",
             "columnName": "cat_id",
-            "affinity": "TEXT",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -96,7 +96,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '780485f980165bbbb3ee7a221ddbc6bf')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2b8d7d3d4d6b45eb0a2b0d97f2930a70')"
     ]
   }
 }
