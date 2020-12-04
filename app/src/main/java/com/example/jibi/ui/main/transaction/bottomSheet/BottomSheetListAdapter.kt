@@ -1,6 +1,5 @@
-package com.example.jibi.ui.main.transaction
+package com.example.jibi.ui.main.transaction.bottomSheet
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,9 +8,7 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.example.jibi.R
 import com.example.jibi.models.Category
-import com.example.jibi.util.GenericViewHolder
 import kotlinx.android.synthetic.main.layout_category_list_item.view.*
-import kotlinx.android.synthetic.main.layout_transaction_list_item.view.*
 
 class BottomSheetListAdapter(
     private val requestManager: RequestManager?,

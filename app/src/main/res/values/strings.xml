@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Jibi</string>
+    <string name="expenses">Expenses</string>
+    <string name="income">Income</string>
     <string name="create_new_transaction">Create New Transaction</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>
