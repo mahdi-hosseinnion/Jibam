@@ -14,9 +14,9 @@ import kotlinx.android.synthetic.main.fragment_screen_slide_page.*
 
 class ScreenSlidePageFragment
 constructor(
-    private val categoryList: List<Category>
-) : Fragment(),
-    BottomSheetListAdapter.Interaction {
+    private val categoryList: List<Category>,
+    private val interaction: BottomSheetListAdapter.Interaction
+) : Fragment() {
 
     private lateinit var recyclerAdapter: BottomSheetListAdapter
 
@@ -31,7 +31,7 @@ constructor(
             layoutManager = GridLayoutManager(this@ScreenSlidePageFragment.context, 4)
             recyclerAdapter = BottomSheetListAdapter(
                 null,
-                this@ScreenSlidePageFragment
+                interaction
             )
             adapter = recyclerAdapter
         }
@@ -39,13 +39,6 @@ constructor(
 //        category_recyclerView.isNestedScrollingEnabled = false
     }
 
-    override fun onItemSelected(position: Int, item: Category) {
-        findNavController().navigate(R.id.action_transactionFragment_to_createTransactionFragment)
-
-    }
-
-    override fun restoreListPosition() {
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

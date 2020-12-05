@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/transactionFragment"
         android:name="com.example.jibi.ui.main.transaction.TransactionFragment"
-        android:label="fragment_transaction"
+        android:label=""
         tools:layout="@layout/fragment_transaction" >
         <action
             android:id="@+id/action_transactionFragment_to_createTransactionFragment"
@@ -17,6 +17,6 @@
     <fragment
         android:id="@+id/createTransactionFragment"
         android:name="com.example.jibi.ui.main.transaction.CreateTransactionFragment"
-        android:label="fragment_create_transaction"
+        android:label="@string/add_transaction"
         tools:layout="@layout/fragment_create_transaction" />
 </navigation>

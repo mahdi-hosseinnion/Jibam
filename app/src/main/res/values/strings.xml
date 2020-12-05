@@ -3,5 +3,12 @@
     <string name="expenses">Expenses</string>
     <string name="income">Income</string>
     <string name="create_new_transaction">Create New Transaction</string>
+    <string name="write_note">Write note</string>
+    <string name="today">Today</string>
+    <string name="cash">Cash</string>
+    <string name="with">With</string>
+    <string name="select_category">Select category</string>
+    <string name="add_transaction">Add Transaction</string>
+    <string name="empty" />
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

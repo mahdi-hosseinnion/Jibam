@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.load.engine.Resource
@@ -22,7 +23,8 @@ import kotlinx.android.synthetic.main.bottom_sheet_create_new_trans.*
 class CreateNewTransBottomSheet
 constructor(
     private val categoryList: List<Category>
-) : BottomSheetDialogFragment() {
+) : BottomSheetDialogFragment(),
+    BottomSheetListAdapter.Interaction {
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -32,12 +34,12 @@ constructor(
 
         bottom_sheet_viewPager.adapter = pagerAdapter
         bottom_sheet_viewPager.registerOnPageChangeCallback(object :
-            ViewPager2.OnPageChangeCallback(){
+            ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                if (position == 0){
+                if (position == 0) {
                     enableExpensesMode()
-                }else{
+                } else {
                     enableIncomeMode()
                 }
             }
@@ -102,13 +104,28 @@ constructor(
         override fun createFragment(position: Int): Fragment {
             if (position == 0) {
                 //expenses type ==1
-                return ScreenSlidePageFragment(categoryList.filter { it.type == 1 })
+                return ScreenSlidePageFragment(
+                    categoryList.filter { it.type == 1 },
+                    this@CreateNewTransBottomSheet
+                )
             } else {
                 //income type ==1
-                return ScreenSlidePageFragment(categoryList.filter { it.type == 2 })
+                return ScreenSlidePageFragment(
+                    categoryList.filter { it.type == 2 },
+                    this@CreateNewTransBottomSheet
+                )
 
             }
         }
+    }
+
+    override fun onItemSelected(position: Int, item: Category) {
+        this.dismiss()
+        findNavController().navigate(R.id.action_transactionFragment_to_createTransactionFragment)
+
+    }
+
+    override fun restoreListPosition() {
     }
 
 
