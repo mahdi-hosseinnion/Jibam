@@ -3,7 +3,7 @@ package com.example.jibi.fragments.main
 import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.ViewModelProvider
 import com.example.jibi.di.main.MainScope
-import com.example.jibi.ui.main.transaction.CreateTransactionFragment
+import com.example.jibi.ui.main.transaction.AddTransactionFragment
 import com.example.jibi.ui.main.transaction.TransactionFragment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
@@ -24,8 +24,8 @@ constructor(
                 TransactionFragment(viewModelFactory)
             }
 
-            CreateTransactionFragment::class.java.name -> {
-                CreateTransactionFragment(viewModelFactory)
+            AddTransactionFragment::class.java.name -> {
+                AddTransactionFragment(viewModelFactory)
             }
 
             else -> {

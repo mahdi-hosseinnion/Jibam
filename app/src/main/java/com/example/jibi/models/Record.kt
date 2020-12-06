@@ -18,4 +18,5 @@ data class Record(
     val cat_id: Int,
     @ColumnInfo(name = "date")
     val date: Int
+    //int can handle the time till 1/19/2038, 6:44:07 AM in millisecond
 )

@@ -16,7 +16,12 @@
     </fragment>
     <fragment
         android:id="@+id/createTransactionFragment"
-        android:name="com.example.jibi.ui.main.transaction.CreateTransactionFragment"
+        android:name="com.example.jibi.ui.main.transaction.AddTransactionFragment"
         android:label="@string/add_transaction"
-        tools:layout="@layout/fragment_create_transaction" />
+        tools:layout="@layout/fragment_add_transaction" >
+        <argument
+            android:name="category_id"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
 </navigation>
