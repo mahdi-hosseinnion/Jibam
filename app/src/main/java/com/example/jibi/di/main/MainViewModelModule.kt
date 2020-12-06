@@ -8,6 +8,7 @@ import com.example.jibi.viewmodels.MainViewModelFactory
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @Module
 abstract class MainViewModelModule {
@@ -15,6 +16,7 @@ abstract class MainViewModelModule {
     @Binds
     abstract fun bindViewModelFactory(factory: MainViewModelFactory): ViewModelProvider.Factory
 
+    @ExperimentalCoroutinesApi
     @Binds
     @IntoMap
     @MainViewModelKey(MainViewModel::class)

@@ -20,8 +20,8 @@
             android:layout_weight="10"
             android:inputType="number" />
 
-        <TextView
-            android:id="@+id/txt_category"
+        <EditText
+            android:id="@+id/edt_category"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_gravity="center|start"
@@ -29,7 +29,7 @@
             android:clickable="true"
             android:focusable="true"
             android:gravity="center|start"
-            android:inputType="number"
+            android:inputType=""
             android:text="@string/select_category"
             android:textSize="18sp" />
 
@@ -41,8 +41,8 @@
             android:hint="@string/write_note"
             android:inputType="text" />
 
-        <TextView
-            android:id="@+id/txt_date"
+        <EditText
+            android:id="@+id/edt_date"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_gravity="center|start"
@@ -53,8 +53,8 @@
             android:text="@string/today"
             android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/txt_wallet"
+        <EditText
+            android:id="@+id/edt_wallet"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_gravity="center|start"

@@ -1,6 +1,8 @@
 package com.example.jibi.ui.main.transaction
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
@@ -11,15 +13,31 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.example.jibi.R
+import com.example.jibi.ui.UICommunicationListener
 import com.example.jibi.ui.main.MainViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 abstract class BaseTransactionFragment
 constructor(
     @LayoutRes
     private val layoutRes: Int,
     private val viewModelFactory: ViewModelProvider.Factory
 ) : Fragment(layoutRes) {
+    private val TAG = "BaseTransactionFragment"
     val viewModel: MainViewModel by viewModels {
         viewModelFactory
+    }
+
+    lateinit var uiCommunicationListener: UICommunicationListener
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        try{
+            uiCommunicationListener = context as UICommunicationListener
+        }catch(e: ClassCastException){
+            Log.e(TAG, "$context must implement UICommunicationListener" )
+        }
+
     }
 }

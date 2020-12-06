@@ -14,6 +14,8 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.load.engine.Resource
 import com.example.jibi.R
 import com.example.jibi.models.Category
+import com.example.jibi.ui.main.transaction.TransactionFragment
+import com.example.jibi.ui.main.transaction.TransactionFragmentDirections
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.bottom_sheet_create_new_trans.*
 
@@ -118,8 +120,11 @@ constructor(
     }
 
     override fun onItemSelected(position: Int, item: Category) {
+//        val action = SpecifyAmountFragmentDirections.confirmationAction(amount)
+//        v.findNavController().navigate(action)
+        val action = TransactionFragmentDirections.actionTransactionFragmentToCreateTransactionFragment(categoryId = item.id)
         this.dismiss()
-        findNavController().navigate(R.id.action_transactionFragment_to_createTransactionFragment)
+        findNavController().navigate(action)
 
     }
 

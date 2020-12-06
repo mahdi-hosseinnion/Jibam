@@ -59,11 +59,11 @@ abstract class BaseViewModel<OneShotOperationsStateEvent, ViewState> : ViewModel
         job.invokeOnCompletion { throwable ->
             _activeJobStack.remove(stateEvent.getId())
             if (throwable == null) {
-                Log.d(TAG, "launchNewJob: Job: ${stateEvent.getId()} completed normally")
+                Log.d(TAG, "launchNewJob: Job: completed normally  ${stateEvent.getId()}")
                 return@invokeOnCompletion
             }
             if (throwable is CancellationException) {
-                Log.d(TAG, "launchNewJob: Job: ${stateEvent.getId()} cancelled normally")
+                Log.d(TAG, "launchNewJob: Job: cancelled normally  ${stateEvent.getId()} msg: ${throwable.message}")
                 return@invokeOnCompletion
             }
             addToMessageStack(throwable = throwable)
