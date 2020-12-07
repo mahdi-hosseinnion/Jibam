@@ -15,6 +15,7 @@ import androidx.navigation.ui.NavigationUI
 import com.example.jibi.R
 import com.example.jibi.ui.UICommunicationListener
 import com.example.jibi.ui.main.MainViewModel
+import com.example.jibi.util.mahdiLog
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
@@ -25,18 +26,32 @@ constructor(
     private val viewModelFactory: ViewModelProvider.Factory
 ) : Fragment(layoutRes) {
     private val TAG = "BaseTransactionFragment"
-    val viewModel: MainViewModel by viewModels {
-        viewModelFactory
+
+    init {
+        mahdiLog(TAG, "called hash:${this.hashCode()}")
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.runPendingJobs()
+    }
+
+    protected val viewModel: MainViewModel by viewModels {
+        viewModelFactory
+    }
     lateinit var uiCommunicationListener: UICommunicationListener
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        try{
+        try {
             uiCommunicationListener = context as UICommunicationListener
-        }catch(e: ClassCastException){
-            Log.e(TAG, "$context must implement UICommunicationListener" )
+        } catch (e: ClassCastException) {
+            Log.e(TAG, "$context must implement UICommunicationListener")
         }
 
     }

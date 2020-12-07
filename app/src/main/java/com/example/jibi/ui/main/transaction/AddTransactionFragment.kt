@@ -29,12 +29,12 @@ constructor(
     viewModelFactory
 ) {
     private val args: AddTransactionFragmentArgs by navArgs()
-    private var category_id: Int? = null
+    private var categoryId: Int? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
-        category_id = args.categoryId
-        setTransProperties(cat_id = category_id)
+        categoryId = args.categoryId
+        setTransProperties(cat_id = categoryId)
     }
 
     private fun setTransProperties(record: Record) {
@@ -82,12 +82,20 @@ constructor(
                 id = 0,
                 money = edt_money.text.toString().toInt(),
                 memo = memo,
-                cat_id = category_id!!,
+                cat_id = categoryId!!,
                 date = getCurrentTimeInSecond()
             )
-            viewModel.launchNewJob(
+            //b/c we navigate back and fragment get destroyed so viewModel get destroyed and job
+            //get cancelled so we should launch this as global job in activity
+            uiCommunicationListener.launchNewGlobalJob(
                 TransactionStateEvent.OneShotOperationsTransactionStateEvent.InsertTransaction(
-                    transaction
+                    Record(
+                        id = 0,
+                        money = edt_money.text.toString().toInt(),
+                        memo = memo,
+                        cat_id = categoryId!!,
+                        date = getCurrentTimeInSecond()
+                    )
                 )
             )
             uiCommunicationListener.hideSoftKeyboard()
@@ -100,11 +108,11 @@ constructor(
             edt_money.error = "Please insert some money"
             return false
         }
-        if (category_id == null) {
+        if (categoryId == null) {
             edt_category.error = "Please select category"
             return false
         }
-        if (category_id!! < 1) {
+        if (categoryId!! < 1) {
             edt_category.error = "Please select category"
 
             return false
@@ -131,6 +139,6 @@ constructor(
 
     override fun onPause() {
         super.onPause()
-        //TODO SAVE THE DATA TO VIEWSTATE
+        //TODO SAVE THE DATA TO VIEW STATE
     }
 }

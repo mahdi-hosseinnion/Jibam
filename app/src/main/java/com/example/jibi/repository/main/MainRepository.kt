@@ -29,7 +29,6 @@ constructor(
     val categoriesDao: CategoriesDao
 ) {
 
-
     fun getSumOfIncome(
         minDate: Int? = null,
         maxDate: Int? = null

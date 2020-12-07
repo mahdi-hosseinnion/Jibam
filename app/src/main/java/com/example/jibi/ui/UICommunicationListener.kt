@@ -1,6 +1,7 @@
 package com.example.jibi.ui
 
 import com.example.jibi.util.Response
+import com.example.jibi.util.StateEvent
 import com.example.jibi.util.StateMessageCallback
 
 
@@ -16,6 +17,8 @@ interface UICommunicationListener {
 //    fun expandAppBar()
 
     fun hideSoftKeyboard()
+
+    fun launchNewGlobalJob(stateEvent: StateEvent)
 
 //    fun isStoragePermissionGranted(): Boolean
 }

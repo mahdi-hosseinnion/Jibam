@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
@@ -12,12 +13,32 @@ import kotlinx.coroutines.Dispatchers.Main
 
 abstract class BaseViewModel<OneShotOperationsStateEvent, ViewState> : ViewModel() {
 
-    val TAG: String = "AppDebug"
+    val TAG: String = "BaseViewModel"
 
     //    protected val _stateEvent: MutableSharedFlow<StateEvent> = MutableSharedFlow()
-    protected val _viewState: MutableLiveData<ViewState> = MutableLiveData()
-    protected val _messageStack = MessageStack()
-    protected val _activeJobStack = ActiveJobStack()
+    private val _viewState: MutableLiveData<ViewState> = MutableLiveData()
+    private val _messageStack = MessageStack()
+    private val _activeJobStack = ActiveJobStack()
+
+    //handle nonCancelable jobs
+    private val unCancellableJobs = ArrayList<OneShotOperationsStateEvent>()
+
+    init {
+        mahdiLog(TAG, "called hash:${this.hashCode()}")
+        //handle nonCancelable jobs
+
+    }
+
+    //handle nonCancelable jobs
+    fun runPendingJobs() {
+        mahdiLog(TAG,"run pending jobs:${unCancellableJobs.size}")
+        if (!unCancellableJobs.isNullOrEmpty()) {
+            for (item in unCancellableJobs) {
+
+                launchNewJob(item)
+            }
+        }
+    }
 
     private val handler = CoroutineExceptionHandler { _, throwable ->
         //should we remove job from _activeJobStack?
@@ -41,6 +62,8 @@ abstract class BaseViewModel<OneShotOperationsStateEvent, ViewState> : ViewModel
             Log.e(TAG, "launchNewJob: YOU FORGOT TO EXTEND FROM STATE EVENT")
             return
         }
+        mahdiLog(TAG, "launch in hash:${this.hashCode()} job: ${stateEvent.getId()}")
+
         if (_activeJobStack.containsKey(stateEvent.getId())) {
             //if already job is active
             return
@@ -58,12 +81,30 @@ abstract class BaseViewModel<OneShotOperationsStateEvent, ViewState> : ViewModel
 
         job.invokeOnCompletion { throwable ->
             _activeJobStack.remove(stateEvent.getId())
+            //handle nonCancelable jobs
+            if (unCancellableJobs.contains(stateEvent)) {
+                unCancellableJobs.remove(stateEvent)
+            }
+
             if (throwable == null) {
-                Log.d(TAG, "launchNewJob: Job: completed normally  ${stateEvent.getId()}")
+                mahdiLog(TAG, "launchNewJob: Job: completed normally  ${stateEvent.getId()}")
                 return@invokeOnCompletion
             }
             if (throwable is CancellationException) {
-                Log.d(TAG, "launchNewJob: Job: cancelled normally  ${stateEvent.getId()} msg: ${throwable.message}")
+                if (stateEvent is TransactionStateEvent.OneShotOperationsTransactionStateEvent.InsertTransaction) {
+                    //handle nonCancelable jobs
+                    mahdiLog(
+                        TAG,
+                        "launchNewJob: Job: added to unCancelable jobs stack ${stateEvent.getId()} msg: ${throwable.message}"
+                    )
+                    unCancellableJobs.add(stateEvent)
+                    mahdiLog(TAG,"the unCancelable size is: ${unCancellableJobs.size}")
+                } else {
+                    mahdiLog(
+                        TAG,
+                        "launchNewJob: Job: cancelled normally  ${stateEvent.getId()} msg: ${throwable.message}"
+                    )
+                }
                 return@invokeOnCompletion
             }
             addToMessageStack(throwable = throwable)
@@ -122,7 +163,7 @@ abstract class BaseViewModel<OneShotOperationsStateEvent, ViewState> : ViewModel
     fun cancelActiveJob(stateEventName: String) {
         val job = _activeJobStack.get(stateEventName)
         if (job == null) {
-            Log.d(TAG, "cancelActiveJob: Job: $stateEventName is null")
+            mahdiLog(TAG, "cancelActiveJob: Job: $stateEventName is null")
             return
         }
         job.cancel()
@@ -153,7 +194,7 @@ abstract class BaseViewModel<OneShotOperationsStateEvent, ViewState> : ViewModel
         _viewState.value = viewState
     }
 
-    fun clearStateMessage(index: Int = 0){
+    fun clearStateMessage(index: Int = 0) {
         _messageStack.clearStateMessage(index)
     }
 
@@ -165,6 +206,7 @@ abstract class BaseViewModel<OneShotOperationsStateEvent, ViewState> : ViewModel
 
     override fun onCleared() {
         _activeJobStack.clear()
+        mahdiLog(TAG, "onCleared called")
         super.onCleared()
     }
 
