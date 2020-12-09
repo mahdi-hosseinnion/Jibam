@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.coroutines.Job
 
-class ActiveJobStack : HashMap<String, Job>() {
+class ActiveJobStack<OneShotOperationsStateEvent> : HashMap<String, Job>() {
     private val TAG = "ActiveJobStack: mahdi"
 
     //for testing
@@ -15,11 +15,21 @@ class ActiveJobStack : HashMap<String, Job>() {
     private val jobTiming = HashMap<String, Long>()
 
     @IgnoredOnParcel
-    protected val _CountOfActiveJobs: MutableLiveData<Int> = MutableLiveData()
+    private val _CountOfActiveJobs: MutableLiveData<Int> = MutableLiveData()
 
     @IgnoredOnParcel
     val countOfActiveJobs: LiveData<Int>
         get() = _CountOfActiveJobs
+
+
+    @IgnoredOnParcel
+    private val _CountOfUnCancellableJobs: MutableLiveData<Int> = MutableLiveData()
+
+    @IgnoredOnParcel
+    //handle nonCancelable jobs
+    val unCancellableJobs = ArrayList<OneShotOperationsStateEvent>()
+    val countOfUnCancellableJobs: LiveData<Int>
+        get() = _CountOfUnCancellableJobs
 
     override fun put(key: String, value: Job): Job? {
         Log.d(TAG, "put: adding'+++' loading $key")
@@ -52,6 +62,7 @@ class ActiveJobStack : HashMap<String, Job>() {
         clearActiveCount()
         super.clear()
     }
+
     //this method should called beforeChange the size of hashMap
     private fun increaseActiveCount() {
         //we cannot increase the value of mutable liveData by using post value
@@ -75,4 +86,37 @@ class ActiveJobStack : HashMap<String, Job>() {
 
     private fun now() = System.currentTimeMillis()
 
+//    fun checkForUnCancellableJob(stateEvent: OneShotOperationsStateEvent) {
+//        if (unCancellableJobs.contains(stateEvent)) {
+//            decreaseUnCancellableCount()
+//            unCancellableJobs.remove(stateEvent)
+//
+//        }
+//    }
+//    fun checkForIsAddedToUnCancellable(stateEvent: OneShotOperationsStateEvent):Boolean {
+//        return unCancellableJobs.contains(stateEvent)
+//
+//    }
+
+    fun addToUnCancellableJob(stateEvent: OneShotOperationsStateEvent) {
+        increaseCancellableCount()
+        unCancellableJobs.add(stateEvent)
+    }
+
+    fun removeFromUnCancellableJob(stateEvent: OneShotOperationsStateEvent) {
+        if (unCancellableJobs.contains(stateEvent)) {
+            decreaseUnCancellableCount()
+            unCancellableJobs.remove(stateEvent)
+        }
+    }
+
+    private fun increaseCancellableCount() {
+        val newValue = (unCancellableJobs.size).plus(1)
+        _CountOfUnCancellableJobs.postValue(newValue)
+    }
+
+    private fun decreaseUnCancellableCount() {
+        val newValue = (unCancellableJobs.size).minus(1)
+        _CountOfUnCancellableJobs.postValue(newValue)
+    }
 }

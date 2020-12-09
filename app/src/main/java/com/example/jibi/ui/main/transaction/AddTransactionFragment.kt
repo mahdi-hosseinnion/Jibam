@@ -35,6 +35,7 @@ constructor(
         setHasOptionsMenu(true)
         categoryId = args.categoryId
         setTransProperties(cat_id = categoryId)
+//        launchFakeJobForTest()
     }
 
     private fun setTransProperties(record: Record) {
@@ -87,22 +88,26 @@ constructor(
             )
             //b/c we navigate back and fragment get destroyed so viewModel get destroyed and job
             //get cancelled so we should launch this as global job in activity
-            uiCommunicationListener.launchNewGlobalJob(
-                TransactionStateEvent.OneShotOperationsTransactionStateEvent.InsertTransaction(
-                    Record(
-                        id = 0,
-                        money = edt_money.text.toString().toInt(),
-                        memo = memo,
-                        cat_id = categoryId!!,
-                        date = getCurrentTimeInSecond()
-                    )
-                )
-            )
+//            uiCommunicationListener.launchNewGlobalJob(
+//                TransactionStateEvent.OneShotOperationsTransactionStateEvent.InsertTransaction(
+//                    Record(
+//                        id = 0,
+//                        money = edt_money.text.toString().toInt(),
+//                        memo = memo,
+//                        cat_id = categoryId!!,
+//                        date = getCurrentTimeInSecond()
+//                    )
+//                )
+//            )
+            viewModel.launchNewJob(TransactionStateEvent.OneShotOperationsTransactionStateEvent.InsertTransaction(transaction),true)
             uiCommunicationListener.hideSoftKeyboard()
             findNavController().navigateUp()
         }
     }
-
+    fun launchFakeJobForTest(){
+        viewModel.launchNewJob(TransactionStateEvent.OneShotOperationsTransactionStateEvent.InsertTransaction(Record(0,85,"asds",1,getCurrentTimeInSecond())))
+        viewModel.launchNewJob(TransactionStateEvent.OneShotOperationsTransactionStateEvent.InsertTransaction(Record(0,76,"ghxd",5,getCurrentTimeInSecond())))
+    }
     private fun handleInsertingErrors(): Boolean {
         if (edt_money.text.toString().toInt() < 0) {
             edt_money.error = "Please insert some money"

@@ -8,6 +8,7 @@ import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -16,6 +17,8 @@ import com.example.jibi.R
 import com.example.jibi.ui.UICommunicationListener
 import com.example.jibi.ui.main.MainViewModel
 import com.example.jibi.util.mahdiLog
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
@@ -36,10 +39,7 @@ constructor(
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.runPendingJobs()
-    }
+
 
     protected val viewModel: MainViewModel by viewModels {
         viewModelFactory
@@ -55,4 +55,5 @@ constructor(
         }
 
     }
+
 }

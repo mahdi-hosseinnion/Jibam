@@ -1,8 +1,11 @@
 package com.example.jibi.persistence
 
+import android.util.Log
 import com.example.jibi.TestUtil.RECORD1
 import com.example.jibi.models.Record
-import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
+import com.example.jibi.util.DEBUG
+import com.example.jibi.util.isUnitTest
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.collect
@@ -11,7 +14,6 @@ import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import kotlin.math.min
 import kotlin.random.Random
 
 
@@ -278,13 +280,13 @@ class RecordsDaoTest : AppDatabaseTest() {
         assertEquals(expectedIncome + 60, sumOfAllIncome)
         assertEquals(expectedExpenses + (-60), sumOfAllExpenses)
 
-        val row = recordsDao.insertOrReplace(Record(152, 1000, "memo32", "sdds", 947243))
+        val row = recordsDao.insertOrReplace(Record(152, 1000, "memo32", 0, 947243))
 
         assertEquals(152, row)
         assertEquals((expectedIncome + 1060), sumOfAllIncome)
-        recordsDao.insertOrReplace(Record(152, 2000, "memo32", "sdds", 947243))
+        recordsDao.insertOrReplace(Record(152, 2000, "memo32", 0, 947243))
         assertEquals((expectedIncome + 2060), sumOfAllIncome)
-        recordsDao.updateRecord(Record(152, 3000, "memo32", "sdds", 947243))
+        recordsDao.updateRecord(Record(152, 3000, "memo32", 0, 947243))
         assertEquals((expectedIncome + 3060), sumOfAllIncome)
         job.cancel()
     }
@@ -380,7 +382,7 @@ class RecordsDaoTest : AppDatabaseTest() {
             )
         )
         expectedIncome += 100
-        assertEquals(expectedIncome,sumOfAllIncome)
+        assertEquals(expectedIncome, sumOfAllIncome)
 
         job.cancel()
     }
@@ -432,7 +434,7 @@ class RecordsDaoTest : AppDatabaseTest() {
             if (item.date > minDate
             ) {
                 if (item.money > 0) {
-                    inRangeRecordIncome=item
+                    inRangeRecordIncome = item
                     expectedIncome += item.money
                 } else {
                     expectedExpenses += item.money
@@ -469,8 +471,8 @@ class RecordsDaoTest : AppDatabaseTest() {
         )
         expectedIncome += 60 + tempRecordForUpdatingIncome.money
         expectedExpenses += (-60) + tempRecordForUpdatingExpenses.money
-        assertEquals(expectedIncome , sumOfAllIncome)
-        assertEquals(expectedExpenses , sumOfAllExpenses)
+        assertEquals(expectedIncome, sumOfAllIncome)
+        assertEquals(expectedExpenses, sumOfAllExpenses)
         //update with in range row
         recordsDao.updateRecord(
             inRangeRecordIncome!!.copy(
@@ -478,7 +480,7 @@ class RecordsDaoTest : AppDatabaseTest() {
             )
         )
         expectedIncome += 100
-        assertEquals(expectedIncome,sumOfAllIncome)
+        assertEquals(expectedIncome, sumOfAllIncome)
         job.cancel()
     }
 
@@ -529,7 +531,7 @@ class RecordsDaoTest : AppDatabaseTest() {
             if (item.date < maxDate
             ) {
                 if (item.money > 0) {
-                    inRangeRecordIncome=item
+                    inRangeRecordIncome = item
                     expectedIncome += item.money
                 } else {
                     expectedExpenses += item.money
@@ -573,7 +575,7 @@ class RecordsDaoTest : AppDatabaseTest() {
             )
         )
         expectedIncome += 100
-        assertEquals(expectedIncome,sumOfAllIncome)
+        assertEquals(expectedIncome, sumOfAllIncome)
         job.cancel()
     }
 
@@ -607,7 +609,7 @@ class RecordsDaoTest : AppDatabaseTest() {
             //insert income
             //total sum of money: 5050
             val tempRecord = Record(
-                0, i, "memo income", "13_3",
+                0, i, "memo income", 2,
                 i * Random.nextInt(100)
             )
             val row = recordsDao.insertOrReplace(tempRecord)
@@ -617,7 +619,7 @@ class RecordsDaoTest : AppDatabaseTest() {
                 //insert expenses
                 //total sum of money: -1275
                 val tempRecord = Record(
-                    0, (i * -1), "memo income", "13_3",
+                    0, (i * -1), "memo income", 4,
                     i * Random.nextInt(100)
                 )
                 val row = recordsDao.insertOrReplace(tempRecord)
@@ -627,5 +629,63 @@ class RecordsDaoTest : AppDatabaseTest() {
 
         }
         return result
+    }
+
+    @Test
+    fun testDoubleInsertSameThing() = runBlockingTest {
+        isUnitTest = true
+
+        val record = Record(5, 13, "d", 2, 13134234)
+        val job1 = launch {
+            recordsDao.insertOrReplace(record)
+        }
+        val job2 = launch {
+            recordsDao.insertOrReplace(record)
+        }
+        mahdiLo1g("asdy","yea called")
+        job1.invokeOnCompletion { throwable ->
+
+            if (throwable == null) {
+                mahdiLo1g(TAG, "launchNewJob: Job: completed normally  ")
+                return@invokeOnCompletion
+            }
+            if (throwable is CancellationException) {
+                    //handle nonCancelable jobs
+                    mahdiLo1g(
+                        TAG,
+                        "launchNewJob: Job1: added to unCancelable jobs stack msg: ${throwable.message} cuze: ${throwable.cause?.message}"
+                    )
+
+                    mahdiLo1g(
+                        TAG,
+                        "launchNewJob: Job1: cancelled normally  msg: ${throwable.message} cuze: ${throwable.cause?.message}"
+                    )
+                return@invokeOnCompletion
+            }
+        }
+        job2.invokeOnCompletion { throwable ->
+
+            if (throwable == null) {
+                mahdiLo1g(TAG, "launchNewJob: Job1: completed normally  ")
+                return@invokeOnCompletion
+            }
+            if (throwable is CancellationException) {
+                    //handle nonCancelable jobs
+                    mahdiLo1g(
+                        TAG,
+                        "launchNewJob: Job2: added to unCancelable jobs stack msg: ${throwable.message} cuze: ${throwable.cause?.message}"
+                    )
+
+                    mahdiLo1g(
+                        TAG,
+                        "launchNewJob: Job2: cancelled normally  msg: ${throwable.message} cuze: ${throwable.cause?.message}"
+                    )
+                return@invokeOnCompletion
+            }
+        }
+
+    }
+    fun mahdiLo1g(className: String?, message: String ) {
+            println("195 $className: $message")
     }
 }

@@ -54,6 +54,7 @@ constructor(
     suspend fun insertTransaction(
         stateEvent: InsertTransaction
     ): DataState<TransactionViewState> {
+        mahdiLog(TAG, "insertTransaction 001 called${stateEvent.record} ")
         val cacheResult = safeCacheCall {
             recordsDao.insertOrReplace(stateEvent.record)
         }
@@ -63,6 +64,7 @@ constructor(
             stateEvent = stateEvent
         ) {
             override suspend fun handleSuccess(resultObj: Long): DataState<TransactionViewState> {
+                mahdiLog(TAG, "insertTransaction 001 HAVE BEEN DONE called${stateEvent.record} ")
                 return DataState.data(
                     response = buildResponse(
                         message = "Transaction Successfully inserted",

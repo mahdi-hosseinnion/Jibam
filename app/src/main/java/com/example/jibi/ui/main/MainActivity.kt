@@ -70,10 +70,11 @@ class MainActivity : BaseActivity() {
     ) {
         //TODO("Not yet implemented")
     }
+
     override fun launchNewGlobalJob(stateEvent: StateEvent) {
         if (stateEvent is TransactionStateEvent.OneShotOperationsTransactionStateEvent) {
             mahdiLog("MainActivity", "run new global job: ${stateEvent.getId()}")
-            viewModel.launchNewJob(stateEvent = stateEvent)
+            viewModel.launchNewJob(stateEvent = stateEvent, isUnCancellable = true)
         }
     }
 }

@@ -45,7 +45,19 @@ constructor(
         txt_balance.setOnClickListener {
             insertRandomTransaction()
         }
+        txt_expenses.setOnClickListener {
+            launchFakeJobForTest()
+        }
+        txt_income.setOnClickListener {
+            viewModel.callOnClear()
+        }
     }
+
+    fun launchFakeJobForTest(){
+        viewModel.launchNewJob(TransactionStateEvent.OneShotOperationsTransactionStateEvent.InsertTransaction(Record(0,85,"asds",1,getCurrentTimeInSecond())))
+        viewModel.launchNewJob(TransactionStateEvent.OneShotOperationsTransactionStateEvent.InsertTransaction(Record(0,76,"ghxd",5,getCurrentTimeInSecond())))
+    }
+    private fun getCurrentTimeInSecond():Int= (System.currentTimeMillis()/1000).toInt()
 
     private fun insertRandomTransaction() {
         viewModel.launchNewJob(
@@ -71,6 +83,7 @@ constructor(
 
     private fun subscribeObservers() {
         viewModel.countOfActiveJobs.observe(viewLifecycleOwner, Observer { count ->
+
             showProgressBar(viewModel.areAnyJobsActive())
         })
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
@@ -144,6 +157,18 @@ constructor(
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.countOfNonCancellableJobs.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                if (it>0){
+                    viewModel.runPendingJobs()
+                }
+            }
+
+        })
+
+    }
     override fun onItemSelected(position: Int, item: Record) {
     }
 
