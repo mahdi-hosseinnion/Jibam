@@ -8,6 +8,8 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -16,7 +18,9 @@ import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
 import com.example.jibi.models.Record
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
+import com.example.jibi.util.mahdiLog
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
+import kotlinx.android.synthetic.main.fragment_add_transaction.view.*
 import kotlinx.android.synthetic.main.layout_category_list_item.*
 import kotlinx.android.synthetic.main.layout_transaction_list_item.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -43,9 +47,20 @@ constructor(
         setHasOptionsMenu(true)
         category = findCategory(cat_id = args.categoryId)
         setTransProperties(category = category)
-        forceKeyBoardToOpenForMoneyEditText()
         initUi()
 
+    }
+
+    private fun addOptionsToWallet() {
+        val items = listOf("Cash", "Bank Melli", "Bank Keshavarzi", "MasterCard")
+        val adapter = ArrayAdapter(requireContext(), R.layout.list_item, items)
+        (txtField_wallet.edt_wallet as? AutoCompleteTextView)?.setAdapter(adapter)
+        //set default value for it
+        edt_wallet.setText(items[0], false)
+        //add listener to hide keyboard when clicked
+        edt_wallet.setOnClickListener {
+            uiCommunicationListener.hideSoftKeyboard()
+        }
     }
 
     private fun forceKeyBoardToOpenForMoneyEditText() {
@@ -54,10 +69,17 @@ constructor(
             activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(edt_money, InputMethodManager.SHOW_IMPLICIT)
     }
-    fun initUi(){
+
+    private fun initUi() {
         //make edt category nonEditable
         edt_category.keyListener = null
+        //Implementing an exposed dropdown menu for wallet editText
+        addOptionsToWallet()
+        //force keyboard to open up when addFragment launches
+        forceKeyBoardToOpenForMoneyEditText()
+
     }
+
     private fun findCategory(cat_id: Int?): Category? {
         if (cat_id != null) {
             viewModel.viewState.value?.categoryList?.let { categoryList ->
@@ -129,7 +151,7 @@ constructor(
             edt_money.error = "Please insert some money"
             return false
         }
-        if (edt_money.text.toString().toInt()<0) {
+        if (edt_money.text.toString().toInt() < 0) {
             Log.e(TAG, "MONEY IS INVALID MOENY")
             edt_money.error = "money should be grater then 0"
             return false

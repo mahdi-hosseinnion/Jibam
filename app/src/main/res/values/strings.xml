@@ -10,5 +10,10 @@
     <string name="select_category">Select category</string>
     <string name="add_transaction">Add Transaction</string>
     <string name="empty" />
+    <string name="money">Money</string>
+    <string name="zero">0</string>
+    <string name="price">Price</string>
+    <string name="wallet">Wallet</string>
+    <string name="category">Category</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

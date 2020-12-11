@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,68 +11,121 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
-        android:orientation="vertical"
-        android:padding="4dp">
+        android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/edt_money"
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:layout_weight="10"
-            android:inputType="number" />
+            android:layout_margin="4dp"
+            android:hint="@string/price"
 
-        <EditText
-            android:id="@+id/edt_category"
+            app:startIconDrawable="@drawable/ic_launcher_foreground">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_money"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="10"
+                android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:layout_gravity="center|start"
-            android:layout_weight="10"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center|start"
-            android:inputType=""
-            android:text="@string/select_category"
-            android:textSize="18sp" />
+            android:layout_margin="4dp"
+            android:hint="@string/category">
 
-        <EditText
-            android:id="@+id/edt_memo"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_category"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center|start"
+                android:layout_weight="10"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center|start"
+                android:inputType="none"
+                android:text="@string/select_category"
+                android:textSize="18sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:layout_weight="10"
-            android:hint="@string/write_note"
-            android:inputType="text" />
+            android:layout_margin="4dp"
 
-        <EditText
-            android:id="@+id/edt_date"
+            android:hint="@string/write_note">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_memo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="10"
+
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:layout_gravity="center|start"
-            android:layout_weight="10"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center|start"
-            android:text="@string/today"
-            android:textSize="16sp" />
+            android:layout_margin="4dp"
 
-        <EditText
-            android:id="@+id/edt_wallet"
+            android:hint="@string/write_note">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_date"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:layout_gravity="center|start"
+                android:layout_weight="10"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center|start"
+                android:text="@string/today"
+                android:textSize="16sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/txtField_wallet"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:layout_gravity="center|start"
-            android:layout_weight="10"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center|start"
-            android:text="@string/cash"
-            android:textSize="16sp" />
+            android:layout_margin="4dp"
+            android:hint="@string/wallet">
 
-        <EditText
-            android:id="@+id/edt_with"
+            <AutoCompleteTextView
+                android:id="@+id/edt_wallet"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center|start"
+                android:gravity="center|start"
+                android:inputType="none"
+                android:textSize="16sp"
+
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:layout_weight="10"
-            android:hint="@string/with"
-            android:inputType="text" />
+            android:layout_margin="4dp"
+
+            android:hint="@string/with">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_with"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
     </LinearLayout>
+
 
 </ScrollView>
