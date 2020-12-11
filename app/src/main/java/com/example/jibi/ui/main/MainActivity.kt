@@ -12,11 +12,8 @@ import androidx.navigation.ui.NavigationUI
 import com.example.jibi.BaseApplication
 import com.example.jibi.R
 import com.example.jibi.ui.BaseActivity
-import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.Response
-import com.example.jibi.util.StateEvent
 import com.example.jibi.util.StateMessageCallback
-import com.example.jibi.util.mahdiLog
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
@@ -60,6 +57,7 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
+        hideSoftKeyboard()
         navController.navigateUp()
         return super.onSupportNavigateUp()
     }
@@ -71,10 +69,4 @@ class MainActivity : BaseActivity() {
         //TODO("Not yet implemented")
     }
 
-    override fun launchNewGlobalJob(stateEvent: StateEvent) {
-        if (stateEvent is TransactionStateEvent.OneShotOperationsTransactionStateEvent) {
-            mahdiLog("MainActivity", "run new global job: ${stateEvent.getId()}")
-            viewModel.launchNewJob(stateEvent = stateEvent, isUnCancellable = true)
-        }
-    }
 }

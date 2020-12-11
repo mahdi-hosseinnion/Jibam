@@ -16,6 +16,7 @@ import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotO
 import com.example.jibi.ui.main.transaction.state.TransactionViewState
 import com.example.jibi.util.DataState
 import com.example.jibi.util.UIComponentType
+import com.example.jibi.util.mahdiLog
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
@@ -35,6 +36,7 @@ constructor(
     val GET_SUM_OF_ALL_INCOME = "getting sum of all income"
     val GET_LIST_OF_TRANSACTION = "getting the list of transaction"
     val GET_LIST_OF_CATEGORY = "getting the list of category"
+    private val TAG1 = "MainViewModel"
 
     init {
         //flow stuff
@@ -136,7 +138,7 @@ constructor(
         }
     }
 
-    fun setAllTransactionIncome(newIncome: Int) {
+    private fun setAllTransactionIncome(newIncome: Int) {
         val update = getCurrentViewStateOrNew()
         if (update.summeryMoney != null) {
             update.summeryMoney = update.summeryMoney?.copy(income = newIncome)
@@ -146,7 +148,7 @@ constructor(
         setViewState(update)
     }
 
-    fun setAllTransactionExpenses(newExpenses: Int) {
+    private fun setAllTransactionExpenses(newExpenses: Int) {
         val update = getCurrentViewStateOrNew()
         if (update.summeryMoney != null) {
             update.summeryMoney = update.summeryMoney?.copy(expenses = newExpenses)
@@ -156,22 +158,15 @@ constructor(
         setViewState(update)
     }
 
-    fun setListOfTransactions(transactionList: List<Record>) {
+    private fun setListOfTransactions(transactionList: List<Record>) {
         val update = getCurrentViewStateOrNew()
             .copy(transactionList = transactionList)
         setViewState(update)
     }
 
-    fun setListOfCategories(categoryList: List<Category>) {
+    private fun setListOfCategories(categoryList: List<Category>) {
         val update = getCurrentViewStateOrNew()
             .copy(categoryList = categoryList)
         setViewState(update)
-        for (item in categoryList) {
-            printLogForViewModelDebug(item.name)
-        }
-    }
-
-    fun printLogForViewModelDebug(text: String) {
-        Log.d(TAG, "printLogForViewModelDebug: $text")
     }
 }

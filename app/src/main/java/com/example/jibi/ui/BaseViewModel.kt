@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.*
 import kotlinx.coroutines.*
@@ -18,18 +19,6 @@ abstract class BaseViewModel<OneShotOperationsStateEvent, ViewState> : ViewModel
     private val _viewState: MutableLiveData<ViewState> = MutableLiveData()
     private val _messageStack = MessageStack()
     private val _activeJobStack = ActiveJobStack<OneShotOperationsStateEvent>()
-
-    private var scope:CoroutineScope? = null
-
-    init {
-        mahdiLog(TAG, "called hash:${this.hashCode()}")
-        //handle nonCancelable jobs
-
-    }
-
-    fun callOnClear() {
-        onCleared()
-    }
 
     //handle nonCancelable jobs
     fun runPendingJobs() {
@@ -67,38 +56,22 @@ abstract class BaseViewModel<OneShotOperationsStateEvent, ViewState> : ViewModel
             Log.e(TAG, "launchNewJob: YOU FORGOT TO EXTEND FROM STATE EVENT")
             return
         }
-        mahdiLog(TAG, "launch in hash:${this.hashCode()} job: ${stateEvent.getId()}")
 
         if (_activeJobStack.containsKey(stateEvent.getId())) {
             //if already job is active
             return
         }
-        mahdiLog(TAG, "launch reaaly in hash:${this.hashCode()} job: ${stateEvent.getId()}")
-//        val job = viewModelScope.launch(IO + handler) {
-        //TODO COMMENT JUST FOR DEBUG
-        scope = CoroutineScope(IO)
-        val job = scope!!.launch(IO + handler) {
-                mahdiLog(
-                    TAG,
-                    "launch ready right before first ensureActive in hash:${this.hashCode()} job: ${stateEvent.getId()}"
-                )
-                ensureActive()
-                mahdiLog(
-                    TAG,
-                    "launch ready to comes the data in hash:${this.hashCode()} job: ${stateEvent.getId()}"
-                )
-                val dataState = getResultByStateEvent(stateEvent)
-                mahdiLog(
-                    TAG,
-                    "launch result comes in hash:${this.hashCode()} job: ${stateEvent.getId()}"
-                )
-                ensureActive()
-                withContext(Main) {
-                    handleNewDataState(dataState)
-                    mahdiLog(
-                        TAG,
-                        "launch data handled in hash:${this.hashCode()} job: ${stateEvent.getId()}"
-                    )
+
+        val job = viewModelScope.launch(IO + handler) {
+
+            ensureActive()
+
+            val dataState = getResultByStateEvent(stateEvent)
+
+            ensureActive()
+            withContext(Main) {
+                handleNewDataState(dataState)
+
 
             }
         }
@@ -237,8 +210,7 @@ abstract class BaseViewModel<OneShotOperationsStateEvent, ViewState> : ViewModel
     override fun onCleared() {
         _activeJobStack.clear()
         mahdiLog(TAG, "onCleared called")
-//        viewModelScope.cancel()
-        scope?.cancel(CancellationException("CANCELLED IN ON CLEAr"))
+        //TODO dont let here to cancel insert
         super.onCleared()
     }
 

@@ -18,7 +18,5 @@ interface UICommunicationListener {
 
     fun hideSoftKeyboard()
 
-    fun launchNewGlobalJob(stateEvent: StateEvent)
-
 //    fun isStoragePermissionGranted(): Boolean
 }

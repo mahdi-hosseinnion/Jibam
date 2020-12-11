@@ -29,19 +29,7 @@ constructor(
     private val viewModelFactory: ViewModelProvider.Factory
 ) : Fragment(layoutRes) {
     private val TAG = "BaseTransactionFragment"
-
-    init {
-        mahdiLog(TAG, "called hash:${this.hashCode()}")
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-    }
-
-
-
-    protected val viewModel: MainViewModel by viewModels {
+    protected val viewModel: MainViewModel by viewModels (ownerProducer = {requireParentFragment()}){
         viewModelFactory
     }
     lateinit var uiCommunicationListener: UICommunicationListener
@@ -55,5 +43,4 @@ constructor(
         }
 
     }
-
 }
