@@ -9,6 +9,7 @@ import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.load.engine.Resource
@@ -18,6 +19,7 @@ import com.example.jibi.ui.main.transaction.TransactionFragment
 import com.example.jibi.ui.main.transaction.TransactionFragmentDirections
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.bottom_sheet_create_new_trans.*
+import kotlinx.android.synthetic.main.fragment_screen_slide_page.*
 
 
 class CreateNewTransBottomSheet
@@ -26,30 +28,36 @@ constructor(
 ) : BottomSheetDialogFragment(),
     BottomSheetListAdapter.Interaction {
 
-
+    private lateinit var recyclerAdapter: BottomSheetListAdapter
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(STYLE_NORMAL, R.style.BottomSheetDialogTheme);
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // The pager adapter, which provides the pages to the view pager widget.
-        val pagerAdapter = ScreenSlidePagerAdapter(this)
-
-        bottom_sheet_viewPager.adapter = pagerAdapter
-        bottom_sheet_viewPager.registerOnPageChangeCallback(object :
-            ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                if (position == 0) {
-                    enableExpensesMode()
-                } else {
-                    enableIncomeMode()
-                }
-            }
-        })
-        txt_switch_expenses.setOnClickListener {
-            enableExpensesMode()
-        }
-        txt_switch_income.setOnClickListener {
-            enableIncomeMode()
-        }
+        initRecyclerView()
+//        val pagerAdapter = ScreenSlidePagerAdapter(this)
+//
+//        bottom_sheet_viewPager.adapter = pagerAdapter
+//        bottom_sheet_viewPager.registerOnPageChangeCallback(object :
+//            ViewPager2.OnPageChangeCallback() {
+//            override fun onPageSelected(position: Int) {
+//                super.onPageSelected(position)
+////                if (position == 0) {
+////                    enableExpensesMode()
+////                } else {
+////                    enableIncomeMode()
+////                }
+//            }
+//        })
+    }
+/*//        txt_switch_expenses.setOnClickListener {
+//            enableExpensesMode()
+//        }
+//        txt_switch_income.setOnClickListener {
+//            enableIncomeMode()
+//        }
 
     }
 
@@ -84,9 +92,20 @@ constructor(
                 R.color.material_on_background_emphasis_high_type
             )
         )
+    }*/
+
+    private fun initRecyclerView() {
+        fakeRecycler.apply {
+            layoutManager = GridLayoutManager(this@CreateNewTransBottomSheet.context, 4)
+            recyclerAdapter = BottomSheetListAdapter(
+                null,
+                null
+            )
+            adapter = recyclerAdapter
+        }
+        recyclerAdapter.submitList(categoryList)
+        fakeRecycler.isNestedScrollingEnabled = false
     }
-
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

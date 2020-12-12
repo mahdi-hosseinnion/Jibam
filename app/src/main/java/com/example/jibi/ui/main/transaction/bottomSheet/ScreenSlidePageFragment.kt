@@ -36,7 +36,7 @@ constructor(
             adapter = recyclerAdapter
         }
         recyclerAdapter.submitList(categoryList)
-//        category_recyclerView.isNestedScrollingEnabled = false
+        category_recyclerView.isNestedScrollingEnabled = false
     }
 
 
