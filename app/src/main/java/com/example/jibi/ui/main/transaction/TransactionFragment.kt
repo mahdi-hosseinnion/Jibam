@@ -63,11 +63,17 @@ constructor(
     }
 
     private fun showBottomSheet() {
+/*        activity?.let {
+            val modalBottomSheet =
+                CreateNewTransBottomSheet(viewModel.viewState.value!!.categoryList!!)
+            modalBottomSheet.show(it.supportFragmentManager, "CreateNewTransBottomSheet")
+        }     */
         activity?.let {
             val modalBottomSheet =
                 CreateNewTransBottomSheet(viewModel.viewState.value!!.categoryList!!)
             modalBottomSheet.show(it.supportFragmentManager, "CreateNewTransBottomSheet")
         }
+//        DialogFragment
     }
 
     private fun subscribeObservers() {

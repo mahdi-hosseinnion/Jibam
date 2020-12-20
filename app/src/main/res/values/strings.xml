@@ -16,4 +16,6 @@
     <string name="wallet">Wallet</string>
     <string name="category">Category</string>
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="bottom_sheet_behavior" translatable="false">com.google.android.material.bottomsheet.BottomSheetBehavior</string>
+
 </resources>

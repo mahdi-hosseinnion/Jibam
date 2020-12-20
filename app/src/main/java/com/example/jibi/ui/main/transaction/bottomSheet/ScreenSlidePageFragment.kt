@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.fragment_screen_slide_page.*
 class ScreenSlidePageFragment
 constructor(
     private val categoryList: List<Category>,
-    private val interaction: BottomSheetListAdapter.Interaction
+    private val interaction: BottomSheetListAdapter.Interaction?
 ) : Fragment() {
 
     private lateinit var recyclerAdapter: BottomSheetListAdapter

@@ -6,6 +6,7 @@ buildscript {
     repositories {
         google()
         jcenter()
+        maven { url "https://raw.github.com/laenger/maven-releases/master/releases" }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:4.1.0"

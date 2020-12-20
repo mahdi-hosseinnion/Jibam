@@ -19,8 +19,8 @@
             android:layout_height="56dp"
             android:layout_margin="4dp"
             android:hint="@string/price"
-
-            app:startIconDrawable="@drawable/ic_launcher_foreground">
+>
+<!--            app:startIconDrawable="@drawable/ic_launcher_foreground">-->
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edt_money"
