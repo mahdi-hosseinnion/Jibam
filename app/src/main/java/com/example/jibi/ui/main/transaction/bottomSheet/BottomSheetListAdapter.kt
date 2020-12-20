@@ -17,7 +17,6 @@ class BottomSheetListAdapter(
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val TAG: String = "AppDebug"
-    private val NO_MORE_RESULTS = -1
     private val BLOG_ITEM = 0
 
     val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Category>() {

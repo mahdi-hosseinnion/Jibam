@@ -27,7 +27,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:tint="@color/black"
-                android:visibility="visible"
+                android:visibility="invisible"
                 app:srcCompat="@drawable/abc_vector_test" />
 
             <FrameLayout

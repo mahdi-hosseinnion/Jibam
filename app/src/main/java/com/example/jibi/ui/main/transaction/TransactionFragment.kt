@@ -63,22 +63,16 @@ constructor(
     }
 
     private fun showBottomSheet() {
-/*        activity?.let {
+//        activity?.let {
             val modalBottomSheet =
                 CreateNewTransBottomSheet(viewModel.viewState.value!!.categoryList!!)
-            modalBottomSheet.show(it.supportFragmentManager, "CreateNewTransBottomSheet")
-        }     */
-        activity?.let {
-            val modalBottomSheet =
-                CreateNewTransBottomSheet(viewModel.viewState.value!!.categoryList!!)
-            modalBottomSheet.show(it.supportFragmentManager, "CreateNewTransBottomSheet")
-        }
-//        DialogFragment
+//            modalBottomSheet.show(it.supportFragmentManager, "CreateNewTransBottomSheet")
+//        }
+        modalBottomSheet.show(parentFragmentManager, "CreateNewTransBottomSheet")
     }
 
     private fun subscribeObservers() {
-        viewModel.countOfActiveJobs.observe(viewLifecycleOwner, Observer { count ->
-
+        viewModel.countOfActiveJobs.observe(viewLifecycleOwner, Observer {
             showProgressBar(viewModel.areAnyJobsActive())
         })
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
