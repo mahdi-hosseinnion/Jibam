@@ -1,5 +1,6 @@
 package com.example.jibi.ui.main.transaction
 
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,9 +10,11 @@ import com.bumptech.glide.RequestManager
 import com.example.jibi.R
 import com.example.jibi.models.Record
 import com.example.jibi.util.GenericViewHolder
+import kotlinx.android.synthetic.main.fragment_add_transaction.view.*
+import kotlinx.android.synthetic.main.layout_transacion_header.view.*
 import kotlinx.android.synthetic.main.layout_transaction_list_item.view.*
 
-class TransactionListAdapter (
+class TransactionListAdapter(
     private val requestManager: RequestManager?,
     private val interaction: Interaction? = null
 ) :
@@ -22,7 +25,7 @@ class TransactionListAdapter (
     private val BLOG_ITEM = 0
     private val NO_MORE_RESULTS_BLOG_MARKER = Record(
         NO_MORE_RESULTS,
-        0 ,
+        0,
         "",
         0,
         0
@@ -48,10 +51,10 @@ class TransactionListAdapter (
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
-        when(viewType){
+        when (viewType) {
 
 
-            NO_MORE_RESULTS ->{
+            NO_MORE_RESULTS -> {
                 Log.e(TAG, "onCreateViewHolder: No more results...")
                 return GenericViewHolder(
                     LayoutInflater.from(parent.context).inflate(
@@ -61,8 +64,8 @@ class TransactionListAdapter (
                     )
                 )
             }
-            BLOG_ITEM ->{
-                return BlogViewHolder(
+            BLOG_ITEM -> {
+                return TransViewHolder(
                     LayoutInflater.from(parent.context).inflate(
                         R.layout.layout_transaction_list_item,
                         parent,
@@ -73,7 +76,7 @@ class TransactionListAdapter (
                 )
             }
             else -> {
-                return BlogViewHolder(
+                return TransViewHolder(
                     LayoutInflater.from(parent.context).inflate(
                         R.layout.layout_transaction_list_item,
                         parent,
@@ -109,14 +112,14 @@ class TransactionListAdapter (
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is BlogViewHolder -> {
+            is TransViewHolder -> {
                 holder.bind(differ.currentList.get(position))
             }
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        if(differ.currentList.get(position).id > -1){
+        if (differ.currentList.get(position).id > -1) {
             return BLOG_ITEM
         }
         return differ.currentList.get(position).id
@@ -142,7 +145,7 @@ class TransactionListAdapter (
     fun submitList(
         blogList: List<Record>?,
         isQueryExhausted: Boolean
-    ){
+    ) {
         val newList = blogList?.toMutableList()
         if (isQueryExhausted)
             newList?.add(NO_MORE_RESULTS_BLOG_MARKER)
@@ -154,7 +157,7 @@ class TransactionListAdapter (
         differ.submitList(newList, commitCallback)
     }
 
-    class BlogViewHolder
+    class TransViewHolder
     constructor(
         itemView: View,
         val requestManager: RequestManager?,
@@ -166,16 +169,53 @@ class TransactionListAdapter (
                 interaction?.onItemSelected(adapterPosition, item)
             }
 
-//            requestManager
-//                .load(item.image)
-//                .transition(withCrossFade())
-//                .into(itemView.blog_image)
-            itemView.pk.text = item.id.toString()
-            itemView.money.text = item.money.toString()
-            itemView.memo.text = item.memo
-            itemView.cat_id.text = item.cat_id.toString()
-            itemView.date.text = item.date.toString()
-//            itemView.blog_update_date.text = DateUtils.convertLongToStringDate(item.date_updated)
+
+            if (item.memo.isNullOrBlank()) {
+                itemView.main_text.text = "UNKNOWN CATEGORY WITH ID: ${item.cat_id.toString()}"
+            } else {
+                itemView.main_text.text = item.memo
+            }
+            if(item.money>=0){
+                itemView.price.text = "+${item.money}"
+                itemView.price.setTextColor(Color.GREEN)
+            }else{
+                itemView.price.text = "-${item.money}"
+                itemView.price.setTextColor(Color.RED)
+            }
+            //TODO
+//            itemView.card
+//           //            requestManager
+////                .load(item.image)
+////                .transition(withCrossFade())
+////                .into(itemView.category_iamge)
+        }
+    }
+
+    class HeaderViewHolder
+    constructor(
+        itemView: View,
+        private val interaction: Interaction?
+    ) : RecyclerView.ViewHolder(itemView) {
+
+        fun bind(item: Record) = with(itemView) {
+            itemView.setOnClickListener {
+                interaction?.onItemSelected(adapterPosition, item)
+            }
+            //money for expenses
+            if (item.money!=0){
+                itemView.header_expenses_sum.text="Expenses: ${item.money}"
+            }else{
+                itemView.header_expenses_sum.text=""
+
+            }
+            //cat_id for income
+            if (item.cat_id!=0){
+                itemView.header_expenses_sum.text="Income: ${item.cat_id}"
+            }else{
+                itemView.header_expenses_sum.text=""
+
+            }
+//            itemView.header_date.text = DateUtils.convertLongToStringDate(item.date)
         }
     }
 

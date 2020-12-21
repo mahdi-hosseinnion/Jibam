@@ -1,32 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:orientation="horizontal"
-    android:layout_weight="100"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="80dp">
-    <TextView
-        android:id="@+id/pk"
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+
+        android:layout_marginBottom="4dp"
+        android:foregroundGravity="center"
+        app:cardCornerRadius="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/linear"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/category_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="#D297EA"
+            android:foregroundGravity="center"
+            android:scaleType="center"
+            app:tint="@color/black"
+            app:srcCompat="@android:drawable/btn_star_big_on" />
+    </androidx.cardview.widget.CardView>
+
+    <LinearLayout
+        android:id="@+id/linear"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="10"/>
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/price"
+        app:layout_constraintStart_toEndOf="@+id/cardView"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/main_text"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="60"
+            android:gravity="center|start"
+            android:padding="4dp"
+            android:textStyle="bold"
+            tools:text="Food" />
+
+        <TextView
+            android:id="@+id/card"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="40"
+            android:drawableTint="@color/black"
+            android:gravity="center|start"
+            android:padding="4dp"
+            android:textStyle="normal"
+            app:drawableStartCompat="@android:drawable/stat_notify_sdcard"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/price"
+            app:layout_constraintStart_toEndOf="@+id/cardView"
+            app:layout_constraintTop_toBottomOf="@+id/cardView"
+            tools:text="Card" />
+
+    </LinearLayout>
+
     <TextView
-        android:id="@+id/money"
-        android:layout_width="0dp"
+        android:id="@+id/price"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_weight="10"/>
-    <TextView
-        android:id="@+id/memo"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="10"/>
-    <TextView
-        android:id="@+id/cat_id"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="10"/>
-    <TextView
-        android:id="@+id/date"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="10"/>
-</LinearLayout>
+        android:gravity="center|end"
+        android:padding="4dp"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/linear"
+        tools:text="-$5,000" />
+</androidx.constraintlayout.widget.ConstraintLayout>
