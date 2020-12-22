@@ -1,24 +1,23 @@
 package com.example.jibi.repository.main
 
-import androidx.room.Update
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
 import com.example.jibi.models.Record
 import com.example.jibi.persistence.*
-import com.example.jibi.repository.JobManager
-import com.example.jibi.repository.asDataState
 import com.example.jibi.repository.buildResponse
 import com.example.jibi.repository.safeCacheCall
-import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
-import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent
+import com.example.jibi.ui.main.transaction.TransactionListAdapter
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent.*
 import com.example.jibi.ui.main.transaction.state.TransactionViewState
 import com.example.jibi.util.*
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import java.lang.Exception
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.*
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
+import kotlin.math.exp
 
 @ExperimentalCoroutinesApi
 @MainScope
@@ -26,7 +25,8 @@ class MainRepository
 @Inject
 constructor(
     val recordsDao: RecordsDao,
-    val categoriesDao: CategoriesDao
+    val categoriesDao: CategoriesDao,
+    val currentLocale: Locale
 ) {
 
     fun getSumOfIncome(
@@ -44,11 +44,61 @@ constructor(
 //    recordsDao.getSumOfExpenses(minDate, maxDate)
 
     //queries
+    @FlowPreview
     fun getTransactionList(
         minDate: Int? = null,
         maxDate: Int? = null
-    ): Flow<List<Record>?> = recordsDao.getRecords(minDate, maxDate)
+    ): Flow<List<Record>?> =
+        recordsDao.getRecords(minDate, maxDate).map { currentList ->
+            val resultList = ArrayList<Record>()
+            var headerDate = currentDateInString(currentList[0].date)
+            var incomeSum = 0
+            var expensesSum = 0
+            var tempList = ArrayList<Record>()
+            for (item in currentList) {
+                if (currentDateInString(item.date) == headerDate) {
+                    //make new header and items
+                    tempList.add(item)
+                    if (item.money >= 0) { //income
+                        incomeSum += item.money
+                    } else { //expenses
+                        expensesSum += item.money
+                    }
+                } else {
+                    //add header and items
+                    resultList.add(createHeader(headerDate, incomeSum, expensesSum))
+                    resultList.addAll(tempList)
+                    //clear item to defualt
+                    headerDate = currentDateInString(item.date)
+                    tempList.clear()
+                    incomeSum = 0
+                    expensesSum = 0
+                    //make new header and items
+                    tempList.add(item)
+                    if (item.money >= 0) { //income
+                        incomeSum += item.money
+                    } else { //expenses
+                        expensesSum += item.money
+                    }
+                }
+            }
+            return@map resultList
+        }
 
+    private fun createHeader(date: String, income: Int, expenses: Int): Record =
+        Record(
+            id = TransactionListAdapter.HEADER_ITEM,
+            money = expenses,
+            memo = date,
+            cat_id = income,
+            date = 0
+        )
+
+    private fun currentDateInString(time: Int): String {
+        val dv: Long = ((time.toLong()) * 1000) // its need to be in milisecond
+        val df: Date = Date(dv)
+        return SimpleDateFormat("MM dd, yyyy", currentLocale).format(df)
+    }
 
     //dataBase main dao
     suspend fun insertTransaction(

@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.marginTop
 import androidx.recyclerview.widget.*
 import com.bumptech.glide.RequestManager
 import com.example.jibi.R
@@ -19,17 +20,19 @@ class TransactionListAdapter(
     private val interaction: Interaction? = null
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    private val TAG: String = "AppDebug"
-    private val NO_MORE_RESULTS = -1
-    private val BLOG_ITEM = 0
-    private val NO_MORE_RESULTS_BLOG_MARKER = Record(
-        NO_MORE_RESULTS,
-        0,
-        "",
-        0,
-        0
-    )
+    companion object {
+        private const val TAG: String = "AppDebug"
+        private const val NO_MORE_RESULTS = -1
+        const val HEADER_ITEM = -3
+        private const val BLOG_ITEM = 0
+        private val NO_MORE_RESULTS_BLOG_MARKER = Record(
+            NO_MORE_RESULTS,
+            0,
+            "",
+            0,
+            0
+        )
+    }
 
     val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Record>() {
 
@@ -75,6 +78,16 @@ class TransactionListAdapter(
                     requestManager = requestManager
                 )
             }
+            HEADER_ITEM -> {
+                return HeaderViewHolder(
+                    LayoutInflater.from(parent.context).inflate(
+                        R.layout.layout_transacion_header,
+                        parent,
+                        false
+                    ),
+                    interaction = interaction
+                )
+            }
             else -> {
                 return TransViewHolder(
                     LayoutInflater.from(parent.context).inflate(
@@ -113,16 +126,26 @@ class TransactionListAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is TransViewHolder -> {
-                holder.bind(differ.currentList.get(position))
+                holder.bind(differ.currentList[position], isHeader(position.plus(1)))
+            }
+            is HeaderViewHolder -> {
+                holder.bind(differ.currentList[position])
             }
         }
     }
 
+    private fun isHeader(position: Int): Boolean {
+        if (position <= itemCount) {
+            return differ.currentList[position].id == HEADER_ITEM
+        }
+        return true
+    }
+
     override fun getItemViewType(position: Int): Int {
-        if (differ.currentList.get(position).id > -1) {
+        if (differ.currentList[position].id > -1) {
             return BLOG_ITEM
         }
-        return differ.currentList.get(position).id
+        return differ.currentList[position].id
     }
 
     override fun getItemCount(): Int {
@@ -164,22 +187,29 @@ class TransactionListAdapter(
         private val interaction: Interaction?
     ) : RecyclerView.ViewHolder(itemView) {
 
-        fun bind(item: Record) = with(itemView) {
+        fun bind(item: Record, isNextItemHeader: Boolean = false) = with(itemView) {
             itemView.setOnClickListener {
                 interaction?.onItemSelected(adapterPosition, item)
             }
 
+            if (isNextItemHeader) {
+                itemView.transaction_divider.visibility = View.GONE
+                itemView.root_transaction_item.setBackgroundResource(R.drawable.tranaction_bottom_header_bg)
+            }else{
+                itemView.transaction_divider.visibility = View.VISIBLE
+                itemView.root_transaction_item.setBackgroundResource(R.color.backGround_gray)
+            }
 
             if (item.memo.isNullOrBlank()) {
                 itemView.main_text.text = "UNKNOWN CATEGORY WITH ID: ${item.cat_id.toString()}"
             } else {
                 itemView.main_text.text = item.memo
             }
-            if(item.money>=0){
+            if (item.money >= 0) {
                 itemView.price.text = "+${item.money}"
                 itemView.price.setTextColor(Color.GREEN)
-            }else{
-                itemView.price.text = "-${item.money}"
+            } else {
+                itemView.price.text = "${item.money}"
                 itemView.price.setTextColor(Color.RED)
             }
             //TODO
@@ -201,20 +231,22 @@ class TransactionListAdapter(
             itemView.setOnClickListener {
                 interaction?.onItemSelected(adapterPosition, item)
             }
+
             //money for expenses
-            if (item.money!=0){
-                itemView.header_expenses_sum.text="Expenses: ${item.money}"
-            }else{
-                itemView.header_expenses_sum.text=""
+            Log.d(TAG, "bind: sum of all expenses = ${item.money}")
+            if (item.money != 0) {
+                itemView.header_expenses_sum.text = "Expenses: ${item.money}"
+            } else {
+                itemView.header_expenses_sum.text = ""
 
             }
             //cat_id for income
-            if (item.cat_id!=0){
-                itemView.header_expenses_sum.text="Income: ${item.cat_id}"
-            }else{
-                itemView.header_expenses_sum.text=""
-
+            if (item.cat_id != 0) {
+                itemView.header_income_sum.text = "Income: ${item.cat_id}"
+            } else {
+                itemView.header_income_sum.text = ""
             }
+            itemView.header_date.text = item.memo
 //            itemView.header_date.text = DateUtils.convertLongToStringDate(item.date)
         }
     }

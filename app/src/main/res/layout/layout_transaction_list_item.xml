@@ -3,6 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="#D2D2D2"
+    android:id="@+id/root_transaction_item"
     android:layout_height="80dp">
 
     <androidx.cardview.widget.CardView
@@ -16,7 +18,7 @@
 
         android:layout_marginBottom="4dp"
         android:foregroundGravity="center"
-        app:cardCornerRadius="24dp"
+        app:cardCornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/linear"
         app:layout_constraintStart_toStartOf="parent"
@@ -87,4 +89,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/linear"
         tools:text="-$5,000" />
+
+    <View
+        android:id="@+id/transaction_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#323232"
+        android:layout_marginStart="70dp"
+        android:layout_marginEnd="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

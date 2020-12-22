@@ -16,30 +16,30 @@ interface RecordsDao {
     suspend fun getRecordById(id: Int): Record
 
 
-
     /**
      * To delete one or more products.
      * Returns number of rows deleted. 0 if no row deleted.
      */
     @Update
-    suspend fun updateRecord(vararg record: Record):Int
+    suspend fun updateRecord(vararg record: Record): Int
+
     @Delete
-    suspend fun deleteRecord(vararg record: Record):Int
+    suspend fun deleteRecord(vararg record: Record): Int
 
     /*
         get records queries
      */
-    @Query("SELECT * FROM records")
+    @Query("SELECT * FROM records $ORDER_BY_DATE")
     fun getAllRecords(): Flow<List<Record>>
 
     //fromDate and toDate count in the result >=
-    @Query("SELECT * FROM records WHERE date BETWEEN :minDate AND :maxDate")
+    @Query("SELECT * FROM records WHERE date BETWEEN :minDate AND :maxDate $ORDER_BY_DATE")
     fun loadAllRecordsBetweenDates(minDate: Int, maxDate: Int): Flow<List<Record>>
 
-    @Query("SELECT * FROM records WHERE date > :minDate")
+    @Query("SELECT * FROM records WHERE date > :minDate $ORDER_BY_DATE")
     fun loadAllRecordsAfterThan(minDate: Int): Flow<List<Record>>
 
-    @Query("SELECT * FROM records WHERE date < :maxDate")
+    @Query("SELECT * FROM records WHERE date < :maxDate $ORDER_BY_DATE")
     fun loadAllRecordsBeforeThan(maxDate: Int): Flow<List<Record>>
 
     /*
@@ -73,4 +73,8 @@ interface RecordsDao {
 
     @Query("SELECT SUM(money) FROM records WHERE (date < :maxDate) AND (money > 0) ")
     fun returnTheSumOfIncomeBeforeThan(maxDate: Int): Flow<Int>
+
+    companion object{
+        private const val ORDER_BY_DATE = "ORDER BY date DESC"
+    }
 }
