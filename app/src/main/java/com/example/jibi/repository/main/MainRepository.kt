@@ -82,6 +82,10 @@ constructor(
                     }
                 }
             }
+            //add header and items
+            resultList.add(createHeader(headerDate, incomeSum, expensesSum))
+            resultList.addAll(tempList)
+            //clear item to defualt
             return@map resultList
         }
 

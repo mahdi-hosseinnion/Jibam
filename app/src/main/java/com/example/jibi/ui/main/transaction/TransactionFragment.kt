@@ -13,6 +13,8 @@ import com.example.jibi.models.Record
 import com.example.jibi.ui.main.transaction.bottomSheet.CreateNewTransBottomSheet
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.mahdiLog
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.android.synthetic.main.layout_transaction_list_item.*
@@ -31,9 +33,45 @@ constructor(
     viewModelFactory
 ), TransactionListAdapter.Interaction {
     private lateinit var recyclerAdapter: TransactionListAdapter
+    private val bottomSheetBehavior by lazy {
+        BottomSheetBehavior.from(main_standardBottomSheet)
+    }
+    val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            if (BottomSheetBehavior.STATE_EXPANDED == newState) {
+                showTransactionListToolBar()
+            } else {
+//                if (BottomSheetBehavior.STATE_COLLAPSED == newState) {
+                hideTransactionListToolBar()
+            }
+
+        }
+
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            // Do something for slide offset
+        }
+    }
+
+    fun showTransactionListToolBar() {
+        view_hastam.visibility = View.GONE
+        lastTransaction.visibility = View.GONE
+        bottom_sheet_toolbar.visibility = View.VISIBLE
+        main_standardBottomSheet.setBackgroundResource(R.color.white)
+    }
+
+    fun hideTransactionListToolBar() {
+        view_hastam.visibility = View.VISIBLE
+        lastTransaction.visibility = View.VISIBLE
+        bottom_sheet_toolbar.visibility = View.GONE
+        main_standardBottomSheet.setBackgroundResource(R.drawable.bottom_sheet_bg)
+
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
         lastTransaction.setOnClickListener {
             findNavController().navigate(R.id.action_transactionFragment_to_createTransactionFragment)
         }
@@ -44,6 +82,9 @@ constructor(
         }
         txt_balance.setOnClickListener {
             insertRandomTransaction()
+        }
+        main_bottom_sheet_back_arrow.setOnClickListener{
+            bottomSheetBehavior.state = STATE_COLLAPSED
         }
     }
 
@@ -64,8 +105,8 @@ constructor(
 
     private fun showBottomSheet() {
 //        activity?.let {
-            val modalBottomSheet =
-                CreateNewTransBottomSheet(viewModel.viewState.value!!.categoryList!!)
+        val modalBottomSheet =
+            CreateNewTransBottomSheet(viewModel.viewState.value!!.categoryList!!)
 //            modalBottomSheet.show(it.supportFragmentManager, "CreateNewTransBottomSheet")
 //        }
         modalBottomSheet.show(parentFragmentManager, "CreateNewTransBottomSheet")
@@ -133,6 +174,7 @@ constructor(
 //                    }
 //                }
 //            })
+            transaction_recyclerView.isNestedScrollingEnabled = true
             adapter = recyclerAdapter
         }
 
@@ -148,9 +190,11 @@ constructor(
 
     override fun onResume() {
         super.onResume()
+        uiCommunicationListener.hideToolbar()
+
         viewModel.countOfNonCancellableJobs.observe(viewLifecycleOwner, Observer {
             it?.let {
-                if (it>0){
+                if (it > 0) {
                     viewModel.runPendingJobs()
                 }
             }
@@ -158,6 +202,7 @@ constructor(
         })
 
     }
+
     override fun onItemSelected(position: Int, item: Record) {
     }
 

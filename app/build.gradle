@@ -149,5 +149,7 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     //viewpager bottomSheet
     implementation "biz.laenger.android:vpbs:0.0.6"
+    //card view
+    implementation "androidx.cardview:cardview:1.0.0"
 
 }

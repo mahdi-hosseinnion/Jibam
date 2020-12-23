@@ -1,6 +1,7 @@
 package com.example.jibi.ui.main
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentFactory
@@ -14,6 +15,7 @@ import com.example.jibi.R
 import com.example.jibi.ui.BaseActivity
 import com.example.jibi.util.Response
 import com.example.jibi.util.StateMessageCallback
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
@@ -67,6 +69,14 @@ class MainActivity : BaseActivity() {
         stateMessageCallback: StateMessageCallback
     ) {
         //TODO("Not yet implemented")
+    }
+
+    override fun hideToolbar() {
+        toolbar_main.visibility = View.GONE
+    }
+
+    override fun showToolbar() {
+        toolbar_main.visibility = View.VISIBLE
     }
 
 }

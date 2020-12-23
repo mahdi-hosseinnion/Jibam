@@ -1,11 +1,12 @@
 package com.example.jibi.ui.main.transaction
 
+import android.content.res.Resources
 import android.graphics.Color
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.marginTop
 import androidx.recyclerview.widget.*
 import com.bumptech.glide.RequestManager
 import com.example.jibi.R
@@ -14,6 +15,7 @@ import com.example.jibi.util.GenericViewHolder
 import kotlinx.android.synthetic.main.fragment_add_transaction.view.*
 import kotlinx.android.synthetic.main.layout_transacion_header.view.*
 import kotlinx.android.synthetic.main.layout_transaction_list_item.view.*
+
 
 class TransactionListAdapter(
     private val requestManager: RequestManager?,
@@ -136,7 +138,7 @@ class TransactionListAdapter(
 
     private fun isHeader(position: Int): Boolean {
         if (position <= itemCount) {
-            return differ.currentList[position].id == HEADER_ITEM
+            return differ.currentList[position].id < 0
         }
         return true
     }
@@ -195,7 +197,7 @@ class TransactionListAdapter(
             if (isNextItemHeader) {
                 itemView.transaction_divider.visibility = View.GONE
                 itemView.root_transaction_item.setBackgroundResource(R.drawable.tranaction_bottom_header_bg)
-            }else{
+            } else {
                 itemView.transaction_divider.visibility = View.VISIBLE
                 itemView.root_transaction_item.setBackgroundResource(R.color.backGround_gray)
             }
@@ -231,7 +233,13 @@ class TransactionListAdapter(
             itemView.setOnClickListener {
                 interaction?.onItemSelected(adapterPosition, item)
             }
+            //hide margin for first object
+            if (adapterPosition<2){
+                val params = ((itemView.root_transaction_header).layoutParams) as RecyclerView.LayoutParams
+                params.setMargins(convertDpToPx(4), 0, convertDpToPx(4), 0) //substitute parameters for left, top, right, bottom
 
+                itemView.root_transaction_header.layoutParams = params
+            }
             //money for expenses
             Log.d(TAG, "bind: sum of all expenses = ${item.money}")
             if (item.money != 0) {
@@ -248,6 +256,14 @@ class TransactionListAdapter(
             }
             itemView.header_date.text = item.memo
 //            itemView.header_date.text = DateUtils.convertLongToStringDate(item.date)
+        }
+        private fun convertDpToPx(dp: Int):Int{
+            val r: Resources = itemView.resources
+            return TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                dp.toFloat(),
+                r.displayMetrics
+            ).toInt()
         }
     }
 

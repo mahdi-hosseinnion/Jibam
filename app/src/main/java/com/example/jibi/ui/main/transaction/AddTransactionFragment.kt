@@ -51,6 +51,11 @@ constructor(
 
     }
 
+    override fun onResume() {
+        uiCommunicationListener.showToolbar()
+        super.onResume()
+    }
+
     private fun addOptionsToWallet() {
         val items = listOf("Cash", "Bank Melli", "Bank Keshavarzi", "MasterCard")
         val adapter = ArrayAdapter(requireContext(), R.layout.list_item, items)
