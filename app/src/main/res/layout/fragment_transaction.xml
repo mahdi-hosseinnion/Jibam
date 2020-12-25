@@ -55,7 +55,8 @@
         <!--            android:layout_width="match_parent"-->
         <!--            android:scrollbars="vertical"-->
 
-        <!--            android:layout_height="match_parent">-->
+        android:scrollbars="vertical">
+
         <View
             android:id="@+id/view_hastam"
             android:layout_width="32dp"
@@ -77,11 +78,11 @@
             android:textStyle="bold" />
 
         <LinearLayout
+            android:id="@+id/bottom_sheet_toolbar"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:id="@+id/bottom_sheet_toolbar"
-            android:visibility="gone"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <ImageButton
                 android:id="@+id/main_bottom_sheet_back_arrow"
@@ -93,6 +94,7 @@
                 android:tint="@color/black"
                 android:visibility="visible"
                 app:srcCompat="@drawable/abc_vector_test" />
+
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -115,6 +117,7 @@
                 android:visibility="visible"
                 app:srcCompat="@android:drawable/ic_menu_search" />
         </LinearLayout>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/transaction_recyclerView"

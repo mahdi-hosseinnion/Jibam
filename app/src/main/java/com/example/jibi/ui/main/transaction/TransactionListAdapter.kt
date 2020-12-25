@@ -7,13 +7,20 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.*
 import com.bumptech.glide.RequestManager
 import com.example.jibi.R
 import com.example.jibi.models.Record
 import com.example.jibi.util.GenericViewHolder
 import kotlinx.android.synthetic.main.fragment_add_transaction.view.*
+import kotlinx.android.synthetic.main.fragment_transaction.*
+import kotlinx.android.synthetic.main.fragment_transaction.view.*
+import kotlinx.android.synthetic.main.layout_new_transaction_list_item.view.*
 import kotlinx.android.synthetic.main.layout_transacion_header.view.*
+import kotlinx.android.synthetic.main.layout_transacion_header.view.header_date
+import kotlinx.android.synthetic.main.layout_transacion_header.view.header_expenses_sum
+import kotlinx.android.synthetic.main.layout_transacion_header.view.header_income_sum
 import kotlinx.android.synthetic.main.layout_transaction_list_item.view.*
 
 
@@ -22,6 +29,9 @@ class TransactionListAdapter(
     private val interaction: Interaction? = null
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private var headerList: List<Record>? = null
+
     companion object {
         private const val TAG: String = "AppDebug"
         private const val NO_MORE_RESULTS = -1
@@ -69,7 +79,7 @@ class TransactionListAdapter(
                     )
                 )
             }
-            BLOG_ITEM -> {
+/*            BLOG_ITEM -> {
                 return TransViewHolder(
                     LayoutInflater.from(parent.context).inflate(
                         R.layout.layout_transaction_list_item,
@@ -94,6 +104,17 @@ class TransactionListAdapter(
                 return TransViewHolder(
                     LayoutInflater.from(parent.context).inflate(
                         R.layout.layout_transaction_list_item,
+                        parent,
+                        false
+                    ),
+                    interaction = interaction,
+                    requestManager = requestManager
+                )
+            }  */
+            else -> {
+                return TransCardViewHolder(
+                    LayoutInflater.from(parent.context).inflate(
+                        R.layout.layout_new_transaction_list_item,
                         parent,
                         false
                     ),
@@ -133,6 +154,29 @@ class TransactionListAdapter(
             is HeaderViewHolder -> {
                 holder.bind(differ.currentList[position])
             }
+            is TransCardViewHolder -> {
+                val currentList = differ.currentList
+                val header = headerList?.get(position)
+                var headerPositionInMainList: Int? = null
+                for (i in currentList.indices) {
+                    if (currentList[i] == header) {
+                        headerPositionInMainList = i
+                    }
+                }
+                if (headerPositionInMainList == null) {
+                    Log.e(TAG, "onBindViewHolder: CANNOT FIND THE HEADER")
+                    return
+                }
+                if (header == null) {
+                    Log.e(TAG, "onBindViewHolder: CANNOT FIND THE HEADER HEADER IS NULL")
+                    return
+                }
+                val transactionList = differ.currentList.subList(
+                    headerPositionInMainList,
+                    headerPositionInMainList + header.date
+                )
+                holder.bind(header, transactionList)
+            }
         }
     }
 
@@ -151,7 +195,7 @@ class TransactionListAdapter(
     }
 
     override fun getItemCount(): Int {
-        return differ.currentList.size
+        return headerList?.size ?: 0
     }
 
 //    // Prepare the images that will be displayed in the RecyclerView.
@@ -168,10 +212,11 @@ class TransactionListAdapter(
 //    }
 
     fun submitList(
-        blogList: List<Record>?,
+        transList: List<Record>?,
         isQueryExhausted: Boolean
     ) {
-        val newList = blogList?.toMutableList()
+        headerList = transList?.filter { it.id == HEADER_ITEM }
+        val newList = transList?.toMutableList()
         if (isQueryExhausted)
             newList?.add(NO_MORE_RESULTS_BLOG_MARKER)
         val commitCallback = Runnable {
@@ -199,7 +244,7 @@ class TransactionListAdapter(
                 itemView.root_transaction_item.setBackgroundResource(R.drawable.tranaction_bottom_header_bg)
             } else {
                 itemView.transaction_divider.visibility = View.VISIBLE
-                itemView.root_transaction_item.setBackgroundResource(R.color.backGround_gray)
+                itemView.root_transaction_item.setBackgroundResource(R.color.backGround_white)
             }
 
             if (item.memo.isNullOrBlank()) {
@@ -223,6 +268,7 @@ class TransactionListAdapter(
         }
     }
 
+
     class HeaderViewHolder
     constructor(
         itemView: View,
@@ -234,12 +280,12 @@ class TransactionListAdapter(
                 interaction?.onItemSelected(adapterPosition, item)
             }
             //hide margin for first object
-            if (adapterPosition<2){
-                val params = ((itemView.root_transaction_header).layoutParams) as RecyclerView.LayoutParams
-                params.setMargins(convertDpToPx(4), 0, convertDpToPx(4), 0) //substitute parameters for left, top, right, bottom
-
-                itemView.root_transaction_header.layoutParams = params
-            }
+//            if (adapterPosition<2){
+//                val params = ((itemView.root_transaction_header).layoutParams) as RecyclerView.LayoutParams
+//                params.setMargins(convertDpToPx(8), 0, convertDpToPx(8), 0) //substitute parameters for left, top, right, bottom
+//
+//                itemView.root_transaction_header.layoutParams = params
+//            }
             //money for expenses
             Log.d(TAG, "bind: sum of all expenses = ${item.money}")
             if (item.money != 0) {
@@ -257,7 +303,8 @@ class TransactionListAdapter(
             itemView.header_date.text = item.memo
 //            itemView.header_date.text = DateUtils.convertLongToStringDate(item.date)
         }
-        private fun convertDpToPx(dp: Int):Int{
+
+        private fun convertDpToPx(dp: Int): Int {
             val r: Resources = itemView.resources
             return TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
@@ -266,6 +313,108 @@ class TransactionListAdapter(
             ).toInt()
         }
     }
+
+    class TransCardViewHolder
+    constructor(
+        itemView: View,
+        private val interaction: Interaction?,
+        val requestManager: RequestManager?
+    ) : RecyclerView.ViewHolder(itemView), SubTransactionListAdapter.Interaction {
+
+        private var recyclerAdapter: SubTransactionListAdapter? = null
+        private val transactionContainer: LinearLayout =
+            itemView.findViewById(R.id.card_linearLayout);
+
+        fun bind(header: Record, items: List<Record>) = with(itemView) {
+            //bind header
+            if (header.money != 0) {
+                itemView.header_expenses_sum.text = "Expenses: ${header.money}"
+            } else {
+                itemView.header_expenses_sum.text = ""
+
+            }
+            //cat_id for income
+            if (header.cat_id != 0) {
+                itemView.header_income_sum.text = "Income: ${header.cat_id}"
+            } else {
+                itemView.header_income_sum.text = ""
+            }
+            itemView.header_date.text = header.memo
+            //bind items
+            if (items.size < 6) {
+                itemView.card_linearLayout.visibility=View.VISIBLE
+                itemView.card_recycler_view.visibility=View.INVISIBLE
+                bindWithLinearLayout(items)
+            } else {
+            itemView.card_linearLayout.visibility = View.INVISIBLE
+            itemView.card_recycler_view.visibility = View.VISIBLE
+            initRecyclerView()
+            submitListToRecyclerView(items)
+            }
+        }
+
+        private fun bindWithLinearLayout(items: List<Record>) {
+            val view: View = LayoutInflater.from(itemView.context)
+                .inflate(R.layout.layout_transaction_list_item, null)
+//            val view: View = LayoutInflater.from(itemView.context).inflate(
+//                R.layout.layout_transaction_list_item,
+//                (itemView.getParent() as ViewGroup),
+//                false
+//            )
+            transactionContainer.removeAllViews()
+            for (i in items.indices) {
+                val childItem =items[i]
+                //hide the divider
+                if (items.size == i.plus(1)) {
+                    view.transaction_divider.visibility = View.GONE
+                } else {
+                    view.transaction_divider.visibility = View.VISIBLE
+                }
+                //set the texts
+                if (childItem.memo.isNullOrBlank()) {
+                    view.main_text.text = "UNKNOWN CATEGORY WITH ID: ${childItem.cat_id.toString()}"
+                } else {
+                    view.main_text.text = childItem.memo
+                }
+                if (childItem.money >= 0) {
+                    view.price.text = "+${childItem.money}"
+                    view.price.setTextColor(Color.GREEN)
+                } else {
+                    view.price.text = "${childItem.money}"
+                    view.price.setTextColor(Color.RED)
+                }
+                //add to linearLayout
+                if (view.getParent() != null) {
+                    (view.getParent() as ViewGroup).removeView(view) // <- fix
+                }
+                transactionContainer.addView(view)
+
+            }
+        }
+
+        fun submitListToRecyclerView(items: List<Record>) {
+            recyclerAdapter?.submitList(items)
+        }
+
+        private fun initRecyclerView() {
+
+            itemView.card_recycler_view.apply {
+                layoutManager = LinearLayoutManager(itemView.context)
+                recyclerAdapter = SubTransactionListAdapter(
+                    null,
+                    this@TransCardViewHolder
+                )
+
+                adapter = recyclerAdapter
+            }
+
+        }
+
+        override fun onItemSelected(position: Int, item: Record) {
+        }
+
+    }
+
 
     interface Interaction {
 

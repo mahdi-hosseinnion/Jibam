@@ -66,7 +66,7 @@ constructor(
                     }
                 } else {
                     //add header and items
-                    resultList.add(createHeader(headerDate, incomeSum, expensesSum))
+                    resultList.add(createHeader(headerDate, incomeSum, expensesSum, tempList.size))
                     resultList.addAll(tempList)
                     //clear item to defualt
                     headerDate = currentDateInString(item.date)
@@ -83,19 +83,19 @@ constructor(
                 }
             }
             //add header and items
-            resultList.add(createHeader(headerDate, incomeSum, expensesSum))
+            resultList.add(createHeader(headerDate, incomeSum, expensesSum, tempList.size))
             resultList.addAll(tempList)
             //clear item to defualt
             return@map resultList
         }
 
-    private fun createHeader(date: String, income: Int, expenses: Int): Record =
+    private fun createHeader(date: String, income: Int, expenses: Int, lenght: Int): Record =
         Record(
             id = TransactionListAdapter.HEADER_ITEM,
             money = expenses,
             memo = date,
             cat_id = income,
-            date = 0
+            date = lenght
         )
 
     private fun currentDateInString(time: Int): String {
