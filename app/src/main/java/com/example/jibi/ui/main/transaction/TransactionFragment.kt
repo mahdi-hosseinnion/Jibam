@@ -97,7 +97,7 @@ constructor(
                     money = Random.nextInt(-1000, 1000),
                     memo = "mme${(System.currentTimeMillis())}",
                     cat_id = Random.nextInt(42),
-                    date = Random.nextInt(1604188800,1609286400)
+                    date = Random.nextInt(1608681600,1609286400)
                 )
             )
         )

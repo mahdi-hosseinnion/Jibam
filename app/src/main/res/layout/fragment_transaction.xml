@@ -43,90 +43,91 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/main_standardBottomSheet"
-        style="?attr/bottomSheetStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bottom_sheet_bg"
-        android:orientation="vertical"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
-        <!--        <androidx.core.widget.NestedScrollView-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:scrollbars="vertical"-->
-
-        android:scrollbars="vertical">
-
-        <View
-            android:id="@+id/view_hastam"
-            android:layout_width="32dp"
-            android:layout_height="6dp"
-            android:layout_gravity="center"
-            android:layout_margin="8dp"
-            android:background="#CFCFCF" />
-
-        <TextView
-            android:id="@+id/lastTransaction"
-            android:layout_width="match_parent"
-            android:layout_height="34dp"
-            android:layout_gravity="center"
-            android:gravity="start|center"
-            android:padding="4dp"
-            android:paddingStart="8dp"
-            android:text="Last Transactions"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+<!--    <androidx.core.widget.NestedScrollView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:scrollbars="vertical">-->
 
         <LinearLayout
-            android:id="@+id/bottom_sheet_toolbar"
+            android:id="@+id/main_standardBottomSheet"
+            style="?attr/bottomSheetStyle"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:orientation="horizontal"
-            android:visibility="gone">
+            android:layout_height="wrap_content"
+            android:background="@drawable/bottom_sheet_bg"
+            android:orientation="vertical"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-            <ImageButton
-                android:id="@+id/main_bottom_sheet_back_arrow"
-                android:layout_width="@dimen/action_bar_size"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-                android:clickable="true"
-                android:focusable="true"
-                android:tint="@color/black"
-                android:visibility="visible"
-                app:srcCompat="@drawable/abc_vector_test" />
+
+            <View
+                android:id="@+id/view_hastam"
+                android:layout_width="32dp"
+                android:layout_height="6dp"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:background="#CFCFCF" />
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:id="@+id/lastTransaction"
+                android:layout_width="match_parent"
+                android:layout_height="34dp"
                 android:layout_gravity="center"
-                android:layout_weight="1"
                 android:gravity="start|center"
                 android:padding="4dp"
+                android:paddingStart="8dp"
                 android:text="Last Transactions"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <ImageButton
-                android:id="@+id/main_bottom_sheet_search_btn"
-                android:layout_width="@dimen/action_bar_size"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-                android:clickable="true"
-                android:focusable="true"
-                android:tint="@color/black"
-                android:visibility="visible"
-                app:srcCompat="@android:drawable/ic_menu_search" />
+            <LinearLayout
+                android:id="@+id/bottom_sheet_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageButton
+                    android:id="@+id/main_bottom_sheet_back_arrow"
+                    android:layout_width="@dimen/action_bar_size"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:tint="@color/black"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/abc_vector_test" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="start|center"
+                    android:padding="4dp"
+                    android:text="Last Transactions"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/main_bottom_sheet_search_btn"
+                    android:layout_width="@dimen/action_bar_size"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:tint="@color/black"
+                    android:visibility="visible"
+                    app:srcCompat="@android:drawable/ic_menu_search" />
+            </LinearLayout>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/transaction_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
         </LinearLayout>
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/transaction_recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <!--        </androidx.core.widget.NestedScrollView>-->
-
-    </LinearLayout>
+<!--    </androidx.core.widget.NestedScrollView>-->
 
     <ProgressBar
         android:id="@+id/progressBar"

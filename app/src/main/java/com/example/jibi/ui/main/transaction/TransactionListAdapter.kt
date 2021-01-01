@@ -22,6 +22,9 @@ import kotlinx.android.synthetic.main.layout_transacion_header.view.header_date
 import kotlinx.android.synthetic.main.layout_transacion_header.view.header_expenses_sum
 import kotlinx.android.synthetic.main.layout_transacion_header.view.header_income_sum
 import kotlinx.android.synthetic.main.layout_transaction_list_item.view.*
+import java.text.DecimalFormat
+import java.text.NumberFormat
+import java.util.*
 
 
 class TransactionListAdapter(
@@ -342,14 +345,14 @@ class TransactionListAdapter(
             itemView.header_date.text = header.memo
             //bind items
             if (items.size < 6) {
-                itemView.card_linearLayout.visibility=View.VISIBLE
-                itemView.card_recycler_view.visibility=View.INVISIBLE
+                itemView.card_linearLayout.visibility = View.VISIBLE
+                itemView.card_recycler_view.visibility = View.INVISIBLE
                 bindWithLinearLayout(items)
             } else {
-            itemView.card_linearLayout.visibility = View.INVISIBLE
-            itemView.card_recycler_view.visibility = View.VISIBLE
-            initRecyclerView()
-            submitListToRecyclerView(items)
+                itemView.card_linearLayout.visibility = View.INVISIBLE
+                itemView.card_recycler_view.visibility = View.VISIBLE
+                initRecyclerView()
+                submitListToRecyclerView(items)
             }
         }
 
@@ -363,7 +366,7 @@ class TransactionListAdapter(
 //            )
             transactionContainer.removeAllViews()
             for (i in items.indices) {
-                val childItem =items[i]
+                val childItem = items[i]
                 //hide the divider
                 if (items.size == i.plus(1)) {
                     view.transaction_divider.visibility = View.GONE
@@ -376,12 +379,13 @@ class TransactionListAdapter(
                 } else {
                     view.main_text.text = childItem.memo
                 }
+                view.price.text = "${separate3By3(childItem.money)}"
                 if (childItem.money >= 0) {
-                    view.price.text = "+${childItem.money}"
-                    view.price.setTextColor(Color.GREEN)
+                    view.price.setTextColor(itemView.resources.getColor(R.color.incomeTextColor))
+                    view.priceCard.setCardBackgroundColor(itemView.resources.getColor(R.color.incomeColor))
                 } else {
-                    view.price.text = "${childItem.money}"
-                    view.price.setTextColor(Color.RED)
+                    view.price.setTextColor(itemView.resources.getColor(R.color.expensesTextColor))
+                    view.priceCard.setCardBackgroundColor(itemView.resources.getColor(R.color.expensesColor))
                 }
                 //add to linearLayout
                 if (view.getParent() != null) {
@@ -390,6 +394,19 @@ class TransactionListAdapter(
                 transactionContainer.addView(view)
 
             }
+        }
+
+        private fun separate3By3(money1: Int): String {
+            var money = money1
+            if (money < 0) {
+                money *= -1
+            }
+            if (money < 1000) {
+                return money.toString()
+            }
+            val formatter: DecimalFormat = NumberFormat.getInstance(Locale.US) as DecimalFormat
+            formatter.applyPattern("#,###,###,###")
+            return formatter.format(money)
         }
 
         fun submitListToRecyclerView(items: List<Record>) {

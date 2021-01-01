@@ -1,6 +1,5 @@
 package com.example.jibi.ui.main.transaction
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +8,9 @@ import com.bumptech.glide.RequestManager
 import com.example.jibi.R
 import com.example.jibi.models.Record
 import kotlinx.android.synthetic.main.layout_transaction_list_item.view.*
+import java.text.DecimalFormat
+import java.text.NumberFormat
+import java.util.*
 
 
 class SubTransactionListAdapter(
@@ -140,19 +142,31 @@ class SubTransactionListAdapter(
             } else {
                 itemView.main_text.text = item.memo
             }
+
+            itemView.price.text = "${separate3By3(item.money)}"
             if (item.money >= 0) {
-                itemView.price.text = "+${item.money}"
-                itemView.price.setTextColor(Color.GREEN)
+                itemView.price.setTextColor(resources.getColor(R.color.incomeTextColor))
+                itemView.priceCard.setCardBackgroundColor(resources.getColor(R.color.incomeColor))
             } else {
-                itemView.price.text = "${item.money}"
-                itemView.price.setTextColor(Color.RED)
+                itemView.price.setTextColor(resources.getColor(R.color.expensesTextColor))
+                itemView.priceCard.setCardBackgroundColor(resources.getColor(R.color.expensesColor))
             }
+
             //TODO
 //            itemView.card
 //           //            requestManager
 ////                .load(item.image)
 ////                .transition(withCrossFade())
 ////                .into(itemView.category_iamge)
+        }
+        private fun separate3By3(money1: Int):String{
+            var money = money1
+            if (money<0){
+                money*=-1
+            }
+            val formatter: DecimalFormat = NumberFormat.getInstance(Locale.US) as DecimalFormat
+            formatter.applyPattern("#,###,###,###")
+            return formatter.format(money)
         }
     }
 

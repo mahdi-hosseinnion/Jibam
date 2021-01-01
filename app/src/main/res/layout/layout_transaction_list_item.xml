@@ -5,8 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_transaction_item"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
-   >
+    android:layout_height="80dp">
 
 
     <androidx.cardview.widget.CardView
@@ -46,7 +45,7 @@
         android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/price"
+        app:layout_constraintEnd_toStartOf="@+id/priceCard"
         app:layout_constraintStart_toEndOf="@+id/cardView"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -80,17 +79,34 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/price"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/priceCard"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:gravity="center|end"
-        android:padding="4dp"
-        android:textSize="15sp"
-        android:textStyle="bold"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="4dp"
+        android:foregroundGravity="center"
+        app:cardCornerRadius="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/linear"
-        tools:text="-$5,000" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center|end"
+            android:padding="4dp"
+            android:textSize="15sp"
+            android:textStyle="bold"
+
+            tools:text="-$5,000" />
+    </androidx.cardview.widget.CardView>
 
     <View
         android:id="@+id/transaction_divider"
@@ -98,7 +114,7 @@
         android:layout_height="0.5dp"
         android:layout_marginStart="70dp"
         android:layout_marginEnd="4dp"
-        android:background="#323232"
+        android:background="#1F000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
