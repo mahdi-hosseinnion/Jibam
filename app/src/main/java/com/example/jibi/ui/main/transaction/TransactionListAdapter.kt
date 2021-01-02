@@ -154,7 +154,7 @@ abstract class TransactionListAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is TransViewHolder -> {
-                holder.bind(differ.currentList[position])
+                holder.bind(differ.currentList[position],isHeader(position.plus(1)))
             }
             is HeaderViewHolder -> {
                 holder.bind(differ.currentList[position])
@@ -185,12 +185,12 @@ abstract class TransactionListAdapter(
         }
     }
 
-//    private fun isHeader(position: Int): Boolean {
-//        if (position <= itemCount) {
-//            return differ.currentList[position].id < 0
-//        }
-//        return true
-//    }
+    private fun isHeader(position: Int): Boolean {
+        if (position <= itemCount) {
+            return differ.currentList[position].id < 0
+        }
+        return true
+    }
 
     override fun getItemViewType(position: Int): Int {
         if (differ.currentList[position].id > -1) {
@@ -231,7 +231,7 @@ abstract class TransactionListAdapter(
         differ.submitList(newList, commitCallback)
     }
 
-    class TransViewHolder
+    inner class TransViewHolder
     constructor(
         itemView: View,
         val requestManager: RequestManager?,
@@ -239,29 +239,33 @@ abstract class TransactionListAdapter(
     ) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(item: Record, isNextItemHeader: Boolean = false) = with(itemView) {
+            var category = getCategoryById(item.cat_id)
+
             itemView.setOnClickListener {
                 interaction?.onItemSelected(adapterPosition, item)
             }
 
-//            if (isNextItemHeader) {
-//                itemView.transaction_divider.visibility = View.GONE
+            if (isNextItemHeader) {
+                itemView.transaction_divider.visibility = View.GONE
 //                itemView.root_transaction_item.setBackgroundResource(R.drawable.tranaction_bottom_header_bg)
-//            } else {
-//                itemView.transaction_divider.visibility = View.VISIBLE
+            } else {
+                itemView.transaction_divider.visibility = View.VISIBLE
 //                itemView.root_transaction_item.setBackgroundResource(R.color.backGround_white)
-//            }
+            }
 
             if (item.memo.isNullOrBlank()) {
-                itemView.main_text.text = "UNKNOWN CATEGORY WITH ID: ${item.cat_id.toString()}"
+                itemView.main_text.text = category.name
             } else {
                 itemView.main_text.text = item.memo
             }
             if (item.money >= 0) {
-                itemView.price.text = "+${item.money}"
-                itemView.price.setTextColor(Color.GREEN)
+                itemView.price.text = "+$${separate3By3(item.money)}"
+                itemView.price.setTextColor(resources.getColor(R.color.incomeTextColor))
+                itemView.priceCard.setCardBackgroundColor(resources.getColor(R.color.incomeColor))
             } else {
-                itemView.price.text = "${item.money}"
-                itemView.price.setTextColor(Color.RED)
+                itemView.price.text = "-$${separate3By3(item.money)}"
+                itemView.price.setTextColor(resources.getColor(R.color.expensesTextColor))
+                itemView.priceCard.setCardBackgroundColor(resources.getColor(R.color.expensesColor))
             }
             //TODO
 //            itemView.card
@@ -269,6 +273,18 @@ abstract class TransactionListAdapter(
 ////                .load(item.image)
 ////                .transition(withCrossFade())
 ////                .into(itemView.category_iamge)
+        }
+        private fun separate3By3(money1: Int): String {
+            var money = money1
+            if (money < 0) {
+                money *= -1
+            }
+            if (money < 1000) {
+                return money.toString()
+            }
+            val formatter: DecimalFormat = NumberFormat.getInstance(Locale.US) as DecimalFormat
+            formatter.applyPattern("#,###,###,###")
+            return formatter.format(money)
         }
     }
 

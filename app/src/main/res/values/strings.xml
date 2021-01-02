@@ -11,6 +11,7 @@
     <string name="add_transaction">Add Transaction</string>
     <string name="empty" />
     <string name="money">Money</string>
+    <string name="total_balance">Total Balance</string>
     <string name="zero">0</string>
     <string name="price">Price</string>
     <string name="wallet">Wallet</string>

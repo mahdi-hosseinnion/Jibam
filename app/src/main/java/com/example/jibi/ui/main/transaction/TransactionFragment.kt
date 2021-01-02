@@ -20,6 +20,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.android.synthetic.main.layout_transaction_list_item.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import java.text.DecimalFormat
+import java.text.NumberFormat
+import java.util.*
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -91,17 +94,31 @@ constructor(
 
 
     private fun insertRandomTransaction() {
-        viewModel.launchNewJob(
-            TransactionStateEvent.OneShotOperationsTransactionStateEvent.InsertTransaction(
-                Record(
-                    id = 0,
-                    money = Random.nextInt(-1000, 1000),
-                    memo = "",
-                    cat_id = Random.nextInt(42),
-                    date = Random.nextInt(1608681600, 1609286400)
+        if (Random.nextBoolean()) {
+            viewModel.launchNewJob(
+                TransactionStateEvent.OneShotOperationsTransactionStateEvent.InsertTransaction(
+                    Record(
+                        id = 0,
+                        money = Random.nextInt(-1000, 1000),
+                        memo = null,
+                        cat_id = Random.nextInt(42),
+                        date = Random.nextInt(1608681600, 1609286400)
+                    )
                 )
             )
-        )
+        } else {
+            viewModel.launchNewJob(
+                TransactionStateEvent.OneShotOperationsTransactionStateEvent.InsertTransaction(
+                    Record(
+                        id = 0,
+                        money = Random.nextInt(-1000, 1000),
+                        memo = "memo ${Random.nextInt(451252)}",
+                        cat_id = Random.nextInt(42),
+                        date = Random.nextInt(1608681600, 1609286400)
+                    )
+                )
+            )
+        }
     }
 
     private fun showBottomSheet() {
@@ -124,9 +141,9 @@ constructor(
                 }
                 it.summeryMoney?.let { summeryMoney ->
                     summeryMoney.balance = (summeryMoney.income + summeryMoney.expenses)
-                    txt_balance.text = "Balance: ${(summeryMoney.balance)}"
-                    txt_expenses.text = "Expenses: ${summeryMoney.expenses}"
-                    txt_income.text = "Income: ${summeryMoney.income}"
+                    txt_balance.text = separate3By3(summeryMoney.balance)
+                    txt_expenses.text = separate3By3(summeryMoney.expenses)
+                    txt_income.text = separate3By3(summeryMoney.income)
                 }
             }
         }
@@ -154,7 +171,18 @@ constructor(
             }
         }
     }
-
+    private fun separate3By3(money1: Int): String {
+        var money = money1
+        if (money < 0) {
+            money *= -1
+        }
+        if (money < 1000) {
+            return money.toString()
+        }
+        val formatter: DecimalFormat = NumberFormat.getInstance(Locale.US) as DecimalFormat
+        formatter.applyPattern("#,###,###,###")
+        return formatter.format(money)
+    }
     private fun initRecyclerView() {
 
         transaction_recyclerView.apply {
@@ -168,11 +196,11 @@ constructor(
                     viewModel.viewState.value?.categoryList?.let {
                         for (item in it) {
                             if (item.id == id) {
-                                return@let item
+                                return item
                             }
                         }
                     }
-                    return Category(-1,-1,"UNKWON CATEGORY","NULL",-1)
+                    return Category(-1, -1, "UNKWON CATEGORY id: $id and size: ${viewModel.viewState.value?.categoryList?.size}", "NULL", -1)
                 }
             }
 //            addOnScrollListener(object: RecyclerView.OnScrollListener(){
