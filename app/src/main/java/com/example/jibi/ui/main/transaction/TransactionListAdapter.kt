@@ -11,6 +11,7 @@ import android.widget.LinearLayout
 import androidx.recyclerview.widget.*
 import com.bumptech.glide.RequestManager
 import com.example.jibi.R
+import com.example.jibi.models.Category
 import com.example.jibi.models.Record
 import com.example.jibi.util.GenericViewHolder
 import kotlinx.android.synthetic.main.fragment_add_transaction.view.*
@@ -25,15 +26,16 @@ import kotlinx.android.synthetic.main.layout_transaction_list_item.view.*
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
-class TransactionListAdapter(
+abstract class TransactionListAdapter(
     private val requestManager: RequestManager?,
     private val interaction: Interaction? = null
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var headerList: List<Record>? = null
+    private var categoryList = ArrayList<Category>()
 
     companion object {
         private const val TAG: String = "AppDebug"
@@ -82,7 +84,7 @@ class TransactionListAdapter(
                     )
                 )
             }
-/*            BLOG_ITEM -> {
+            BLOG_ITEM -> {
                 return TransViewHolder(
                     LayoutInflater.from(parent.context).inflate(
                         R.layout.layout_transaction_list_item,
@@ -113,18 +115,18 @@ class TransactionListAdapter(
                     interaction = interaction,
                     requestManager = requestManager
                 )
-            }  */
-            else -> {
-                return TransCardViewHolder(
-                    LayoutInflater.from(parent.context).inflate(
-                        R.layout.layout_new_transaction_list_item,
-                        parent,
-                        false
-                    ),
-                    interaction = interaction,
-                    requestManager = requestManager
-                )
             }
+//            else -> {
+//                return TransCardViewHolder(
+//                    LayoutInflater.from(parent.context).inflate(
+//                        R.layout.layout_new_transaction_list_item,
+//                        parent,
+//                        false
+//                    ),
+//                    interaction = interaction,
+//                    requestManager = requestManager
+//                )
+//            }
         }
     }
 
@@ -152,43 +154,43 @@ class TransactionListAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is TransViewHolder -> {
-                holder.bind(differ.currentList[position], isHeader(position.plus(1)))
+                holder.bind(differ.currentList[position])
             }
             is HeaderViewHolder -> {
                 holder.bind(differ.currentList[position])
             }
-            is TransCardViewHolder -> {
-                val currentList = differ.currentList
-                val header = headerList?.get(position)
-                var headerPositionInMainList: Int? = null
-                for (i in currentList.indices) {
-                    if (currentList[i] == header) {
-                        headerPositionInMainList = i
-                    }
-                }
-                if (headerPositionInMainList == null) {
-                    Log.e(TAG, "onBindViewHolder: CANNOT FIND THE HEADER")
-                    return
-                }
-                if (header == null) {
-                    Log.e(TAG, "onBindViewHolder: CANNOT FIND THE HEADER HEADER IS NULL")
-                    return
-                }
-                val transactionList = differ.currentList.subList(
-                    headerPositionInMainList,
-                    headerPositionInMainList + header.date
-                )
-                holder.bind(header, transactionList)
-            }
+//            is TransCardViewHolder -> {
+//                val currentList = differ.currentList
+//                val header = headerList?.get(position)
+//                var headerPositionInMainList: Int? = null
+//                for (i in currentList.indices) {
+//                    if (currentList[i] == header) {
+//                        headerPositionInMainList = i
+//                    }
+//                }
+//                if (headerPositionInMainList == null) {
+//                    Log.e(TAG, "onBindViewHolder: CANNOT FIND THE HEADER")
+//                    return
+//                }
+//                if (header == null) {
+//                    Log.e(TAG, "onBindViewHolder: CANNOT FIND THE HEADER HEADER IS NULL")
+//                    return
+//                }
+//                val transactionList = differ.currentList.subList(
+//                    headerPositionInMainList,
+//                    headerPositionInMainList + header.date
+//                )
+//                holder.bind(header, transactionList)
+//            }
         }
     }
 
-    private fun isHeader(position: Int): Boolean {
-        if (position <= itemCount) {
-            return differ.currentList[position].id < 0
-        }
-        return true
-    }
+//    private fun isHeader(position: Int): Boolean {
+//        if (position <= itemCount) {
+//            return differ.currentList[position].id < 0
+//        }
+//        return true
+//    }
 
     override fun getItemViewType(position: Int): Int {
         if (differ.currentList[position].id > -1) {
@@ -198,7 +200,7 @@ class TransactionListAdapter(
     }
 
     override fun getItemCount(): Int {
-        return headerList?.size ?: 0
+        return differ.currentList.size
     }
 
 //    // Prepare the images that will be displayed in the RecyclerView.
@@ -218,7 +220,6 @@ class TransactionListAdapter(
         transList: List<Record>?,
         isQueryExhausted: Boolean
     ) {
-        headerList = transList?.filter { it.id == HEADER_ITEM }
         val newList = transList?.toMutableList()
         if (isQueryExhausted)
             newList?.add(NO_MORE_RESULTS_BLOG_MARKER)
@@ -242,13 +243,13 @@ class TransactionListAdapter(
                 interaction?.onItemSelected(adapterPosition, item)
             }
 
-            if (isNextItemHeader) {
-                itemView.transaction_divider.visibility = View.GONE
-                itemView.root_transaction_item.setBackgroundResource(R.drawable.tranaction_bottom_header_bg)
-            } else {
-                itemView.transaction_divider.visibility = View.VISIBLE
-                itemView.root_transaction_item.setBackgroundResource(R.color.backGround_white)
-            }
+//            if (isNextItemHeader) {
+//                itemView.transaction_divider.visibility = View.GONE
+//                itemView.root_transaction_item.setBackgroundResource(R.drawable.tranaction_bottom_header_bg)
+//            } else {
+//                itemView.transaction_divider.visibility = View.VISIBLE
+//                itemView.root_transaction_item.setBackgroundResource(R.color.backGround_white)
+//            }
 
             if (item.memo.isNullOrBlank()) {
                 itemView.main_text.text = "UNKNOWN CATEGORY WITH ID: ${item.cat_id.toString()}"
@@ -317,7 +318,22 @@ class TransactionListAdapter(
         }
     }
 
-    class TransCardViewHolder
+    fun getCategoryById(id: Int): Category {
+        categoryList.let {
+            for (item in it) {
+                if (item.id == id) {
+                    return@let item
+                }
+            }
+        }
+        val category: Category = getCategoryByIdFromRoot(id)
+        categoryList.add(category)
+        return category
+    }
+
+    abstract fun getCategoryByIdFromRoot(id: Int): Category
+
+    inner class TransCardViewHolder
     constructor(
         itemView: View,
         private val interaction: Interaction?,
@@ -367,15 +383,16 @@ class TransactionListAdapter(
             transactionContainer.removeAllViews()
             for (i in items.indices) {
                 val childItem = items[i]
+                var childCategory = getCategoryById(childItem.cat_id)
                 //hide the divider
-                if (items.size == i.plus(1)) {
-                    view.transaction_divider.visibility = View.GONE
-                } else {
-                    view.transaction_divider.visibility = View.VISIBLE
-                }
+//                if (items.size == i.plus(1)) {
+//                    view.transaction_divider.visibility = View.GONE
+//                } else {
+//                    view.transaction_divider.visibility = View.VISIBLE
+//                }
                 //set the texts
                 if (childItem.memo.isNullOrBlank()) {
-                    view.main_text.text = "UNKNOWN CATEGORY WITH ID: ${childItem.cat_id.toString()}"
+                    view.main_text.text = childCategory.name
                 } else {
                     view.main_text.text = childItem.memo
                 }

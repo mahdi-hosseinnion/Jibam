@@ -132,11 +132,11 @@ class SubTransactionListAdapter(
             itemView.setOnClickListener {
                 interaction?.onItemSelected(adapterPosition, item)
             }
-            if (itemCount == adapterPosition.plus(1)) {
-                itemView.transaction_divider.visibility = View.GONE
-            } else {
-                itemView.transaction_divider.visibility = View.VISIBLE
-            }
+//            if (itemCount == adapterPosition.plus(1)) {
+//                itemView.transaction_divider.visibility = View.GONE
+//            } else {
+//                itemView.transaction_divider.visibility = View.VISIBLE
+//            }
             if (item.memo.isNullOrBlank()) {
                 itemView.main_text.text = "UNKNOWN CATEGORY WITH ID: ${item.cat_id.toString()}"
             } else {

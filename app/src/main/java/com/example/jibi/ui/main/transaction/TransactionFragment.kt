@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.jibi.R
 import com.example.jibi.di.main.MainScope
+import com.example.jibi.models.Category
 import com.example.jibi.models.Record
 import com.example.jibi.ui.main.transaction.bottomSheet.CreateNewTransBottomSheet
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
@@ -83,7 +84,7 @@ constructor(
         txt_balance.setOnClickListener {
             insertRandomTransaction()
         }
-        main_bottom_sheet_back_arrow.setOnClickListener{
+        main_bottom_sheet_back_arrow.setOnClickListener {
             bottomSheetBehavior.state = STATE_COLLAPSED
         }
     }
@@ -95,9 +96,9 @@ constructor(
                 Record(
                     id = 0,
                     money = Random.nextInt(-1000, 1000),
-                    memo = "mme${(System.currentTimeMillis())}",
+                    memo = "",
                     cat_id = Random.nextInt(42),
-                    date = Random.nextInt(1608681600,1609286400)
+                    date = Random.nextInt(1608681600, 1609286400)
                 )
             )
         )
@@ -158,10 +159,22 @@ constructor(
 
         transaction_recyclerView.apply {
             layoutManager = LinearLayoutManager(this@TransactionFragment.context)
-            recyclerAdapter = TransactionListAdapter(
+            recyclerAdapter = object : TransactionListAdapter(
                 null,
                 this@TransactionFragment
-            )
+            ) {
+
+                override fun getCategoryByIdFromRoot(id: Int): Category {
+                    viewModel.viewState.value?.categoryList?.let {
+                        for (item in it) {
+                            if (item.id == id) {
+                                return@let item
+                            }
+                        }
+                    }
+                    return Category(-1,-1,"UNKWON CATEGORY","NULL",-1)
+                }
+            }
 //            addOnScrollListener(object: RecyclerView.OnScrollListener(){
 //
 //                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {

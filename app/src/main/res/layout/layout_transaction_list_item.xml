@@ -5,6 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_transaction_item"
     android:layout_width="match_parent"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
     android:layout_height="80dp">
 
 
@@ -108,7 +110,7 @@
             tools:text="-$5,000" />
     </androidx.cardview.widget.CardView>
 
-    <View
+<!--    <View
         android:id="@+id/transaction_divider"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
@@ -117,5 +119,5 @@
         android:background="#1F000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />-->
 </androidx.constraintlayout.widget.ConstraintLayout>
