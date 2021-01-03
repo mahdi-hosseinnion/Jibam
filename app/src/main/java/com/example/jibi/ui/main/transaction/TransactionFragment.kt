@@ -1,7 +1,9 @@
 package com.example.jibi.ui.main.transaction
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.view.ViewTreeObserver
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -36,6 +38,9 @@ constructor(
     R.layout.fragment_transaction,
     viewModelFactory
 ), TransactionListAdapter.Interaction {
+
+    private val TAG = "TransactionFragment"
+
     private lateinit var recyclerAdapter: TransactionListAdapter
     private val bottomSheetBehavior by lazy {
         BottomSheetBehavior.from(main_standardBottomSheet)
@@ -74,6 +79,20 @@ constructor(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        //set bottom sheet peek height
+        fragment_transacion_root.viewTreeObserver.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                fragment_transacion_root.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                val rootHeight = fragment_transacion_root.height
+                val layoutHeight = transaction_fragment_view.height
+                Log.d(TAG, "onViewCreated: rootHeight: $rootHeight & layoutHeight: $layoutHeight")
+                bottomSheetBehavior.peekHeight = (rootHeight - layoutHeight)
+            }
+
+        })
+
 
         bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
         lastTransaction.setOnClickListener {
@@ -171,6 +190,7 @@ constructor(
             }
         }
     }
+
     private fun separate3By3(money1: Int): String {
         var money = money1
         if (money < 0) {
@@ -183,6 +203,7 @@ constructor(
         formatter.applyPattern("#,###,###,###")
         return formatter.format(money)
     }
+
     private fun initRecyclerView() {
 
         transaction_recyclerView.apply {
@@ -200,7 +221,13 @@ constructor(
                             }
                         }
                     }
-                    return Category(-1, -1, "UNKWON CATEGORY id: $id and size: ${viewModel.viewState.value?.categoryList?.size}", "NULL", -1)
+                    return Category(
+                        -1,
+                        -1,
+                        "UNKWON CATEGORY id: $id and size: ${viewModel.viewState.value?.categoryList?.size}",
+                        "NULL",
+                        -1
+                    )
                 }
             }
 //            addOnScrollListener(object: RecyclerView.OnScrollListener(){
