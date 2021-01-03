@@ -21,7 +21,7 @@
         android:layout_marginBottom="4dp"
 
         android:foregroundGravity="center"
-        app:cardCornerRadius="16dp"
+        card_view:cardCornerRadius="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/linear"
         app:layout_constraintStart_toStartOf="parent"

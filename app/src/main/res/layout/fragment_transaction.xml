@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_transacion_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F0F0F0"
-    android:id="@+id/fragment_transacion_root"
     tools:context=".ui.main.transaction.TransactionFragment">
-<!--    android:background="#E6E6E6"-->
+    <!--    android:background="#E6E6E6"-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/transaction_fragment_view"
@@ -86,11 +86,11 @@
                         android:id="@+id/txt_income_viewHolder"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
                         android:foregroundGravity="center"
                         android:gravity="center"
                         android:text="@string/income"
                         android:textColor="@color/white"
-android:layout_marginTop="8dp"
                         android:textSize="16sp"
                         app:layout_constraintEnd_toStartOf="@+id/txt_expenses_viewHolder"
                         app:layout_constraintStart_toStartOf="parent"
@@ -116,6 +116,8 @@ android:layout_marginTop="8dp"
                         android:id="@+id/card_divider"
                         android:layout_width="2dp"
                         android:layout_height="match_parent"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="12dp"
                         android:background="@color/backGround_gray"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/txt_expenses"
@@ -127,11 +129,11 @@ android:layout_marginTop="8dp"
                         android:id="@+id/txt_expenses_viewHolder"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
                         android:foregroundGravity="center"
                         android:gravity="center"
                         android:text="@string/expenses"
                         android:textColor="@color/white"
-                        android:layout_marginTop="8dp"
                         android:textSize="16sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/txt_income_viewHolder"
@@ -174,82 +176,86 @@ android:layout_marginTop="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:background="@drawable/bottom_sheet_bg"
+        android:background="@color/white"
         android:orientation="vertical"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
 
-        <View
-            android:id="@+id/view_hastam"
-            android:layout_width="32dp"
-            android:layout_height="6dp"
-            android:layout_gravity="center"
-            android:layout_margin="8dp"
-            android:background="#CFCFCF" />
 
-        <TextView
-            android:id="@+id/lastTransaction"
-            android:layout_width="match_parent"
-            android:layout_height="34dp"
-            android:layout_gravity="center"
-            android:gravity="start|center"
-            android:padding="4dp"
-            android:paddingStart="8dp"
-            android:text="Last Transactions"
-            android:textSize="20sp"
-            android:textStyle="bold" />
 
-        <LinearLayout
-            android:id="@+id/bottom_sheet_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <ImageButton
-                android:id="@+id/main_bottom_sheet_back_arrow"
-                android:layout_width="@dimen/action_bar_size"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-                android:clickable="true"
-                android:focusable="true"
-                android:tint="@color/black"
-                android:visibility="visible"
-                app:srcCompat="@drawable/abc_vector_test" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+            <View
+                android:id="@+id/view_hastam"
+                android:layout_width="32dp"
+                android:layout_height="6dp"
                 android:layout_gravity="center"
-                android:layout_weight="1"
-                android:gravity="start|center"
-                android:padding="4dp"
-                android:text="Last Transactions"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:layout_margin="8dp"
+                android:background="#CFCFCF" />
 
-            <ImageButton
-                android:id="@+id/main_bottom_sheet_search_btn"
-                android:layout_width="@dimen/action_bar_size"
-                android:layout_height="match_parent"
+            <com.google.android.material.appbar.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_gravity="bottom"
                 android:background="@color/white"
-                android:clickable="true"
-                android:focusable="true"
-                android:tint="@color/black"
-                android:visibility="visible"
-                app:srcCompat="@android:drawable/ic_menu_search" />
-        </LinearLayout>
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:liftOnScroll="true">
+
+
+                <LinearLayout
+                    android:id="@+id/bottom_sheet_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:orientation="horizontal"
+                    android:visibility="visible">
+
+                    <ImageButton
+                        android:id="@+id/main_bottom_sheet_back_arrow"
+                        android:layout_width="1px"
+                        android:layout_height="match_parent"
+                        android:background="@color/white"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:tint="@color/black"
+                        android:visibility="visible"
+                        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="4dp"
+                        android:layout_weight="1"
+                        android:gravity="start|center"
+                        android:padding="4dp"
+                        android:text="Last Transactions"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <ImageButton
+                        android:id="@+id/main_bottom_sheet_search_btn"
+                        android:layout_width="@dimen/action_bar_size"
+                        android:layout_height="match_parent"
+                        android:background="@color/white"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:tint="@color/black"
+                        android:visibility="visible"
+                        app:srcCompat="?android:attr/actionModeWebSearchDrawable" />
+                </LinearLayout>
+            </com.google.android.material.appbar.AppBarLayout>
 
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/transaction_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="8dp" />
-
+            android:paddingTop="8dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     </LinearLayout>
-    <!--    </androidx.core.widget.NestedScrollView>-->
+    <!--        </androidx.core.widget.NestedScrollView>-->
 
     <ProgressBar
         android:id="@+id/progressBar"

@@ -2,12 +2,13 @@ package com.example.jibi.ui.main.transaction
 
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.jibi.R
 import com.example.jibi.di.main.MainScope
@@ -15,7 +16,6 @@ import com.example.jibi.models.Category
 import com.example.jibi.models.Record
 import com.example.jibi.ui.main.transaction.bottomSheet.CreateNewTransBottomSheet
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
-import com.example.jibi.util.mahdiLog
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import kotlinx.android.synthetic.main.activity_main.*
@@ -42,12 +42,17 @@ constructor(
     private val TAG = "TransactionFragment"
 
     private lateinit var recyclerAdapter: TransactionListAdapter
+
     private val bottomSheetBehavior by lazy {
         BottomSheetBehavior.from(main_standardBottomSheet)
     }
+
+    private var closeBottomWidth = 0
+
     val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
 
         override fun onStateChanged(bottomSheet: View, newState: Int) {
+            Log.d(TAG, "onStateChanged: newState: $newState")
             if (BottomSheetBehavior.STATE_EXPANDED == newState) {
                 showTransactionListToolBar()
             } else {
@@ -58,28 +63,37 @@ constructor(
         }
 
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
-            // Do something for slide offset
+            // make the toolbar 20% of the screen
+            if (closeBottomWidth<1){
+                closeBottomWidth=convertDpToPx(56)
+            }
+            val closeButtonParams =
+                main_bottom_sheet_back_arrow.layoutParams as ViewGroup.LayoutParams
+            closeButtonParams.width = (slideOffset * closeBottomWidth).toInt()
+            main_bottom_sheet_back_arrow.layoutParams = closeButtonParams
+
         }
     }
 
     fun showTransactionListToolBar() {
         view_hastam.visibility = View.GONE
-        lastTransaction.visibility = View.GONE
-        bottom_sheet_toolbar.visibility = View.VISIBLE
-        main_standardBottomSheet.setBackgroundResource(R.color.white)
+//        lastTransaction.visibility = View.GONE
+//        bottom_sheet_toolbar.visibility = View.VISIBLE
+//        main_standardBottomSheet.setBackgroundResource(R.color.white)
     }
 
     fun hideTransactionListToolBar() {
         view_hastam.visibility = View.VISIBLE
-        lastTransaction.visibility = View.VISIBLE
-        bottom_sheet_toolbar.visibility = View.GONE
-        main_standardBottomSheet.setBackgroundResource(R.drawable.bottom_sheet_bg)
+//        lastTransaction.visibility = View.VISIBLE
+//        bottom_sheet_toolbar.visibility = View.GONE
+//        main_standardBottomSheet.setBackgroundResource(R.drawable.bottom_sheet_bg)
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        //set width for closeButtonAnimation
+        closeBottomWidth=convertDpToPx(56)
         //set bottom sheet peek height
         fragment_transacion_root.viewTreeObserver.addOnGlobalLayoutListener(object :
             ViewTreeObserver.OnGlobalLayoutListener {
@@ -87,7 +101,6 @@ constructor(
                 fragment_transacion_root.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 val rootHeight = fragment_transacion_root.height
                 val layoutHeight = transaction_fragment_view.height
-                Log.d(TAG, "onViewCreated: rootHeight: $rootHeight & layoutHeight: $layoutHeight")
                 bottomSheetBehavior.peekHeight = (rootHeight - layoutHeight)
             }
 
@@ -95,9 +108,7 @@ constructor(
 
 
         bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
-        lastTransaction.setOnClickListener {
-            findNavController().navigate(R.id.action_transactionFragment_to_createTransactionFragment)
-        }
+
         initRecyclerView()
         subscribeObservers()
         fab.setOnClickListener { view ->
@@ -138,6 +149,15 @@ constructor(
                 )
             )
         }
+    }
+
+    private fun convertDpToPx(dp: Int): Int {
+        val r = resources
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dp.toFloat(),
+            r.displayMetrics
+        ).toInt()
     }
 
     private fun showBottomSheet() {
