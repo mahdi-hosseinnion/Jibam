@@ -1,5 +1,6 @@
 package com.example.jibi.ui.main.transaction
 
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
@@ -7,9 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.Toast
+import androidx.cardview.widget.CardView
+import androidx.core.view.setPadding
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.jibi.R
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
@@ -48,24 +52,43 @@ constructor(
     }
 
     private var closeBottomWidth = 0
+    private var bottomSheetRadios = 0
+    private var lastRecyclerState = 0
 
     val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
 
         override fun onStateChanged(bottomSheet: View, newState: Int) {
-            Log.d(TAG, "onStateChanged: newState: $newState")
             if (BottomSheetBehavior.STATE_EXPANDED == newState) {
                 showTransactionListToolBar()
+                last_transacion_app_bar.isLiftOnScroll = false
             } else {
 //                if (BottomSheetBehavior.STATE_COLLAPSED == newState) {
+                last_transacion_app_bar.isLiftOnScroll = true
                 hideTransactionListToolBar()
             }
 
         }
 
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
-            // make the toolbar 20% of the screen
-            if (closeBottomWidth<1){
-                closeBottomWidth=convertDpToPx(56)
+            main_bottom_sheet_back_arrow.alpha = slideOffset
+            if (bottomSheetRadios < 1) {
+                bottomSheetRadios = convertDpToPx(18)
+            }
+            val bottomSheetBackGround = main_standardBottomSheet.background as GradientDrawable
+            val topHeight = (bottomSheetRadios * (1f - slideOffset))
+
+            //change bottom sheet raidus
+            bottomSheetBackGround.cornerRadius = topHeight
+//            main_standardBottomSheet.setPadding(0, topHeight.toInt(), 0, 0)
+            //change top of bottomSheet height
+            val viewParams = view_hastam.layoutParams
+            viewParams.height = topHeight.toInt()
+            view_hastam.layoutParams = viewParams
+            view_hastam2.alpha = (1f - slideOffset)
+
+            // make the toolbar close button animation
+            if (closeBottomWidth < 1) {
+                closeBottomWidth = convertDpToPx(56)
             }
             val closeButtonParams =
                 main_bottom_sheet_back_arrow.layoutParams as ViewGroup.LayoutParams
@@ -76,14 +99,14 @@ constructor(
     }
 
     fun showTransactionListToolBar() {
-        view_hastam.visibility = View.GONE
+//        view_hastam.visibility = View.GONE
 //        lastTransaction.visibility = View.GONE
 //        bottom_sheet_toolbar.visibility = View.VISIBLE
 //        main_standardBottomSheet.setBackgroundResource(R.color.white)
     }
 
     fun hideTransactionListToolBar() {
-        view_hastam.visibility = View.VISIBLE
+//        view_hastam.visibility = View.VISIBLE
 //        lastTransaction.visibility = View.VISIBLE
 //        bottom_sheet_toolbar.visibility = View.GONE
 //        main_standardBottomSheet.setBackgroundResource(R.drawable.bottom_sheet_bg)
@@ -93,19 +116,8 @@ constructor(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //set width for closeButtonAnimation
-        closeBottomWidth=convertDpToPx(56)
-        //set bottom sheet peek height
-        fragment_transacion_root.viewTreeObserver.addOnGlobalLayoutListener(object :
-            ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                fragment_transacion_root.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                val rootHeight = fragment_transacion_root.height
-                val layoutHeight = transaction_fragment_view.height
-                bottomSheetBehavior.peekHeight = (rootHeight - layoutHeight)
-            }
-
-        })
-
+        closeBottomWidth = convertDpToPx(56)
+        bottomSheetRadios = convertDpToPx(18)
 
         bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
 
@@ -175,6 +187,7 @@ constructor(
         })
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
             viewState?.let {
+                Log.d(TAG, "submitList: called transacionLIst: ${it.transactionList}")
                 it.transactionList?.let { transactionList ->
                     recyclerAdapter.submitList(transactionList, true)
                 }
@@ -278,6 +291,19 @@ constructor(
 
     override fun onResume() {
         super.onResume()
+
+        //set bottom sheet peek height
+        fragment_transacion_root.viewTreeObserver.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                fragment_transacion_root.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                val rootHeight = fragment_transacion_root.height
+                val layoutHeight = transaction_fragment_view.height
+                bottomSheetBehavior.peekHeight = (rootHeight - layoutHeight)
+            }
+
+        })
+
         uiCommunicationListener.hideToolbar()
 
         viewModel.countOfNonCancellableJobs.observe(viewLifecycleOwner, Observer {

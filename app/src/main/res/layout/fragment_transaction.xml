@@ -6,35 +6,37 @@
     android:id="@+id/fragment_transacion_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F0F0F0"
+    android:background="@drawable/fragment_transacion_bg"
     tools:context=".ui.main.transaction.TransactionFragment">
     <!--    android:background="#E6E6E6"-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/transaction_fragment_view"
         android:layout_width="match_parent"
-        android:layout_height="300dp">
+        android:layout_height="244dp">
+        <!--        android:layout_height="300dp">-->
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar_maina"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/mtrl_toolbar_default_height"
-            android:background="@color/purple_500"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <!--        <androidx.appcompat.widget.Toolbar-->
+        <!--            android:id="@+id/toolbar_maina"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="@dimen/mtrl_toolbar_default_height"-->
+        <!--            android:background="@color/purple_500"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent" />-->
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_margin="8dp"
-            android:background="@drawable/main_card_bg"
             android:padding="8dp"
+            android:paddingTop="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar_maina">
+            app:layout_constraintTop_toTopOf="parent">
+            <!--            android:background="@drawable/main_card_bg"-->
 
             <TextView
                 android:id="@+id/txt_balance_viewHolder"
@@ -174,84 +176,99 @@
         android:id="@+id/main_standardBottomSheet"
         style="?attr/bottomSheetStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:background="@color/white"
+        android:layout_height="match_parent"
+        android:background="@drawable/bottom_sheet_bg"
         android:orientation="vertical"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
 
-
+        <FrameLayout
+            android:id="@+id/view_hastam"
+            android:layout_width="40dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center">
 
             <View
-                android:id="@+id/view_hastam"
-                android:layout_width="32dp"
-                android:layout_height="6dp"
+                android:id="@+id/view_hastam2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_margin="8dp"
-                android:background="#CFCFCF" />
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"
+                android:background="@drawable/view_hastam2_bg" />
+            <!--                card_view:cardBackgroundColor="#EBEBEB" />-->
+        </FrameLayout>
 
-            <com.google.android.material.appbar.AppBarLayout
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:id="@+id/last_transacion_app_bar"
+            android:layout_gravity="bottom"
+            android:background="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:liftOnScroll="true">
+            <!--            <androidx.appcompat.widget.Toolbar-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent">-->
+
+            <LinearLayout
+                android:id="@+id/bottom_sheet_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:layout_gravity="bottom"
-                android:background="@color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:liftOnScroll="true">
+                android:orientation="horizontal"
+                android:visibility="visible">
 
+                <ImageButton
+                    android:id="@+id/main_bottom_sheet_back_arrow"
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:scaleType="centerInside"
+                    android:tint="@color/black"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/ic_baseline_close_24" />
 
-                <LinearLayout
-                    android:id="@+id/bottom_sheet_toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:orientation="horizontal"
-                    android:visibility="visible">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:gravity="start|center"
+                    android:padding="4dp"
+                    android:text="Transactions"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="normal" />
 
-                    <ImageButton
-                        android:id="@+id/main_bottom_sheet_back_arrow"
-                        android:layout_width="1px"
-                        android:layout_height="match_parent"
-                        android:background="@color/white"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:tint="@color/black"
-                        android:visibility="visible"
-                        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+                <ImageButton
+                    android:id="@+id/main_bottom_sheet_search_btn"
+                    android:layout_width="@dimen/action_bar_size"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:tint="@color/black"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/ic_baseline_search_24" />
+            </LinearLayout>
+            <!--            </androidx.appcompat.widget.Toolbar>-->
+        </com.google.android.material.appbar.AppBarLayout>
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="4dp"
-                        android:layout_weight="1"
-                        android:gravity="start|center"
-                        android:padding="4dp"
-                        android:text="Last Transactions"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-
-                    <ImageButton
-                        android:id="@+id/main_bottom_sheet_search_btn"
-                        android:layout_width="@dimen/action_bar_size"
-                        android:layout_height="match_parent"
-                        android:background="@color/white"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:tint="@color/black"
-                        android:visibility="visible"
-                        app:srcCompat="?android:attr/actionModeWebSearchDrawable" />
-                </LinearLayout>
-            </com.google.android.material.appbar.AppBarLayout>
-
+        <!--        <View-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="1dp"-->
+        <!--            android:background="#EBEBEB" />-->
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/transaction_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="8dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     </LinearLayout>

@@ -14,10 +14,12 @@ import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent.*
 import com.example.jibi.ui.main.transaction.state.TransactionViewState
+import com.example.jibi.util.Constants
 import com.example.jibi.util.DataState
 import com.example.jibi.util.UIComponentType
 import com.example.jibi.util.mahdiLog
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
@@ -25,6 +27,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@FlowPreview
 @ExperimentalCoroutinesApi
 @MainScope
 class MainViewModel
@@ -74,7 +77,10 @@ constructor(
                 mainRepository.getTransactionList()
                     //loading stuff
                     .onStart { increaseLoading(GET_LIST_OF_TRANSACTION) }
-                    .catch { cause -> addToMessageStack(throwable = cause) }
+                    .catch {
+                            cause -> addToMessageStack(throwable = cause)
+                        Log.d(TAG, "crashed")
+                    }
                     .collect {
                         //loading stuff
                         decreaseLoading(GET_LIST_OF_TRANSACTION)
@@ -95,6 +101,15 @@ constructor(
                             setListOfCategories(it)
                         }
                     }
+            }
+            //timeout loading decrese
+            launch {
+                delay(Constants.CACHE_TIMEOUT)
+                decreaseLoading(GET_LIST_OF_CATEGORY)
+                decreaseLoading(GET_LIST_OF_TRANSACTION)
+                decreaseLoading(GET_SUM_OF_ALL_INCOME)
+                decreaseLoading(GET_SUM_OF_ALL_EXPENSES)
+
             }
         }
     }

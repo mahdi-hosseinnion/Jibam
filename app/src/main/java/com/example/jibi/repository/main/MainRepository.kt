@@ -50,6 +50,9 @@ constructor(
         maxDate: Int? = null
     ): Flow<List<Record>?> =
         recordsDao.getRecords(minDate, maxDate).map { currentList ->
+            if (currentList.size<1){
+                return@map null
+            }
             val resultList = ArrayList<Record>()
             var headerDate = currentDateInString(currentList[0].date)
             var incomeSum = 0
