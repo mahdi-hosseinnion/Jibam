@@ -5,9 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_transaction_item"
     android:layout_width="match_parent"
+    android:layout_height="70dp"
     android:paddingLeft="8dp"
-    android:paddingRight="8dp"
-    android:layout_height="70dp">
+    android:paddingRight="8dp">
 
 
     <androidx.cardview.widget.CardView
@@ -17,16 +17,16 @@
         android:layout_gravity="center"
         android:layout_marginStart="4dp"
         android:layout_marginTop="4dp"
-        android:layout_marginEnd="4dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="4dp"
 
         android:foregroundGravity="center"
-        card_view:cardCornerRadius="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/linear"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        card_view:cardBackgroundColor="#D297EA">
+        card_view:cardBackgroundColor="#D297EA"
+        card_view:cardCornerRadius="16dp">
 
         <ImageView
             android:id="@+id/category_image"

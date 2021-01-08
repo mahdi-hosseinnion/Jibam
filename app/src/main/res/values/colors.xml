@@ -14,4 +14,5 @@
     <color name="expensesTextColor">#FB2946</color>
     <color name="incomeTextColor">#00D188</color>
     <color name="background_gray">#F9FAFE</color>
+    <color name="category_icon_foreground">#F06292</color>
 </resources>
