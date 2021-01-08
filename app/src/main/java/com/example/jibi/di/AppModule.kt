@@ -4,6 +4,10 @@ import android.app.Application
 import android.os.Build
 import androidx.core.os.ConfigurationCompat
 import androidx.room.Room
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
+import com.bumptech.glide.request.RequestOptions
+import com.example.jibi.R
 import com.example.jibi.persistence.AppDatabase
 import com.example.jibi.persistence.AppDatabase.Companion.DATABASE_NAME
 import com.example.jibi.persistence.CategoriesDao
@@ -46,5 +50,20 @@ object AppModule {
     fun provideCurrentLocal(app: Application): Locale {
         return ConfigurationCompat.getLocales(app.resources.configuration)[0]
 
+    }
+    @Singleton
+    @Provides
+    fun provideRequestOptions(): RequestOptions {
+        return RequestOptions()
+//            .error
+//            .placeholderOf(R.drawable.ic_cat_others)
+//            .error(R.drawable.ic_cat_others)
+    }
+
+    @Singleton
+    @Provides
+    fun provideGlideInstance(application: Application, requestOptions: RequestOptions): RequestManager {
+        return Glide.with(application)
+            .setDefaultRequestOptions(requestOptions)
     }
 }

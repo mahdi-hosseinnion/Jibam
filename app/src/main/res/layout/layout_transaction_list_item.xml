@@ -26,17 +26,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         card_view:cardBackgroundColor="#D297EA"
-        card_view:cardCornerRadius="16dp">
+        card_view:cardCornerRadius="27dp">
 
         <ImageView
             android:id="@+id/category_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:padding="12dp"
             android:layout_gravity="center"
             android:background="#D297EA"
-            android:scaleType="center"
-            app:srcCompat="@android:drawable/btn_star_big_on"
-            app:tint="@color/black" />
+            android:scaleType="center"/>
+<!--            tools:srcCompat="@drawable/ic_cat_travel"/>-->
+<!--            app:tint="@color/black" />-->
     </androidx.cardview.widget.CardView>
 
     <LinearLayout

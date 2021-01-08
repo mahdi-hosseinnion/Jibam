@@ -14,6 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.RequestManager
 import com.example.jibi.R
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
@@ -37,7 +38,8 @@ import kotlin.random.Random
 class TransactionFragment
 @Inject
 constructor(
-    viewModelFactory: ViewModelProvider.Factory
+    viewModelFactory: ViewModelProvider.Factory,
+    private val requestManager: RequestManager
 ) : BaseTransactionFragment(
     R.layout.fragment_transaction,
     viewModelFactory
@@ -175,7 +177,7 @@ constructor(
     private fun showBottomSheet() {
 //        activity?.let {
         val modalBottomSheet =
-            CreateNewTransBottomSheet(viewModel.viewState.value!!.categoryList!!)
+            CreateNewTransBottomSheet(viewModel.viewState.value!!.categoryList!!,requestManager)
 //            modalBottomSheet.show(it.supportFragmentManager, "CreateNewTransBottomSheet")
 //        }
         modalBottomSheet.show(parentFragmentManager, "CreateNewTransBottomSheet")
@@ -242,8 +244,9 @@ constructor(
         transaction_recyclerView.apply {
             layoutManager = LinearLayoutManager(this@TransactionFragment.context)
             recyclerAdapter = object : TransactionListAdapter(
-                null,
-                this@TransactionFragment
+                requestManager ,
+                this@TransactionFragment,
+                this@TransactionFragment.requireActivity().packageName
             ) {
 
                 override fun getCategoryByIdFromRoot(id: Int): Category {

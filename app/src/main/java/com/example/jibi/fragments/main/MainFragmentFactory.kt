@@ -2,6 +2,7 @@ package com.example.jibi.fragments.main
 
 import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.RequestManager
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.ui.main.transaction.AddTransactionFragment
 import com.example.jibi.ui.main.transaction.TransactionFragment
@@ -13,15 +14,16 @@ import javax.inject.Inject
 class MainFragmentFactory
 @Inject
 constructor(
-    private val viewModelFactory: ViewModelProvider.Factory
-) : FragmentFactory() {
+    private val viewModelFactory: ViewModelProvider.Factory,
+    private val requestManager: RequestManager
+    ) : FragmentFactory() {
 
     override fun instantiate(classLoader: ClassLoader, className: String) =
 
         when (className) {
 
             TransactionFragment::class.java.name -> {
-                TransactionFragment(viewModelFactory)
+                TransactionFragment(viewModelFactory,requestManager)
             }
 
             AddTransactionFragment::class.java.name -> {
@@ -29,7 +31,7 @@ constructor(
             }
 
             else -> {
-                TransactionFragment(viewModelFactory)
+                TransactionFragment(viewModelFactory,requestManager)
             }
         }
 

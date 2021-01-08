@@ -19,6 +19,7 @@ import androidx.viewpager.widget.ViewPager
 import biz.laenger.android.vpbs.BottomSheetUtils
 import biz.laenger.android.vpbs.ViewPagerBottomSheetBehavior
 import biz.laenger.android.vpbs.ViewPagerBottomSheetDialogFragment
+import com.bumptech.glide.RequestManager
 import com.example.jibi.R
 import com.example.jibi.models.Category
 import com.example.jibi.ui.main.transaction.TransactionFragmentDirections
@@ -30,7 +31,9 @@ import java.util.*
 
 class CreateNewTransBottomSheet
 constructor(
-    private val categoryList: List<Category>
+    private val categoryList: List<Category>,
+    private val requestManager: RequestManager
+
 ) : ViewPagerBottomSheetDialogFragment(), BottomSheetListAdapter.Interaction,
     ViewPager.OnPageChangeListener {
 
@@ -199,8 +202,9 @@ constructor(
             recycler.apply {
                 layoutManager = GridLayoutManager(this@CreateNewTransBottomSheet.context, 4)
                 recyclerAdapter = BottomSheetListAdapter(
-                    null,
-                    this@CreateNewTransBottomSheet
+                    requestManager,
+                    this@CreateNewTransBottomSheet,
+                    this@CreateNewTransBottomSheet.requireActivity().packageName
                 )
                 adapter = recyclerAdapter
             }

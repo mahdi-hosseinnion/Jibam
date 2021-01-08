@@ -1,7 +1,8 @@
 package com.example.jibi.ui.main.transaction
 
+import android.content.ContentResolver
 import android.content.res.Resources
-import android.graphics.Color
+import android.net.Uri
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.*
 import com.bumptech.glide.RequestManager
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.example.jibi.R
 import com.example.jibi.models.Category
 import com.example.jibi.models.Record
@@ -31,7 +33,8 @@ import kotlin.collections.ArrayList
 
 abstract class TransactionListAdapter(
     private val requestManager: RequestManager?,
-    private val interaction: Interaction? = null
+    private val interaction: Interaction? = null,
+    private val packageName: String
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -92,7 +95,8 @@ abstract class TransactionListAdapter(
                         false
                     ),
                     interaction = interaction,
-                    requestManager = requestManager
+                    requestManager = requestManager,
+                    packageName = packageName
                 )
             }
             HEADER_ITEM -> {
@@ -113,7 +117,8 @@ abstract class TransactionListAdapter(
                         false
                     ),
                     interaction = interaction,
-                    requestManager = requestManager
+                    requestManager = requestManager,
+                    packageName = packageName
                 )
             }
 //            else -> {
@@ -154,7 +159,7 @@ abstract class TransactionListAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is TransViewHolder -> {
-                holder.bind(differ.currentList[position],isHeader(position.plus(1)))
+                holder.bind(differ.currentList[position], isHeader(position.plus(1)))
             }
             is HeaderViewHolder -> {
                 holder.bind(differ.currentList[position])
@@ -235,7 +240,8 @@ abstract class TransactionListAdapter(
     constructor(
         itemView: View,
         val requestManager: RequestManager?,
-        private val interaction: Interaction?
+        private val interaction: Interaction?,
+        val packageName: String
     ) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(item: Record, isNextItemHeader: Boolean = false) = with(itemView) {
@@ -267,13 +273,21 @@ abstract class TransactionListAdapter(
                 itemView.price.setTextColor(resources.getColor(R.color.expensesTextColor))
                 itemView.priceCard.setCardBackgroundColor(resources.getColor(R.color.expensesColor))
             }
+            val categoryImageUrl = this.resources.getIdentifier(
+                "ic_cat_${category.name}",
+                "drawable",
+                packageName
+            )
             //TODO
 //            itemView.card
-//           //            requestManager
-////                .load(item.image)
-////                .transition(withCrossFade())
-////                .into(itemView.category_iamge)
+            requestManager
+                ?.load(categoryImageUrl)
+                ?.centerInside()
+                ?.transition(withCrossFade())
+                ?.error(R.drawable.ic_error)
+                ?.into(itemView.category_image)
         }
+
         private fun separate3By3(money1: Int): String {
             var money = money1
             if (money < 0) {

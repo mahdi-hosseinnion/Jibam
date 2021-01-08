@@ -5,12 +5,11 @@
     android:layout_height="80dp"
     android:layout_gravity="center"
     android:layout_weight="100"
-    android:gravity="center"
-    android:orientation="vertical"
     android:clickable="true"
     android:focusable="true"
-    android:padding="4dp"
-    >
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="4dp">
 
     <ImageView
         android:id="@+id/category_image"
@@ -18,8 +17,8 @@
         android:layout_height="0dp"
         android:layout_gravity="center"
         android:layout_weight="60"
-
-        app:srcCompat="@android:drawable/ic_notification_overlay" />
+        android:background="@drawable/category_background"
+        app:tint="@color/black" />
 
     <TextView
         android:id="@+id/category_name"

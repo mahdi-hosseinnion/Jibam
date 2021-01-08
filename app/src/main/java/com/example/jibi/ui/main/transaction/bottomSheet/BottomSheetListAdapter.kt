@@ -9,10 +9,13 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withC
 import com.example.jibi.R
 import com.example.jibi.models.Category
 import kotlinx.android.synthetic.main.layout_category_list_item.view.*
+import kotlinx.android.synthetic.main.layout_category_list_item.view.category_image
+import kotlinx.android.synthetic.main.layout_transaction_list_item.view.*
 
 class BottomSheetListAdapter(
     private val requestManager: RequestManager?,
-    private val interaction: Interaction? = null
+    private val interaction: Interaction? = null,
+    private val packageName:String
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -45,7 +48,8 @@ class BottomSheetListAdapter(
                 false
             ),
             interaction = interaction,
-            requestManager = requestManager
+            requestManager = requestManager,
+            packageName = packageName
         )
     }
 
@@ -118,7 +122,8 @@ class BottomSheetListAdapter(
     constructor(
         itemView: View,
         val requestManager: RequestManager?,
-        private val interaction: Interaction?
+        private val interaction: Interaction?,
+        private val packageName:String
     ) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(item: Category) = with(itemView) {
@@ -131,6 +136,19 @@ class BottomSheetListAdapter(
                 ?.into(itemView.category_image)
             itemView.category_name.text = item.name
 //            itemView.blog_update_date.text = DateUtils.convertLongToStringDate(item.date_updated)
+            val categoryImageUrl = this.resources.getIdentifier(
+                "ic_cat_${item.name}",
+                "drawable",
+                packageName
+            )
+            //TODO
+//            itemView.card
+            requestManager
+                ?.load(categoryImageUrl)
+                ?.centerInside()
+                ?.transition(withCrossFade())
+                ?.error(R.drawable.ic_error)
+                ?.into(itemView.category_image)
         }
     }
 
