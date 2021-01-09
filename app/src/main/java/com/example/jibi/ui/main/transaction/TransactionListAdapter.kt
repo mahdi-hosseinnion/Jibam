@@ -280,7 +280,7 @@ abstract class TransactionListAdapter(
             )
             //TODO
 //            itemView.card
-            itemView.cardView.setCardBackgroundColor(resources.getColor(listOfColor[(category.id+1)]))
+            itemView.cardView.setCardBackgroundColor(resources.getColor(listOfColor[(category.id + 1)]))
             requestManager
                 ?.load(categoryImageUrl)
                 ?.centerInside()

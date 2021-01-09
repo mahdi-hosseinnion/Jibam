@@ -2,6 +2,8 @@ package com.example.jibi.ui.main.transaction
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
@@ -18,12 +20,14 @@ import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
 import com.example.jibi.models.Record
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
-import com.example.jibi.util.mahdiLog
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
 import kotlinx.android.synthetic.main.fragment_add_transaction.view.*
 import kotlinx.android.synthetic.main.layout_category_list_item.*
 import kotlinx.android.synthetic.main.layout_transaction_list_item.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import java.text.DecimalFormat
+import java.text.NumberFormat
+import java.util.*
 import javax.inject.Inject
 
 
@@ -48,7 +52,7 @@ constructor(
         category = findCategory(cat_id = args.categoryId)
         setTransProperties(category = category)
         initUi()
-
+        edt_money.addTextChangedListener(onTextChangedListener)
     }
 
     override fun onResume() {
@@ -207,6 +211,39 @@ constructor(
 
     override fun onPause() {
         super.onPause()
+    }
+
+    private val onTextChangedListener = object : TextWatcher {
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+        override fun afterTextChanged(p0: Editable?) {
+            edt_money.removeTextChangedListener(this)
+
+            try {
+                var originalString: String = p0.toString()
+                val longval: Long
+                if (originalString.contains(",")) {
+                    originalString = originalString.replace(",".toRegex(), "")
+                }
+                longval = originalString.toLong()
+                val formatter: DecimalFormat = NumberFormat.getInstance(Locale.US) as DecimalFormat
+                formatter.applyPattern("#,###,###,###,###,###")
+                val formattedString: String = formatter.format(longval)
+
+                //setting text after format to EditText
+                edt_money.setText(formattedString)
+                edt_money.setSelection(edt_money.text!!.length)
+            } catch (nfe: NumberFormatException) {
+                nfe.printStackTrace()
+            } catch (e: Exception) {
+                Log.e(TAG, "afterTextChanged: ", e)
+            }
+
+            edt_money.addTextChangedListener(this)
+        }
+
     }
 
 }

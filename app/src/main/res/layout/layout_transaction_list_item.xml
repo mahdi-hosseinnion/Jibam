@@ -32,12 +32,12 @@
             android:id="@+id/category_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="14dp"
             android:layout_gravity="center"
-            android:scaleType="center"/>
-<!--        best size 24-->
-<!--            tools:srcCompat="@drawable/ic_cat_travel"/>-->
-<!--            app:tint="@color/black" />-->
+            android:padding="14dp"
+            android:scaleType="center" />
+        <!--        best size 24-->
+        <!--            tools:srcCompat="@drawable/ic_cat_travel"/>-->
+        <!--            app:tint="@color/black" />-->
     </androidx.cardview.widget.CardView>
 
     <LinearLayout
@@ -70,11 +70,11 @@
             android:layout_height="0dp"
             android:layout_gravity="center"
             android:layout_weight="30"
-            app:drawableTint="@color/black"
             android:gravity="center|start"
             android:padding="4dp"
             android:textStyle="normal"
             app:drawableStartCompat="@android:drawable/stat_notify_sdcard"
+            app:drawableTint="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/price"
             app:layout_constraintStart_toEndOf="@+id/cardView"
@@ -93,12 +93,14 @@
         android:layout_marginEnd="4dp"
         android:layout_marginBottom="4dp"
         android:foregroundGravity="center"
-        app:cardCornerRadius="4dp"
+        android:padding="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/linear"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        card_view:cardCornerRadius="8dp">
+
 
         <TextView
             android:id="@+id/price"

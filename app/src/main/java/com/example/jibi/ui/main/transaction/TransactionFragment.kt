@@ -7,8 +7,10 @@ import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.setPadding
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -49,15 +51,15 @@ constructor(
 
     private lateinit var recyclerAdapter: TransactionListAdapter
 
-    private val bottomSheetBehavior by lazy {
-        BottomSheetBehavior.from(main_standardBottomSheet)
-    }
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+
+    private var bottomSheetPeekHeight = 0
 
     private var closeBottomWidth = 0
     private var bottomSheetRadios = 0
     private var lastRecyclerState = 0
 
-    val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+    private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
 
         override fun onStateChanged(bottomSheet: View, newState: Int) {
             if (BottomSheetBehavior.STATE_EXPANDED == newState) {
@@ -121,7 +123,7 @@ constructor(
         closeBottomWidth = convertDpToPx(56)
         bottomSheetRadios = convertDpToPx(18)
 
-        bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
+        bottomSheetBehavior = BottomSheetBehavior.from(main_standardBottomSheet)
 
         initRecyclerView()
         subscribeObservers()
@@ -177,7 +179,7 @@ constructor(
     private fun showBottomSheet() {
 //        activity?.let {
         val modalBottomSheet =
-            CreateNewTransBottomSheet(viewModel.viewState.value!!.categoryList!!,requestManager)
+            CreateNewTransBottomSheet(viewModel.viewState.value!!.categoryList!!, requestManager)
 //            modalBottomSheet.show(it.supportFragmentManager, "CreateNewTransBottomSheet")
 //        }
         modalBottomSheet.show(parentFragmentManager, "CreateNewTransBottomSheet")
@@ -244,7 +246,7 @@ constructor(
         transaction_recyclerView.apply {
             layoutManager = LinearLayoutManager(this@TransactionFragment.context)
             recyclerAdapter = object : TransactionListAdapter(
-                requestManager ,
+                requestManager,
                 this@TransactionFragment,
                 this@TransactionFragment.requireActivity().packageName
             ) {
@@ -294,7 +296,7 @@ constructor(
 
     override fun onResume() {
         super.onResume()
-
+        Log.d(TAG, "onResume: called")
         //set bottom sheet peek height
         fragment_transacion_root.viewTreeObserver.addOnGlobalLayoutListener(object :
             ViewTreeObserver.OnGlobalLayoutListener {
@@ -302,10 +304,16 @@ constructor(
                 fragment_transacion_root.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 val rootHeight = fragment_transacion_root.height
                 val layoutHeight = transaction_fragment_view.height
-                bottomSheetBehavior.peekHeight = (rootHeight - layoutHeight)
+                Log.d(TAG, "onGlobalLayout: rootHeight:$rootHeight and layoutHeight $layoutHeight ")
+                if (bottomSheetPeekHeight < 1) {
+                    bottomSheetPeekHeight = rootHeight - layoutHeight
+                }
+                bottomSheetBehavior.peekHeight = bottomSheetPeekHeight
             }
 
         })
+
+        bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
 
         uiCommunicationListener.hideToolbar()
 
