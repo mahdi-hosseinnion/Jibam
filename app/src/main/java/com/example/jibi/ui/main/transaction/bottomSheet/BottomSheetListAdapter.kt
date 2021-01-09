@@ -1,5 +1,7 @@
 package com.example.jibi.ui.main.transaction.bottomSheet
 
+import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -149,6 +151,14 @@ class BottomSheetListAdapter(
                 ?.transition(withCrossFade())
                 ?.error(R.drawable.ic_error)
                 ?.into(itemView.category_image)
+        }
+        private fun convertDpToPx(dp: Int): Int {
+            val r = itemView.resources
+            return TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                dp.toFloat(),
+                r.displayMetrics
+            ).toInt()
         }
     }
 

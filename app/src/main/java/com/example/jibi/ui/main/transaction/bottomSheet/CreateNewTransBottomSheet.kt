@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.graphics.*
 import android.os.Build
+import android.util.Log
 import android.view.*
 import android.view.LayoutInflater
 import android.widget.FrameLayout
