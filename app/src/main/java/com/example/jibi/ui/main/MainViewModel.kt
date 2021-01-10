@@ -77,8 +77,8 @@ constructor(
                 mainRepository.getTransactionList()
                     //loading stuff
                     .onStart { increaseLoading(GET_LIST_OF_TRANSACTION) }
-                    .catch {
-                            cause -> addToMessageStack(throwable = cause)
+                    .catch { cause ->
+                        addToMessageStack(throwable = cause)
                         Log.d(TAG, "crashed")
                     }
                     .collect {
@@ -182,6 +182,11 @@ constructor(
     private fun setListOfCategories(categoryList: List<Category>) {
         val update = getCurrentViewStateOrNew()
             .copy(categoryList = categoryList)
+        setViewState(update)
+    }
+
+    fun setDetailTransFields(transaction: Record) {
+        val update = getCurrentViewStateOrNew().copy(detailTransFields = transaction)
         setViewState(update)
     }
 }

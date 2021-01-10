@@ -104,7 +104,7 @@ constructor(
     private fun currentDateInString(time: Int): String {
         val dv: Long = ((time.toLong()) * 1000) // its need to be in milisecond
         val df: Date = Date(dv)
-        return SimpleDateFormat("MM dd, yyyy", currentLocale).format(df)
+        return SimpleDateFormat("MM dd, yy", currentLocale).format(df)
     }
 
     //dataBase main dao

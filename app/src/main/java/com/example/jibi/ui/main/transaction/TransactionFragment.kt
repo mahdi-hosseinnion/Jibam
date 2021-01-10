@@ -14,6 +14,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.setPadding
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
@@ -29,12 +30,14 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.android.synthetic.main.layout_transaction_list_item.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
 import javax.inject.Inject
 import kotlin.random.Random
 
+@FlowPreview
 @ExperimentalCoroutinesApi
 @MainScope
 class TransactionFragment
@@ -328,7 +331,10 @@ constructor(
 
     }
 
+
     override fun onItemSelected(position: Int, item: Record) {
+        viewModel.setDetailTransFields(item)
+        findNavController().navigate(R.id.action_transactionFragment_to_detailTransFragment)
     }
 
     override fun restoreListPosition() {

@@ -26,13 +26,15 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class MainRepositoryTest {
     private val ERROR_MESSAGE = "SOMETHING GOES WRUNG"
-    private val RECORD_1 = Record(3, 32, "32a3g", "32df", 32232345)
+    private val RECORD_1 = Record(3, 32, "32a3g", 1, 32232345)
 
     //system under test
     lateinit var mainRepository: MainRepository
@@ -47,7 +49,7 @@ class MainRepositoryTest {
     fun init() {
         MockKAnnotations.init(this)
         mainRepository = MainRepository(
-            recordsDao, categoriesDao
+            recordsDao, categoriesDao, Locale.CANADA
         )
         //mock log.e for flow.catch in asDataState()
         mockkStatic(Log::class)
