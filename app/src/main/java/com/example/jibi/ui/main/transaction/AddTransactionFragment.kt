@@ -50,11 +50,14 @@ constructor(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setHasOptionsMenu(true)
+//        setHasOptionsMenu(true)
         category = findCategory(cat_id = args.categoryId)
         setTransProperties(category = category)
         initUi()
         edt_money.addTextChangedListener(onTextChangedListener)
+        fab_insertTransaction.setOnClickListener {
+            insertNewTrans()
+        }
     }
 
     override fun onResume() {
@@ -198,19 +201,19 @@ constructor(
 
     private fun getCurrentTimeInSecond(): Int = (System.currentTimeMillis() / 1000).toInt()
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.add_menu, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.save -> {
-                insertNewTrans()
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
+//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+//        inflater.inflate(R.menu.add_menu, menu)
+//    }
+//
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        when (item.itemId) {
+//            R.id.save -> {
+//                insertNewTrans()
+//                return true
+//            }
+//        }
+//        return super.onOptionsItemSelected(item)
+//    }
 
     override fun onPause() {
         super.onPause()
