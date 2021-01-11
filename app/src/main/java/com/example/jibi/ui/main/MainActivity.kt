@@ -64,12 +64,6 @@ class MainActivity : BaseActivity() {
         return super.onSupportNavigateUp()
     }
 
-    override fun onResponseReceived(
-        response: Response,
-        stateMessageCallback: StateMessageCallback
-    ) {
-        //TODO("Not yet implemented")
-    }
 
     override fun hideToolbar() {
         toolbar_main.visibility = View.GONE

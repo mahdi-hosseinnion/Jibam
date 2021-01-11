@@ -52,6 +52,49 @@ abstract class TransactionListAdapter(
             0,
             0
         )
+        val listOfColor = listOf(
+            R.color.category_background_color_1,
+            R.color.category_background_color_2,
+            R.color.category_background_color_3,
+            R.color.category_background_color_4,
+            R.color.category_background_color_5,
+            R.color.category_background_color_6,
+            R.color.category_background_color_7,
+            R.color.category_background_color_8,
+            R.color.category_background_color_9,
+            R.color.category_background_color_10,
+            R.color.category_background_color_11,
+            R.color.category_background_color_12,
+            R.color.category_background_color_13,
+            R.color.category_background_color_14,
+            R.color.category_background_color_15,
+            R.color.category_background_color_16,
+            R.color.category_background_color_17,
+            R.color.category_background_color_18,
+            R.color.category_background_color_19,
+            R.color.category_background_color_20,
+            R.color.category_background_color_21,
+            R.color.category_background_color_22,
+            R.color.category_background_color_23,
+            R.color.category_background_color_24,
+            R.color.category_background_color_25,
+            R.color.category_background_color_26,
+            R.color.category_background_color_27,
+            R.color.category_background_color_28,
+            R.color.category_background_color_29,
+            R.color.category_background_color_30,
+            R.color.category_background_color_31,
+            R.color.category_background_color_32,
+            R.color.category_background_color_33,
+            R.color.category_background_color_34,
+            R.color.category_background_color_35,
+            R.color.category_background_color_36,
+            R.color.category_background_color_37,
+            R.color.category_background_color_38,
+            R.color.category_background_color_39,
+            R.color.category_background_color_40,
+            R.color.category_background_color_41
+        )
     }
 
     val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Record>() {
@@ -280,60 +323,22 @@ abstract class TransactionListAdapter(
             )
             //TODO
 //            itemView.card
-            itemView.cardView.setCardBackgroundColor(resources.getColor(listOfColor[(category.id + 1)]))
+            if (category.id>0){
+            itemView.cardView.setCardBackgroundColor(
+                resources.getColor(
+                    listOfColor[(category.id.minus(
+                        1
+                    ))]
+                )
+            )}
             requestManager
                 ?.load(categoryImageUrl)
                 ?.centerInside()
                 ?.transition(withCrossFade())
                 ?.error(R.drawable.ic_error)
                 ?.into(itemView.category_image)
-            val ie = 1
-
         }
 
-        val listOfColor = listOf(
-            R.color.category_background_color_1,
-            R.color.category_background_color_2,
-            R.color.category_background_color_3,
-            R.color.category_background_color_4,
-            R.color.category_background_color_5,
-            R.color.category_background_color_6,
-            R.color.category_background_color_7,
-            R.color.category_background_color_8,
-            R.color.category_background_color_9,
-            R.color.category_background_color_10,
-            R.color.category_background_color_11,
-            R.color.category_background_color_12,
-            R.color.category_background_color_13,
-            R.color.category_background_color_14,
-            R.color.category_background_color_15,
-            R.color.category_background_color_16,
-            R.color.category_background_color_17,
-            R.color.category_background_color_18,
-            R.color.category_background_color_19,
-            R.color.category_background_color_20,
-            R.color.category_background_color_21,
-            R.color.category_background_color_22,
-            R.color.category_background_color_23,
-            R.color.category_background_color_24,
-            R.color.category_background_color_25,
-            R.color.category_background_color_26,
-            R.color.category_background_color_27,
-            R.color.category_background_color_28,
-            R.color.category_background_color_29,
-            R.color.category_background_color_30,
-            R.color.category_background_color_31,
-            R.color.category_background_color_32,
-            R.color.category_background_color_33,
-            R.color.category_background_color_34,
-            R.color.category_background_color_35,
-            R.color.category_background_color_36,
-            R.color.category_background_color_37,
-            R.color.category_background_color_38,
-            R.color.category_background_color_39,
-            R.color.category_background_color_40,
-            R.color.category_background_color_41
-        )
 
         private fun separate3By3(money1: Int): String {
             var money = money1
@@ -348,6 +353,7 @@ abstract class TransactionListAdapter(
             return formatter.format(money)
         }
     }
+
 
 
     class HeaderViewHolder

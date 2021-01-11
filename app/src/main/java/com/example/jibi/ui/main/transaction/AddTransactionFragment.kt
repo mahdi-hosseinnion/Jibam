@@ -25,12 +25,14 @@ import kotlinx.android.synthetic.main.fragment_add_transaction.view.*
 import kotlinx.android.synthetic.main.layout_category_list_item.*
 import kotlinx.android.synthetic.main.layout_transaction_list_item.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
 import javax.inject.Inject
 
 
+@FlowPreview
 @ExperimentalCoroutinesApi
 @MainScope
 class AddTransactionFragment
@@ -131,7 +133,8 @@ constructor(
             if (memo.isNullOrBlank()) {
                 memo = null
             }
-            var money: Int = (edt_money.text.toString().toInt())
+            var money: Int = (edt_money.text.toString().replace(",".toRegex(), "").toInt())
+
             if (category?.type == 1) {
                 money *= -1
             }
@@ -155,12 +158,12 @@ constructor(
 
 
     private fun handleInsertingErrors(): Boolean {
-        if (edt_money.text.toString().isBlank()) {
+        if (edt_money.text.toString().replace(",".toRegex(), "").isBlank()) {
             Log.e(TAG, "MONEY IS NULL")
             edt_money.error = "Please insert some money"
             return false
         }
-        if (edt_money.text.toString().toInt() < 0) {
+        if (edt_money.text.toString().replace(",".toRegex(), "").toInt() < 0) {
             Log.e(TAG, "MONEY IS INVALID MOENY")
             edt_money.error = "money should be grater then 0"
             return false

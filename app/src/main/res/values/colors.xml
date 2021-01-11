@@ -11,8 +11,8 @@
     <color name="backGround_white">#80CBC4</color>
     <color name="expensesColor">#FFDDE3</color>
     <color name="incomeColor">#C5F7E6</color>
-    <color name="expensesTextColor">#FB2946</color>
-    <color name="incomeTextColor">#00D188</color>
+    <color name="expensesTextColor">#000000</color>
+    <color name="incomeTextColor">#000000</color>
     <color name="background_gray">#F9FAFE</color>
     <color name="category_icon_foreground">#FFFFFF</color>
 <!--color material 300-->
