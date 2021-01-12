@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.LinearLayout
+import android.widget.SimpleAdapter
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -15,6 +16,7 @@ import androidx.core.view.setPadding
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
@@ -24,6 +26,7 @@ import com.example.jibi.models.Category
 import com.example.jibi.models.Record
 import com.example.jibi.ui.main.transaction.bottomSheet.CreateNewTransBottomSheet
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
+import com.example.jibi.util.SwipeToDeleteCallback
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import kotlinx.android.synthetic.main.activity_main.*
@@ -289,6 +292,26 @@ constructor(
 //                    }
 //                }
 //            })
+
+//            //swipe to delete
+            val swipeHandler =
+                object : SwipeToDeleteCallback(this@TransactionFragment.requireContext()) {
+                    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                        val adapter = transaction_recyclerView.adapter as TransactionListAdapter
+//                        delete from list
+                        adapter.removeAt(viewHolder.adapterPosition)
+                        //delete from database
+                        viewModel.launchNewJob(
+                            TransactionStateEvent.OneShotOperationsTransactionStateEvent.DeleteTransaction(
+                                adapter.getRecord(viewHolder.adapterPosition)
+                            )
+                        )
+                    }
+                }
+
+            val itemTouchHelper = ItemTouchHelper(swipeHandler)
+            itemTouchHelper.attachToRecyclerView(transaction_recyclerView)
+
             transaction_recyclerView.isNestedScrollingEnabled = true
             adapter = recyclerAdapter
         }
@@ -345,4 +368,6 @@ constructor(
 
     override fun restoreListPosition() {
     }
+
+
 }

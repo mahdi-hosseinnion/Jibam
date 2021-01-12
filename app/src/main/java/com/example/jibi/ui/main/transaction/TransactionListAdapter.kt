@@ -42,7 +42,7 @@ abstract class TransactionListAdapter(
 
     companion object {
         private const val TAG: String = "AppDebug"
-        private const val NO_MORE_RESULTS = -1
+        const val NO_MORE_RESULTS = -1
 
         const val YESTERDAY = "Yesterday"
         const val TODAY = "Today"
@@ -255,6 +255,21 @@ abstract class TransactionListAdapter(
         return differ.currentList.size
     }
 
+    fun getRecord(position: Int): Record = differ.currentList[position]
+
+
+    fun removeAt(position: Int) {
+        val newList = differ.currentList.toMutableList()
+        val beforeRecord = differ.currentList[position.minus(1)]
+        val afterRecord = differ.currentList[position.plus(1)]
+        if (beforeRecord.id == HEADER_ITEM &&
+            afterRecord.id == HEADER_ITEM
+        ) {
+            newList.removeAt(position.minus(1))
+        }
+        newList.removeAt(position)
+        differ.submitList(newList)
+    }
 //    // Prepare the images that will be displayed in the RecyclerView.
 //    // This also ensures if the network connection is lost, they will be in the cache
 //    fun preloadGlideImages(
