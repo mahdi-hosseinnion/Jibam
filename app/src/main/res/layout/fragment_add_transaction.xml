@@ -138,7 +138,7 @@
         android:layout_height="56dp"
         android:layout_gravity="end|bottom"
         android:contentDescription="yep"
-        android:layout_margin="8dp"
+        android:layout_margin="16dp"
         android:id="@+id/fab_insertTransaction"
         app:srcCompat="@drawable/ic_check_green_24dp" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

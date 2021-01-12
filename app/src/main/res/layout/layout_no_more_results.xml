@@ -4,11 +4,11 @@
     android:layout_height="40dp"
     android:layout_marginTop="8dp"
 
-    android:background="#817E7E">
+    android:background="#E6E6E6">
 <TextView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:gravity="center"
-    android:text="NO MORE RESULT!"/>
+    android:text="JIBI"/>
 </FrameLayout>

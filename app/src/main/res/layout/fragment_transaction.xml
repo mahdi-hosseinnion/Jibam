@@ -185,7 +185,7 @@
         <FrameLayout
             android:id="@+id/view_hastam"
             android:layout_width="40dp"
-            android:layout_height="18dp"
+            android:layout_height="8dp"
             android:layout_gravity="center">
 
             <View
@@ -193,8 +193,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="6dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="3dp"
                 android:background="@drawable/view_hastam2_bg" />
             <!--                card_view:cardBackgroundColor="#EBEBEB" />-->
         </FrameLayout>

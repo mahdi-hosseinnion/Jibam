@@ -79,7 +79,7 @@ constructor(
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
             main_bottom_sheet_back_arrow.alpha = slideOffset
             if (bottomSheetRadios < 1) {
-                bottomSheetRadios = convertDpToPx(18)
+                bottomSheetRadios = convertDpToPx(8)
             }
             val bottomSheetBackGround = main_standardBottomSheet.background as GradientDrawable
             val topHeight = (bottomSheetRadios * (1f - slideOffset))
@@ -124,7 +124,7 @@ constructor(
         super.onViewCreated(view, savedInstanceState)
         //set width for closeButtonAnimation
         closeBottomWidth = convertDpToPx(56)
-        bottomSheetRadios = convertDpToPx(18)
+        bottomSheetRadios = convertDpToPx(8)
 
         bottomSheetBehavior = BottomSheetBehavior.from(main_standardBottomSheet)
 
@@ -151,7 +151,10 @@ constructor(
                         money = Random.nextInt(-1000, 1000),
                         memo = null,
                         cat_id = Random.nextInt(42),
-                        date = Random.nextInt(1608681600, 1609286400)
+                        date = Random.nextInt(
+                            System.currentTimeMillis().minus(604_800L).toInt(),
+                            System.currentTimeMillis().toInt()
+                        )
                     )
                 )
             )
@@ -163,7 +166,10 @@ constructor(
                         money = Random.nextInt(-1000, 1000),
                         memo = "memo ${Random.nextInt(451252)}",
                         cat_id = Random.nextInt(42),
-                        date = Random.nextInt(1608681600, 1609286400)
+                        date = Random.nextInt(
+                            System.currentTimeMillis().minus(604_800L).toInt(),
+                            System.currentTimeMillis().toInt()
+                        )
                     )
                 )
             )

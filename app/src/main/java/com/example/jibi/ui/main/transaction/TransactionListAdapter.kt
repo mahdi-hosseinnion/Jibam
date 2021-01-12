@@ -43,6 +43,10 @@ abstract class TransactionListAdapter(
     companion object {
         private const val TAG: String = "AppDebug"
         private const val NO_MORE_RESULTS = -1
+
+        const val YESTERDAY = "Yesterday"
+        const val TODAY = "Today"
+
         const val HEADER_ITEM = -3
         private const val BLOG_ITEM = 0
         private val NO_MORE_RESULTS_BLOG_MARKER = Record(
@@ -323,14 +327,15 @@ abstract class TransactionListAdapter(
             )
             //TODO
 //            itemView.card
-            if (category.id>0){
-            itemView.cardView.setCardBackgroundColor(
-                resources.getColor(
-                    listOfColor[(category.id.minus(
-                        1
-                    ))]
+            if (category.id > 0) {
+                itemView.cardView.setCardBackgroundColor(
+                    resources.getColor(
+                        listOfColor[(category.id.minus(
+                            1
+                        ))]
+                    )
                 )
-            )}
+            }
             requestManager
                 ?.load(categoryImageUrl)
                 ?.centerInside()
@@ -353,7 +358,6 @@ abstract class TransactionListAdapter(
             return formatter.format(money)
         }
     }
-
 
 
     class HeaderViewHolder
@@ -387,7 +391,14 @@ abstract class TransactionListAdapter(
             } else {
                 itemView.header_income_sum.text = ""
             }
-            itemView.header_date.text = item.memo
+            if (item.memo == (YESTERDAY) || item.memo == (TODAY)
+            ) {
+                itemView.header_date_name.text = item.memo
+                itemView.header_date.text = ""
+            } else {
+                itemView.header_date_name.text = item.memo?.substring(0, 3)
+                itemView.header_date.text = item.memo?.substring(4)
+            }
 //            itemView.header_date.text = DateUtils.convertLongToStringDate(item.date)
         }
 

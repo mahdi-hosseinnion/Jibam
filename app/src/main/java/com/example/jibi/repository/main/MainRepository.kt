@@ -7,6 +7,8 @@ import com.example.jibi.persistence.*
 import com.example.jibi.repository.buildResponse
 import com.example.jibi.repository.safeCacheCall
 import com.example.jibi.ui.main.transaction.TransactionListAdapter
+import com.example.jibi.ui.main.transaction.TransactionListAdapter.Companion.TODAY
+import com.example.jibi.ui.main.transaction.TransactionListAdapter.Companion.YESTERDAY
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent.*
 import com.example.jibi.ui.main.transaction.state.TransactionViewState
 import com.example.jibi.util.*
@@ -29,6 +31,9 @@ constructor(
     val currentLocale: Locale
 ) {
 
+    var today: String? = null
+    var yesterday: String? = null
+
     fun getSumOfIncome(
         minDate: Int? = null,
         maxDate: Int? = null
@@ -50,7 +55,7 @@ constructor(
         maxDate: Int? = null
     ): Flow<List<Record>?> =
         recordsDao.getRecords(minDate, maxDate).map { currentList ->
-            if (currentList.size<1){
+            if (currentList.size < 1) {
                 return@map null
             }
             val resultList = ArrayList<Record>()
@@ -89,22 +94,56 @@ constructor(
             resultList.add(createHeader(headerDate, incomeSum, expensesSum, tempList.size))
             resultList.addAll(tempList)
             //clear item to defualt
+            today = null
+            yesterday = null
             return@map resultList
         }
 
-    private fun createHeader(date: String, income: Int, expenses: Int, lenght: Int): Record =
-        Record(
-            id = TransactionListAdapter.HEADER_ITEM,
-            money = expenses,
-            memo = date,
-            cat_id = income,
-            date = lenght
-        )
+    private fun createHeader(date: String, income: Int, expenses: Int, lenght: Int): Record {
+        return if (lenght > 1) {
+             Record(
+                id = TransactionListAdapter.HEADER_ITEM,
+                money = expenses,
+                memo = date,
+                cat_id = income,
+                date = lenght
+            )
+        } else {
+             Record(
+                id = TransactionListAdapter.HEADER_ITEM,
+                money = 0,
+                memo = date,
+                cat_id = 0,
+                date = lenght
+            )
+        }
+    }
 
     private fun currentDateInString(time: Int): String {
         val dv: Long = ((time.toLong()) * 1000) // its need to be in milisecond
         val df: Date = Date(dv)
-        return SimpleDateFormat("MM dd, yy", currentLocale).format(df)
+
+        val transDate = SimpleDateFormat("E MM/dd/yy", currentLocale).format(df)
+
+        if (today == null) {
+            today = SimpleDateFormat(
+                "E MM/dd/yy",
+                currentLocale
+            ).format(Date(System.currentTimeMillis()))
+        }
+        if (yesterday == null) {
+            yesterday = SimpleDateFormat(
+                "E MM/dd/yy",
+                currentLocale
+            ).format(Date(System.currentTimeMillis().minus(86_400_000L)))
+        }
+        if (transDate == today) {
+            return TODAY
+        }
+        if (transDate == yesterday) {
+            return YESTERDAY
+        }
+        return transDate
     }
 
     //dataBase main dao
