@@ -189,4 +189,22 @@ constructor(
         val update = getCurrentViewStateOrNew().copy(detailTransFields = transaction)
         setViewState(update)
     }
+
+    fun setRecentlyDeletedTrans(transaction: Record, position: Int, header: Record?) {
+        val update = getCurrentViewStateOrNew().copy(
+            recentlyDeletedFields = TransactionViewState.RecentlyDeletedFields(
+                recentlyDeletedTrans = transaction,
+                recentlyDeletedTransPosition = position,
+                recentlyDeletedHeader = header
+            )
+        )
+        setViewState(update)
+    }
+
+    fun setRecentlyDeletedTransToNull() {
+        val update = getCurrentViewStateOrNew().copy(
+            recentlyDeletedFields = TransactionViewState.RecentlyDeletedFields()
+        )
+        setViewState(update)
+    }
 }

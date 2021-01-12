@@ -16,6 +16,8 @@ import com.example.jibi.ui.BaseActivity
 import com.example.jibi.util.Response
 import com.example.jibi.util.StateMessageCallback
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.main_activity_root_view
+import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
@@ -41,6 +43,7 @@ class MainActivity : BaseActivity() {
 
         setupActionBarWithNavController()
     }
+
 
     override fun inject() {
         (application as BaseApplication).mainComponent()

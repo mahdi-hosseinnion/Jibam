@@ -15,8 +15,14 @@ data class TransactionViewState(
     var summeryMoney: SummaryMoney? = null,
 
     //detail fragment
-    var detailTransFields: Record? = null
+    var detailTransFields: Record? = null,
 
+    //swipe to delete
+    var recentlyDeletedFields: RecentlyDeletedFields = RecentlyDeletedFields()
 ) {
-
+    data class RecentlyDeletedFields(
+        var recentlyDeletedTrans: Record? = null,
+        var recentlyDeletedTransPosition: Int? = null,
+        var recentlyDeletedHeader: Record? = null
+    )
 }

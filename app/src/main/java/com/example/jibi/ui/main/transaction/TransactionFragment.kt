@@ -8,11 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.LinearLayout
-import android.widget.SimpleAdapter
 import android.widget.Toast
-import androidx.cardview.widget.CardView
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.view.setPadding
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -24,11 +20,13 @@ import com.example.jibi.R
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
 import com.example.jibi.models.Record
+import com.example.jibi.repository.buildResponse
 import com.example.jibi.ui.main.transaction.bottomSheet.CreateNewTransBottomSheet
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
-import com.example.jibi.util.SwipeToDeleteCallback
+import com.example.jibi.util.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.android.synthetic.main.layout_transaction_list_item.*
@@ -39,6 +37,7 @@ import java.text.NumberFormat
 import java.util.*
 import javax.inject.Inject
 import kotlin.random.Random
+
 
 @FlowPreview
 @ExperimentalCoroutinesApi
@@ -297,15 +296,26 @@ constructor(
             val swipeHandler =
                 object : SwipeToDeleteCallback(this@TransactionFragment.requireContext()) {
                     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+
                         val adapter = transaction_recyclerView.adapter as TransactionListAdapter
+                        val deletedTrans = adapter.getRecord(viewHolder.adapterPosition)
 //                        delete from list
-                        adapter.removeAt(viewHolder.adapterPosition)
+                        val removedHeader = adapter.removeAt(viewHolder.adapterPosition)
+                        //add to recently deleted
+                        viewModel.setRecentlyDeletedTrans(
+                            deletedTrans,
+                            viewHolder.adapterPosition,
+                            removedHeader
+                        )
                         //delete from database
                         viewModel.launchNewJob(
                             TransactionStateEvent.OneShotOperationsTransactionStateEvent.DeleteTransaction(
-                                adapter.getRecord(viewHolder.adapterPosition)
+                                deletedTrans
                             )
                         )
+                        //show snackBar
+                        showUndoSnackBar()
+
                     }
                 }
 
@@ -316,6 +326,53 @@ constructor(
             adapter = recyclerAdapter
         }
 
+    }
+
+    private fun showUndoSnackBar() {
+        val undoCallback = object : UndoCallback {
+            override fun undo() {
+                insertRecentlyDeletedTrans()
+            }
+
+            override fun onDismiss() {
+                viewModel.setRecentlyDeletedTransToNull()
+            }
+        }
+        uiCommunicationListener.onResponseReceived(
+            buildResponse(
+                "Transaction successfully deleted", UIComponentType.UndoSnackBar(undoCallback,fragment_transacion_root),
+                MessageType.Info
+            ), object : StateMessageCallback {
+                override fun removeMessageFromStack() {
+                }
+            }
+        )
+    }
+
+    private fun insertRecentlyDeletedTrans() {
+        viewModel.viewState.value?.recentlyDeletedFields?.let { recentlyDeleted ->
+            if (recentlyDeleted.recentlyDeletedTrans != null) {
+                //insert to list
+                recyclerAdapter.insertRecordAt(
+                    recentlyDeleted.recentlyDeletedTrans!!,
+                    recentlyDeleted.recentlyDeletedTransPosition,
+                    recentlyDeleted.recentlyDeletedHeader
+                )
+                //insert into database
+                viewModel.launchNewJob(
+                    TransactionStateEvent.OneShotOperationsTransactionStateEvent.InsertTransaction(
+                        recentlyDeleted.recentlyDeletedTrans!!
+                    )
+                )
+            } else {
+                viewModel.addToMessageStack(
+                    message = "Something went wrong \n cannot return deleted transaction back",
+                    uiComponentType = UIComponentType.Dialog,
+                    messageType = MessageType.Error
+                )
+            }
+        }
+        viewModel.setRecentlyDeletedTransToNull()
     }
 
     private fun showProgressBar(isLoading: Boolean) {

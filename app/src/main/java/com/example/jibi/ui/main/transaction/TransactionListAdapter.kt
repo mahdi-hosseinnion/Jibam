@@ -257,18 +257,37 @@ abstract class TransactionListAdapter(
 
     fun getRecord(position: Int): Record = differ.currentList[position]
 
+    fun insertRecordAt(transaction: Record, position: Int?, header: Record?) {
+        val newList = differ.currentList.toMutableList()
+        if (position != null) {
+            if (header != null) {
+                newList.add(position.minus(1), header)
+            }
+            newList.add(position, transaction)
+        } else {
+            if (header != null) {
+                newList.add(header)
+            }
+            newList.add(transaction)
+        }
+        differ.submitList(newList)
+    }
 
-    fun removeAt(position: Int) {
+    fun removeAt(position: Int): Record? {
         val newList = differ.currentList.toMutableList()
         val beforeRecord = differ.currentList[position.minus(1)]
         val afterRecord = differ.currentList[position.plus(1)]
+
+        var removedHeader: Record? = null
+
         if (beforeRecord.id == HEADER_ITEM &&
             afterRecord.id == HEADER_ITEM
         ) {
-            newList.removeAt(position.minus(1))
+            removedHeader = newList.removeAt(position.minus(1))
         }
         newList.removeAt(position)
         differ.submitList(newList)
+        return removedHeader
     }
 //    // Prepare the images that will be displayed in the RecyclerView.
 //    // This also ensures if the network connection is lost, they will be in the cache

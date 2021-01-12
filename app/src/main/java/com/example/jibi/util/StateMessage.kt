@@ -1,5 +1,7 @@
 package com.example.jibi.util
 
+import android.view.View
+
 data class StateMessage(val response: Response)
 
 data class Response(
@@ -16,6 +18,11 @@ sealed class UIComponentType{
 
     class AreYouSureDialog(
         val callback: AreYouSureCallback
+    ): UIComponentType()
+
+    class UndoSnackBar(
+        val callback: UndoCallback,
+        val parentView:View
     ): UIComponentType()
 
     object None: UIComponentType()
@@ -43,4 +50,11 @@ interface AreYouSureCallback {
     fun proceed()
 
     fun cancel()
+}
+interface UndoCallback {
+
+    fun undo()
+
+    fun onDismiss()
+
 }

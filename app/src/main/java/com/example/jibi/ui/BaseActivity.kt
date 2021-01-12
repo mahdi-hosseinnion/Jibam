@@ -4,13 +4,14 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.ModalDialog.onDismiss
 import com.afollestad.materialdialogs.callbacks.onDismiss
 import com.example.jibi.BaseApplication
 import com.example.jibi.R
 import com.example.jibi.util.*
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 
@@ -47,7 +48,7 @@ abstract class BaseActivity : AppCompatActivity(),
         stateMessageCallback: StateMessageCallback
     ) {
 
-        when(response.uiComponentType){
+        when (response.uiComponentType) {
 
             is UIComponentType.AreYouSureDialog -> {
 
@@ -75,7 +76,15 @@ abstract class BaseActivity : AppCompatActivity(),
                     stateMessageCallback = stateMessageCallback
                 )
             }
+            is UIComponentType.UndoSnackBar -> {
+                displayUndoSnackBar(
+                    message = response.message,
+                    undoCallback = response.uiComponentType.callback,
+                    parentView = response.uiComponentType.parentView,
+                    stateMessageCallback = stateMessageCallback
 
+                )
+            }
             is UIComponentType.None -> {
                 // This would be a good place to send to your Error Reporting
                 // software of choice (ex: Firebase crash reporting)
@@ -88,7 +97,7 @@ abstract class BaseActivity : AppCompatActivity(),
     private fun displayDialog(
         response: Response,
         stateMessageCallback: StateMessageCallback
-    ){
+    ) {
         Log.d(TAG, "displayDialog: ")
         response.message?.let { message ->
 
@@ -121,7 +130,7 @@ abstract class BaseActivity : AppCompatActivity(),
                     null
                 }
             }
-        }?: stateMessageCallback.removeMessageFromStack()
+        } ?: stateMessageCallback.removeMessageFromStack()
     }
 
     private fun displaySuccessDialog(
@@ -129,10 +138,10 @@ abstract class BaseActivity : AppCompatActivity(),
         stateMessageCallback: StateMessageCallback
     ): MaterialDialog {
         return MaterialDialog(this)
-            .show{
+            .show {
                 title(R.string.text_success)
                 message(text = message)
-                positiveButton(R.string.text_ok){
+                positiveButton(R.string.text_ok) {
                     stateMessageCallback.removeMessageFromStack()
                     dismiss()
                 }
@@ -148,10 +157,10 @@ abstract class BaseActivity : AppCompatActivity(),
         stateMessageCallback: StateMessageCallback
     ): MaterialDialog {
         return MaterialDialog(this)
-            .show{
+            .show {
                 title(R.string.text_error)
                 message(text = message)
-                positiveButton(R.string.text_ok){
+                positiveButton(R.string.text_ok) {
                     stateMessageCallback.removeMessageFromStack()
                     dismiss()
                 }
@@ -167,10 +176,10 @@ abstract class BaseActivity : AppCompatActivity(),
         stateMessageCallback: StateMessageCallback
     ): MaterialDialog {
         return MaterialDialog(this)
-            .show{
+            .show {
                 title(R.string.text_info)
                 message(text = message)
-                positiveButton(R.string.text_ok){
+                positiveButton(R.string.text_ok) {
                     stateMessageCallback.removeMessageFromStack()
                     dismiss()
                 }
@@ -187,15 +196,15 @@ abstract class BaseActivity : AppCompatActivity(),
         stateMessageCallback: StateMessageCallback
     ): MaterialDialog {
         return MaterialDialog(this)
-            .show{
+            .show {
                 title(R.string.are_you_sure)
                 message(text = message)
-                negativeButton(R.string.text_cancel){
+                negativeButton(R.string.text_cancel) {
                     callback.cancel()
                     stateMessageCallback.removeMessageFromStack()
                     dismiss()
                 }
-                positiveButton(R.string.text_yes){
+                positiveButton(R.string.text_yes) {
                     callback.proceed()
                     stateMessageCallback.removeMessageFromStack()
                     dismiss()
@@ -207,9 +216,35 @@ abstract class BaseActivity : AppCompatActivity(),
             }
     }
 
+    private fun displayUndoSnackBar(
+        message: String?,
+        undoCallback: UndoCallback,
+        stateMessageCallback: StateMessageCallback,
+        parentView: View
+    ) {
+        val snackbar: Snackbar = Snackbar.make(
+            parentView, message ?: "No Message",
+            Snackbar.LENGTH_LONG
+        )
+        snackbar.setAction(R.string.snack_bar_undo) { v ->
+            undoCallback.undo()
+
+        }
+        snackbar.addCallback(object : Snackbar.Callback() {
+            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                super.onDismissed(transientBottomBar, event)
+                undoCallback.onDismiss()
+            }
+
+        })
+        snackbar.show()
+        stateMessageCallback.removeMessageFromStack()
+    }
+
+
     override fun onPause() {
         super.onPause()
-        if(dialogInView != null){
+        if (dialogInView != null) {
             (dialogInView as MaterialDialog).dismiss()
             dialogInView = null
         }

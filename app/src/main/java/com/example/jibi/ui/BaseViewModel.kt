@@ -127,7 +127,7 @@ abstract class BaseViewModel<OneShotOperationsStateEvent, ViewState> : ViewModel
         if (mMessage == null && throwable != null) {
             mMessage = throwable.message
         }
-        Log.e(TAG, "launchNewJob: invoke on completion error: $mMessage ", throwable)
+        Log.e(TAG, "addToMessageStack: error: $mMessage ", throwable)
         _messageStack.add(
             StateMessage(
                 Response(
