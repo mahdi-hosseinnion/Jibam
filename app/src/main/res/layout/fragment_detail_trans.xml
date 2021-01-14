@@ -85,6 +85,7 @@
                 android:gravity="start|center"
                 android:textColor="@color/black"
                 android:textSize="16sp"
+                android:inputType="number"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/txt_money"
                 app:layout_constraintTop_toBottomOf="@+id/image_cardView" />
@@ -112,9 +113,9 @@
                 android:layout_marginTop="8dp"
                 android:foregroundGravity="center"
                 android:gravity="start|center"
-
                 android:textColor="@color/black"
                 android:textSize="16sp"
+                android:inputType="text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/txt_memo_detail"
                 app:layout_constraintTop_toBottomOf="@+id/edt_money_detail" />
@@ -150,7 +151,6 @@
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
-
                 app:layout_constraintStart_toEndOf="@id/txt_date_detail"
                 app:layout_constraintTop_toBottomOf="@id/edt_memo_detail"
                 tools:text="4:30 PM" />
@@ -163,7 +163,6 @@
                 android:layout_marginTop="8dp"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-
                 app:layout_constraintEnd_toStartOf="@id/txt_time_detail"
                 app:layout_constraintStart_toEndOf="@+id/txt_date_viewHolder_detail"
                 app:layout_constraintTop_toBottomOf="@id/edt_memo_detail"

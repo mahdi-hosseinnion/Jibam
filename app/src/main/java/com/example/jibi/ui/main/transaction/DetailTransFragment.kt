@@ -1,13 +1,18 @@
 package com.example.jibi.ui.main.transaction
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -33,20 +38,19 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
+
 @FlowPreview
 @ExperimentalCoroutinesApi
 class DetailTransFragment
 @Inject
-
 constructor(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager,
     private val currentLocale: Locale
-
 ) : BaseTransactionFragment(
     R.layout.fragment_detail_trans,
     viewModelFactory
-) {
+), View.OnClickListener {
 
     private val TAG = "DetailTransFragment"
     var transactionId: Int = -1
@@ -56,6 +60,27 @@ constructor(
         setHasOptionsMenu(true)
         subscribeObservers()
         edt_money_detail.addTextChangedListener(onTextChangedListener)
+        prepareEditTexts()
+    }
+
+    private fun forceKeyBoardToOpenForMoneyEditText() {
+        edt_money_detail.requestFocus()
+        val imm: InputMethodManager =
+            activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(edt_money_detail, InputMethodManager.SHOW_IMPLICIT)
+    }
+
+    private fun prepareEditTexts() {
+        //add on click
+        edt_money_detail.setOnClickListener(this)
+        edt_memo_detail.setOnClickListener(this)
+        txt_date_detail.setOnClickListener(this)
+        txt_time_detail.setOnClickListener(this)
+        //clear focus from edit texts
+        disableContentInteraction(edt_money_detail)
+        disableContentInteraction(edt_memo_detail)
+        disableContentInteraction(txt_date_detail)
+        disableContentInteraction(txt_time_detail)
 
     }
 
@@ -178,6 +203,52 @@ constructor(
         findNavController().navigateUp()
     }
 
+    private fun disableContentInteraction(edt: EditText) {
+        edt.keyListener = null
+        edt.isFocusable = false
+        edt.isFocusableInTouchMode = false
+        edt.isCursorVisible = false
+        edt.clearFocus()
+    }
+
+    private fun enableContentInteraction(edt: EditText) {
+        val tempEditText = EditText(this.requireContext())
+        if (edt.id == R.id.edt_money_detail) {
+            //set input type for money editText to number
+            tempEditText.inputType = InputType.TYPE_CLASS_NUMBER
+        }
+        edt.keyListener = tempEditText.keyListener
+        edt.isFocusable = true
+        edt.isFocusableInTouchMode = true
+        edt.isCursorVisible = true
+        edt.requestFocus()
+        //force to open keyboard
+        val imm: InputMethodManager =
+            activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(edt, InputMethodManager.SHOW_IMPLICIT)
+        if (edt.text != null) {
+            edt.setSelection(edt.text.length)
+        }
+        //reset to on click
+        edt.setOnClickListener(null)
+    }
+
+    override fun onClick(view: View?) {
+        when (view?.id) {
+            R.id.edt_money_detail -> {
+                enableContentInteraction(view as EditText)
+            }
+            R.id.edt_memo_detail -> {
+                enableContentInteraction(view as EditText)
+            }
+            R.id.txt_date_detail -> {
+                //TODO Open date picker
+            }
+            R.id.txt_time_detail -> {
+                //TODO open time picker
+            }
+        }
+    }
 
     private val onTextChangedListener = object : TextWatcher {
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -211,4 +282,6 @@ constructor(
         }
 
     }
+
+
 }
