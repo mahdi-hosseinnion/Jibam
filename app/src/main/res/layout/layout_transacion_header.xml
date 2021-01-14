@@ -6,7 +6,7 @@
     android:id="@+id/root_transaction_header"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/backGround_gray"
+    android:background="@color/header_item_background"
     android:paddingLeft="8dp"
     android:paddingTop="4dp"
     android:paddingRight="8dp"

@@ -15,6 +15,7 @@
     <color name="incomeTextColor">#000000</color>
     <color name="background_gray">#F9FAFE</color>
     <color name="category_icon_foreground">#FFFFFF</color>
+    <color name="header_item_background">#EEEEEE</color>
 <!--color material 300-->
    <color name="category_background_color_1">#e57373</color>
     <color name="category_background_color_2">#f06292</color>

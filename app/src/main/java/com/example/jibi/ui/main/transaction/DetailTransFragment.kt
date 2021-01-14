@@ -12,7 +12,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import androidx.core.content.ContextCompat.getSystemService
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -27,9 +27,7 @@ import com.example.jibi.util.AreYouSureCallback
 import com.example.jibi.util.MessageType
 import com.example.jibi.util.StateMessageCallback
 import com.example.jibi.util.UIComponentType
-import kotlinx.android.synthetic.main.fragment_add_transaction.*
 import kotlinx.android.synthetic.main.fragment_detail_trans.*
-import kotlinx.android.synthetic.main.layout_transaction_list_item.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.text.DecimalFormat
@@ -53,7 +51,12 @@ constructor(
 ), View.OnClickListener {
 
     private val TAG = "DetailTransFragment"
-    var transactionId: Int = -1
+    var transaction_catId: Int = -1
+
+    var transaction: Record? = null
+    var category: Category? = null
+
+    private var changeList = mutableSetOf<String>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -61,13 +64,10 @@ constructor(
         subscribeObservers()
         edt_money_detail.addTextChangedListener(onTextChangedListener)
         prepareEditTexts()
-    }
-
-    private fun forceKeyBoardToOpenForMoneyEditText() {
-        edt_money_detail.requestFocus()
-        val imm: InputMethodManager =
-            activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.showSoftInput(edt_money_detail, InputMethodManager.SHOW_IMPLICIT)
+        fab_submitChanges.hide()
+        fab_submitChanges.setOnClickListener {
+            saveChanges()
+        }
     }
 
     private fun prepareEditTexts() {
@@ -76,25 +76,43 @@ constructor(
         edt_memo_detail.setOnClickListener(this)
         txt_date_detail.setOnClickListener(this)
         txt_time_detail.setOnClickListener(this)
+
         //clear focus from edit texts
         disableContentInteraction(edt_money_detail)
         disableContentInteraction(edt_memo_detail)
         disableContentInteraction(txt_date_detail)
         disableContentInteraction(txt_time_detail)
+        //add on text change listener for memo
+        edt_memo_detail.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun afterTextChanged(p0: Editable?) {
+                val currentText = p0.toString()
+                if (currentText != transaction?.memo) {
+                    setToEditMode(MEMO)
+                } else {
+                    setToViewMode(MEMO)
+                }
+            }
+        })
     }
 
     private fun subscribeObservers() {
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
             viewState?.detailTransFields?.let {
+                //TODO NOT SET IT TILL NOW
+                transaction = it
                 setTranProperties(it)
-                transactionId = it.id
+                transaction_catId = it.cat_id
             }
             viewState?.categoryList?.let {
-                Log.d(TAG, "subscribeObservers: called with $transactionId * 00$it")
-                if (transactionId >= 0) {
+                Log.d(TAG, "subscribeObservers: called with $transaction_catId * 00$it")
+                if (transaction_catId >= 0) {
                     for (item in it) {
-                        if (item.id == transactionId) {
+                        if (item.id == transaction_catId) {
+                            category = item
                             setCategoryProperties(item)
                             break
                         }
@@ -102,6 +120,81 @@ constructor(
                 }
             }
         })
+    }
+
+    private fun saveChanges() {
+        if (handleInsertingErrors()) {
+            uiCommunicationListener.hideSoftKeyboard()
+            var memo: String? = edt_memo_detail.text.toString()
+            //check if memo is blank then just save null
+            if (memo.isNullOrBlank()) {
+                memo = null
+            }
+            var money: Int = (edt_money_detail.text.toString().replace(",".toRegex(), "").toInt())
+
+            if (category?.type == 1) {
+                money *= -1
+            }
+            val tempTansaction = Record(
+                id = transaction?.id ?: 0,
+                money = money,
+                memo = memo,
+                cat_id = category!!.id,
+                date = getUpdatedTime()
+            )
+
+            viewModel.launchNewJob(
+                TransactionStateEvent.OneShotOperationsTransactionStateEvent.InsertTransaction(
+                    tempTansaction
+                ), true
+            )
+            findNavController().navigateUp()
+        }
+    }
+
+    private fun handleInsertingErrors(): Boolean {
+        var errorMsg = ""
+        if (edt_money_detail.text.toString().replace(",".toRegex(), "").isBlank()) {
+            Log.e(TAG, "MONEY IS NULL")
+            edt_money_detail.error = "Please insert some money"
+            return false
+        }
+        if (edt_money_detail.text.toString().replace(",".toRegex(), "").toInt() < 0) {
+            Log.e(TAG, "MONEY IS INVALID MOENY")
+            edt_money_detail.error = "money should be grater then 0"
+            return false
+        }
+        if (category == null) {
+            Log.e(TAG, "CATEGORY == NULL")
+            errorMsg = "Please select category"
+        }
+        if (category?.id == null) {
+            Log.e(TAG, "CATEGORY ID == NULL")
+            errorMsg = "Please select category"
+        }
+        if (category?.id!! < 1) {
+            Log.e(TAG, "CATEGORY ID == -1")
+            errorMsg = "Please select category"
+
+        }
+        if (category?.type == null) {
+            Log.e(TAG, "CATEGORY type == NULL")
+            errorMsg = "Please select category"
+        }
+        if (category?.type!! < 1) {
+            Log.e(TAG, "CATEGORY type == -1")
+            errorMsg = "Please select category"
+        }
+        if (errorMsg.isNotBlank()) {
+            Toast.makeText(requireContext(), errorMsg, Toast.LENGTH_LONG).show()
+            return false
+        }
+        return true
+    }
+
+    private fun getUpdatedTime(): Int {
+        //TODO ADD CHANGE TIME FUTARE
+        return transaction?.date ?: 0
     }
 
     private fun setTranProperties(trans: Record) {
@@ -271,7 +364,23 @@ constructor(
 
                 //setting text after format to EditText
                 edt_money_detail.setText(formattedString)
-                edt_money_detail.setSelection(edt_money.text!!.length)
+                edt_money_detail.setSelection(edt_money_detail.text!!.length)
+
+                //check for set to editable mode
+                Log.d(
+                    TAG,
+                    "afterTextChanged: long ${longval.toInt()} & trans: ${transaction?.money}"
+                )
+                val originalValue = if (transaction?.money ?: 0 >= 0) {
+                    transaction?.money ?: 0
+                } else {
+                    transaction?.money?.unaryMinus() ?: 0
+                }
+                if (longval.toInt() != originalValue) {
+                    setToEditMode(MONEY)
+                } else {
+                    setToViewMode(MONEY)
+                }
             } catch (nfe: NumberFormatException) {
                 nfe.printStackTrace()
             } catch (e: Exception) {
@@ -283,5 +392,26 @@ constructor(
 
     }
 
+    fun setToEditMode(key: String) {
+        fab_submitChanges.show()
+        changeList.add(key)
+        fake_txt.text = changeList.toString()
 
+    }
+
+    fun setToViewMode(key: String) {
+        changeList.remove(key)
+        if (changeList.isEmpty()) {
+            fab_submitChanges.hide()
+        }
+        fake_txt.text = changeList.toString()
+    }
+
+    companion object {
+        private const val CATEGORY = "CATEGORY"
+        private const val MONEY = "MONEY"
+        private const val MEMO = "MEMO"
+        private const val DATE = "DATE"
+        private const val TIME = "TIME"
+    }
 }

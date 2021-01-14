@@ -401,9 +401,7 @@ abstract class TransactionListAdapter(
     ) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(item: Record) = with(itemView) {
-            itemView.setOnClickListener {
-                interaction?.onItemSelected(adapterPosition, item)
-            }
+            
             //hide margin for first object
 //            if (adapterPosition<2){
 //                val params = ((itemView.root_transaction_header).layoutParams) as RecyclerView.LayoutParams
