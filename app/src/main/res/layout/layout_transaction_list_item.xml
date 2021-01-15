@@ -5,15 +5,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_transaction_item"
     android:layout_width="match_parent"
-    android:layout_height="64dp"
+    android:layout_height="56dp"
     android:paddingLeft="8dp"
     android:paddingRight="8dp">
 
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_gravity="center"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
@@ -26,14 +26,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         card_view:cardBackgroundColor="#D297EA"
-        card_view:cardCornerRadius="24dp">
+        card_view:cardCornerRadius="20dp">
 
         <ImageView
             android:id="@+id/category_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:padding="14dp"
+            android:padding="8dp"
             android:scaleType="center" />
         <!--        best size 24-->
         <!--            tools:srcCompat="@drawable/ic_cat_travel"/>-->
@@ -57,29 +57,35 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:layout_weight="70"
             android:gravity="center|start"
             android:padding="4dp"
+            android:paddingTop="8dp"
             android:textSize="16dp"
+
             android:textStyle="bold"
             tools:text="Food" />
 
-        <TextView
-            android:id="@+id/card"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_gravity="center"
-            android:layout_weight="30"
-            android:gravity="center|start"
-            android:padding="4dp"
-            android:textStyle="normal"
-            app:drawableStartCompat="@android:drawable/stat_notify_sdcard"
-            app:drawableTint="@color/black"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/price"
-            app:layout_constraintStart_toEndOf="@+id/cardView"
-            app:layout_constraintTop_toBottomOf="@+id/cardView"
-            tools:text="Card" />
+        <!--        <TextView-->
+        <!--            android:id="@+id/card"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="0dp"-->
+        <!--            android:layout_gravity="center"-->
+        <!--            android:layout_weight="30"-->
+        <!--            android:gravity="center|start"-->
+        <!--            android:padding="4dp"-->
+        <!--            android:textSize="12dp"-->
+        <!--            android:paddingBottom="8dp"-->
+        <!--            android:textStyle="normal"-->
+        <!--            app:drawableStartCompat="@android:drawable/stat_notify_sdcard"-->
+        <!--            app:drawableTint="@color/black"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toStartOf="@+id/price"-->
+        <!--            app:layout_constraintStart_toEndOf="@+id/cardView"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/cardView"-->
+        <!--            tools:text="Card" />-->
 
     </LinearLayout>
 
@@ -89,9 +95,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="4dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginBottom="8dp"
         android:foregroundGravity="center"
         android:padding="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
