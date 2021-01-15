@@ -15,6 +15,8 @@ import android.widget.AutoCompleteTextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.RequestManager
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.jibi.R
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
@@ -24,6 +26,7 @@ import kotlinx.android.synthetic.main.fragment_add_transaction.*
 import kotlinx.android.synthetic.main.fragment_add_transaction.view.*
 import kotlinx.android.synthetic.main.layout_category_list_item.*
 import kotlinx.android.synthetic.main.layout_transaction_list_item.*
+import kotlinx.android.synthetic.main.layout_transaction_list_item.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.text.DecimalFormat
@@ -38,8 +41,10 @@ import javax.inject.Inject
 class AddTransactionFragment
 @Inject
 constructor(
-    viewModelFactory: ViewModelProvider.Factory
-) : BaseTransactionFragment(
+    viewModelFactory: ViewModelProvider.Factory,
+    private val requestManager: RequestManager,
+
+    ) : BaseTransactionFragment(
     R.layout.fragment_add_transaction,
     viewModelFactory
 ) {
@@ -86,7 +91,7 @@ constructor(
 
     private fun initUi() {
         //make edt category nonEditable
-        edt_category.keyListener = null
+//        edt_category.keyListener = null
         //Implementing an exposed dropdown menu for wallet editText
         addOptionsToWallet()
         //force keyboard to open up when addFragment launches
@@ -121,7 +126,22 @@ constructor(
     ) {
         money?.let { edt_money.setText(it) }
         memo?.let { edt_memo.setText(memo) }
-        category?.name?.let { edt_category.setText(it) }
+        category?.let {
+            category_fab.setText(it.name)
+            category_fab.extend()
+            Log.d(TAG, "setTransProperties: amedemah:${it.name}")
+//            val categoryImageUrl = this.resources.getIdentifier(
+//                "ic_cat_${category.name}",
+//                "drawable",
+//                requireActivity().packageName
+//            )
+//            requestManager
+//                .load(categoryImageUrl)
+//                .centerInside()
+//                .transition(DrawableTransitionOptions.withCrossFade())
+//                .error(R.drawable.ic_error)
+//                .into(category_fab.icon)
+        }
 /*      TODO HANDLE THIS vars
         specificDate?.let {}
         wallet_id?.let {}
@@ -173,26 +193,26 @@ constructor(
         }
         if (category == null) {
             Log.e(TAG, "CATEGORY == NULL")
-            edt_category.error = "Please select category"
+//            edt_category.error = "Please select category"
         }
         if (category?.id == null) {
             Log.e(TAG, "CATEGORY ID == NULL")
-            edt_category.error = "Please select category"
+//            edt_category.error = "Please select category"
             return false
         }
         if (category?.id!! < 1) {
             Log.e(TAG, "CATEGORY ID == -1")
-            edt_category.error = "Please select category"
+//            edt_category.error = "Please select category"
             return false
         }
         if (category?.type == null) {
             Log.e(TAG, "CATEGORY type == NULL")
-            edt_category.error = "Please select category"
+//            edt_category.error = "Please select category"
             return false
         }
         if (category?.type!! < 1) {
             Log.e(TAG, "CATEGORY type == -1")
-            edt_category.error = "Please select category"
+//            edt_category.error = "Please select category"
             return false
         }
 

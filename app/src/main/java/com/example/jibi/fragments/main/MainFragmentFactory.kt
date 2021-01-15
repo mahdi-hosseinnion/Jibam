@@ -32,7 +32,7 @@ constructor(
             }
 
             AddTransactionFragment::class.java.name -> {
-                AddTransactionFragment(viewModelFactory)
+                AddTransactionFragment(viewModelFactory,requestManager)
             }
             DetailTransFragment::class.java.name -> {
                 DetailTransFragment(viewModelFactory, requestManager, currentLocale)
