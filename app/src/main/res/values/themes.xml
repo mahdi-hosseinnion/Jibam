@@ -14,13 +14,13 @@
         <!-- Customize your theme here. -->
     </style>
 
-<!--    <style name="BottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/BottomSheetStyle</item>
-    </style>
+    <!--    <style name="BottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+            <item name="bottomSheetStyle">@style/BottomSheetStyle</item>
+        </style>
 
-    <style name="BottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
-        <item name="android:background">@drawable/botton_bg</item>
-    </style>-->
+        <style name="BottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+            <item name="android:background">@drawable/botton_bg</item>
+        </style>-->
     <!--bottomSheet sysle -->
     <style name="BottomSheetDialogThemeRoundCorner" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/BottomSheetStyle</item>
@@ -36,5 +36,22 @@
 
     <style name="BottomDefaultSheetStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@color/white</item>
+    </style>
+
+    <style name="calcutorTextViewStyle">
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">25dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textStyle">bold</item>
+        <item name="backgroundTint">@color/transparent</item>
+        <item name="elevation">2dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetRight">0dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="rippleColor">#C8C8C8</item>
+        <item name="android:layout_margin">8dp</item>
     </style>
 </resources>

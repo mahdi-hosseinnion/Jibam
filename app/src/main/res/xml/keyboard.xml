@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
+    android:keyWidth="25%p"
+    android:keyHeight="10%p">
+
+    <Row>
+        <Key
+            android:codes="7"
+            android:horizontalGap="5%p"
+            android:keyWidth="20%p"
+            android:keyLabel="7" />
+        <Key
+            android:codes="8"
+            android:horizontalGap="5%p"
+            android:keyWidth="20%p"
+            android:keyLabel="8" />
+        <Key
+            android:codes="9"
+            android:horizontalGap="5%p"
+            android:keyWidth="20%p"
+            android:keyLabel="9" />
+        <Key
+            android:codes="-2"
+            android:horizontalGap="5%p"
+            android:keyWidth="20%p"
+            android:keyLabel="*" />
+    </Row>
+    <Row>
+        <Key
+            android:codes="4"
+            android:horizontalGap="5%p"
+            android:keyWidth="20%p"
+            android:keyLabel="4" />
+        <Key
+            android:codes="5"
+            android:horizontalGap="5%p"
+            android:keyWidth="20%p"
+            android:keyLabel="5" />
+        <Key
+            android:codes="6"
+            android:horizontalGap="5%p"
+            android:keyWidth="20%p"
+            android:keyLabel="6" />
+        <Key
+            android:codes="-3"
+            android:horizontalGap="5%p"
+            android:keyWidth="20%p"
+            android:keyLabel="-" />
+
+    </Row>
+
+    <Row>
+        <Key
+            android:codes="1"
+            android:horizontalGap="5%p"
+            android:keyWidth="20%p"
+            android:keyLabel="1" />
+        <Key
+            android:codes="2"
+            android:horizontalGap="5%p"
+            android:keyWidth="20%p"
+            android:keyLabel="2" />
+        <Key
+            android:codes="3"
+            android:horizontalGap="5%p"
+            android:keyWidth="20%p"
+            android:keyLabel="3" />
+        <Key
+            android:codes="-4"
+            android:horizontalGap="5%p"
+            android:keyWidth="20%p"
+            android:keyLabel="+" />
+
+    </Row>
+
+    <Row>
+        <Key
+            android:codes="-5"
+            android:horizontalGap="5%p"
+            android:keyWidth="20%p"
+            android:keyLabel="." />
+        <Key
+            android:codes="0"
+            android:horizontalGap="5%p"
+            android:keyWidth="20%p"
+            android:keyLabel="0" />
+        <Key
+            android:codes="-6"
+            android:horizontalGap="5%p"
+            android:keyWidth="20%p"
+
+            android:keyLabel="C" />
+        <Key
+            android:codes="-7"
+            android:horizontalGap="5%p"
+            android:keyWidth="20%p"
+
+            android:keyLabel="=" />
+    </Row>
+</Keyboard>

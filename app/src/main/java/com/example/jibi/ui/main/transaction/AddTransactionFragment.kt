@@ -1,22 +1,23 @@
 package com.example.jibi.ui.main.transaction
 
+import android.app.Activity
 import android.content.Context
+import android.content.res.ColorStateList
+import android.inputmethodservice.Keyboard
+import android.inputmethodservice.KeyboardView
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.RequestManager
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.jibi.R
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
@@ -63,6 +64,7 @@ constructor(
         fab_insertTransaction.setOnClickListener {
             insertNewTrans()
         }
+
     }
 
     override fun onResume() {
@@ -130,6 +132,21 @@ constructor(
             category_fab.setText(it.name)
             category_fab.extend()
             Log.d(TAG, "setTransProperties: amedemah:${it.name}")
+
+            val resourceId: Int = requireActivity().resources.getIdentifier(
+                "ic_cat_${category.name}",
+                "drawable",
+                requireActivity().packageName
+            )
+
+            category_fab.icon = resources.getDrawable(resourceId)
+            category_fab.backgroundTintList = ColorStateList.valueOf(
+                resources.getColor(
+                    TransactionListAdapter.listOfColor[(category.id.minus(
+                        1
+                    ))]
+                )
+            )
 //            val categoryImageUrl = this.resources.getIdentifier(
 //                "ic_cat_${category.name}",
 //                "drawable",

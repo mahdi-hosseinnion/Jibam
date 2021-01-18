@@ -13,8 +13,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
 
             <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -31,15 +30,13 @@
                 app:layout_constraintBottom_toBottomOf="@+id/topLinear"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/topLinear"
-                app:strokeColor="@color/black"
-                app:strokeWidth="1dp"
                 tools:text="Food" />
 
             <LinearLayout
                 android:id="@+id/topLinear"
                 android:layout_width="match_parent"
                 android:layout_height="112dp"
-                android:background="@color/purple_200"
+                android:background="@color/purple_500"
                 android:gravity="end"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -106,57 +103,17 @@
             <!--            </com.google.android.material.textfield.TextInputLayout>-->
 
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="28dp"
-                android:id="@+id/sjdf"
-                android:hint="@string/write_note"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/topLinear">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edt_memo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="10"
-
-                    android:inputType="text" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-<!--            <com.google.android.material.textfield.TextInputLayout-->
-<!--                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="56dp"-->
-<!--                android:layout_margin="4dp"-->
-
-<!--                android:hint="@string/write_note">-->
-
-<!--                <com.google.android.material.textfield.TextInputEditText-->
-<!--                    android:id="@+id/edt_date"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent"-->
-
-<!--                    android:layout_gravity="center|start"-->
-<!--                    android:layout_weight="10"-->
-<!--                    android:clickable="true"-->
-<!--                    android:focusable="true"-->
-<!--                    android:gravity="center|start"-->
-<!--                    android:text="@string/today"-->
-<!--                    android:textSize="16sp" />-->
-<!--            </com.google.android.material.textfield.TextInputLayout>-->
-
-            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/txtField_wallet"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:layout_margin="4dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="28dp"
+                android:layout_marginEnd="8dp"
                 android:hint="@string/wallet"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sjdf">
+                app:layout_constraintTop_toBottomOf="@+id/topLinear">
 
                 <AutoCompleteTextView
                     android:id="@+id/edt_wallet"
@@ -165,30 +122,280 @@
                     android:layout_gravity="center|start"
                     android:gravity="center|start"
                     android:inputType="none"
-                    android:textSize="16sp"
-
-                    />
+                    android:textSize="16sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
-<!--            <com.google.android.material.textfield.TextInputLayout-->
-<!--                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="56dp"-->
-<!--                android:layout_margin="4dp"-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/sjdf"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="88dp"
+                android:hint="@string/write_note"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtField_wallet">
 
-<!--                android:hint="@string/with">-->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_memo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="10"
+                    android:gravity="top"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-<!--                <com.google.android.material.textfield.TextInputEditText-->
-<!--                    android:id="@+id/edt_with"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:inputType="text" />-->
-<!--            </com.google.android.material.textfield.TextInputLayout>-->
+            <!--            <com.google.android.material.textfield.TextInputLayout-->
+            <!--                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="56dp"-->
+            <!--                android:layout_margin="4dp"-->
 
+            <!--                android:hint="@string/write_note">-->
+
+            <!--                <com.google.android.material.textfield.TextInputEditText-->
+            <!--                    android:id="@+id/edt_date"-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="match_parent"-->
+
+            <!--                    android:layout_gravity="center|start"-->
+            <!--                    android:layout_weight="10"-->
+            <!--                    android:clickable="true"-->
+            <!--                    android:focusable="true"-->
+            <!--                    android:gravity="center|start"-->
+            <!--                    android:text="@string/today"-->
+            <!--                    android:textSize="16sp" />-->
+            <!--            </com.google.android.material.textfield.TextInputLayout>-->
+
+
+            <!--            <com.google.android.material.textfield.TextInputLayout-->
+            <!--                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="56dp"-->
+            <!--                android:layout_margin="4dp"-->
+
+            <!--                android:hint="@string/with">-->
+
+            <!--                <com.google.android.material.textfield.TextInputEditText-->
+            <!--                    android:id="@+id/edt_with"-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="match_parent"-->
+            <!--                    android:inputType="text" />-->
+            <!--            </com.google.android.material.textfield.TextInputLayout>-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="88dp"
+                android:background="#f9f9f9"
+                android:orientation="vertical"
+                android:weightSum="100"
+                android:paddingTop="8dp"
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/txtField_wallet">
+<!--                android:background="#f9f9f9"-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="20"
+                    android:orientation="horizontal">
+
+                    <Button
+                        style="@style/calcutorTextViewStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+                        android:text="AC" />
+
+                    <Button
+                        style="@style/calcutorTextViewStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+
+                        android:layout_weight="25"
+                        android:text="C" />
+
+                    <Button
+                        style="@style/calcutorTextViewStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+
+                        android:text="%" />
+
+                    <Button
+                        style="@style/calcutorTextViewStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+                        android:text="/" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="20"
+                    android:orientation="horizontal">
+
+                    <Button
+                        style="@style/calcutorTextViewStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+
+                        android:text="7" />
+
+                    <Button
+                        style="@style/calcutorTextViewStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+                        android:text="8"
+                      />
+
+                    <Button
+                        style="@style/calcutorTextViewStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+
+                        android:text="9" />
+
+                    <Button
+                        style="@style/calcutorTextViewStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+                        android:text="*" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="20"
+
+                    android:orientation="horizontal">
+
+                    <Button
+                        style="@style/calcutorTextViewStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+
+                        android:text="4" />
+
+                    <Button
+                        style="@style/calcutorTextViewStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+
+                        android:text="5" />
+
+                    <Button
+                        style="@style/calcutorTextViewStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+
+                        android:layout_weight="25"
+                        android:text="6" />
+
+                    <Button
+                        style="@style/calcutorTextViewStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+
+                        android:layout_weight="25"
+                        android:text="-" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="20"
+                    android:orientation="horizontal">
+
+                    <Button
+                        style="@style/calcutorTextViewStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+                        android:text="1" />
+
+                    <Button
+                        style="@style/calcutorTextViewStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+                        android:text="2" />
+
+                    <Button
+                        style="@style/calcutorTextViewStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+                        android:text="3" />
+
+                    <Button
+                        style="@style/calcutorTextViewStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+                        android:text="+" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="20"
+                    android:orientation="horizontal"
+                    android:weightSum="100">
+
+                    <Button
+                        style="@style/calcutorTextViewStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+
+                        android:layout_weight="25"
+                        android:text="00" />
+
+                    <Button
+                        style="@style/calcutorTextViewStyle"
+                        android:layout_width="0dp"
+
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+                        android:text="0" />
+
+                    <Button
+                        style="@style/calcutorTextViewStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+
+                        android:layout_weight="25"
+                        android:text="." />
+
+                    <Button
+                        style="@style/calcutorTextViewStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+
+                        android:layout_weight="25"
+                        android:text="=" />
+
+                </LinearLayout>
+            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </FrameLayout>
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_insertTransaction"
@@ -197,5 +404,6 @@
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
         android:contentDescription="yep"
+
         app:srcCompat="@drawable/ic_check_green_24dp" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
