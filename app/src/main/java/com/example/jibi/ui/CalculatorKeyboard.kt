@@ -12,6 +12,10 @@ import com.example.jibi.R
 
 //copy from this
 // https://stackoverflow.com/a/45005691/10362460
+//and
+//http://www.fampennings.nl/maarten/android/09keyboard/index.htm
+//TODO add slide up animation
+//https://stackoverflow.com/a/46644736/10362460
 class CalculatorKeyboard(
     context: Context,
     attributeSet: AttributeSet? = null
@@ -146,7 +150,7 @@ class CalculatorKeyboard(
         // All communication goes through the InputConnection
         if (v.id == R.id.btn_c) {
             val selectedText = inputConnection!!.getSelectedText(0)
-            if (selectedText.isBlank()) {
+            if (selectedText.isNullOrBlank()) {
                 // no selection, so delete previous character
                 inputConnection!!.deleteSurroundingText(1, 0)
             } else {

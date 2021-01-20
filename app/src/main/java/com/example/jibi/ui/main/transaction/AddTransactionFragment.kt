@@ -2,17 +2,23 @@ package com.example.jibi.ui.main.transaction
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.content.res.Resources
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
+import android.view.View.OnFocusChangeListener
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputConnection
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.LinearLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.marginBottom
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -21,11 +27,12 @@ import com.example.jibi.R
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
 import com.example.jibi.models.Record
-import com.example.jibi.ui.CalculatorKeyboard
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
 import kotlinx.android.synthetic.main.fragment_add_transaction.view.*
+import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.android.synthetic.main.keyboard_add_transaction.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -57,7 +64,6 @@ constructor(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
 
 
 //        setHasOptionsMenu(true)
@@ -103,16 +109,71 @@ constructor(
         //force keyboard to open up when addFragment launches
 //        forceKeyBoardToOpenForMoneyEditText()
         // init keyboard
+
         // prevent system keyboard from appearing when EditText is tapped
         edt_money.setRawInputType(InputType.TYPE_CLASS_TEXT)
         edt_money.setTextIsSelectable(true)
 
-        val myKeyboard: CalculatorKeyboard = view.findViewById(R.id.keyboard) as CalculatorKeyboard
         // pass the InputConnection from the EditText to the keyboard
         val ic: InputConnection = edt_money.onCreateInputConnection(EditorInfo())
-        myKeyboard.inputConnection = ic
+        keyboard.inputConnection = ic
+        //controll visibity
+
+        // Make the custom keyboard appear
+        edt_money.setOnFocusChangeListener(OnFocusChangeListener { v, hasFocus ->
+            if (hasFocus)
+                showCustomKeyboard(v)
+            else
+                hideCustomKeyboard()
+        })
+        edt_money.requestFocus()
+        edt_money.setOnTouchListener { view, motionEvent ->
+            val inType: Int = edt_money.getInputType() // Backup the input type
+            edt_money.inputType = InputType.TYPE_NULL // Disable standard keyboard
+            edt_money.onTouchEvent(motionEvent)               // Call native handler
+            edt_money.inputType = inType // Restore input type
+
+            return@setOnTouchListener true // Consume touch event
+        }
+        edt_money.setOnClickListener {
+            showCustomKeyboard(it)
+        }
+        uiCommunicationListener.hideSoftKeyboard()
+
+        showCustomKeyboard(edt_money)
+
     }
 
+    fun showCustomKeyboard(view: View) {
+        keyboard.visibility = View.VISIBLE
+        val imm: InputMethodManager =
+            activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+        finalNUmber.text = "${keyboard.height} & ${keyboard.measuredHeight}"
+        //change fab height
+        val viewParams = fab_insertTransaction.layoutParams as CoordinatorLayout.LayoutParams
+        val e=convertDpToPx(16)
+        viewParams.setMargins(e,e,e,e.plus(keyboard.measuredHeight))
+    }
+
+    fun hideCustomKeyboard() {
+        keyboard.visibility = View.GONE
+        finalNUmber.text = "${keyboard.height} & ${keyboard.measuredHeight}"
+
+        //change fab height
+        val viewParams = fab_insertTransaction.layoutParams as CoordinatorLayout.LayoutParams
+        val e=convertDpToPx(16)
+        viewParams.setMargins(e,e,e,e)
+
+    }
+    private fun convertDpToPx(dp: Int): Int {
+        val r: Resources = resources
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dp.toFloat(),
+            r.displayMetrics
+        ).toInt()
+    }
     private fun findCategory(cat_id: Int?): Category? {
         if (cat_id != null) {
             viewModel.viewState.value?.categoryList?.let { categoryList ->
@@ -274,7 +335,7 @@ constructor(
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
         override fun afterTextChanged(p0: Editable?) {
-            edt_money.removeTextChangedListener(this)
+/*            edt_money.removeTextChangedListener(this)
 
             try {
                 var originalString: String = p0.toString()
@@ -289,14 +350,17 @@ constructor(
 
                 //setting text after format to EditText
                 edt_money.setText(formattedString)
-                edt_money.setSelection(edt_money.text!!.length)
+                //TODO FIX SELECTION ISSUE
+                //IF YOU SELECT LENGH that will not work b/c if cursor be in middle of text it move to the end
+                edt_money.setSelection(edt_money.text!!.length.minus(1))
+
             } catch (nfe: NumberFormatException) {
                 nfe.printStackTrace()
             } catch (e: Exception) {
                 Log.e(TAG, "afterTextChanged: ", e)
             }
 
-            edt_money.addTextChangedListener(this)
+            edt_money.addTextChangedListener(this)*/
         }
 
     }
