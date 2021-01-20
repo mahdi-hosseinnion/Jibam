@@ -1,19 +1,18 @@
 package com.example.jibi.ui.main.transaction
 
-import android.app.Activity
 import android.content.Context
 import android.content.res.ColorStateList
-import android.inputmethodservice.Keyboard
-import android.inputmethodservice.KeyboardView
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputConnection
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -22,12 +21,12 @@ import com.example.jibi.R
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
 import com.example.jibi.models.Record
+import com.example.jibi.ui.CalculatorKeyboard
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
 import kotlinx.android.synthetic.main.fragment_add_transaction.view.*
-import kotlinx.android.synthetic.main.layout_category_list_item.*
-import kotlinx.android.synthetic.main.layout_transaction_list_item.*
-import kotlinx.android.synthetic.main.layout_transaction_list_item.view.*
+import kotlinx.android.synthetic.main.keyboard_add_transaction.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.text.DecimalFormat
@@ -51,15 +50,20 @@ constructor(
 ) {
     private val TAG = "AddTransactionFragment"
 
+
     private val args: AddTransactionFragmentArgs by navArgs()
     private var category: Category? = null
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+
 //        setHasOptionsMenu(true)
         category = findCategory(cat_id = args.categoryId)
         setTransProperties(category = category)
-        initUi()
+        initUi(view)
         edt_money.addTextChangedListener(onTextChangedListener)
         fab_insertTransaction.setOnClickListener {
             insertNewTrans()
@@ -91,14 +95,22 @@ constructor(
         imm.showSoftInput(edt_money, InputMethodManager.SHOW_IMPLICIT)
     }
 
-    private fun initUi() {
+    private fun initUi(view: View) {
         //make edt category nonEditable
 //        edt_category.keyListener = null
         //Implementing an exposed dropdown menu for wallet editText
         addOptionsToWallet()
         //force keyboard to open up when addFragment launches
-        forceKeyBoardToOpenForMoneyEditText()
+//        forceKeyBoardToOpenForMoneyEditText()
+        // init keyboard
+        // prevent system keyboard from appearing when EditText is tapped
+        edt_money.setRawInputType(InputType.TYPE_CLASS_TEXT)
+        edt_money.setTextIsSelectable(true)
 
+        val myKeyboard: CalculatorKeyboard = view.findViewById(R.id.keyboard) as CalculatorKeyboard
+        // pass the InputConnection from the EditText to the keyboard
+        val ic: InputConnection = edt_money.onCreateInputConnection(EditorInfo())
+        myKeyboard.inputConnection = ic
     }
 
     private fun findCategory(cat_id: Int?): Category? {
@@ -288,5 +300,12 @@ constructor(
         }
 
     }
+    private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
 
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+        }
+
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {
+        }
+    }
 }
