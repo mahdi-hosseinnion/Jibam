@@ -9,6 +9,7 @@ import android.view.inputmethod.InputConnection
 import android.widget.Button
 import android.widget.LinearLayout
 import com.example.jibi.R
+import java.lang.StringBuilder
 
 //copy from this
 // https://stackoverflow.com/a/45005691/10362460
@@ -16,7 +17,8 @@ import com.example.jibi.R
 //http://www.fampennings.nl/maarten/android/09keyboard/index.htm
 //TODO add slide up animation
 //https://stackoverflow.com/a/46644736/10362460
-class CalculatorKeyboard(
+
+open class CalculatorKeyboard(
     context: Context,
     attributeSet: AttributeSet? = null
 //    defStyleAttr: Int = 0
@@ -112,10 +114,10 @@ class CalculatorKeyboard(
             R.id.btn_c to CLEAR,
             R.id.btn_ac to CLEAR_ALL,
             R.id.btn_percent to "%",
-            R.id.btn_division to "/",
-            R.id.btn_times to "*",
-            R.id.btn_mines to "-",
-            R.id.btn_plus to "+",
+            R.id.btn_division to DIVISION,
+            R.id.btn_times to TIMES,
+            R.id.btn_mines to MINES,
+            R.id.btn_plus to PLUS,
             R.id.btn_period to ".",
             R.id.btn_equal to "=",
             R.id.btn_1 to "1",
@@ -137,6 +139,10 @@ class CalculatorKeyboard(
         private const val TAG = "CalculatorKeyboard"
         private const val CLEAR = "CLEAR"
         private const val CLEAR_ALL = "CLEAR_ALL"
+        const val TIMES = "*"
+        const val DIVISION = "/"
+        const val PLUS = "+"
+        const val MINES = "-"
     }
 
     override fun onClick(v: View?) {
@@ -153,9 +159,11 @@ class CalculatorKeyboard(
             if (selectedText.isNullOrBlank()) {
                 // no selection, so delete previous character
                 inputConnection!!.deleteSurroundingText(1, 0)
+
             } else {
                 // delete the selection
                 inputConnection!!.commitText("", 1)
+
             }
         } else {
             val value = keyValues[v.id]
