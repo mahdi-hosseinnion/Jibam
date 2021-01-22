@@ -28,6 +28,7 @@ import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
 import com.example.jibi.models.Record
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
+import com.example.jibi.util.TextCalculator
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
@@ -57,6 +58,7 @@ constructor(
 ) {
     private val TAG = "AddTransactionFragment"
 
+    private val textCalculator = TextCalculator()
 
     private val args: AddTransactionFragmentArgs by navArgs()
     private var category: Category? = null
@@ -70,6 +72,7 @@ constructor(
         category = findCategory(cat_id = args.categoryId)
         setTransProperties(category = category)
         initUi(view)
+//        edt_money.addTextChangedListener(onTextChangedListener)
         edt_money.addTextChangedListener(onTextChangedListener)
         fab_insertTransaction.setOnClickListener {
             insertNewTrans()
@@ -152,8 +155,8 @@ constructor(
         finalNUmber.text = "${keyboard.height} & ${keyboard.measuredHeight}"
         //change fab height
         val viewParams = fab_insertTransaction.layoutParams as CoordinatorLayout.LayoutParams
-        val e=convertDpToPx(16)
-        viewParams.setMargins(e,e,e,e.plus(keyboard.measuredHeight))
+        val e = convertDpToPx(16)
+        viewParams.setMargins(e, e, e, e.plus(keyboard.measuredHeight))
     }
 
     fun hideCustomKeyboard() {
@@ -162,10 +165,11 @@ constructor(
 
         //change fab height
         val viewParams = fab_insertTransaction.layoutParams as CoordinatorLayout.LayoutParams
-        val e=convertDpToPx(16)
-        viewParams.setMargins(e,e,e,e)
+        val e = convertDpToPx(16)
+        viewParams.setMargins(e, e, e, e)
 
     }
+
     private fun convertDpToPx(dp: Int): Int {
         val r: Resources = resources
         return TypedValue.applyDimension(
@@ -174,6 +178,7 @@ constructor(
             r.displayMetrics
         ).toInt()
     }
+
     private fun findCategory(cat_id: Int?): Category? {
         if (cat_id != null) {
             viewModel.viewState.value?.categoryList?.let { categoryList ->
@@ -335,9 +340,9 @@ constructor(
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
         override fun afterTextChanged(p0: Editable?) {
-/*            edt_money.removeTextChangedListener(this)
+           edt_money.removeTextChangedListener(this)
 
-            try {
+            /* try {
                 var originalString: String = p0.toString()
                 val longval: Long
                 if (originalString.contains(",")) {
@@ -358,12 +363,19 @@ constructor(
                 nfe.printStackTrace()
             } catch (e: Exception) {
                 Log.e(TAG, "afterTextChanged: ", e)
-            }
+            }*/
 
-            edt_money.addTextChangedListener(this)*/
+            //calculate result of main edittext
+            val calculatedResult = textCalculator.calculateResult(p0.toString())
+            finalNUmber.text = calculatedResult.toString()
+
+
+            edt_money.addTextChangedListener(this)
         }
 
     }
+
+
     private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
 
         override fun onStateChanged(bottomSheet: View, newState: Int) {

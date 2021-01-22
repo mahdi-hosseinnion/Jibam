@@ -2,6 +2,10 @@ package com.example.jibi.util
 
 import android.util.Log
 import com.example.jibi.ui.CalculatorKeyboard
+import com.example.jibi.ui.CalculatorKeyboard.Companion.DIVISION
+import com.example.jibi.ui.CalculatorKeyboard.Companion.MINES
+import com.example.jibi.ui.CalculatorKeyboard.Companion.PLUS
+import com.example.jibi.ui.CalculatorKeyboard.Companion.TIMES
 
 //TODO divide by 0?
 class TextCalculator {
@@ -12,7 +16,8 @@ class TextCalculator {
 
     fun calculateResult(value: String): Double {
         Log.d(TAG, "calculateResult: method called with v: $value")
-        var result = value
+        var result = ignoreLastIndexOperator(value)
+
 
         val times = value.indexOf(CalculatorKeyboard.TIMES)
         val division = value.indexOf(CalculatorKeyboard.DIVISION)
@@ -253,6 +258,20 @@ class TextCalculator {
         return result.toDouble()
     }
 
+    private fun ignoreLastIndexOperator(value: String): String {
+        //this method delete the last operator
+        val lastChar = value[value.length.minus(1)].toString()
+        if (
+            lastChar == TIMES ||
+            lastChar == DIVISION ||
+            lastChar == PLUS ||
+            lastChar == MINES
+        ){
+            //remove it from string
+            return value.removeRange(value.length.minus(1),value.length)
+        }
+        return value
+    }
 
     private fun Int.isPositive(): Boolean = this >= 0
 }
