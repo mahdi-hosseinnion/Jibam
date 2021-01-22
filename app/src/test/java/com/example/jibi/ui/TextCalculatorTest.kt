@@ -1,6 +1,7 @@
 package com.example.jibi.ui
 
 import android.util.Log
+import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions
 import com.example.jibi.ui.CalculatorKeyboard.Companion.DIVISION
 import com.example.jibi.ui.CalculatorKeyboard.Companion.MINES
 import com.example.jibi.ui.CalculatorKeyboard.Companion.PLUS
@@ -19,12 +20,16 @@ class TextCalculatorTest {
     //system under test
     var textCalculator: TextCalculator? = null
 
-    val maxRandomNumber = 10.0
-    val minRandomNumber = 1.0//should not be 0
+    //    val maxRandomNumber = Int.MAX_VALUE.toLong()
+//    val minRandomNumber = Int.MAX_VALUE.minus(1000L)//should not be 0//
+    val maxRandomNumber = 1_000_000L
+    val minRandomNumber = 1L//should not be 0
+
 
     @BeforeEach
     fun before() {
         textCalculator = TextCalculator()
+        Double.MAX_VALUE
         //mock log.e for flow.catch in asDataState()
         mockkStatic(Log::class)
         every { Log.e(any(), any(), any()) } answers {
@@ -32,7 +37,7 @@ class TextCalculatorTest {
             0
         }
         every { Log.d(any(), any()) } answers {
-            println("Log.e from ${this.args[0]}, Message: ${this.args[1]}")
+            println("Log.d from ${this.args[0]}, Message: ${this.args[1]}")
             0
         }
     }
@@ -43,10 +48,10 @@ class TextCalculatorTest {
         unmockkAll()
     }
 
-    @Test
+    @RepeatedTest(value = 10)
     fun test_Time_Operator_success() = runBlocking {
-        val randomX = Random.nextDouble(minRandomNumber, maxRandomNumber)
-        val randomY = Random.nextDouble(minRandomNumber, maxRandomNumber)
+        val randomX = Random.nextLong(minRandomNumber, maxRandomNumber).convertToRandomDouble()
+        val randomY = Random.nextLong(minRandomNumber, maxRandomNumber).convertToRandomDouble()
         val textForCalculate = "$randomX${CalculatorKeyboard.TIMES}$randomY"
         val expectedResult = randomX.times(randomY)
 
@@ -57,10 +62,10 @@ class TextCalculatorTest {
         assertEquals(expectedResult, actualResult)
     }
 
-    @Test
+    @RepeatedTest(value = 10)
     fun test_Division_Operator_success() = runBlocking {
-        val randomX = Random.nextDouble(minRandomNumber, maxRandomNumber)
-        val randomY = Random.nextDouble(minRandomNumber, maxRandomNumber)
+        val randomX = Random.nextLong(minRandomNumber, maxRandomNumber).convertToRandomDouble()
+        val randomY = Random.nextLong(minRandomNumber, maxRandomNumber).convertToRandomDouble()
         val textForCalculate = "$randomX${CalculatorKeyboard.DIVISION}$randomY"
         val expectedResult = randomX.div(randomY)
 
@@ -71,10 +76,10 @@ class TextCalculatorTest {
         assertEquals(expectedResult, actualResult)
     }
 
-    @Test
+    @RepeatedTest(value = 10)
     fun test_Plus_Operator_success() = runBlocking {
-        val randomX = Random.nextDouble(minRandomNumber, maxRandomNumber)
-        val randomY = Random.nextDouble(minRandomNumber, maxRandomNumber)
+        val randomX = Random.nextLong(minRandomNumber, maxRandomNumber).convertToRandomDouble()
+        val randomY = Random.nextLong(minRandomNumber, maxRandomNumber).convertToRandomDouble()
 
         val textForCalculate = "$randomX${CalculatorKeyboard.PLUS}$randomY"
         val expectedResult = randomX.plus(randomY)
@@ -86,10 +91,10 @@ class TextCalculatorTest {
         assertEquals(expectedResult, actualResult)
     }
 
-    @Test
+    @RepeatedTest(value = 10)
     fun test_Minus_Operator_success() = runBlocking {
-        val randomX = Random.nextDouble(minRandomNumber, maxRandomNumber)
-        val randomY = Random.nextDouble(minRandomNumber, maxRandomNumber)
+        val randomX = Random.nextLong(minRandomNumber, maxRandomNumber).convertToRandomDouble()
+        val randomY = Random.nextLong(minRandomNumber, maxRandomNumber).convertToRandomDouble()
         val textForCalculate = "$randomX${CalculatorKeyboard.MINES}$randomY"
         val expectedResult = randomX.minus(randomY)
 
@@ -102,11 +107,11 @@ class TextCalculatorTest {
 
     @RepeatedTest(value = 100)
     fun test_Complex_Operator_success() = runBlocking {
-        val A = Random.nextDouble(minRandomNumber, maxRandomNumber)
-        val B = Random.nextDouble(minRandomNumber, maxRandomNumber)
-        val C = Random.nextDouble(minRandomNumber, maxRandomNumber)
-        val X = Random.nextDouble(minRandomNumber, maxRandomNumber)
-        val Y = Random.nextDouble(minRandomNumber, maxRandomNumber)
+        val A = Random.nextLong(minRandomNumber, maxRandomNumber).convertToRandomDouble()
+        val B = Random.nextLong(minRandomNumber, maxRandomNumber).convertToRandomDouble()
+        val C = Random.nextLong(minRandomNumber, maxRandomNumber).convertToRandomDouble()
+        val X = Random.nextLong(minRandomNumber, maxRandomNumber).convertToRandomDouble()
+        val Y = Random.nextLong(minRandomNumber, maxRandomNumber).convertToRandomDouble()
         val RANDOMONE = Random.nextInt(10)
         //make random complex math
         var textForCalculate = "$A $PLUS $B $TIMES $C $DIVISION $X $MINES $Y"
@@ -119,28 +124,28 @@ class TextCalculatorTest {
                 expectedResult = A.times(B).plus(C.div(X)).minus(Y)
             }
             2 -> {
-                textForCalculate ="$A $TIMES $B $DIVISION $C $PLUS $X"
-                    expectedResult =(A.times(B)).div(C).plus(X)
+                textForCalculate = "$A $TIMES $B $DIVISION $C $PLUS $X"
+                expectedResult = (A.times(B)).div(C).plus(X)
             }
             3 -> {
-                textForCalculate ="$X $PLUS $Y $MINES $A $PLUS $B $PLUS $C"
-                    expectedResult = (X.plus(Y)).minus(A.plus(B).plus(C))
+                textForCalculate = "$X $PLUS $Y $MINES $A $PLUS $B $PLUS $C"
+                expectedResult = (X.plus(Y)).minus(A.plus(B).plus(C))
             }
             4 -> {
-                textForCalculate ="$X $TIMES $Y $TIMES $A $TIMES $B $TIMES $C"
-                    expectedResult =X.times(Y).times(A).times(B).times(C)
+                textForCalculate = "$X $TIMES $Y $TIMES $A $TIMES $B $TIMES $C"
+                expectedResult = X.times(Y).times(A).times(B).times(C)
             }
             5 -> {
-                textForCalculate ="$X $DIVISION $Y $DIVISION $A $DIVISION $B $DIVISION $C"
-                    expectedResult =X.div(Y).div(A).div(B).div(C)
+                textForCalculate = "$X $DIVISION $Y $DIVISION $A $DIVISION $B $DIVISION $C"
+                expectedResult = X.div(Y).div(A).div(B).div(C)
             }
             6 -> {
-                textForCalculate ="$X $PLUS $Y $PLUS $A $PLUS $B $PLUS $C"
-                    expectedResult =X.plus(Y).plus(A).plus(B).plus(C)
+                textForCalculate = "$X $PLUS $Y $PLUS $A $PLUS $B $PLUS $C"
+                expectedResult = X.plus(Y).plus(A).plus(B).plus(C)
             }
             6 -> {
-                textForCalculate ="$X $MINES $Y $MINES $A $MINES $B $MINES $C"
-                    expectedResult =X.minus(Y).minus(A).minus(B).minus(C)
+                textForCalculate = "$X $MINES $Y $MINES $A $MINES $B $MINES $C"
+                expectedResult = X.minus(Y).minus(A).minus(B).minus(C)
             }
         }
 
@@ -152,4 +157,34 @@ class TextCalculatorTest {
         assertEquals(expectedResult, actualResult)
     }
 
+    private fun Long.convertToRandomDouble(): Double {
+        return this.minus(
+            when (Random.nextInt(8)) {
+                1 -> {
+                    0.25
+                }
+                2 -> {
+                    0.50
+                }
+                3 -> {
+                    0.75
+                }
+                4 -> {
+                    0.20
+                }
+                5 -> {
+                    0.55
+                }
+                6 -> {
+                    0.70
+                }
+                7 -> {
+                    0.80
+                }
+                else -> {
+                    1.0
+                }
+            }
+        )
+    }
 }
