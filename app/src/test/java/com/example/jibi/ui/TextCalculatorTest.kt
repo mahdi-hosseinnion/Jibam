@@ -59,7 +59,7 @@ class TextCalculatorTest {
 
         println("expect: $expectedResult")
         println("actual: $actualResult")
-        assertEquals(expectedResult, actualResult)
+        assertEquals(expectedResult.toString(), actualResult)
     }
 
     @RepeatedTest(value = 10)
@@ -73,7 +73,7 @@ class TextCalculatorTest {
 
         println("expect: $expectedResult")
         println("actual: $actualResult")
-        assertEquals(expectedResult, actualResult)
+        assertEquals(expectedResult.toString(), actualResult)
     }
 
     @RepeatedTest(value = 10)
@@ -88,7 +88,7 @@ class TextCalculatorTest {
 
         println("expect: $expectedResult")
         println("actual: $actualResult")
-        assertEquals(expectedResult, actualResult)
+        assertEquals(expectedResult.toString(), actualResult)
     }
 
     @RepeatedTest(value = 10)
@@ -102,7 +102,7 @@ class TextCalculatorTest {
 
         println("expect: $expectedResult")
         println("actual: $actualResult")
-        assertEquals(expectedResult, actualResult)
+        assertEquals(expectedResult.toString(), actualResult)
     }
 
     @RepeatedTest(value = 100)
@@ -136,8 +136,8 @@ class TextCalculatorTest {
                 expectedResult = X.times(Y).times(A).times(B).times(C)
             }
             5 -> {
-                textForCalculate = "$X $DIVISION $Y $DIVISION $A $DIVISION $B $DIVISION $C"
-                expectedResult = X.div(Y).div(A).div(B).div(C)
+                textForCalculate = "$X $DIVISION $Y"
+                expectedResult = X.div(Y)
             }
             6 -> {
                 textForCalculate = "$X $PLUS $Y $PLUS $A $PLUS $B $PLUS $C"
@@ -154,7 +154,38 @@ class TextCalculatorTest {
         val actualResult = textCalculator!!.calculateResult(textForCalculate)
         println("expect: $expectedResult")
         println("actual: $actualResult")
-        assertEquals(expectedResult, actualResult)
+        assertEquals(expectedResult.toString(), actualResult)
+    }
+
+    @Test
+    fun wiredOperatorPlacement_Plus(){
+        val randomX = Random.nextLong(minRandomNumber, maxRandomNumber).convertToRandomDouble()
+        val randomY = Random.nextLong(minRandomNumber, maxRandomNumber).convertToRandomDouble()
+        var textForCalculate = "$PLUS $randomX${PLUS}$randomY $PLUS "
+        textForCalculate = textForCalculate.replace(" ", "").replace(")", "").replace("(", "")
+
+        val expectedResult = randomX.plus(randomY)
+
+        val actualResult = textCalculator!!.calculateResult(textForCalculate)
+
+        println("expect: $expectedResult")
+        println("actual: $actualResult")
+        assertEquals(expectedResult.toString(), actualResult)
+    }
+    @Test
+    fun wiredOperatorPlacement_Minus(){
+        val randomX = Random.nextLong(minRandomNumber, maxRandomNumber).convertToRandomDouble()
+        val randomY = Random.nextLong(minRandomNumber, maxRandomNumber).convertToRandomDouble()
+        var textForCalculate = "$MINES $randomX${MINES}$randomY $MINES "
+        textForCalculate = textForCalculate.replace(" ", "").replace(")", "").replace("(", "")
+
+        val expectedResult = randomX.minus(randomY)
+
+        val actualResult = textCalculator!!.calculateResult(textForCalculate)
+
+        println("expect: $expectedResult")
+        println("actual: $actualResult")
+        assertEquals(expectedResult.toString(), actualResult)
     }
 
     private fun Long.convertToRandomDouble(): Double {
