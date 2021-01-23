@@ -46,12 +46,15 @@
                     android:id="@+id/edt_money"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_margin="8dp"
+                    android:layout_margin="4dp"
+                    android:padding="4dp"
                     android:layout_weight="70"
-                    android:gravity="end"
                     android:background="@android:color/transparent"
+                    android:gravity="end|center"
                     android:hint="0"
-                    android:textColor="@color/black"
+                    android:maxLines="1"
+                    android:scrollHorizontally="true"
+                    android:textColor="@color/white"
                     android:textSize="32dp"
                     tools:text="80+23" />
 
@@ -61,6 +64,9 @@
                     android:layout_height="0dp"
                     android:layout_margin="8dp"
                     android:layout_weight="30"
+                    android:maxLines="1"
+                    android:gravity="end|center"
+                    android:scrollHorizontally="true"
                     android:textSize="20dp"
                     tools:text="103" />
             </LinearLayout>
@@ -108,7 +114,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="28dp"
+                android:layout_marginTop="32dp"
                 android:layout_marginEnd="8dp"
                 android:hint="@string/wallet"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -190,21 +196,13 @@
 
 
     </ScrollView>
+
     <com.example.jibi.ui.CalculatorKeyboard
         android:id="@+id/keyboard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom" />
+        android:layout_gravity="bottom"
+        android:orientation="vertical" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_insertTransaction"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="16dp"
-        android:contentDescription="yep"
-
-        app:srcCompat="@drawable/ic_check_green_24dp" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

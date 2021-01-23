@@ -17,8 +17,7 @@ import java.lang.StringBuilder
 //http://www.fampennings.nl/maarten/android/09keyboard/index.htm
 //TODO add slide up animation
 //https://stackoverflow.com/a/46644736/10362460
-
-open class CalculatorKeyboard(
+class CalculatorKeyboard(
     context: Context,
     attributeSet: AttributeSet? = null
 //    defStyleAttr: Int = 0
@@ -27,6 +26,21 @@ open class CalculatorKeyboard(
     attributeSet
 //    defStyleAttr
 ), View.OnClickListener {
+
+    val text = StringBuilder("")
+
+    private val listOfNumbers = charArrayOf(
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+        '6',
+        '7',
+        '8',
+        '9',
+        '0'
+    )
 
     // keyboard keys (buttons)
     private val mButton1: Button
@@ -43,7 +57,6 @@ open class CalculatorKeyboard(
 
     private val mButtonClear: Button
     private val mButtonClearAll: Button
-    private val mButtonPercent: Button
     private val mButtonDivision: Button
     private val mButtonTimes: Button
     private val mButtonMines: Button
@@ -67,7 +80,6 @@ open class CalculatorKeyboard(
         //not number
         mButtonClear = findViewById(R.id.btn_c)
         mButtonClearAll = findViewById(R.id.btn_ac)
-        mButtonPercent = findViewById(R.id.btn_percent)
         mButtonDivision = findViewById(R.id.btn_division)
         mButtonTimes = findViewById(R.id.btn_times)
         mButtonMines = findViewById(R.id.btn_mines)
@@ -101,7 +113,6 @@ open class CalculatorKeyboard(
 
         mButtonClear.setOnClickListener(this)
         mButtonClearAll.setOnClickListener(this)
-        mButtonPercent.setOnClickListener(this)
         mButtonDivision.setOnClickListener(this)
         mButtonTimes.setOnClickListener(this)
         mButtonMines.setOnClickListener(this)
@@ -113,7 +124,6 @@ open class CalculatorKeyboard(
         keyValues = mapOf(
             R.id.btn_c to CLEAR,
             R.id.btn_ac to CLEAR_ALL,
-            R.id.btn_percent to "%",
             R.id.btn_division to DIVISION,
             R.id.btn_times to TIMES,
             R.id.btn_mines to MINES,
@@ -139,12 +149,12 @@ open class CalculatorKeyboard(
         private const val TAG = "CalculatorKeyboard"
         private const val CLEAR = "CLEAR"
         private const val CLEAR_ALL = "CLEAR_ALL"
-        const val TIMES = "*"
-        const val DIVISION = "/"
+        const val TIMES = "×"
+        const val DIVISION = "÷"
         const val PLUS = "+"
         const val MINES = "-"
     }
-
+    //TODO BUG CANNOT RESULV WHEN CORSUR MOVE
     override fun onClick(v: View?) {
         // do nothing if the InputConnection has not been set yet
         if (inputConnection == null || v == null) {
@@ -167,7 +177,29 @@ open class CalculatorKeyboard(
             }
         } else {
             val value = keyValues[v.id]
-            inputConnection!!.commitText(value, 1)
+            if (!value.isNullOrBlank()) {
+                if (text.isBlank()) {
+                    //nothing inserted yet
+                    if (value.indexOfAny(listOfNumbers) >= 0) {
+                        //contain number
+                        inputConnection!!.commitText(value, 1)
+                        text.append(value)
+                    }
+
+                } else {
+                    //something inserted
+                    if (text.toString() == "0") {
+                        if (v.id == R.id.btn_period) {
+                            //only . allowed after 0
+                            inputConnection!!.commitText(value, 1)
+                            text.append(value)
+                        }
+                    } else {
+                        inputConnection!!.commitText(value, 1)
+                        text.append(value)
+                    }
+                }
+            }
         }
     }
 

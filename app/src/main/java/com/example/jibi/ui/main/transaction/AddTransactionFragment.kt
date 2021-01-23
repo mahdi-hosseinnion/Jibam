@@ -9,6 +9,9 @@ import android.text.InputType
 import android.text.TextWatcher
 import android.util.Log
 import android.util.TypedValue
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.view.inputmethod.EditorInfo
@@ -62,21 +65,29 @@ constructor(
 
     private val args: AddTransactionFragmentArgs by navArgs()
     private var category: Category? = null
+        private val listOfNumbers = charArrayOf(
+            '1',
+            '2',
+            '3',
+            '4',
+            '5',
+            '6',
+            '7',
+            '8',
+            '9'
+        )
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-//        setHasOptionsMenu(true)
+        setHasOptionsMenu(true)
         category = findCategory(cat_id = args.categoryId)
         setTransProperties(category = category)
         initUi(view)
 //        edt_money.addTextChangedListener(onTextChangedListener)
         edt_money.addTextChangedListener(onTextChangedListener)
-        fab_insertTransaction.setOnClickListener {
-            insertNewTrans()
-        }
+
 
     }
 
@@ -152,21 +163,11 @@ constructor(
         val imm: InputMethodManager =
             activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
-        finalNUmber.text = "${keyboard.height} & ${keyboard.measuredHeight}"
-        //change fab height
-        val viewParams = fab_insertTransaction.layoutParams as CoordinatorLayout.LayoutParams
-        val e = convertDpToPx(16)
-        viewParams.setMargins(e, e, e, e.plus(keyboard.measuredHeight))
     }
 
     fun hideCustomKeyboard() {
         keyboard.visibility = View.GONE
-        finalNUmber.text = "${keyboard.height} & ${keyboard.measuredHeight}"
 
-        //change fab height
-        val viewParams = fab_insertTransaction.layoutParams as CoordinatorLayout.LayoutParams
-        val e = convertDpToPx(16)
-        viewParams.setMargins(e, e, e, e)
 
     }
 
@@ -218,13 +219,13 @@ constructor(
             )
 
             category_fab.icon = resources.getDrawable(resourceId)
-            category_fab.backgroundTintList = ColorStateList.valueOf(
-                resources.getColor(
-                    TransactionListAdapter.listOfColor[(category.id.minus(
-                        1
-                    ))]
-                )
-            )
+            /*         category_fab.backgroundTintList = ColorStateList.valueOf(
+                         resources.getColor(
+                             TransactionListAdapter.listOfColor[(category.id.minus(
+                                 1
+                             ))]
+                         )
+                     )*/
 //            val categoryImageUrl = this.resources.getIdentifier(
 //                "ic_cat_${category.name}",
 //                "drawable",
@@ -251,7 +252,7 @@ constructor(
             if (memo.isNullOrBlank()) {
                 memo = null
             }
-            var money: Int = (edt_money.text.toString().replace(",".toRegex(), "").toInt())
+            var money: Int = (finalNUmber.text.toString().replace(",".toRegex(), "").toInt())
 
             if (category?.type == 1) {
                 money *= -1
@@ -276,12 +277,12 @@ constructor(
 
 
     private fun handleInsertingErrors(): Boolean {
-        if (edt_money.text.toString().replace(",".toRegex(), "").isBlank()) {
+        if (finalNUmber.text.toString().replace(",".toRegex(), "").isBlank()) {
             Log.e(TAG, "MONEY IS NULL")
             edt_money.error = "Please insert some money"
             return false
         }
-        if (edt_money.text.toString().replace(",".toRegex(), "").toInt() < 0) {
+        if (finalNUmber.text.toString().replace(",".toRegex(), "").toInt() < 0) {
             Log.e(TAG, "MONEY IS INVALID MOENY")
             edt_money.error = "money should be grater then 0"
             return false
@@ -340,7 +341,7 @@ constructor(
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
         override fun afterTextChanged(p0: Editable?) {
-           edt_money.removeTextChangedListener(this)
+            edt_money.removeTextChangedListener(this)
 
             /* try {
                 var originalString: String = p0.toString()
@@ -366,15 +367,32 @@ constructor(
             }*/
 
             //calculate result of main edittext
-            val calculatedResult = textCalculator.calculateResult(p0.toString())
-            finalNUmber.text = calculatedResult.toString()
-
+            if (p0.toString().indexOfAny(
+                    chars = listOfNumbers
+                ) >= 0
+            ) {
+                val calculatedResult = textCalculator.calculateResult(p0.toString())
+                finalNUmber.text = calculatedResult
+            }
 
             edt_money.addTextChangedListener(this)
         }
 
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.add_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.save -> {
+                insertNewTrans()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
     private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
 
