@@ -29,6 +29,9 @@
         <action
             android:id="@+id/action_createTransactionFragment_to_transactionFragment"
             app:destination="@id/transactionFragment" />
+        <action
+            android:id="@+id/action_createTransactionFragment_to_viewCategoriesFragment"
+            app:destination="@id/viewCategoriesFragment" />
     </fragment>
     <fragment
         android:id="@+id/detailTransFragment"
@@ -39,4 +42,18 @@
             android:id="@+id/action_detailTransFragment_to_transactionFragment"
             app:destination="@id/transactionFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/viewCategoriesFragment"
+        android:name="com.example.jibi.ui.main.transaction.ViewCategoriesFragment"
+        android:label="fragment_view_categories"
+        tools:layout="@layout/fragment_view_categories" >
+        <action
+            android:id="@+id/action_viewCategoriesFragment_to_addCategoryFragment"
+            app:destination="@id/addCategoryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addCategoryFragment"
+        android:name="com.example.jibi.ui.main.transaction.AddCategoryFragment"
+        android:label="fragment_add_category"
+        tools:layout="@layout/fragment_add_category" />
 </navigation>

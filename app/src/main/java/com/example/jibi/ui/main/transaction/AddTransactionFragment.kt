@@ -30,6 +30,7 @@ import com.example.jibi.R
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
 import com.example.jibi.models.Record
+import com.example.jibi.ui.main.transaction.bottomSheet.CreateNewTransBottomSheet
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.TextCalculator
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -53,7 +54,7 @@ class AddTransactionFragment
 @Inject
 constructor(
     viewModelFactory: ViewModelProvider.Factory,
-    private val requestManager: RequestManager,
+    private val requestManager: RequestManager
 
     ) : BaseTransactionFragment(
     R.layout.fragment_add_transaction,
@@ -88,9 +89,25 @@ constructor(
 //        edt_money.addTextChangedListener(onTextChangedListener)
         edt_money.addTextChangedListener(onTextChangedListener)
 
+        category_fab.setOnClickListener {
+            showBottomSheet()
+        }
 
     }
 
+    private fun showBottomSheet() {
+        val modalBottomSheet =
+            CreateNewTransBottomSheet(viewModel.viewState.value!!.categoryList!!, requestManager,onCategorySelectedCallback)
+        modalBottomSheet.show(parentFragmentManager, "CreateNewTransBottomSheet")
+    }
+    private val onCategorySelectedCallback = object : CreateNewTransBottomSheet.OnCategorySelectedCallback {
+        override fun onCategorySelected(item: Category) {
+            //on category changed
+            category = item
+            setTransProperties(category = item)
+        }
+
+    }
     override fun onResume() {
         uiCommunicationListener.showToolbar()
         super.onResume()

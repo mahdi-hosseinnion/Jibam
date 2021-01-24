@@ -64,7 +64,7 @@
             android:padding="4dp"
             android:paddingTop="8dp"
             android:textSize="16dp"
-
+            android:maxLines="1"
             android:textStyle="bold"
             tools:text="Food" />
 

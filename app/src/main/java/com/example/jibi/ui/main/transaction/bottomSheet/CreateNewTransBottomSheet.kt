@@ -33,8 +33,8 @@ import java.util.*
 class CreateNewTransBottomSheet
 constructor(
     private val categoryList: List<Category>,
-    private val requestManager: RequestManager
-
+    private val requestManager: RequestManager,
+    private val onCategorySelected:OnCategorySelectedCallback
 ) : ViewPagerBottomSheetDialogFragment(), BottomSheetListAdapter.Interaction,
     ViewPager.OnPageChangeListener {
 
@@ -153,15 +153,10 @@ constructor(
 
     override fun onItemSelected(position: Int, item: Category) {
         this.dismiss()
-
-        val action =
-            TransactionFragmentDirections.actionTransactionFragmentToCreateTransactionFragment(
-                categoryId = item.id
-            )
-        findNavController().navigate(action)
+        onCategorySelected.onCategorySelected(item)
     }
 
-    override fun restoreListPosition() {}
+
 
     companion object {
         const val VIEW_PAGER_SIZE = 2
@@ -253,5 +248,8 @@ constructor(
     override fun onPageSelected(position: Int) {}
 
     override fun onPageScrollStateChanged(state: Int) {}
+    interface OnCategorySelectedCallback{
+        fun onCategorySelected( item: Category)
 
+    }
 }

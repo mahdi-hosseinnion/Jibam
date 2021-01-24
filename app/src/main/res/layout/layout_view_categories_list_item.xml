@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_transaction_item"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:orientation="horizontal"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp">
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="8dp"
+        android:foregroundGravity="center"
+        app:cardBackgroundColor="@color/background_gray"
+        card_view:cardCornerRadius="20dp">
+
+        <ImageView
+            android:id="@+id/category_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:padding="8dp"
+            android:scaleType="center"
+            app:tint="@color/black" />
+        <!--        best size 24-->
+        <!--            tools:srcCompat="@drawable/ic_cat_travel"/>-->
+        <!--            app:tint="@color/black" />-->
+    </androidx.cardview.widget.CardView>
+
+
+    <TextView
+        android:id="@+id/nameOfCategory"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="70"
+        android:gravity="center|start"
+        android:maxLines="1"
+        android:padding="4dp"
+        android:paddingTop="8dp"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        tools:text="Food" />
+
+
+    <ImageView
+        android:layout_width="56dp"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="16dp"
+        app:srcCompat="@drawable/ic_delete_"
+        app:tint="@android:color/holo_red_light" />
+
+    <ImageView
+        android:layout_width="56dp"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="16dp"
+        app:srcCompat="@android:drawable/ic_menu_sort_by_size" />
+
+</LinearLayout>

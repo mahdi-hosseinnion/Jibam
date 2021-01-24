@@ -4,9 +4,7 @@ import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
 import com.example.jibi.di.main.MainScope
-import com.example.jibi.ui.main.transaction.AddTransactionFragment
-import com.example.jibi.ui.main.transaction.DetailTransFragment
-import com.example.jibi.ui.main.transaction.TransactionFragment
+import com.example.jibi.ui.main.transaction.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.util.*
@@ -32,10 +30,16 @@ constructor(
             }
 
             AddTransactionFragment::class.java.name -> {
-                AddTransactionFragment(viewModelFactory,requestManager)
+                AddTransactionFragment(viewModelFactory, requestManager)
             }
             DetailTransFragment::class.java.name -> {
                 DetailTransFragment(viewModelFactory, requestManager, currentLocale)
+            }
+            AddCategoryFragment::class.java.name -> {
+                AddCategoryFragment(viewModelFactory, requestManager)
+            }
+            ViewCategoriesFragment::class.java.name -> {
+                ViewCategoriesFragment(viewModelFactory, requestManager)
             }
 
             else -> {

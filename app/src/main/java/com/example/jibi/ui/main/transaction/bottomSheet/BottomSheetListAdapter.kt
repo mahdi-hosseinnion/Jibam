@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.layout_transaction_list_item.view.*
 class BottomSheetListAdapter(
     private val requestManager: RequestManager?,
     private val interaction: Interaction? = null,
-    private val packageName:String
+    private val packageName: String
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -112,12 +112,7 @@ class BottomSheetListAdapter(
     fun submitList(
         blogList: List<Category>?,
     ) {
-        val commitCallback = Runnable {
-            // if process died must restore list position
-            // very annoying
-            interaction?.restoreListPosition()
-        }
-        differ.submitList(blogList, commitCallback)
+        differ.submitList(blogList)
     }
 
     class CategoryViewHolder
@@ -125,7 +120,7 @@ class BottomSheetListAdapter(
         itemView: View,
         val requestManager: RequestManager?,
         private val interaction: Interaction?,
-        private val packageName:String
+        private val packageName: String
     ) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(item: Category) = with(itemView) {
@@ -152,6 +147,7 @@ class BottomSheetListAdapter(
                 ?.error(R.drawable.ic_error)
                 ?.into(itemView.category_image)
         }
+
         private fun convertDpToPx(dp: Int): Int {
             val r = itemView.resources
             return TypedValue.applyDimension(
@@ -166,6 +162,5 @@ class BottomSheetListAdapter(
 
         fun onItemSelected(position: Int, item: Category)
 
-        fun restoreListPosition()
     }
 }

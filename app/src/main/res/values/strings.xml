@@ -36,4 +36,5 @@
     <string name="are_you_sure_delete">Are you sure you want to delete this transaction?</string>
     <string name="snack_bar_delete_text">Are you sure you want to delete this transaction?</string>
     <string name="snack_bar_undo">Undo</string>
+    <string name="add_new_category">Add new category</string>
 </resources>

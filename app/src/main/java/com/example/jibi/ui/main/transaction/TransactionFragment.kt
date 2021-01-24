@@ -188,13 +188,26 @@ constructor(
     }
 
     private fun showBottomSheet() {
-//        activity?.let {
         val modalBottomSheet =
-            CreateNewTransBottomSheet(viewModel.viewState.value!!.categoryList!!, requestManager)
-//            modalBottomSheet.show(it.supportFragmentManager, "CreateNewTransBottomSheet")
-//        }
+            CreateNewTransBottomSheet(
+                viewModel.viewState.value!!.categoryList!!,
+                requestManager,
+                onCategorySelectedCallback
+            )
         modalBottomSheet.show(parentFragmentManager, "CreateNewTransBottomSheet")
     }
+
+    private val onCategorySelectedCallback = object : CreateNewTransBottomSheet.OnCategorySelectedCallback {
+        override fun onCategorySelected(item: Category) {
+            val action =
+                TransactionFragmentDirections.actionTransactionFragmentToCreateTransactionFragment(
+                    categoryId = item.id
+                )
+            findNavController().navigate(action)
+        }
+
+    }
+
 
     private fun subscribeObservers() {
         viewModel.countOfActiveJobs.observe(viewLifecycleOwner, Observer {
@@ -340,7 +353,8 @@ constructor(
         }
         uiCommunicationListener.onResponseReceived(
             buildResponse(
-                "Transaction successfully deleted", UIComponentType.UndoSnackBar(undoCallback,fragment_transacion_root),
+                "Transaction successfully deleted",
+                UIComponentType.UndoSnackBar(undoCallback, fragment_transacion_root),
                 MessageType.Info
             ), object : StateMessageCallback {
                 override fun removeMessageFromStack() {

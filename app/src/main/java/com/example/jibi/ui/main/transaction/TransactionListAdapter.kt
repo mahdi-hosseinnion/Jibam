@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.*
+import androidx.viewpager.widget.PagerAdapter
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.example.jibi.R
@@ -458,6 +459,7 @@ abstract class TransactionListAdapter(
     }
 
     abstract fun getCategoryByIdFromRoot(id: Int): Category
+
 
     inner class TransCardViewHolder
     constructor(
