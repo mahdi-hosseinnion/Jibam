@@ -1,10 +1,12 @@
 package com.example.jibi.ui
 
 import android.content.Context
+import android.renderscript.ScriptGroup
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.inputmethod.ExtractedTextRequest
 import android.view.inputmethod.InputConnection
 import android.widget.Button
 import android.widget.LinearLayout
@@ -27,7 +29,7 @@ class CalculatorKeyboard(
 //    defStyleAttr
 ), View.OnClickListener {
 
-    val text = StringBuilder("")
+    var text = StringBuilder("")
 
     private val listOfNumbers = charArrayOf(
         '1',
@@ -38,8 +40,15 @@ class CalculatorKeyboard(
         '6',
         '7',
         '8',
-        '9',
-        '0'
+        '9'
+    )
+
+    private val listOfSigns = listOf(
+        DIVISION,
+        TIMES,
+        MINES,
+        PLUS,
+        PERIOD
     )
 
     // keyboard keys (buttons)
@@ -79,7 +88,7 @@ class CalculatorKeyboard(
         LayoutInflater.from(context).inflate(R.layout.keyboard_add_transaction, this, true)
         //not number
         mButtonClear = findViewById(R.id.btn_c)
-        mButtonClearAll = findViewById(R.id.btn_ac)
+        mButtonClearAll = findViewById(R.id.btn_clearAll)
         mButtonDivision = findViewById(R.id.btn_division)
         mButtonTimes = findViewById(R.id.btn_times)
         mButtonMines = findViewById(R.id.btn_mines)
@@ -123,12 +132,12 @@ class CalculatorKeyboard(
         // map buttons IDs to input strings
         keyValues = mapOf(
             R.id.btn_c to CLEAR,
-            R.id.btn_ac to CLEAR_ALL,
+            R.id.btn_clearAll to CLEAR_ALL,
             R.id.btn_division to DIVISION,
             R.id.btn_times to TIMES,
             R.id.btn_mines to MINES,
             R.id.btn_plus to PLUS,
-            R.id.btn_period to ".",
+            R.id.btn_period to PERIOD,
             R.id.btn_equal to "=",
             R.id.btn_1 to "1",
             R.id.btn_2 to "2",
@@ -153,7 +162,9 @@ class CalculatorKeyboard(
         const val DIVISION = "÷"
         const val PLUS = "+"
         const val MINES = "-"
+        const val PERIOD = "."
     }
+
     //TODO BUG CANNOT RESULV WHEN CORSUR MOVE
     override fun onClick(v: View?) {
         // do nothing if the InputConnection has not been set yet
@@ -165,34 +176,78 @@ class CalculatorKeyboard(
         // Delete text or input key value
         // All communication goes through the InputConnection
         if (v.id == R.id.btn_c) {
+            if (text.isBlank()) {
+                return
+            }
             val selectedText = inputConnection!!.getSelectedText(0)
             if (selectedText.isNullOrBlank()) {
                 // no selection, so delete previous character
                 inputConnection!!.deleteSurroundingText(1, 0)
-
+                text = text.removeLastIndex()
+                printText()
             } else {
                 // delete the selection
+                val selectedText =
+                    inputConnection!!.getSelectedText(InputConnection.GET_TEXT_WITH_STYLES)
+
                 inputConnection!!.commitText("", 1)
 
+                text = text.deleteString(selectedText.toString())
+                printText()
             }
+        } else if (v.id == R.id.btn_clearAll) {
+            //clear everything
+            inputConnection!!.clearText()
+            text.clear()
+
         } else {
             val value = keyValues[v.id]
+
             if (!value.isNullOrBlank()) {
+
                 if (text.isBlank()) {
                     //nothing inserted yet
-                    if (value.indexOfAny(listOfNumbers) >= 0) {
+                    if (value.indexOfAny(listOfNumbers) >= 0 || value == "0") {
                         //contain number
                         inputConnection!!.commitText(value, 1)
                         text.append(value)
                     }
 
                 } else {
+
+                    //TODO SHOULD SUPPORT CURSOR CHANGE IF ADD SING IN DIFFERENT PLACE
+                    //user should not be able to insert two math sign in row
+                    if (text.substring(text.lastIndex)
+                            .lastIndexOfAny(listOfSigns) >= 0 //last index of current text is math sign
+                        &&
+                        value.lastIndexOfAny(listOfSigns) >= 0 //value is math sign too
+                    ) {
+                        if (text.substring(text.lastIndex)!=value){ //if its different sign
+                            // delete the last one aka->0
+                            inputConnection!!.deleteSurroundingText(1, 0)
+                            text = text.removeLastIndex()
+
+                            text.append(value)
+                            inputConnection!!.commitText(value, 1)
+
+                        }
+                        return
+                    }
+
                     //something inserted
                     if (text.toString() == "0") {
                         if (v.id == R.id.btn_period) {
                             //only . allowed after 0
                             inputConnection!!.commitText(value, 1)
                             text.append(value)
+                        } else {
+                            //if it's number (not 0) remove 0
+                            if (value.indexOfAny(listOfNumbers) >= 0) {
+                                // delete the last one aka->0
+                                inputConnection!!.deleteSurroundingText(1, 0)
+                                inputConnection!!.commitText(value, 1)
+                                text = StringBuilder(value)
+                            }
                         }
                     } else {
                         inputConnection!!.commitText(value, 1)
@@ -203,5 +258,31 @@ class CalculatorKeyboard(
         }
     }
 
+    private fun InputConnection.clearText() {
+        val currentText = getExtractedText(ExtractedTextRequest(), 0).text;
+        val beforeCursorText = getTextBeforeCursor(currentText.length, 0)
+        val afterCursorText = getTextAfterCursor(currentText.length, 0)
+        deleteSurroundingText(beforeCursorText.length, afterCursorText.length)
+//        CharSequence currentText = inputConnection.getExtractedText(new ExtractedTextRequest(), 0).text;
+//        CharSequence beforCursorText = inputConnection.getTextBeforeCursor(currentText.length(), 0);
+//        CharSequence afterCursorText = inputConnection.getTextAfterCursor(currentText.length(), 0);
+//        inputConnection.deleteSurroundingText(beforCursorText.length(), afterCursorText.length());
+    }
 
+    private fun StringBuilder.removeLastIndex(): StringBuilder =
+        StringBuilder(this.substring(0, text.lastIndex))
+
+    private fun StringBuilder.deleteString(s: String): StringBuilder {
+        val indexOfSelectedText = this.indexOf(s)
+        return StringBuilder(
+            this.removeRange(
+                indexOfSelectedText,
+                indexOfSelectedText.plus(s.length)
+            )
+        )
+    }
+
+    private fun printText() {
+        Log.d(TAG, "onClick: text: -${text.toString()}-")
+    }
 }
