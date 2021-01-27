@@ -52,7 +52,7 @@ abstract class TransactionListAdapter(
         private const val BLOG_ITEM = 0
         private val NO_MORE_RESULTS_BLOG_MARKER = Record(
             NO_MORE_RESULTS,
-            0,
+            0.0,
             "",
             0,
             0
@@ -346,7 +346,7 @@ abstract class TransactionListAdapter(
             } else {
                 itemView.main_text.text = item.memo
             }
-            if (item.money >= 0) {
+            if (item.money >= 0.0) {
                 itemView.price.text = "+$${separate3By3(item.money)}"
                 itemView.price.setTextColor(resources.getColor(R.color.incomeTextColor))
                 itemView.priceCard.setCardBackgroundColor(resources.getColor(R.color.incomeColor))
@@ -380,16 +380,16 @@ abstract class TransactionListAdapter(
         }
 
 
-        private fun separate3By3(money1: Int): String {
+        private fun separate3By3(money1: Double): String {
             var money = money1
-            if (money < 0) {
-                money *= -1
+            if (money < 0.0) {
+                money *= -1.0
             }
-            if (money < 1000) {
+            if (money < 1000.0) {
                 return money.toString()
             }
             val formatter: DecimalFormat = NumberFormat.getInstance(Locale.US) as DecimalFormat
-            formatter.applyPattern("#,###,###,###")
+            formatter.applyPattern("#,###,###,###.###")
             return formatter.format(money)
         }
     }
@@ -402,7 +402,7 @@ abstract class TransactionListAdapter(
     ) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(item: Record) = with(itemView) {
-            
+
             //hide margin for first object
 //            if (adapterPosition<2){
 //                val params = ((itemView.root_transaction_header).layoutParams) as RecyclerView.LayoutParams
@@ -412,15 +412,15 @@ abstract class TransactionListAdapter(
 //            }
             //money for expenses
             Log.d(TAG, "bind: sum of all expenses = ${item.money}")
-            if (item.money != 0) {
+            if (item.money != 0.0) {
                 itemView.header_expenses_sum.text = "Expenses: ${item.money}"
             } else {
                 itemView.header_expenses_sum.text = ""
 
             }
             //cat_id for income
-            if (item.cat_id != 0) {
-                itemView.header_income_sum.text = "Income: ${item.cat_id}"
+            if (item.incomeSum != null && item.incomeSum != 0.0) {
+                itemView.header_income_sum.text = "Income: ${item.incomeSum}"
             } else {
                 itemView.header_income_sum.text = ""
             }
@@ -474,7 +474,7 @@ abstract class TransactionListAdapter(
 
         fun bind(header: Record, items: List<Record>) = with(itemView) {
             //bind header
-            if (header.money != 0) {
+            if (header.money != 0.0) {
                 itemView.header_expenses_sum.text = "Expenses: ${header.money}"
             } else {
                 itemView.header_expenses_sum.text = ""
@@ -541,16 +541,16 @@ abstract class TransactionListAdapter(
             }
         }
 
-        private fun separate3By3(money1: Int): String {
+        private fun separate3By3(money1: Double): String {
             var money = money1
-            if (money < 0) {
-                money *= -1
+            if (money < 0.0) {
+                money *= -1.0
             }
-            if (money < 1000) {
+            if (money < 1000.0) {
                 return money.toString()
             }
             val formatter: DecimalFormat = NumberFormat.getInstance(Locale.US) as DecimalFormat
-            formatter.applyPattern("#,###,###,###")
+            formatter.applyPattern("#,###,###,###.###")
             return formatter.format(money)
         }
 

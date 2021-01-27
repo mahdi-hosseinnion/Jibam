@@ -30,7 +30,7 @@ fun RecordsDao.getRecords(
 fun RecordsDao.getSumOfIncome(
     minDate: Int?=null,
     maxDate: Int?=null
-): Flow<Int?> {
+): Flow<Double?> {
     if (minDate != null && maxDate != null) {
         return returnTheSumOfIncomeBetweenDates(minDate, maxDate)
     }
@@ -46,7 +46,7 @@ fun RecordsDao.getSumOfIncome(
 fun RecordsDao.getSumOfExpenses(
     minDate: Int?=null,
     maxDate: Int?=null
-): Flow<Int?> {
+): Flow<Double?> {
     if (minDate != null && maxDate != null) {
         return returnTheSumOfExpensesBetweenDates(minDate, maxDate)
     }

@@ -37,13 +37,13 @@ constructor(
     fun getSumOfIncome(
         minDate: Int? = null,
         maxDate: Int? = null
-    ): Flow<Int?> = recordsDao.getSumOfIncome(minDate, maxDate)
+    ): Flow<Double?> = recordsDao.getSumOfIncome(minDate, maxDate)
 
 
     fun getSumOfExpenses(
         minDate: Int? = null,
         maxDate: Int? = null
-    ): Flow<Int?> = recordsDao.getSumOfExpenses(minDate, maxDate)
+    ): Flow<Double?> = recordsDao.getSumOfExpenses(minDate, maxDate)
 
 
 //    recordsDao.getSumOfExpenses(minDate, maxDate)
@@ -60,8 +60,8 @@ constructor(
             }
             val resultList = ArrayList<Record>()
             var headerDate = currentDateInString(currentList[0].date)
-            var incomeSum = 0
-            var expensesSum = 0
+            var incomeSum = 0.0
+            var expensesSum = 0.0
             var tempList = ArrayList<Record>()
             for (item in currentList) {
                 if (currentDateInString(item.date) == headerDate) {
@@ -79,8 +79,8 @@ constructor(
                     //clear item to defualt
                     headerDate = currentDateInString(item.date)
                     tempList.clear()
-                    incomeSum = 0
-                    expensesSum = 0
+                    incomeSum = 0.0
+                    expensesSum = 0.0
                     //make new header and items
                     tempList.add(item)
                     if (item.money >= 0) { //income
@@ -99,22 +99,23 @@ constructor(
             return@map resultList
         }
 
-    private fun createHeader(date: String, income: Int, expenses: Int, lenght: Int): Record {
+    private fun createHeader(date: String, income: Double, expenses: Double, lenght: Int): Record {
         return if (lenght > 1) {
-             Record(
+            Record(
                 id = TransactionListAdapter.HEADER_ITEM,
                 money = expenses,
-                memo = date,
-                cat_id = income,
-                date = lenght
-            )
-        } else {
-             Record(
-                id = TransactionListAdapter.HEADER_ITEM,
-                money = 0,
+                incomeSum = income,
                 memo = date,
                 cat_id = 0,
-                date = lenght
+                date = 0
+            )
+        } else {
+            Record(
+                id = TransactionListAdapter.HEADER_ITEM,
+                money = 0.0,
+                memo = date,
+                cat_id = 0,
+                date = 0
             )
         }
     }

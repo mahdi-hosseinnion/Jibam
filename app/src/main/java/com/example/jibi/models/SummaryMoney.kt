@@ -1,9 +1,9 @@
 package com.example.jibi.models
 
 data class SummaryMoney(
-    var balance: Int = 0,
-    var income: Int = 0,
-    var expenses: Int = 0
+    var balance: Double = 0.0,
+    var income: Double = 0.0,
+    var expenses: Double = 0.0
 )
 //extra
 /*

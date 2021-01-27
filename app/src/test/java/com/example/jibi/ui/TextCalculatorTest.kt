@@ -78,9 +78,10 @@ class TextCalculatorTest {
 
     @RepeatedTest(value = 10)
     fun test_Plus_Operator_success() = runBlocking {
-        val randomX = Random.nextLong(minRandomNumber, maxRandomNumber).convertToRandomDouble()
-        val randomY = Random.nextLong(minRandomNumber, maxRandomNumber).convertToRandomDouble()
-
+//        val randomX = Random.nextLong(minRandomNumber, maxRandomNumber).convertToRandomDouble()
+//        val randomY = Random.nextLong(minRandomNumber, maxRandomNumber).convertToRandomDouble()
+        val randomX = Int.MAX_VALUE.toLong().convertToRandomDouble()
+        val randomY = Int.MAX_VALUE.minus(1).toLong().convertToRandomDouble()
         val textForCalculate = "$randomX${CalculatorKeyboard.PLUS}$randomY"
         val expectedResult = randomX.plus(randomY)
 

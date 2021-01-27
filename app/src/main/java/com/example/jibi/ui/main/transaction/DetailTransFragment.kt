@@ -130,7 +130,7 @@ constructor(
             if (memo.isNullOrBlank()) {
                 memo = null
             }
-            var money: Int = (edt_money_detail.text.toString().replace(",".toRegex(), "").toInt())
+            var money: Double = (edt_money_detail.text.toString().replace(",".toRegex(), "").toDouble())
 
             if (category?.type == 1) {
                 money *= -1
@@ -159,7 +159,7 @@ constructor(
             edt_money_detail.error = "Please insert some money"
             return false
         }
-        if (edt_money_detail.text.toString().replace(",".toRegex(), "").toInt() < 0) {
+        if (edt_money_detail.text.toString().replace(",".toRegex(), "").toDouble() < 0) {
             Log.e(TAG, "MONEY IS INVALID MOENY")
             edt_money_detail.error = "money should be grater then 0"
             return false
@@ -369,14 +369,14 @@ constructor(
                 //check for set to editable mode
                 Log.d(
                     TAG,
-                    "afterTextChanged: long ${longval.toInt()} & trans: ${transaction?.money}"
+                    "afterTextChanged: long ${longval.toDouble()} & trans: ${transaction?.money}"
                 )
-                val originalValue = if (transaction?.money ?: 0 >= 0) {
+                val originalValue = if (transaction?.money ?: 0.0 >= 0.0) {
                     transaction?.money ?: 0
                 } else {
                     transaction?.money?.unaryMinus() ?: 0
                 }
-                if (longval.toInt() != originalValue) {
+                if (longval.toDouble() != originalValue) {
                     setToEditMode(MONEY)
                 } else {
                     setToViewMode(MONEY)

@@ -269,7 +269,7 @@ constructor(
             if (memo.isNullOrBlank()) {
                 memo = null
             }
-            var money: Int = (finalNUmber.text.toString().replace(",".toRegex(), "").toInt())
+            var money: Double = (finalNUmber.text.toString().replace(",".toRegex(), "").toDouble())
 
             if (category?.type == 1) {
                 money *= -1
@@ -299,7 +299,7 @@ constructor(
             edt_money.error = "Please insert some money"
             return false
         }
-        if (finalNUmber.text.toString().replace(",".toRegex(), "").toInt() < 0) {
+        if (finalNUmber.text.toString().replace(",".toRegex(), "").toDouble() < 0) {
             Log.e(TAG, "MONEY IS INVALID MOENY")
             edt_money.error = "money should be grater then 0"
             return false
@@ -368,7 +368,7 @@ constructor(
                 }
                 longval = originalString.toLong()
                 val formatter: DecimalFormat = NumberFormat.getInstance(Locale.US) as DecimalFormat
-                formatter.applyPattern("#,###,###,###,###,###")
+                formatter.applyPattern("#,###,###,###.###")
                 val formattedString: String = formatter.format(longval)
 
                 //setting text after format to EditText

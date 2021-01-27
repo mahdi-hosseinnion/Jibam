@@ -48,31 +48,31 @@ interface RecordsDao {
 
     //return all
     @Query("SELECT SUM(money) FROM records WHERE money < 0 ")
-    fun returnTheSumOfAllExpenses(): Flow<Int?>
+    fun returnTheSumOfAllExpenses(): Flow<Double?>
 
     @Query("SELECT SUM(money) FROM records WHERE money > 0 ")
-    fun returnTheSumOfAllIncome(): Flow<Int?>
+    fun returnTheSumOfAllIncome(): Flow<Double?>
 
     //between dates
     @Query("SELECT SUM(money) FROM records WHERE (date BETWEEN :minDate AND :maxDate) AND(money < 0) ")
-    fun returnTheSumOfExpensesBetweenDates(minDate: Int, maxDate: Int): Flow<Int>
+    fun returnTheSumOfExpensesBetweenDates(minDate: Int, maxDate: Int): Flow<Double>
 
     @Query("SELECT SUM(money) FROM records WHERE (date BETWEEN :minDate AND :maxDate) AND(money > 0) ")
-    fun returnTheSumOfIncomeBetweenDates(minDate: Int, maxDate: Int): Flow<Int>
+    fun returnTheSumOfIncomeBetweenDates(minDate: Int, maxDate: Int): Flow<Double>
 
     //after than
     @Query("SELECT SUM(money) FROM records WHERE (date > :minDate) AND (money < 0) ")
-    fun returnTheSumOfExpensesAfterThan(minDate: Int): Flow<Int>
+    fun returnTheSumOfExpensesAfterThan(minDate: Int): Flow<Double>
 
     @Query("SELECT SUM(money) FROM records WHERE (date > :minDate) AND (money > 0) ")
-    fun returnTheSumOfIncomeAfterThan(minDate: Int): Flow<Int>
+    fun returnTheSumOfIncomeAfterThan(minDate: Int): Flow<Double>
 
     //before than
     @Query("SELECT SUM(money) FROM records WHERE (date < :maxDate) AND (money < 0) ")
-    fun returnTheSumOfExpensesBeforeThan(maxDate: Int): Flow<Int>
+    fun returnTheSumOfExpensesBeforeThan(maxDate: Int): Flow<Double>
 
     @Query("SELECT SUM(money) FROM records WHERE (date < :maxDate) AND (money > 0) ")
-    fun returnTheSumOfIncomeBeforeThan(maxDate: Int): Flow<Int>
+    fun returnTheSumOfIncomeBeforeThan(maxDate: Int): Flow<Double>
 
     companion object{
         private const val ORDER_BY_DATE = "ORDER BY date DESC"

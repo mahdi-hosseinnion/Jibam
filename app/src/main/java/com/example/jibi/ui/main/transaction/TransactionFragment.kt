@@ -150,7 +150,7 @@ constructor(
                 TransactionStateEvent.OneShotOperationsTransactionStateEvent.InsertTransaction(
                     Record(
                         id = 0,
-                        money = Random.nextInt(-1000, 1000),
+                        money = Random.nextInt(-1000, 1000).toDouble(),
                         memo = null,
                         cat_id = Random.nextInt(42),
                         date = Random.nextInt(
@@ -165,7 +165,7 @@ constructor(
                 TransactionStateEvent.OneShotOperationsTransactionStateEvent.InsertTransaction(
                     Record(
                         id = 0,
-                        money = Random.nextInt(-1000, 1000),
+                        money = Random.nextInt(-1000, 1000).toDouble(),
                         memo = "memo ${Random.nextInt(451252)}",
                         cat_id = Random.nextInt(42),
                         date = Random.nextInt(
@@ -252,16 +252,16 @@ constructor(
         }
     }
 
-    private fun separate3By3(money1: Int): String {
+    private fun separate3By3(money1: Double): String {
         var money = money1
-        if (money < 0) {
-            money *= -1
+        if (money < 0.0) {
+            money *= -1.0
         }
-        if (money < 1000) {
+        if (money < 1000.0) {
             return money.toString()
         }
         val formatter: DecimalFormat = NumberFormat.getInstance(Locale.US) as DecimalFormat
-        formatter.applyPattern("#,###,###,###")
+        formatter.applyPattern("#,###,###,###.###")
         return formatter.format(money)
     }
 

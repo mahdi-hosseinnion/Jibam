@@ -153,7 +153,7 @@ constructor(
         }
     }
 
-    private fun setAllTransactionIncome(newIncome: Int) {
+    private fun setAllTransactionIncome(newIncome: Double) {
         val update = getCurrentViewStateOrNew()
         if (update.summeryMoney != null) {
             update.summeryMoney = update.summeryMoney?.copy(income = newIncome)
@@ -163,7 +163,7 @@ constructor(
         setViewState(update)
     }
 
-    private fun setAllTransactionExpenses(newExpenses: Int) {
+    private fun setAllTransactionExpenses(newExpenses: Double) {
         val update = getCurrentViewStateOrNew()
         if (update.summeryMoney != null) {
             update.summeryMoney = update.summeryMoney?.copy(expenses = newExpenses)

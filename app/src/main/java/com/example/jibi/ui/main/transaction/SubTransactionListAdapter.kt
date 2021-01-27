@@ -159,13 +159,13 @@ class SubTransactionListAdapter(
 ////                .transition(withCrossFade())
 ////                .into(itemView.category_iamge)
         }
-        private fun separate3By3(money1: Int):String{
+        private fun separate3By3(money1: Double):String{
             var money = money1
-            if (money<0){
-                money*=-1
+            if (money<0.0){
+                money*=-1.0
             }
             val formatter: DecimalFormat = NumberFormat.getInstance(Locale.US) as DecimalFormat
-            formatter.applyPattern("#,###,###,###")
+            formatter.applyPattern("#,###,###,###.###")
             return formatter.format(money)
         }
     }
