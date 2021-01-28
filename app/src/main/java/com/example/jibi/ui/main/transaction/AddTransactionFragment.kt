@@ -1,12 +1,12 @@
 package com.example.jibi.ui.main.transaction
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.content.res.Resources
+import android.graphics.Color
 import android.os.Bundle
-import android.text.Editable
-import android.text.InputType
-import android.text.TextWatcher
+import android.text.*
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.util.Log
 import android.util.TypedValue
 import android.view.Menu
@@ -17,11 +17,7 @@ import android.view.View.OnFocusChangeListener
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputConnection
 import android.view.inputmethod.InputMethodManager
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import android.widget.LinearLayout
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.view.marginBottom
+import android.widget.*
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -34,15 +30,13 @@ import com.example.jibi.ui.main.transaction.bottomSheet.CreateNewTransBottomShee
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.TextCalculator
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
 import kotlinx.android.synthetic.main.fragment_add_transaction.view.*
 import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.android.synthetic.main.keyboard_add_transaction.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import java.text.DecimalFormat
-import java.text.NumberFormat
+import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
@@ -54,9 +48,10 @@ class AddTransactionFragment
 @Inject
 constructor(
     viewModelFactory: ViewModelProvider.Factory,
-    private val requestManager: RequestManager
+    private val requestManager: RequestManager,
+    private val currentLocale: Locale
 
-    ) : BaseTransactionFragment(
+) : BaseTransactionFragment(
     R.layout.fragment_add_transaction,
     viewModelFactory
 ) {
@@ -66,17 +61,17 @@ constructor(
 
     private val args: AddTransactionFragmentArgs by navArgs()
     private var category: Category? = null
-        private val listOfNumbers = charArrayOf(
-            '1',
-            '2',
-            '3',
-            '4',
-            '5',
-            '6',
-            '7',
-            '8',
-            '9'
-        )
+    private val listOfNumbers = charArrayOf(
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+        '6',
+        '7',
+        '8',
+        '9'
+    )
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -93,21 +88,29 @@ constructor(
             showBottomSheet()
         }
 
+
     }
 
     private fun showBottomSheet() {
         val modalBottomSheet =
-            CreateNewTransBottomSheet(viewModel.viewState.value!!.categoryList!!, requestManager,onCategorySelectedCallback)
+            CreateNewTransBottomSheet(
+                viewModel.viewState.value!!.categoryList!!,
+                requestManager,
+                onCategorySelectedCallback
+            )
         modalBottomSheet.show(parentFragmentManager, "CreateNewTransBottomSheet")
     }
-    private val onCategorySelectedCallback = object : CreateNewTransBottomSheet.OnCategorySelectedCallback {
-        override fun onCategorySelected(item: Category) {
-            //on category changed
-            category = item
-            setTransProperties(category = item)
+
+    private val onCategorySelectedCallback =
+        object : CreateNewTransBottomSheet.OnCategorySelectedCallback {
+            override fun onCategorySelected(item: Category) {
+                //on category changed
+                category = item
+                setTransProperties(category = item)
+            }
+
         }
 
-    }
     override fun onResume() {
         uiCommunicationListener.showToolbar()
         super.onResume()
@@ -133,8 +136,8 @@ constructor(
     }
 
     private fun initUi(view: View) {
-        //make edt category nonEditable
-//        edt_category.keyListener = null
+        //add date to date
+        setDateToEditText()
         //Implementing an exposed dropdown menu for wallet editText
         addOptionsToWallet()
         //force keyboard to open up when addFragment launches
@@ -173,6 +176,70 @@ constructor(
 
         showCustomKeyboard(edt_money)
 
+    }
+
+    private fun setDateToEditText(time: Int? = null) {
+        disableContentInteraction(edt_date)
+        val ss =
+            SpannableString("${dateWithPattern(DATE_PATTERN)}    ${dateWithPattern(TIME_PATTERN)}")
+        val dateOnClick = object : ClickableSpan() {
+            override fun onClick(p0: View) {
+                Log.d(TAG, "HIEL onClick: date clicked")
+
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.isUnderlineText = false
+                ds.color = edt_date.currentTextColor
+            }
+        }
+        val timeOnClick = object : ClickableSpan() {
+            override fun onClick(p0: View) {
+                Log.d(TAG, "HIEL onClick: time clicked")
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.isUnderlineText = false
+                ds.color = edt_date.currentTextColor
+            }
+        }
+        val dateEndIndex = ss.indexOf(DATE_PATTERN[DATE_PATTERN.lastIndex]).plus(1)
+        ss.setSpan(
+            dateOnClick,
+            0,
+            dateEndIndex,
+            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        var timeStartIndex =
+            dateEndIndex.plus(ss.count { it == ' ' }).minus(DATE_PATTERN.count { it == ' ' }).minus(
+                TIME_PATTERN.count { it == ' ' })
+        if (timeStartIndex < dateEndIndex)
+            timeStartIndex = dateEndIndex
+        ss.setSpan(
+            timeOnClick,
+            timeStartIndex,
+            ss.lastIndex.plus(1),
+            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        //some customization
+        edt_date.setText(ss)
+        edt_date.movementMethod = LinkMovementMethod.getInstance()
+        edt_date.highlightColor = Color.TRANSPARENT
+    }
+
+    private fun dateWithPattern(pattern: String): String {
+        val df: Date = Date(System.currentTimeMillis())
+        return SimpleDateFormat(pattern, currentLocale).format(df)
+    }
+
+    private fun disableContentInteraction(edt: EditText) {
+        edt.keyListener = null
+        edt.isFocusable = false
+        edt.isFocusableInTouchMode = false
+        edt.isCursorVisible = false
+        edt.clearFocus()
     }
 
     fun showCustomKeyboard(view: View) {
@@ -418,5 +485,10 @@ constructor(
 
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
         }
+    }
+
+    companion object {
+        const val TIME_PATTERN = "KK:mm aa"
+        const val DATE_PATTERN = "MM/dd/yy (E)"
     }
 }

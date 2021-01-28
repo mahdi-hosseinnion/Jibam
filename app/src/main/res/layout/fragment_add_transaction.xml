@@ -47,12 +47,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_margin="4dp"
-                    android:padding="4dp"
                     android:layout_weight="70"
                     android:background="@android:color/transparent"
                     android:gravity="end|center"
                     android:hint="0"
                     android:maxLines="1"
+                    android:padding="4dp"
                     android:scrollHorizontally="true"
                     android:textColor="@color/white"
                     android:textSize="32dp"
@@ -64,8 +64,8 @@
                     android:layout_height="0dp"
                     android:layout_margin="8dp"
                     android:layout_weight="30"
-                    android:maxLines="1"
                     android:gravity="end|center"
+                    android:maxLines="1"
                     android:scrollHorizontally="true"
                     android:textSize="20dp"
                     tools:text="103" />
@@ -132,6 +132,32 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txtField_date"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:hint="@string/date"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtField_wallet">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center|start"
+                    android:padding="8dp"
+                    android:gravity="center|start"
+                    android:inputType="none"
+                    android:focusable="true"
+                    android:clickable="true"
+                    android:textSize="16sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/sjdf"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
@@ -144,7 +170,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
 
-                app:layout_constraintTop_toBottomOf="@+id/txtField_wallet">
+                app:layout_constraintTop_toBottomOf="@+id/txtField_date">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edt_memo"
@@ -152,9 +178,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="10"
                     android:gravity="top"
-                    android:minLines="2"
+                    android:inputType="textMultiLine"
                     android:maxLines="4"
-                    android:inputType="textMultiLine" />
+                    android:minLines="2" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!--            <com.google.android.material.textfield.TextInputLayout-->
