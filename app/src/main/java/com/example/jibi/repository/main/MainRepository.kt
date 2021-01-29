@@ -124,17 +124,17 @@ constructor(
         val dv: Long = ((time.toLong()) * 1000) // its need to be in milisecond
         val df: Date = Date(dv)
 
-        val transDate = SimpleDateFormat("E MM/dd/yy", currentLocale).format(df)
+        val transDate = SimpleDateFormat(TransactionListAdapter.HEADER_DATE_PATTERN, currentLocale).format(df)
 
         if (today == null) {
             today = SimpleDateFormat(
-                "E MM/dd/yy",
+                TransactionListAdapter.HEADER_DATE_PATTERN,
                 currentLocale
             ).format(Date(System.currentTimeMillis()))
         }
         if (yesterday == null) {
             yesterday = SimpleDateFormat(
-                "E MM/dd/yy",
+                TransactionListAdapter.HEADER_DATE_PATTERN,
                 currentLocale
             ).format(Date(System.currentTimeMillis().minus(86_400_000L)))
         }

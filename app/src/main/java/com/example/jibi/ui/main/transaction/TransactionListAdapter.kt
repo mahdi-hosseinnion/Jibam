@@ -57,6 +57,13 @@ abstract class TransactionListAdapter(
             0,
             0
         )
+        //list of supported patter
+        //https://stackoverflow.com/a/12781297/10362460
+//        "E MM/dd/yy",
+        const val HEADER_DATE_PATTERN="E, MMM dd yyyy"
+//        const val HEADER_DATE_PATTERN="MM/dd/yy (E)"
+
+
         val listOfColor = listOf(
             R.color.category_background_color_1,
             R.color.category_background_color_2,

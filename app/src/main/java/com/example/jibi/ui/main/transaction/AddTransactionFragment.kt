@@ -1,5 +1,8 @@
 package com.example.jibi.ui.main.transaction
 
+import android.app.DatePickerDialog
+import android.app.DatePickerDialog.OnDateSetListener
+import android.app.TimePickerDialog
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
@@ -73,6 +76,7 @@ constructor(
         '9'
     )
 
+    val combineCalender = GregorianCalendar(currentLocale)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -184,7 +188,7 @@ constructor(
             SpannableString("${dateWithPattern(DATE_PATTERN)}    ${dateWithPattern(TIME_PATTERN)}")
         val dateOnClick = object : ClickableSpan() {
             override fun onClick(p0: View) {
-                Log.d(TAG, "HIEL onClick: date clicked")
+                showDatePickerDialog()
 
             }
 
@@ -196,7 +200,7 @@ constructor(
         }
         val timeOnClick = object : ClickableSpan() {
             override fun onClick(p0: View) {
-                Log.d(TAG, "HIEL onClick: time clicked")
+                showTimePickerDialog()
             }
 
             override fun updateDrawState(ds: TextPaint) {
@@ -230,8 +234,53 @@ constructor(
     }
 
     private fun dateWithPattern(pattern: String): String {
-        val df: Date = Date(System.currentTimeMillis())
+//        val df: Date = Date(System.currentTimeMillis())
+        Log.d(TAG, "dateWithPattern 6859: --->>> ${combineCalender.timeInMillis}")
+        val df = Date(combineCalender.timeInMillis)
         return SimpleDateFormat(pattern, currentLocale).format(df)
+    }
+
+    private fun showDatePickerDialog() {
+        //hide money keyboard
+        hideCustomKeyboard()
+
+        val datePickerDialog =
+            DatePickerDialog(
+                this.requireContext(),
+                { datePicker, year, monthOfYear, dayOfMonth ->
+                    Log.d(
+                        TAG,
+                        "showDatePickerDialog 6859: year: $year month: $monthOfYear day: $dayOfMonth"
+                    )
+                    combineCalender.set(year, monthOfYear, dayOfMonth)
+                    //update time
+                    setDateToEditText()
+                },
+                combineCalender.get(Calendar.YEAR),
+                combineCalender.get(Calendar.MONTH),
+                combineCalender.get(Calendar.DAY_OF_MONTH)
+            )
+        datePickerDialog.show()
+    }
+
+    private fun showTimePickerDialog() {
+        //hide money keyboard
+        hideCustomKeyboard()
+        //show picker
+        val timePickerDialog =
+            TimePickerDialog(
+                this.requireContext(),
+                TimePickerDialog.OnTimeSetListener { datePicker, hourOfDay, minute ->
+                    Log.d(TAG, "showDatePickerDialog6859: hour: $hourOfDay || minute: $minute ")
+                    combineCalender.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                    combineCalender.set(Calendar.MINUTE, minute)
+                    setDateToEditText()
+                },
+                combineCalender.get(Calendar.HOUR_OF_DAY),
+                combineCalender.get(Calendar.MINUTE),
+                false
+            )
+        timePickerDialog.show()
     }
 
     private fun disableContentInteraction(edt: EditText) {
@@ -346,7 +395,7 @@ constructor(
                 money = money,
                 memo = memo,
                 cat_id = category!!.id,
-                date = getCurrentTimeInSecond()
+                date = getTimeInSecond()
             )
 
             viewModel.launchNewJob(
@@ -399,7 +448,7 @@ constructor(
         return true
     }
 
-    private fun getCurrentTimeInSecond(): Int = (System.currentTimeMillis() / 1000).toInt()
+    private fun getTimeInSecond(): Int = ((combineCalender.timeInMillis) / 1000).toInt()
 
 //    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
 //        inflater.inflate(R.menu.add_menu, menu)
