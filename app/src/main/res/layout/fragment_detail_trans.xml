@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_gray"
+    android:orientation="vertical"
     tools:context=".ui.main.transaction.DetailTransFragment">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/fragment_detail_toolbar_main"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/mtrl_toolbar_default_height"
+            android:background="@color/purple_500" />
     <ScrollView
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     <androidx.cardview.widget.CardView
@@ -192,4 +199,4 @@
         android:layout_margin="16dp"
         android:contentDescription="syep"
         app:srcCompat="@drawable/ic_check_green_24dp" />
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>

@@ -418,7 +418,7 @@ constructor(
 
         bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
 
-        uiCommunicationListener.hideToolbar()
+//        uiCommunicationListener.hideToolbar()
 
         viewModel.countOfNonCancellableJobs.observe(viewLifecycleOwner, Observer {
             it?.let {

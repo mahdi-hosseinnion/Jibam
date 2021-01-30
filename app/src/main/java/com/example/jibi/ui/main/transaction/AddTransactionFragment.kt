@@ -56,8 +56,9 @@ constructor(
 
 ) : BaseTransactionFragment(
     R.layout.fragment_add_transaction,
-    viewModelFactory
-) {
+    viewModelFactory,
+    R.id.fragment_add_toolbar_main
+    ) {
     private val TAG = "AddTransactionFragment"
 
     private val textCalculator = TextCalculator()
@@ -116,7 +117,7 @@ constructor(
         }
 
     override fun onResume() {
-        uiCommunicationListener.showToolbar()
+//        uiCommunicationListener.showToolbar()
         super.onResume()
     }
 

@@ -9,13 +9,23 @@
         android:id="@+id/transactionFragment"
         android:name="com.example.jibi.ui.main.transaction.TransactionFragment"
         android:label=""
-        tools:layout="@layout/fragment_transaction" >
+        tools:layout="@layout/fragment_transaction"
+
+        >
         <action
             android:id="@+id/action_transactionFragment_to_createTransactionFragment"
-            app:destination="@id/createTransactionFragment" />
+            app:destination="@id/createTransactionFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
         <action
             android:id="@+id/action_transactionFragment_to_detailTransFragment"
-            app:destination="@id/detailTransFragment" />
+            app:destination="@id/detailTransFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
     </fragment>
     <fragment
         android:id="@+id/createTransactionFragment"
@@ -25,13 +35,25 @@
         <argument
             android:name="category_id"
             app:argType="integer"
-            android:defaultValue="-1" />
+            android:defaultValue="-1"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />/>
         <action
             android:id="@+id/action_createTransactionFragment_to_transactionFragment"
-            app:destination="@id/transactionFragment" />
+            app:destination="@id/transactionFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />/>
         <action
             android:id="@+id/action_createTransactionFragment_to_viewCategoriesFragment"
-            app:destination="@id/viewCategoriesFragment" />
+            app:destination="@id/viewCategoriesFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />/>
     </fragment>
     <fragment
         android:id="@+id/detailTransFragment"
@@ -40,7 +62,11 @@
         tools:layout="@layout/fragment_detail_trans" >
         <action
             android:id="@+id/action_detailTransFragment_to_transactionFragment"
-            app:destination="@id/transactionFragment" />
+            app:destination="@id/transactionFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />/>
     </fragment>
     <fragment
         android:id="@+id/viewCategoriesFragment"

@@ -47,7 +47,8 @@ constructor(
     private val currentLocale: Locale
 ) : BaseTransactionFragment(
     R.layout.fragment_detail_trans,
-    viewModelFactory
+    viewModelFactory,
+    R.id.fragment_detail_toolbar_main
 ), View.OnClickListener {
 
     private val TAG = "DetailTransFragment"
@@ -241,7 +242,7 @@ constructor(
     }
 
     override fun onResume() {
-        uiCommunicationListener.showToolbar()
+//        uiCommunicationListener.showToolbar()
         super.onResume()
     }
 

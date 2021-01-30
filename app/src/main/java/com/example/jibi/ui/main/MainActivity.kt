@@ -41,7 +41,7 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        setupActionBarWithNavController()
+//        setupActionBarWithNavController()
     }
 
 
@@ -50,8 +50,8 @@ class MainActivity : BaseActivity() {
             .inject(this)
     }
 
-    private fun setupActionBarWithNavController() {
-        val toolbar = findViewById<Toolbar>(R.id.toolbar_main)
+    override fun setupActionBarWithNavController(toolbar: Toolbar) {
+//        val toolbar = findViewById<Toolbar>(R.id.toolbar_main)
         setSupportActionBar(toolbar)
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -68,12 +68,13 @@ class MainActivity : BaseActivity() {
     }
 
 
-    override fun hideToolbar() {
-        toolbar_main.visibility = View.GONE
-    }
 
-    override fun showToolbar() {
-        toolbar_main.visibility = View.VISIBLE
-    }
+//    override fun hideToolbar() {
+//        toolbar_main.visibility = View.GONE
+//    }
+//
+//    override fun showToolbar() {
+//        toolbar_main.visibility = View.VISIBLE
+//    }
 
 }

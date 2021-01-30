@@ -75,7 +75,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txt_balance"
-                card_view:cardBackgroundColor="#5400BE"
+                card_view:cardBackgroundColor="@color/purple_700"
                 card_view:cardCornerRadius="16dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
