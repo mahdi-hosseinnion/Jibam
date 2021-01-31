@@ -44,6 +44,21 @@ constructor(
     init {
         //flow stuff
         viewModelScope.launch {
+
+            launch {
+                mainRepository.getCategoryList()
+                    //loading stuff
+                    .onStart { increaseLoading(GET_LIST_OF_CATEGORY) }
+                    .catch { cause -> addToMessageStack(throwable = cause) }
+                    .collect {
+                        //loading stuff
+                        decreaseLoading(GET_LIST_OF_CATEGORY)
+                        it?.let {
+                            setListOfCategories(it)
+                        }
+                    }
+            }
+
             launch {
                 //TODO HANDLE WHERE TO INCREMENT AND WHEN TO DECREMENT LOADING
                 mainRepository.getSumOfExpenses()
@@ -89,19 +104,7 @@ constructor(
                         }
                     }
             }
-            launch {
-                mainRepository.getCategoryList()
-                    //loading stuff
-                    .onStart { increaseLoading(GET_LIST_OF_CATEGORY) }
-                    .catch { cause -> addToMessageStack(throwable = cause) }
-                    .collect {
-                        //loading stuff
-                        decreaseLoading(GET_LIST_OF_CATEGORY)
-                        it?.let {
-                            setListOfCategories(it)
-                        }
-                    }
-            }
+
             //timeout loading decrese
             launch {
                 delay(Constants.CACHE_TIMEOUT)

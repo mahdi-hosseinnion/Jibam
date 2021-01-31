@@ -75,6 +75,11 @@ constructor(
                 last_transacion_app_bar.isLiftOnScroll = true
                 hideTransactionListToolBar()
             }
+            if (BottomSheetBehavior.STATE_DRAGGING == newState) {
+                fab.hide()
+            } else {
+                fab.show()
+            }
 
         }
 
@@ -139,6 +144,7 @@ constructor(
             insertRandomTransaction()
         }
         main_bottom_sheet_back_arrow.setOnClickListener {
+            transaction_recyclerView.scrollToPosition(0)
             bottomSheetBehavior.state = STATE_COLLAPSED
         }
     }
@@ -197,16 +203,17 @@ constructor(
         modalBottomSheet.show(parentFragmentManager, "CreateNewTransBottomSheet")
     }
 
-    private val onCategorySelectedCallback = object : CreateNewTransBottomSheet.OnCategorySelectedCallback {
-        override fun onCategorySelected(item: Category) {
-            val action =
-                TransactionFragmentDirections.actionTransactionFragmentToCreateTransactionFragment(
-                    categoryId = item.id
-                )
-            findNavController().navigate(action)
-        }
+    private val onCategorySelectedCallback =
+        object : CreateNewTransBottomSheet.OnCategorySelectedCallback {
+            override fun onCategorySelected(item: Category) {
+                val action =
+                    TransactionFragmentDirections.actionTransactionFragmentToCreateTransactionFragment(
+                        categoryId = item.id
+                    )
+                findNavController().navigate(action)
+            }
 
-    }
+        }
 
 
     private fun subscribeObservers() {
@@ -292,8 +299,17 @@ constructor(
                     )
                 }
             }
-//            addOnScrollListener(object: RecyclerView.OnScrollListener(){
-//
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+                        if (dy > 0) {
+                            fab.hide()
+                        } else {
+                            fab.show()
+                        }
+                    }
+                }
 //                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
 //                    super.onScrollStateChanged(recyclerView, newState)
 //                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
@@ -303,7 +319,7 @@ constructor(
 //                        viewModel.nextPage()
 //                    }
 //                }
-//            })
+            })
 
 //            //swipe to delete
             val swipeHandler =
