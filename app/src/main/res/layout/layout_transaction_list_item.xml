@@ -6,6 +6,7 @@
     android:id="@+id/root_transaction_item"
     android:layout_width="match_parent"
     android:layout_height="56dp"
+    android:background="@color/white"
     android:paddingLeft="8dp"
     android:paddingRight="8dp">
 

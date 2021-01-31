@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -62,78 +63,29 @@ constructor(
 
     private var closeBottomWidth = 0
     private var bottomSheetRadios = 0
-    private var lastRecyclerState = 0
 
     private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
 
         override fun onStateChanged(bottomSheet: View, newState: Int) {
-            if (BottomSheetBehavior.STATE_EXPANDED == newState) {
-                showTransactionListToolBar()
-                last_transacion_app_bar.isLiftOnScroll = false
-            } else {
-//                if (BottomSheetBehavior.STATE_COLLAPSED == newState) {
-                last_transacion_app_bar.isLiftOnScroll = true
-                hideTransactionListToolBar()
-            }
-            if (BottomSheetBehavior.STATE_DRAGGING == newState) {
-                fab.hide()
-            } else {
-                fab.show()
-            }
+            onBottomSheetStateChanged(newState)
 
         }
 
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
-            main_bottom_sheet_back_arrow.alpha = slideOffset
-            if (bottomSheetRadios < 1) {
-                bottomSheetRadios = convertDpToPx(8)
-            }
-            val bottomSheetBackGround = main_standardBottomSheet.background as GradientDrawable
-            val topHeight = (bottomSheetRadios * (1f - slideOffset))
-
-            //change bottom sheet raidus
-            bottomSheetBackGround.cornerRadius = topHeight
-//            main_standardBottomSheet.setPadding(0, topHeight.toInt(), 0, 0)
-            //change top of bottomSheet height
-            val viewParams = view_hastam.layoutParams
-            viewParams.height = topHeight.toInt()
-            view_hastam.layoutParams = viewParams
-            view_hastam2.alpha = (1f - slideOffset)
-
-            // make the toolbar close button animation
-            if (closeBottomWidth < 1) {
-                closeBottomWidth = convertDpToPx(56)
-            }
-            val closeButtonParams =
-                main_bottom_sheet_back_arrow.layoutParams as ViewGroup.LayoutParams
-            closeButtonParams.width = (slideOffset * closeBottomWidth).toInt()
-            main_bottom_sheet_back_arrow.layoutParams = closeButtonParams
-
+            onBottomSheetSlide(slideOffset)
         }
     }
 
-    fun showTransactionListToolBar() {
-//        view_hastam.visibility = View.GONE
-//        lastTransaction.visibility = View.GONE
-//        bottom_sheet_toolbar.visibility = View.VISIBLE
-//        main_standardBottomSheet.setBackgroundResource(R.color.white)
-    }
-
-    fun hideTransactionListToolBar() {
-//        view_hastam.visibility = View.VISIBLE
-//        lastTransaction.visibility = View.VISIBLE
-//        bottom_sheet_toolbar.visibility = View.GONE
-//        main_standardBottomSheet.setBackgroundResource(R.drawable.bottom_sheet_bg)
-
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //set width for closeButtonAnimation
         closeBottomWidth = convertDpToPx(56)
-        bottomSheetRadios = convertDpToPx(8)
+        bottomSheetRadios = convertDpToPx(16)
 
         bottomSheetBehavior = BottomSheetBehavior.from(main_standardBottomSheet)
+
+        bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
 
         initRecyclerView()
         subscribeObservers()
@@ -417,6 +369,7 @@ constructor(
         super.onResume()
         Log.d(TAG, "onResume: called")
         //set bottom sheet peek height
+
         fragment_transacion_root.viewTreeObserver.addOnGlobalLayoutListener(object :
             ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
@@ -431,10 +384,14 @@ constructor(
             }
 
         })
-
-        bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
-
-//        uiCommunicationListener.hideToolbar()
+        //reset it
+        onBottomSheetStateChanged(bottomSheetBehavior.state)
+        if (bottomSheetBehavior.state ==BottomSheetBehavior.STATE_EXPANDED){
+            onBottomSheetSlide(1f)
+        }else{
+            onBottomSheetSlide(0f)
+        }
+//        bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
 
         viewModel.countOfNonCancellableJobs.observe(viewLifecycleOwner, Observer {
             it?.let {
@@ -456,5 +413,54 @@ constructor(
     override fun restoreListPosition() {
     }
 
+     fun onBottomSheetStateChanged(newState: Int) {
+        if (BottomSheetBehavior.STATE_EXPANDED == newState) {
+            last_transacion_app_bar.isLiftOnScroll = false
+            transaction_divider_bottomSheet.visibility = View.GONE
+        } else {
+            last_transacion_app_bar.isLiftOnScroll = true
+        }
+        if (BottomSheetBehavior.STATE_COLLAPSED == newState) {
+            transaction_divider_bottomSheet.visibility = View.VISIBLE
 
+        }
+        if (BottomSheetBehavior.STATE_DRAGGING == newState) {
+            fab.hide()
+        } else {
+            fab.show()
+        }
+
+    }
+     fun onBottomSheetSlide( slideOffset: Float) {
+        main_bottom_sheet_back_arrow.alpha = slideOffset
+        if (bottomSheetRadios < 1) {
+            bottomSheetRadios = convertDpToPx(16)
+        }
+        val bottomSheetBackGround = main_standardBottomSheet.background as GradientDrawable
+
+        val topHeight = (bottomSheetRadios * (1f - slideOffset))
+
+        //change bottom sheet raidus
+        bottomSheetBackGround.cornerRadius = topHeight
+        main_standardBottomSheet.background = bottomSheetBackGround
+        //change app bar
+        last_transacion_app_bar.background = bottomSheetBackGround
+        last_transacion_app_bar.setPadding(topHeight.toInt(), 0, topHeight.toInt(), 0)
+//            main_standardBottomSheet.setPadding(0, topHeight.toInt(), 0, 0)
+        //change top of bottomSheet height
+//            val viewParams = view_hastam.layoutParams
+//            viewParams.height = topHeight.toInt()
+//            view_hastam.layoutParams = viewParams
+//            view_hastam2.alpha = (1f - slideOffset)
+
+        // make the toolbar close button animation
+        if (closeBottomWidth < 1) {
+            closeBottomWidth = convertDpToPx(56)
+        }
+        val closeButtonParams =
+            main_bottom_sheet_back_arrow.layoutParams as ViewGroup.LayoutParams
+        closeButtonParams.width = (slideOffset * closeBottomWidth).toInt()
+        main_bottom_sheet_back_arrow.layoutParams = closeButtonParams
+
+    }
 }
