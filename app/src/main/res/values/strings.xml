@@ -38,4 +38,5 @@
     <string name="snack_bar_undo">Undo</string>
     <string name="add_new_category">Add new category</string>
     <string name="now">Now</string>
+    <string name="search">Search</string>
 </resources>

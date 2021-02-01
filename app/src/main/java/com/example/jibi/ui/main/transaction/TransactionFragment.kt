@@ -1,12 +1,17 @@
 package com.example.jibi.ui.main.transaction
 
+import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
@@ -29,6 +34,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_add_transaction.*
 import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.android.synthetic.main.layout_transaction_list_item.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -64,6 +70,14 @@ constructor(
     private var closeBottomWidth = 0
     private var bottomSheetRadios = 0
 
+    private enum class SearchViewStateEnum { VISIBLE, INVISIBLE }
+
+    private fun SearchViewStateEnum.isVisible(): Boolean {
+        return (this == SearchViewStateEnum.VISIBLE)
+    }
+
+    private var searchViewState: SearchViewStateEnum = SearchViewStateEnum.INVISIBLE
+
     private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
 
         override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -96,11 +110,83 @@ constructor(
             insertRandomTransaction()
         }
         main_bottom_sheet_back_arrow.setOnClickListener {
-            transaction_recyclerView.scrollToPosition(0)
-            bottomSheetBehavior.state = STATE_COLLAPSED
+            //check for search view
+            if (searchViewState.isVisible()) {
+                disableSearchMode()
+            } else {
+                transaction_recyclerView.scrollToPosition(0)
+                bottomSheetBehavior.state = STATE_COLLAPSED
+            }
+        }
+        //search view stuff
+        main_bottom_sheet_search_btn.setOnClickListener {
+            enableSearchMode()
+        }
+        bottom_sheet_search_clear.setOnClickListener {
+            bottom_sheet_search_edt.setText("")
+        }
+
+
+    }
+
+    private fun enableSearchMode() {
+        if (!searchViewState.isVisible()) {
+            searchViewState = SearchViewStateEnum.VISIBLE
+
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            //force to slide
+            onBottomSheetStateChanged(BottomSheetBehavior.STATE_EXPANDED)
+            onBottomSheetSlide(1f)
+
+            //visible search stuff
+            bottom_sheet_search_edt.visibility = View.VISIBLE
+            bottom_sheet_search_clear.visibility = View.INVISIBLE
+
+            bottom_sheet_search_edt.addTextChangedListener(onSearchViewTextChangeListener)
+            //invisible search stuff
+            main_bottom_sheet_search_btn.visibility = View.GONE
+            main_bottom_sheet_filter_btn.visibility = View.GONE
+            bottom_sheet_title.visibility = View.GONE
+
+//            forceKeyBoardToOpenForMoneyEditText(bottom_sheet_search_edt)
         }
     }
 
+    private fun disableSearchMode() {
+        if (searchViewState.isVisible()) {
+
+            searchViewState = SearchViewStateEnum.INVISIBLE
+
+            //invisible search stuff
+            bottom_sheet_search_edt.visibility = View.GONE
+            bottom_sheet_search_clear.visibility = View.GONE
+
+            uiCommunicationListener.hideSoftKeyboard()
+            bottom_sheet_search_edt.removeTextChangedListener(onSearchViewTextChangeListener)
+            //visible search stuff
+            main_bottom_sheet_search_btn.visibility = View.VISIBLE
+            main_bottom_sheet_filter_btn.visibility = View.VISIBLE
+            bottom_sheet_title.visibility = View.VISIBLE
+        }
+    }
+
+    val onSearchViewTextChangeListener = object : TextWatcher {
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+        }
+
+        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            if (p0.isNullOrEmpty()) {
+                bottom_sheet_search_clear.visibility = View.INVISIBLE
+            } else {
+                bottom_sheet_search_clear.visibility = View.VISIBLE
+            }
+            //search for something
+        }
+
+        override fun afterTextChanged(p0: Editable?) {
+        }
+    }
 
     private fun insertRandomTransaction() {
         if (Random.nextBoolean()) {
@@ -386,9 +472,9 @@ constructor(
         })
         //reset it
         onBottomSheetStateChanged(bottomSheetBehavior.state)
-        if (bottomSheetBehavior.state ==BottomSheetBehavior.STATE_EXPANDED){
+        if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
             onBottomSheetSlide(1f)
-        }else{
+        } else {
             onBottomSheetSlide(0f)
         }
 //        bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
@@ -413,7 +499,7 @@ constructor(
     override fun restoreListPosition() {
     }
 
-     fun onBottomSheetStateChanged(newState: Int) {
+    fun onBottomSheetStateChanged(newState: Int) {
         if (BottomSheetBehavior.STATE_EXPANDED == newState) {
             last_transacion_app_bar.isLiftOnScroll = false
             transaction_divider_bottomSheet.visibility = View.GONE
@@ -421,6 +507,7 @@ constructor(
             last_transacion_app_bar.isLiftOnScroll = true
         }
         if (BottomSheetBehavior.STATE_COLLAPSED == newState) {
+            disableSearchMode()
             transaction_divider_bottomSheet.visibility = View.VISIBLE
 
         }
@@ -431,7 +518,8 @@ constructor(
         }
 
     }
-     fun onBottomSheetSlide( slideOffset: Float) {
+
+    fun onBottomSheetSlide(slideOffset: Float) {
         main_bottom_sheet_back_arrow.alpha = slideOffset
         if (bottomSheetRadios < 1) {
             bottomSheetRadios = convertDpToPx(16)
@@ -462,5 +550,12 @@ constructor(
         closeButtonParams.width = (slideOffset * closeBottomWidth).toInt()
         main_bottom_sheet_back_arrow.layoutParams = closeButtonParams
 
+    }
+
+    private fun forceKeyBoardToOpenForMoneyEditText(editText: EditText) {
+        editText.requestFocus()
+        val imm: InputMethodManager =
+            activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
     }
 }

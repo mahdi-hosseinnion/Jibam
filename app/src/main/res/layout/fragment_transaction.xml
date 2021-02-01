@@ -235,7 +235,9 @@
                     android:visibility="visible"
                     app:srcCompat="@drawable/md_nav_back" />
 
+
                 <TextView
+                    android:id="@+id/bottom_sheet_title"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
@@ -247,6 +249,29 @@
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     android:textStyle="normal" />
+
+                <EditText
+                    android:id="@+id/bottom_sheet_search_edt"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/transparent"
+                    android:hint="@string/search"
+                    android:maxLines="1"
+                    android:scrollHorizontally="true"
+                    android:visibility="gone" />
+
+                <ImageButton
+                    android:id="@+id/bottom_sheet_search_clear"
+                    android:layout_width="@dimen/action_bar_size"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="16dp"
+                    android:tint="@color/black"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_baseline_close_24" />
 
                 <ImageButton
                     android:id="@+id/main_bottom_sheet_search_btn"
