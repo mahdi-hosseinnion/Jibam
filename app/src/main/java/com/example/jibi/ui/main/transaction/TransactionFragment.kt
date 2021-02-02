@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -99,10 +100,24 @@ constructor(
             onBottomSheetSlide(slideOffset)
         }
     }
+    private val backStackForBottomSheet = object : OnBackPressedCallback(false) {
+        override fun handleOnBackPressed() {
+            //check for search view
+            if (searchViewState.isVisible()) {
+                disableSearchMode()
+            } else {
+                transaction_recyclerView.scrollToPosition(0)
+                bottomSheetBehavior.state = STATE_COLLAPSED
+                this.isEnabled = false
+            }
+        }
 
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        requireActivity().onBackPressedDispatcher.addCallback(backStackForBottomSheet)
         //set width for closeButtonAnimation
         closeBottomWidth = convertDpToPx(56)
         bottomSheetRadios = convertDpToPx(16)
@@ -471,6 +486,8 @@ constructor(
         super.onResume()
         Log.d(TAG, "onResume: called")
         //set bottom sheet peek height
+        if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED)
+            resetIt(1f)
 
         fragment_transacion_root.viewTreeObserver.addOnGlobalLayoutListener(object :
             ViewTreeObserver.OnGlobalLayoutListener {
@@ -487,12 +504,11 @@ constructor(
 
         })
         //reset it
-        onBottomSheetStateChanged(bottomSheetBehavior.state)
-        if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
-            onBottomSheetSlide(1f)
-        } else {
-            onBottomSheetSlide(0f)
-        }
+//        onBottomSheetStateChanged(bottomSheetBehavior.state)
+//        if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+//            onBottomSheetSlide(0f)
+//        }
+
 //        bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
 
         viewModel.countOfNonCancellableJobs.observe(viewLifecycleOwner, Observer {
@@ -522,8 +538,12 @@ constructor(
         if (BottomSheetBehavior.STATE_EXPANDED == newState) {
             last_transacion_app_bar.isLiftOnScroll = false
             transaction_divider_bottomSheet.visibility = View.GONE
+            //enable backStack
+            backStackForBottomSheet.isEnabled = true
         } else {
             last_transacion_app_bar.isLiftOnScroll = true
+            //disable backStack
+            backStackForBottomSheet.isEnabled = false
         }
         if (BottomSheetBehavior.STATE_COLLAPSED == newState) {
             disableSearchMode()
@@ -598,6 +618,50 @@ constructor(
             closeButtonParams.width = (slideOffset * closeBottomWidth).toInt()
             main_bottom_sheet_back_arrow.layoutParams = closeButtonParams
         }
+    }
+    fun resetIt(slideOffset: Float){
+        main_bottom_sheet_back_arrow.alpha = slideOffset
+        if (bottomSheetRadios < 1) {
+            bottomSheetRadios = convertDpToPx(16)
+        }
+        val bottomSheetBackGround = main_standardBottomSheet.background as GradientDrawable
+
+        val topHeight = (bottomSheetRadios * (1f - slideOffset))
+
+        //change bottom sheet raidus
+        bottomSheetBackGround.cornerRadius = topHeight
+        main_standardBottomSheet.background = bottomSheetBackGround
+        //change app bar
+        if (normalAppBarHeight < 1) {
+            normalAppBarHeight = convertDpToPx(40)
+        }
+        last_transacion_app_bar.background = bottomSheetBackGround
+//            last_transacion_app_bar.setPadding(topHeight.toInt(), 0, topHeight.toInt(), 0)
+        //change app bar height
+        val appbarViewParams = last_transacion_app_bar.layoutParams
+        appbarViewParams.height = (normalAppBarHeight + (bottomSheetRadios - topHeight.toInt()))
+        last_transacion_app_bar.layoutParams = appbarViewParams
+        //change buttons height
+        val buttonsViewParams = main_bottom_sheet_search_btn.layoutParams
+        buttonsViewParams.width = (normalAppBarHeight + (bottomSheetRadios - topHeight.toInt()))
+
+        main_bottom_sheet_search_btn.layoutParams = buttonsViewParams
+        main_bottom_sheet_filter_btn.layoutParams = buttonsViewParams
+//            main_standardBottomSheet.setPadding(0, topHeight.toInt(), 0, 0)
+        //change top of bottomSheet height
+        val viewParams = view_hastam.layoutParams
+        viewParams.height = topHeight.toInt()
+        view_hastam.layoutParams = viewParams
+        view_hastam2.alpha = (1f - slideOffset)
+
+        // make the toolbar close button animation
+        if (closeBottomWidth < 1) {
+            closeBottomWidth = convertDpToPx(56)
+        }
+        val closeButtonParams =
+            main_bottom_sheet_back_arrow.layoutParams as ViewGroup.LayoutParams
+        closeButtonParams.width = (slideOffset * closeBottomWidth).toInt()
+        main_bottom_sheet_back_arrow.layoutParams = closeButtonParams
     }
 
     private fun forceKeyBoardToOpenForMoneyEditText(editText: EditText) {

@@ -242,7 +242,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:gravity="start|center"
-                    android:paddingStart="4dp"
+                    android:paddingStart="8dp"
                     android:text="Transactions"
                     android:textColor="@color/black"
                     android:textSize="20sp"

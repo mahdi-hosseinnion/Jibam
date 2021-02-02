@@ -1,18 +1,22 @@
 package com.example.jibi.ui.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.example.jibi.BaseApplication
 import com.example.jibi.R
 import com.example.jibi.ui.BaseActivity
+import com.example.jibi.ui.main.transaction.BaseTransactionFragment
 import com.example.jibi.util.Response
 import com.example.jibi.util.StateMessageCallback
 import kotlinx.android.synthetic.main.activity_main.*
