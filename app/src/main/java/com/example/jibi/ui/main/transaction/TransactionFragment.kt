@@ -69,14 +69,21 @@ constructor(
 
     private var closeBottomWidth = 0
     private var bottomSheetRadios = 0
+    private var lastSlideValue = -1f
 
-    private enum class SearchViewStateEnum { VISIBLE, INVISIBLE }
+    private sealed class SearchViewState {
+        object VISIBLE : SearchViewState()
+        object INVISIBLE : SearchViewState()
 
-    private fun SearchViewStateEnum.isVisible(): Boolean {
-        return (this == SearchViewStateEnum.VISIBLE)
+        fun isVisible(): Boolean = this == VISIBLE
+        fun isInvisible(): Boolean = this == INVISIBLE
     }
 
-    private var searchViewState: SearchViewStateEnum = SearchViewStateEnum.INVISIBLE
+//    private fun SearchViewState.isVisible(): Boolean {
+//        return (this == SearchViewStateEnum.VISIBLE)
+//    }
+
+    private var searchViewState: SearchViewState = SearchViewState.INVISIBLE
 
     private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
 
@@ -111,7 +118,7 @@ constructor(
         }
         main_bottom_sheet_back_arrow.setOnClickListener {
             //check for search view
-            if (searchViewState.isVisible()) {
+            if (searchViewState .isVisible()) {
                 disableSearchMode()
             } else {
                 transaction_recyclerView.scrollToPosition(0)
@@ -130,32 +137,32 @@ constructor(
     }
 
     private fun enableSearchMode() {
-        if (!searchViewState.isVisible()) {
-            searchViewState = SearchViewStateEnum.VISIBLE
-
+        if (searchViewState .isInvisible()) {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+
+
             //force to slide
-            onBottomSheetStateChanged(BottomSheetBehavior.STATE_EXPANDED)
-            onBottomSheetSlide(1f)
+//            onBottomSheetStateChanged(BottomSheetBehavior.STATE_EXPANDED)
+//            onBottomSheetSlide(1f)
 
             //visible search stuff
             bottom_sheet_search_edt.visibility = View.VISIBLE
             bottom_sheet_search_clear.visibility = View.INVISIBLE
 
             bottom_sheet_search_edt.addTextChangedListener(onSearchViewTextChangeListener)
+            forceKeyBoardToOpenForMoneyEditText(bottom_sheet_search_edt)
             //invisible search stuff
             main_bottom_sheet_search_btn.visibility = View.GONE
             main_bottom_sheet_filter_btn.visibility = View.GONE
             bottom_sheet_title.visibility = View.GONE
-
-//            forceKeyBoardToOpenForMoneyEditText(bottom_sheet_search_edt)
+            //this should come after all
+            searchViewState = SearchViewState.VISIBLE
         }
     }
 
     private fun disableSearchMode() {
-        if (searchViewState.isVisible()) {
-
-            searchViewState = SearchViewStateEnum.INVISIBLE
+        if (searchViewState .isVisible()) {
+            Log.d(TAG, "disableSearchMode: 765 called and setted to invisible")
 
             //invisible search stuff
             bottom_sheet_search_edt.visibility = View.GONE
@@ -163,14 +170,18 @@ constructor(
 
             uiCommunicationListener.hideSoftKeyboard()
             bottom_sheet_search_edt.removeTextChangedListener(onSearchViewTextChangeListener)
+            bottom_sheet_search_edt.setText("")
             //visible search stuff
             main_bottom_sheet_search_btn.visibility = View.VISIBLE
             main_bottom_sheet_filter_btn.visibility = View.VISIBLE
             bottom_sheet_title.visibility = View.VISIBLE
+
+            //this should come after all
+            searchViewState = SearchViewState.INVISIBLE
         }
     }
 
-    val onSearchViewTextChangeListener = object : TextWatcher {
+    private val onSearchViewTextChangeListener = object : TextWatcher {
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
         }
@@ -346,6 +357,7 @@ constructor(
                         } else {
                             fab.show()
                         }
+
                     }
                 }
 //                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -499,7 +511,10 @@ constructor(
     override fun restoreListPosition() {
     }
 
-    fun onBottomSheetStateChanged(newState: Int) {
+    private fun onBottomSheetStateChanged(newState: Int) {
+
+        Log.d(TAG, "onBottomSheetSlide: 765 newState: $newState")
+
         if (BottomSheetBehavior.STATE_EXPANDED == newState) {
             last_transacion_app_bar.isLiftOnScroll = false
             transaction_divider_bottomSheet.visibility = View.GONE
@@ -509,7 +524,6 @@ constructor(
         if (BottomSheetBehavior.STATE_COLLAPSED == newState) {
             disableSearchMode()
             transaction_divider_bottomSheet.visibility = View.VISIBLE
-
         }
         if (BottomSheetBehavior.STATE_DRAGGING == newState) {
             fab.hide()
@@ -519,37 +533,54 @@ constructor(
 
     }
 
-    fun onBottomSheetSlide(slideOffset: Float) {
-        main_bottom_sheet_back_arrow.alpha = slideOffset
-        if (bottomSheetRadios < 1) {
-            bottomSheetRadios = convertDpToPx(16)
+    private fun onBottomSheetSlide(slideOffset: Float) {
+
+        //prevent from calling when recyclerview scrolled
+        if (slideOffset == lastSlideValue) {
+            return
+        } else {
+            lastSlideValue = slideOffset
         }
-        val bottomSheetBackGround = main_standardBottomSheet.background as GradientDrawable
+        if (slideOffset <= 0f && bottomSheetBehavior.state != STATE_COLLAPSED) {
+            //some bugs happens when keyboard get opened so we should do this
+            //when keyboard opens this onSlide method called with value 0
+            return
+        } else {
+            Log.d(
+                TAG,
+                "onBottomSheetSlide: 765 called with slide: $slideOffset AND ${bottomSheetBehavior.state}"
+            )
 
-        val topHeight = (bottomSheetRadios * (1f - slideOffset))
+            main_bottom_sheet_back_arrow.alpha = slideOffset
+            if (bottomSheetRadios < 1) {
+                bottomSheetRadios = convertDpToPx(16)
+            }
+            val bottomSheetBackGround = main_standardBottomSheet.background as GradientDrawable
 
-        //change bottom sheet raidus
-        bottomSheetBackGround.cornerRadius = topHeight
-        main_standardBottomSheet.background = bottomSheetBackGround
-        //change app bar
-        last_transacion_app_bar.background = bottomSheetBackGround
-        last_transacion_app_bar.setPadding(topHeight.toInt(), 0, topHeight.toInt(), 0)
+            val topHeight = (bottomSheetRadios * (1f - slideOffset))
+
+            //change bottom sheet raidus
+            bottomSheetBackGround.cornerRadius = topHeight
+            main_standardBottomSheet.background = bottomSheetBackGround
+            //change app bar
+            last_transacion_app_bar.background = bottomSheetBackGround
+            last_transacion_app_bar.setPadding(topHeight.toInt(), 0, topHeight.toInt(), 0)
 //            main_standardBottomSheet.setPadding(0, topHeight.toInt(), 0, 0)
-        //change top of bottomSheet height
+            //change top of bottomSheet height
 //            val viewParams = view_hastam.layoutParams
 //            viewParams.height = topHeight.toInt()
 //            view_hastam.layoutParams = viewParams
 //            view_hastam2.alpha = (1f - slideOffset)
 
-        // make the toolbar close button animation
-        if (closeBottomWidth < 1) {
-            closeBottomWidth = convertDpToPx(56)
+            // make the toolbar close button animation
+            if (closeBottomWidth < 1) {
+                closeBottomWidth = convertDpToPx(56)
+            }
+            val closeButtonParams =
+                main_bottom_sheet_back_arrow.layoutParams as ViewGroup.LayoutParams
+            closeButtonParams.width = (slideOffset * closeBottomWidth).toInt()
+            main_bottom_sheet_back_arrow.layoutParams = closeButtonParams
         }
-        val closeButtonParams =
-            main_bottom_sheet_back_arrow.layoutParams as ViewGroup.LayoutParams
-        closeButtonParams.width = (slideOffset * closeBottomWidth).toInt()
-        main_bottom_sheet_back_arrow.layoutParams = closeButtonParams
-
     }
 
     private fun forceKeyBoardToOpenForMoneyEditText(editText: EditText) {
