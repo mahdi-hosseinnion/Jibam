@@ -182,33 +182,32 @@
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
 
-        <!--        <FrameLayout-->
-        <!--            android:id="@+id/view_hastam"-->
-        <!--            android:layout_width="40dp"-->
-        <!--            android:layout_height="8dp"-->
-        <!--            android:layout_gravity="center">-->
+        <FrameLayout
+            android:id="@+id/view_hastam"
+            android:layout_width="40dp"
+            android:layout_height="16dp"
+            android:layout_gravity="center">
 
-        <!--            <View-->
-        <!--                android:id="@+id/view_hastam2"-->
-        <!--                android:layout_width="match_parent"-->
-        <!--                android:layout_height="match_parent"-->
-        <!--                android:layout_gravity="center"-->
-        <!--                android:layout_marginTop="3dp"-->
-        <!--                android:layout_marginBottom="3dp"-->
-        <!--                android:background="@drawable/view_hastam2_bg" />-->
-        <!--            &lt;!&ndash;                card_view:cardBackgroundColor="#EBEBEB" />&ndash;&gt;-->
-        <!--        </FrameLayout>-->
+            <View
+                android:id="@+id/view_hastam2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"
+                android:background="@drawable/view_hastam2_bg" />
+            <!--                card_view:cardBackgroundColor="#EBEBEB" />-->
+        </FrameLayout>
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/last_transacion_app_bar"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="40dp"
             android:layout_gravity="bottom"
             android:background="@drawable/bottom_sheet_bg"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            android:gravity="center"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:liftOnScroll="true">
@@ -219,7 +218,7 @@
             <LinearLayout
                 android:id="@+id/bottom_sheet_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="match_parent"
                 android:orientation="horizontal"
                 android:visibility="visible">
 
@@ -241,9 +240,9 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:gravity="start|center"
+                    android:paddingStart="4dp"
                     android:text="Transactions"
                     android:textColor="@color/black"
                     android:textSize="20sp"
@@ -254,9 +253,9 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:inputType="text"
                     android:background="@color/transparent"
                     android:hint="@string/search"
+                    android:inputType="text"
                     android:maxLines="1"
                     android:scrollHorizontally="true"
                     android:visibility="gone" />
@@ -275,7 +274,7 @@
 
                 <ImageButton
                     android:id="@+id/main_bottom_sheet_search_btn"
-                    android:layout_width="@dimen/action_bar_size"
+                    android:layout_width="40dp"
                     android:layout_height="match_parent"
                     android:background="@color/white"
                     android:clickable="true"
@@ -286,14 +285,14 @@
 
                 <ImageButton
                     android:id="@+id/main_bottom_sheet_filter_btn"
-                    android:layout_width="@dimen/action_bar_size"
+                    android:layout_width="40dp"
                     android:layout_height="match_parent"
                     android:background="@color/white"
                     android:clickable="true"
                     android:focusable="true"
                     android:tint="@color/black"
                     android:visibility="visible"
-                    app:srcCompat="@android:drawable/btn_star_big_off" />
+                    app:srcCompat="@android:drawable/stat_notify_sync" />
             </LinearLayout>
             <!--            </androidx.appcompat.widget.Toolbar>-->
         </com.google.android.material.appbar.AppBarLayout>

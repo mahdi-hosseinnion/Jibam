@@ -69,6 +69,9 @@ constructor(
 
     private var closeBottomWidth = 0
     private var bottomSheetRadios = 0
+    private var normalAppBarHeight = 0
+
+
     private var lastSlideValue = -1f
 
     private sealed class SearchViewState {
@@ -103,6 +106,7 @@ constructor(
         //set width for closeButtonAnimation
         closeBottomWidth = convertDpToPx(56)
         bottomSheetRadios = convertDpToPx(16)
+        normalAppBarHeight = convertDpToPx(40)
 
         bottomSheetBehavior = BottomSheetBehavior.from(main_standardBottomSheet)
 
@@ -118,7 +122,7 @@ constructor(
         }
         main_bottom_sheet_back_arrow.setOnClickListener {
             //check for search view
-            if (searchViewState .isVisible()) {
+            if (searchViewState.isVisible()) {
                 disableSearchMode()
             } else {
                 transaction_recyclerView.scrollToPosition(0)
@@ -137,7 +141,7 @@ constructor(
     }
 
     private fun enableSearchMode() {
-        if (searchViewState .isInvisible()) {
+        if (searchViewState.isInvisible()) {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
 
 
@@ -161,7 +165,7 @@ constructor(
     }
 
     private fun disableSearchMode() {
-        if (searchViewState .isVisible()) {
+        if (searchViewState.isVisible()) {
             Log.d(TAG, "disableSearchMode: 765 called and setted to invisible")
 
             //invisible search stuff
@@ -563,14 +567,27 @@ constructor(
             bottomSheetBackGround.cornerRadius = topHeight
             main_standardBottomSheet.background = bottomSheetBackGround
             //change app bar
+            if (normalAppBarHeight < 1) {
+                normalAppBarHeight = convertDpToPx(40)
+            }
             last_transacion_app_bar.background = bottomSheetBackGround
-            last_transacion_app_bar.setPadding(topHeight.toInt(), 0, topHeight.toInt(), 0)
+//            last_transacion_app_bar.setPadding(topHeight.toInt(), 0, topHeight.toInt(), 0)
+            //change app bar height
+            val appbarViewParams = last_transacion_app_bar.layoutParams
+            appbarViewParams.height = (normalAppBarHeight + (bottomSheetRadios - topHeight.toInt()))
+            last_transacion_app_bar.layoutParams = appbarViewParams
+            //change buttons height
+            val buttonsViewParams = main_bottom_sheet_search_btn.layoutParams
+            buttonsViewParams.width = (normalAppBarHeight + (bottomSheetRadios - topHeight.toInt()))
+
+            main_bottom_sheet_search_btn.layoutParams = buttonsViewParams
+            main_bottom_sheet_filter_btn.layoutParams = buttonsViewParams
 //            main_standardBottomSheet.setPadding(0, topHeight.toInt(), 0, 0)
             //change top of bottomSheet height
-//            val viewParams = view_hastam.layoutParams
-//            viewParams.height = topHeight.toInt()
-//            view_hastam.layoutParams = viewParams
-//            view_hastam2.alpha = (1f - slideOffset)
+            val viewParams = view_hastam.layoutParams
+            viewParams.height = topHeight.toInt()
+            view_hastam.layoutParams = viewParams
+            view_hastam2.alpha = (1f - slideOffset)
 
             // make the toolbar close button animation
             if (closeBottomWidth < 1) {
