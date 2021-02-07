@@ -47,6 +47,8 @@ abstract class TransactionListAdapter(
 
         const val NO_RESULT_FOUND = -2
 
+        const val DATABASE_IS_EMPTY = -4
+
         const val YESTERDAY = "Yesterday"
         const val TODAY = "Today"
 
@@ -61,6 +63,13 @@ abstract class TransactionListAdapter(
         )
         val NO_RESULT_FOUND_FOR_THIS_QUERY_MARKER = Record(
             NO_RESULT_FOUND,
+            0.0,
+            "",
+            0,
+            0
+        )
+        val NO_RESULT_FOUND_IN_DATABASE = Record(
+            DATABASE_IS_EMPTY,
             0.0,
             "",
             0,
@@ -153,10 +162,20 @@ abstract class TransactionListAdapter(
                 )
             }
             NO_RESULT_FOUND -> {
-                Log.e(TAG, "onCreateViewHolder: No more results...")
+                Log.e(TAG, "onCreateViewHolder: NO result  found with this query or filter ...")
                 return GenericViewHolder(
                     LayoutInflater.from(parent.context).inflate(
                         R.layout.layout_no_results_found_list_item,
+                        parent,
+                        false
+                    )
+                )
+            }
+            DATABASE_IS_EMPTY -> {
+                Log.e(TAG, "onCreateViewHolder: Database is empty...")
+                return GenericViewHolder(
+                    LayoutInflater.from(parent.context).inflate(
+                        R.layout.layout_no_results_found_in_database_list_item,
                         parent,
                         false
                     )
@@ -335,7 +354,10 @@ abstract class TransactionListAdapter(
         isQueryExhausted: Boolean
     ) {
         val newList = transList?.toMutableList()
-        if (isQueryExhausted && newList?.get(0) != NO_RESULT_FOUND_FOR_THIS_QUERY_MARKER)
+        if (isQueryExhausted &&
+            newList?.get(0) != NO_RESULT_FOUND_FOR_THIS_QUERY_MARKER &&
+            newList?.get(0) != NO_RESULT_FOUND_IN_DATABASE
+        )
             newList?.add(NO_MORE_RESULTS_BLOG_MARKER)
         val commitCallback = Runnable {
             // if process died must restore list position

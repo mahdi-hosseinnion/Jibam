@@ -57,7 +57,7 @@ constructor(
         searchModel: SearchModel
     ): Flow<List<Record>?> =
         recordsDao.getRecords(minDate, maxDate, searchModel).map { currentList ->
-            if (currentList.size < 1) {
+            if (currentList.isEmpty()) {
                 return@map null
             }
             val resultList = ArrayList<Record>()

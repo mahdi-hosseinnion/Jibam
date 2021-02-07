@@ -15,6 +15,7 @@ import com.example.jibi.repository.buildResponse
 import com.example.jibi.repository.main.MainRepository
 import com.example.jibi.ui.BaseViewModel
 import com.example.jibi.ui.main.transaction.TransactionListAdapter.Companion.NO_RESULT_FOUND_FOR_THIS_QUERY_MARKER
+import com.example.jibi.ui.main.transaction.TransactionListAdapter.Companion.NO_RESULT_FOUND_IN_DATABASE
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent.*
@@ -127,7 +128,7 @@ constructor(
                                         //contain query params
                                         setListOfTransactions(listOf(NO_RESULT_FOUND_FOR_THIS_QUERY_MARKER))
                                     } else {
-                                        setListOfTransactions(listOf())
+                                        setListOfTransactions(listOf(NO_RESULT_FOUND_IN_DATABASE))
                                     }
                                 }
 

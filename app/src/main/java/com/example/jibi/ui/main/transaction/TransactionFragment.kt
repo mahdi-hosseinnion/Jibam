@@ -559,15 +559,16 @@ constructor(
 
 
         if (BottomSheetBehavior.STATE_EXPANDED == newState) {
-            last_transacion_app_bar.isLiftOnScroll = true
+            last_transacion_app_bar.isLiftOnScroll = false
             //enable backStack
             backStackForBottomSheet.isEnabled = true
         } else {
             //disable backStack
             backStackForBottomSheet.isEnabled = false
         }
+        last_transacion_app_bar.isLiftOnScroll = true
+
         if (STATE_COLLAPSED == newState) {
-            last_transacion_app_bar.isLiftOnScroll = false
 
             disableSearchMode()
         }
