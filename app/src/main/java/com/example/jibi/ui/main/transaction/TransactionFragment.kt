@@ -18,6 +18,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,6 +28,7 @@ import com.example.jibi.R
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
 import com.example.jibi.models.Record
+import com.example.jibi.models.SearchModel
 import com.example.jibi.repository.buildResponse
 import com.example.jibi.ui.main.transaction.bottomSheet.CreateNewTransBottomSheet
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
@@ -40,6 +42,8 @@ import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.android.synthetic.main.layout_transaction_list_item.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
@@ -74,6 +78,8 @@ constructor(
 
 
     private var lastSlideValue = -1f
+
+    private var searchModel = SearchModel()
 
     private sealed class SearchViewState {
         object VISIBLE : SearchViewState()
@@ -197,6 +203,15 @@ constructor(
 
             //this should come after all
             searchViewState = SearchViewState.INVISIBLE
+            //clear search
+            searchModel = searchModel.copy(query = "")
+            //submit that
+            lifecycleScope.launch {
+//                viewModel.queryChannel.value = SearchModel(query = p0.toString())
+                viewModel.queryChannel.emit(searchModel)
+                //add new search query
+                Log.d(TAG, "searchDEBUG: clear")
+            }
         }
     }
 
@@ -215,6 +230,15 @@ constructor(
         }
 
         override fun afterTextChanged(p0: Editable?) {
+            searchModel = searchModel.copy(query = p0.toString())
+
+            //submit that
+            lifecycleScope.launch {
+//                viewModel.queryChannel.value = SearchModel(query = p0.toString())
+                viewModel.queryChannel.emit(searchModel)
+                //add new search query
+                Log.d(TAG, "searchDEBUG: 1-- $p0")
+            }
         }
     }
 
@@ -533,21 +557,19 @@ constructor(
 
     private fun onBottomSheetStateChanged(newState: Int) {
 
-        Log.d(TAG, "onBottomSheetSlide: 765 newState: $newState")
 
         if (BottomSheetBehavior.STATE_EXPANDED == newState) {
-            last_transacion_app_bar.isLiftOnScroll = false
-            transaction_divider_bottomSheet.visibility = View.GONE
+            last_transacion_app_bar.isLiftOnScroll = true
             //enable backStack
             backStackForBottomSheet.isEnabled = true
         } else {
-            last_transacion_app_bar.isLiftOnScroll = true
             //disable backStack
             backStackForBottomSheet.isEnabled = false
         }
-        if (BottomSheetBehavior.STATE_COLLAPSED == newState) {
+        if (STATE_COLLAPSED == newState) {
+            last_transacion_app_bar.isLiftOnScroll = false
+
             disableSearchMode()
-            transaction_divider_bottomSheet.visibility = View.VISIBLE
         }
         if (BottomSheetBehavior.STATE_DRAGGING == newState) {
             fab.hide()
@@ -570,10 +592,6 @@ constructor(
             //when keyboard opens this onSlide method called with value 0
             return
         } else {
-            Log.d(
-                TAG,
-                "onBottomSheetSlide: 765 called with slide: $slideOffset AND ${bottomSheetBehavior.state}"
-            )
 
             main_bottom_sheet_back_arrow.alpha = slideOffset
             if (bottomSheetRadios < 1) {
@@ -619,7 +637,8 @@ constructor(
             main_bottom_sheet_back_arrow.layoutParams = closeButtonParams
         }
     }
-    fun resetIt(slideOffset: Float){
+
+    fun resetIt(slideOffset: Float) {
         main_bottom_sheet_back_arrow.alpha = slideOffset
         if (bottomSheetRadios < 1) {
             bottomSheetRadios = convertDpToPx(16)

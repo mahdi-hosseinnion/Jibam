@@ -1,9 +1,9 @@
 package com.example.jibi.persistence
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.jibi.models.Record
 import kotlinx.coroutines.flow.Flow
+import java.util.logging.Filter
 
 @Dao
 interface RecordsDao {
@@ -29,18 +29,59 @@ interface RecordsDao {
     /*
         get records queries
      */
-    @Query("SELECT * FROM records $ORDER_BY_DATE")
-    fun getAllRecords(): Flow<List<Record>>
+    @Query(
+        "SELECT * FROM records " +
+                "WHERE " +
+                "( " +
+                "money LIKE '%' || :query || '%' " +
+                "OR memo LIKE '%' || :query || '%' " +
+                ") " + ORDER_BY_DATE
+    )
+    fun getAllRecords(query: String): Flow<List<Record>>
 
     //fromDate and toDate count in the result >=
-    @Query("SELECT * FROM records WHERE date BETWEEN :minDate AND :maxDate $ORDER_BY_DATE")
-    fun loadAllRecordsBetweenDates(minDate: Int, maxDate: Int): Flow<List<Record>>
+    @Query(
+        "SELECT * FROM records WHERE date BETWEEN :minDate AND :maxDate " +
+                "AND " +
+                "( " +
+                "money LIKE '%' || :query || '%' " +
+                "OR memo LIKE '%' || :query || '%' " +
+                ") " +
+                ORDER_BY_DATE
 
-    @Query("SELECT * FROM records WHERE date > :minDate $ORDER_BY_DATE")
-    fun loadAllRecordsAfterThan(minDate: Int): Flow<List<Record>>
+//                ORDER BY date_updated DESC LIMIT (:page * :pageSize)
+    )
+    fun loadAllRecordsBetweenDates(
+        minDate: Int,
+        maxDate: Int,
+        query: String
+    ): Flow<List<Record>>
 
-    @Query("SELECT * FROM records WHERE date < :maxDate $ORDER_BY_DATE")
-    fun loadAllRecordsBeforeThan(maxDate: Int): Flow<List<Record>>
+    @Query(
+        "SELECT * FROM records WHERE date > :minDate " +
+                "AND " +
+                "( " +
+                "money LIKE '%' || :query || '%' " +
+                "OR memo LIKE '%' || :query || '%' " +
+                ")" +
+                ORDER_BY_DATE
+    )
+    fun loadAllRecordsAfterThan(
+        minDate: Int, query: String
+    ): Flow<List<Record>>
+
+    @Query(
+        "SELECT * FROM records WHERE date < :maxDate " +
+                "AND " +
+                "( " +
+                "money LIKE '%' || :query || '%' " +
+                "OR memo LIKE '%' || :query || '%' " +
+                ")" +
+                ORDER_BY_DATE
+    )
+    fun loadAllRecordsBeforeThan(
+        maxDate: Int, query: String
+    ): Flow<List<Record>>
 
     /*
         sum queries
@@ -74,7 +115,7 @@ interface RecordsDao {
     @Query("SELECT SUM(money) FROM records WHERE (date < :maxDate) AND (money > 0) ")
     fun returnTheSumOfIncomeBeforeThan(maxDate: Int): Flow<Double>
 
-    companion object{
-        private const val ORDER_BY_DATE = "ORDER BY date DESC"
+    companion object {
+        const val ORDER_BY_DATE = "ORDER BY date DESC"
     }
 }

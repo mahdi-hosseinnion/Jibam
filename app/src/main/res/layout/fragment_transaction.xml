@@ -301,11 +301,6 @@
         <!--            android:layout_width="match_parent"-->
         <!--            android:layout_height="1dp"-->
         <!--            android:background="#EBEBEB" />-->
-        <View
-            android:id="@+id/transaction_divider_bottomSheet"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#C8C8C8" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/transaction_recyclerView"

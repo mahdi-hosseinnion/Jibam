@@ -1,15 +1,20 @@
 package com.example.jibi.ui.main
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.DialogFragmentNavigatorDestinationBuilder
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
 import com.example.jibi.models.Record
+import com.example.jibi.models.SearchModel
 import com.example.jibi.models.SummaryMoney
 import com.example.jibi.repository.buildResponse
 import com.example.jibi.repository.main.MainRepository
 import com.example.jibi.ui.BaseViewModel
+import com.example.jibi.ui.main.transaction.TransactionListAdapter.Companion.NO_RESULT_FOUND_FOR_THIS_QUERY_MARKER
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent.*
@@ -20,13 +25,16 @@ import com.example.jibi.util.UIComponentType
 import com.example.jibi.util.mahdiLog
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+//instance search
+//https://blog.mindorks.com/instant-search-using-kotlin-flow-operators
+//https://www.hellsoft.se/instant-search-with-kotlin-coroutines/ WE USE THIS
 @FlowPreview
 @ExperimentalCoroutinesApi
 @MainScope
@@ -40,6 +48,11 @@ constructor(
     val GET_LIST_OF_TRANSACTION = "getting the list of transaction"
     val GET_LIST_OF_CATEGORY = "getting the list of category"
     private val TAG1 = "MainViewModel"
+
+    //search stuff
+    // In our ViewModel
+    var queryChannel = MutableStateFlow(SearchModel())
+
 
     init {
         //flow stuff
@@ -89,20 +102,42 @@ constructor(
                 //TODO HANDLE WHERE TO INCREMENT AND WHEN TO DECREMENT LOADING
             }
             launch {
-                mainRepository.getTransactionList()
-                    //loading stuff
-                    .onStart { increaseLoading(GET_LIST_OF_TRANSACTION) }
-                    .catch { cause ->
-                        addToMessageStack(throwable = cause)
-                        Log.d(TAG, "crashed")
+
+                queryChannel
+                    .debounce(Constants.SEARCH_DEBOUNCE)
+                    .distinctUntilChanged()
+                    .collectLatest {
+
+                        Log.d(TAG, "searchDEBUG: 2-- ${it.query}")
+                        //send query to repository
+                        mainRepository.getTransactionList(searchModel = it)
+                            //loading stuff
+                            .onStart { increaseLoading(GET_LIST_OF_TRANSACTION) }
+                            .catch { cause ->
+                                addToMessageStack(throwable = cause)
+                                Log.d(TAG, "crashed")
+                            }
+                            .collect { result ->
+                                //loading stuff
+                                decreaseLoading(GET_LIST_OF_TRANSACTION)
+                                if (result != null) {
+                                    setListOfTransactions(result)
+                                } else {
+                                    if (it.isNotEmpty()) {
+                                        //contain query params
+                                        setListOfTransactions(listOf(NO_RESULT_FOUND_FOR_THIS_QUERY_MARKER))
+                                    } else {
+                                        setListOfTransactions(listOf())
+                                    }
+                                }
+
+                            }
                     }
-                    .collect {
-                        //loading stuff
-                        decreaseLoading(GET_LIST_OF_TRANSACTION)
-                        it?.let {
-                            setListOfTransactions(it)
-                        }
-                    }
+                //special time out for search
+                launch {
+                    delay(Constants.CACHE_TIMEOUT)
+                    decreaseLoading(GET_LIST_OF_TRANSACTION)
+                }
             }
 
             //timeout loading decrese

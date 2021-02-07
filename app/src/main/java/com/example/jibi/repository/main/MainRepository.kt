@@ -3,6 +3,7 @@ package com.example.jibi.repository.main
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
 import com.example.jibi.models.Record
+import com.example.jibi.models.SearchModel
 import com.example.jibi.persistence.*
 import com.example.jibi.repository.buildResponse
 import com.example.jibi.repository.safeCacheCall
@@ -52,9 +53,10 @@ constructor(
     @FlowPreview
     fun getTransactionList(
         minDate: Int? = null,
-        maxDate: Int? = null
+        maxDate: Int? = null,
+        searchModel: SearchModel
     ): Flow<List<Record>?> =
-        recordsDao.getRecords(minDate, maxDate).map { currentList ->
+        recordsDao.getRecords(minDate, maxDate, searchModel).map { currentList ->
             if (currentList.size < 1) {
                 return@map null
             }
@@ -124,7 +126,8 @@ constructor(
         val dv: Long = ((time.toLong()) * 1000) // its need to be in milisecond
         val df: Date = Date(dv)
 
-        val transDate = SimpleDateFormat(TransactionListAdapter.HEADER_DATE_PATTERN, currentLocale).format(df)
+        val transDate =
+            SimpleDateFormat(TransactionListAdapter.HEADER_DATE_PATTERN, currentLocale).format(df)
 
         if (today == null) {
             today = SimpleDateFormat(

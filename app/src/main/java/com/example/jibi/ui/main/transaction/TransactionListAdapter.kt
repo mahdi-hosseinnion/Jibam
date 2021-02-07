@@ -45,6 +45,8 @@ abstract class TransactionListAdapter(
         private const val TAG: String = "AppDebug"
         const val NO_MORE_RESULTS = -1
 
+        const val NO_RESULT_FOUND = -2
+
         const val YESTERDAY = "Yesterday"
         const val TODAY = "Today"
 
@@ -57,10 +59,18 @@ abstract class TransactionListAdapter(
             0,
             0
         )
+        val NO_RESULT_FOUND_FOR_THIS_QUERY_MARKER = Record(
+            NO_RESULT_FOUND,
+            0.0,
+            "",
+            0,
+            0
+        )
+
         //list of supported patter
         //https://stackoverflow.com/a/12781297/10362460
 //        "E MM/dd/yy",
-        const val HEADER_DATE_PATTERN="E, MMM dd yyyy"
+        const val HEADER_DATE_PATTERN = "E, MMM dd yyyy"
 //        const val HEADER_DATE_PATTERN="MM/dd/yy (E)"
 
 
@@ -137,6 +147,16 @@ abstract class TransactionListAdapter(
                 return GenericViewHolder(
                     LayoutInflater.from(parent.context).inflate(
                         R.layout.layout_no_more_results,
+                        parent,
+                        false
+                    )
+                )
+            }
+            NO_RESULT_FOUND -> {
+                Log.e(TAG, "onCreateViewHolder: No more results...")
+                return GenericViewHolder(
+                    LayoutInflater.from(parent.context).inflate(
+                        R.layout.layout_no_results_found_list_item,
                         parent,
                         false
                     )
@@ -315,7 +335,7 @@ abstract class TransactionListAdapter(
         isQueryExhausted: Boolean
     ) {
         val newList = transList?.toMutableList()
-        if (isQueryExhausted)
+        if (isQueryExhausted && newList?.get(0) != NO_RESULT_FOUND_FOR_THIS_QUERY_MARKER)
             newList?.add(NO_MORE_RESULTS_BLOG_MARKER)
         val commitCallback = Runnable {
             // if process died must restore list position
