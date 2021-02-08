@@ -34,7 +34,7 @@ import kotlin.collections.ArrayList
 @ExperimentalCoroutinesApi
 class MainRepositoryTest {
     private val ERROR_MESSAGE = "SOMETHING GOES WRUNG"
-    private val RECORD_1 = Record(3, 32, "32a3g", 1, 32232345)
+    private val RECORD_1 = Record(3, 32.0, "32a3g", 1, 32232345)
 
     //system under test
     lateinit var mainRepository: MainRepository
@@ -70,23 +70,23 @@ class MainRepositoryTest {
         //setup
         every { recordsDao.returnTheSumOfAllIncome() } returns flow {
             delay(500)
-            emit(50)
+            emit(50.0)
             delay(500)
-            emit(56)
+            emit(56.0)
             delay(500)
             throw Exception(ERROR_MESSAGE)
         }.catch { t ->
             assertEquals(ERROR_MESSAGE, t.message)
         }
-        val listOfResult = ArrayList<Int?>()
+        val listOfResult = ArrayList<Double?>()
         mainRepository.getSumOfIncome().collect {
             println(it.toString())
             listOfResult.add(it)
         }
         //assert
         println("run assertes")
-        assertEquals(50, listOfResult[0])
-        assertEquals(56, listOfResult[1])
+        assertEquals(50.0, listOfResult[0])
+        assertEquals(56.0, listOfResult[1])
     }
 
     @Test
@@ -96,23 +96,23 @@ class MainRepositoryTest {
         //setup
         every { recordsDao.returnTheSumOfExpensesBetweenDates(minDate, lastDate) } returns flow {
             delay(500)
-            emit(50)
+            emit(50.0)
             delay(500)
-            emit(56)
+            emit(56.0)
             delay(500)
             throw Exception(ERROR_MESSAGE)
         }.catch { t ->
             assertEquals(ERROR_MESSAGE, t.message)
         }
-        val listOfResult = ArrayList<Int?>()
+        val listOfResult = ArrayList<Double?>()
         mainRepository.getSumOfExpenses(minDate, lastDate).collect {
             println(it.toString())
             listOfResult.add(it)
         }
         //assert
         println("run assertes")
-        assertEquals(50, listOfResult[0])
-        assertEquals(56, listOfResult[1])
+        assertEquals(50.0, listOfResult[0])
+        assertEquals(56.0, listOfResult[1])
     }
 
     /*

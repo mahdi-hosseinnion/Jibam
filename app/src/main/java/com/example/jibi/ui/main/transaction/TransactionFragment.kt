@@ -15,7 +15,6 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -35,14 +34,12 @@ import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
 import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.android.synthetic.main.layout_transaction_list_item.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import java.text.NumberFormat
@@ -320,9 +317,9 @@ constructor(
                 }
                 it.summeryMoney?.let { summeryMoney ->
                     summeryMoney.balance = (summeryMoney.income + summeryMoney.expenses)
-                    txt_balance.text = separate3By3(summeryMoney.balance)
-                    txt_expenses.text = separate3By3(summeryMoney.expenses)
-                    txt_income.text = separate3By3(summeryMoney.income)
+                    txt_balance.text = separate3By3AndRoundIt(summeryMoney.balance)
+                    txt_expenses.text = separate3By3AndRoundIt(summeryMoney.expenses)
+                    txt_income.text = separate3By3AndRoundIt(summeryMoney.income)
                 }
             }
         }
@@ -351,18 +348,45 @@ constructor(
         }
     }
 
-    private fun separate3By3(money1: Double): String {
-        var money = money1
-        if (money < 0.0) {
-            money *= -1.0
-        }
-        if (money < 1000.0) {
-            return money.toString()
-        }
+    private fun separate3By3AndRoundIt(money: Double): String {
+        //TIP this method will round -354.3999999999942 to -354.4
+        Log.d("456987", "separate3By3AndRoundIt: start with $money")
+
+        //seprate 3 by 3 part
+//        val finalResult = if (money > 1_000.0 && money < -1_000.0) {
+//            money.toString()
+//        } else {
         val formatter: DecimalFormat = NumberFormat.getInstance(Locale.US) as DecimalFormat
         formatter.applyPattern("#,###,###,###.###")
-        return formatter.format(money)
+        //if you use this pattern it will round to two decimal
+//        formatter.applyPattern("#,###,###,###.##")
+        val finalResult = formatter.format(money).toString()
+//        }
+
+        if ((finalResult.indexOf('.')) == -1) {
+            return finalResult
+        }
+
+        //round part
+        if (finalResult.substring(finalResult.lastIndex.minus(1)) == ".0") {
+            //convert 15.0 to 15
+            return finalResult.substring(
+                startIndex = 0,
+                endIndex = finalResult.lastIndex.minus(1)
+            )
+        }
+
+        val periodPosition = finalResult.indexOf('.')
+
+        return if (periodPosition > -1 && periodPosition.plus(3) < finalResult.length) {
+            //convert 19.23423424 to 19.23
+            finalResult.substring(0, periodPosition.plus(3))
+        } else {
+            finalResult
+        }
+
     }
+
 
     private fun initRecyclerView() {
 

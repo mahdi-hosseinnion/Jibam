@@ -13,6 +13,10 @@ import io.mockk.unmockkAll
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.params.provider.ValueSource
+import java.text.DecimalFormat
+import java.text.NumberFormat
+import java.util.*
 import kotlin.random.Random
 
 class TextCalculatorTest {
@@ -159,7 +163,7 @@ class TextCalculatorTest {
     }
 
     @Test
-    fun wiredOperatorPlacement_Plus(){
+    fun wiredOperatorPlacement_Plus() {
         val randomX = Random.nextLong(minRandomNumber, maxRandomNumber).convertToRandomDouble()
         val randomY = Random.nextLong(minRandomNumber, maxRandomNumber).convertToRandomDouble()
         var textForCalculate = "$PLUS $randomX${PLUS}$randomY $PLUS "
@@ -173,8 +177,9 @@ class TextCalculatorTest {
         println("actual: $actualResult")
         assertEquals(expectedResult.toString(), actualResult)
     }
+
     @Test
-    fun wiredOperatorPlacement_Minus(){
+    fun wiredOperatorPlacement_Minus() {
         val randomX = Random.nextLong(minRandomNumber, maxRandomNumber).convertToRandomDouble()
         val randomY = Random.nextLong(minRandomNumber, maxRandomNumber).convertToRandomDouble()
         var textForCalculate = "$MINES $randomX${MINES}$randomY $MINES "
@@ -218,5 +223,73 @@ class TextCalculatorTest {
                 }
             }
         )
+    }
+
+    private fun separate3By3AndRoundIt(money: Double): String {
+        Log.d("aa", "separate3By3AndRoundIt: start with $money")
+
+        //seprate 3 by 3 part
+//        val finalResult = if (money > 1_000.0 && money < -1_000.0) {
+//            money.toString()
+//        } else {
+        val formatter: DecimalFormat = NumberFormat.getInstance(Locale.US) as DecimalFormat
+        formatter.applyPattern("#,###,###,###.###")
+        val finalResult = formatter.format(money)
+//        }
+        Log.d(
+            "aa",
+            "separate3By3AndRoundIt: final Result = $finalResult + ${finalResult.indexOf('.')}"
+        )
+        if ((finalResult.indexOf('.')) == -1) {
+            return finalResult
+        }
+
+        //round part
+        if (finalResult.substring(finalResult.lastIndex.minus(1)) == ".0") {
+            Log.d("aa", "separate3By3AndRoundIt: first shart")
+            //convert 15.0 to 15
+            return finalResult.substring(
+                startIndex = 0,
+                endIndex = finalResult.lastIndex.minus(1)
+            )
+        }
+
+        val periodPosition = finalResult.indexOf('.')
+
+        return if (periodPosition > -1 && periodPosition.plus(3) < finalResult.length) {
+            Log.d("aa", "separate3By3AndRoundIt second shart")
+            //convert 19.23423424 to 19.23
+            finalResult.substring(0, periodPosition.plus(3))
+        } else {
+            Log.d("aa", "separate3By3AndRoundIt third shart shart")
+            finalResult
+        }
+
+    }
+
+    @Test
+    fun testSeparator() {
+        val testCases = listOf<Double>( 12.5, 12.546885, 13.98, -12.5, -12.546885, -13.98)
+        val expectedValue = listOf<Double>( 12.5, 12.54, 13.98, -12.5, -12.54, -13.98)
+        for (i in testCases.indices.minus(1)) {
+            assertEquals(expectedValue[i].toString(), separate3By3AndRoundIt(testCases[i]))
+        }
+        //last one
+        assertEquals("12", separate3By3AndRoundIt(12.0))
+        assertEquals("0", separate3By3AndRoundIt(0.0))
+        assertEquals("1", separate3By3AndRoundIt(1.0))
+        assertEquals("-1", separate3By3AndRoundIt(-1.0))
+        //grater then 999 number
+        assertEquals("12,000", separate3By3AndRoundIt(12000.0))
+        assertEquals("10,000.16", separate3By3AndRoundIt(10000.16426))
+        assertEquals("100,000.5", separate3By3AndRoundIt(100000.5))
+        assertEquals("100,000.73", separate3By3AndRoundIt(100000.73))
+        //manfi ha
+        assertEquals("-12,000", separate3By3AndRoundIt(-12000.0))
+        assertEquals("-10,000.16", separate3By3AndRoundIt(-10000.16426))
+        assertEquals("-100,000.5", separate3By3AndRoundIt(-100000.5))
+        assertEquals("-100,000.73", separate3By3AndRoundIt(-100000.73))
+        assertEquals("-354.4", separate3By3AndRoundIt(-354.3999999999942))
+
     }
 }
