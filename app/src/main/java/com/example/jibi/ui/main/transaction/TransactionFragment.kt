@@ -33,7 +33,7 @@ import com.example.jibi.ui.main.transaction.bottomSheet.CreateNewTransBottomShee
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
+import com.google.android.material.bottomsheet.BottomSheetBehavior.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
 import kotlinx.android.synthetic.main.fragment_transaction.*
@@ -129,6 +129,7 @@ constructor(
         bottomSheetBehavior = BottomSheetBehavior.from(main_standardBottomSheet)
 
         bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
+        onBottomSheetStateChanged(bottomSheetBehavior.state)
 
         initRecyclerView()
         subscribeObservers()
@@ -160,7 +161,7 @@ constructor(
 
     private fun enableSearchMode() {
         if (searchViewState.isInvisible()) {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            bottomSheetBehavior.state = STATE_EXPANDED
 
 
             //force to slide
@@ -581,22 +582,25 @@ constructor(
 
     private fun onBottomSheetStateChanged(newState: Int) {
 
-
-        if (BottomSheetBehavior.STATE_EXPANDED == newState) {
+        if (STATE_EXPANDED == newState) {
             last_transacion_app_bar.isLiftOnScroll = false
+//            last_transacion_app_bar.liftOnScrollTargetViewId = R.id.transaction_recyclerView
+            last_transacion_app_bar.setLiftable(false)
+
             //enable backStack
             backStackForBottomSheet.isEnabled = true
         } else {
+            if (searchViewState.isVisible()) {
+                //when searching user should not be able to scroll down
+                return
+            }
+            last_transacion_app_bar.isLiftOnScroll = true
+            last_transacion_app_bar.setLiftable(true)
             //disable backStack
             backStackForBottomSheet.isEnabled = false
         }
-        last_transacion_app_bar.isLiftOnScroll = true
 
-        if (STATE_COLLAPSED == newState) {
-
-            disableSearchMode()
-        }
-        if (BottomSheetBehavior.STATE_DRAGGING == newState) {
+        if (STATE_DRAGGING == newState) {
             fab.hide()
         } else {
             fab.show()
@@ -606,17 +610,24 @@ constructor(
 
     private fun onBottomSheetSlide(slideOffset: Float) {
 
-        //prevent from calling when recyclerview scrolled
-        if (slideOffset == lastSlideValue) {
-            return
-        } else {
-            lastSlideValue = slideOffset
-        }
+
         if (slideOffset <= 0f && bottomSheetBehavior.state != STATE_COLLAPSED) {
             //some bugs happens when keyboard get opened so we should do this
             //when keyboard opens this onSlide method called with value 0
-            return
+            //the issue is when is bottom sheet set to state expanded and then scrolled onSlide called with value 0
+            Log.d(
+                TAG,
+                "onBottomSheetSlide:1990 NOOOOOOOOOOOOOOOOOOOOOOOO APPLLYYYYYYYYYYYYED with $slideOffset && and last $lastSlideValue"
+            )
+            if (lastSlideValue > 0.90) {
+                onBottomSheetSlide(1f)
+            }
+
         } else {
+            Log.d(
+                TAG,
+                "onBottomSheetSlide:1990 APPLLYYYYYYYYYYYYED $slideOffset and last $lastSlideValue"
+            )
 
             main_bottom_sheet_back_arrow.alpha = slideOffset
             if (bottomSheetRadios < 1) {
@@ -660,6 +671,12 @@ constructor(
                 main_bottom_sheet_back_arrow.layoutParams as ViewGroup.LayoutParams
             closeButtonParams.width = (slideOffset * closeBottomWidth).toInt()
             main_bottom_sheet_back_arrow.layoutParams = closeButtonParams
+        }
+        //prevent from calling when recyclerview scrolled
+        if (slideOffset == lastSlideValue) {
+            return
+        } else {
+            lastSlideValue = slideOffset
         }
     }
 

@@ -205,12 +205,11 @@
             android:layout_height="40dp"
             android:layout_gravity="bottom"
             android:background="@drawable/bottom_sheet_bg"
+            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:gravity="center"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:liftOnScroll="true">
+            app:layout_constraintTop_toTopOf="parent">
             <!--            <androidx.appcompat.widget.Toolbar-->
             <!--                android:layout_width="match_parent"-->
             <!--                android:layout_height="match_parent">-->
