@@ -34,7 +34,8 @@ class CreateNewTransBottomSheet
 constructor(
     private val categoryList: List<Category>,
     private val requestManager: RequestManager,
-    private val onCategorySelected:OnCategorySelectedCallback
+    private val onCategorySelected: OnCategorySelectedCallback,
+    private val isHideable: Boolean=true
 ) : ViewPagerBottomSheetDialogFragment(), BottomSheetListAdapter.Interaction,
     ViewPager.OnPageChangeListener {
 
@@ -70,7 +71,7 @@ constructor(
 
         //creating bottom sheet behavior
         val bottomSheetBehavior = ViewPagerBottomSheetBehavior.from((view.parent) as View)
-
+        bottomSheetBehavior.isHideable = isHideable
         bottomSheetBehavior.setBottomSheetCallback(object :
             ViewPagerBottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -89,6 +90,7 @@ constructor(
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}
 
         })
+
         //hiding app bar at the start
         backArrow?.setOnClickListener {
             this.dismiss()
@@ -155,7 +157,6 @@ constructor(
         this.dismiss()
         onCategorySelected.onCategorySelected(item)
     }
-
 
 
     companion object {
@@ -248,8 +249,8 @@ constructor(
     override fun onPageSelected(position: Int) {}
 
     override fun onPageScrollStateChanged(state: Int) {}
-    interface OnCategorySelectedCallback{
-        fun onCategorySelected( item: Category)
+    interface OnCategorySelectedCallback {
+        fun onCategorySelected(item: Category)
 
     }
 }

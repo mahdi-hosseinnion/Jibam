@@ -134,8 +134,10 @@ constructor(
         initRecyclerView()
         subscribeObservers()
         fab.setOnClickListener { view ->
-            showBottomSheet()
+//            showBottomSheet()
+            findNavController().navigate(R.id.action_transactionFragment_to_createTransactionFragment)
         }
+
         txt_balance.setOnClickListener {
             insertRandomTransaction()
         }
@@ -296,11 +298,7 @@ constructor(
     private val onCategorySelectedCallback =
         object : CreateNewTransBottomSheet.OnCategorySelectedCallback {
             override fun onCategorySelected(item: Category) {
-                val action =
-                    TransactionFragmentDirections.actionTransactionFragmentToCreateTransactionFragment(
-                        categoryId = item.id
-                    )
-                findNavController().navigate(action)
+//                findNavController().navigate(action)
             }
 
         }

@@ -58,7 +58,7 @@ constructor(
     R.layout.fragment_add_transaction,
     viewModelFactory,
     R.id.fragment_add_toolbar_main
-    ) {
+) {
     private val TAG = "AddTransactionFragment"
 
     private val textCalculator = TextCalculator()
@@ -83,8 +83,12 @@ constructor(
         super.onViewCreated(view, savedInstanceState)
 
         setHasOptionsMenu(true)
-        category = findCategory(cat_id = args.categoryId)
-        setTransProperties(category = category)
+//        category = findCategory(cat_id = args.categoryId)
+        if (category == null) {
+            showBottomSheet()
+        } else {
+            setTransProperties(category = category)
+        }
         initUi(view)
 //        edt_money.addTextChangedListener(onTextChangedListener)
         edt_money.addTextChangedListener(onTextChangedListener)
@@ -101,8 +105,10 @@ constructor(
             CreateNewTransBottomSheet(
                 viewModel.viewState.value!!.categoryList!!,
                 requestManager,
-                onCategorySelectedCallback
+                onCategorySelectedCallback,
+                category != null
             )
+        modalBottomSheet.isCancelable = category != null
         modalBottomSheet.show(parentFragmentManager, "CreateNewTransBottomSheet")
     }
 
