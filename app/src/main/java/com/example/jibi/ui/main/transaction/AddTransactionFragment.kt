@@ -12,10 +12,7 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.util.Log
 import android.util.TypedValue
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.view.View.OnFocusChangeListener
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputConnection
@@ -84,11 +81,7 @@ constructor(
 
         setHasOptionsMenu(true)
 //        category = findCategory(cat_id = args.categoryId)
-        if (category == null) {
-            showBottomSheet()
-        } else {
-            setTransProperties(category = category)
-        }
+
         initUi(view)
 //        edt_money.addTextChangedListener(onTextChangedListener)
         edt_money.addTextChangedListener(onTextChangedListener)
@@ -98,6 +91,18 @@ constructor(
         }
 
 
+    }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        if (category == null) {
+            showBottomSheet()
+        } else {
+            setTransProperties(category = category)
+        }
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     private fun showBottomSheet() {

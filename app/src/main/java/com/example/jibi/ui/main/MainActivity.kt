@@ -1,27 +1,21 @@
 package com.example.jibi.ui.main
 
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.Fragment
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupWithNavController
 import com.example.jibi.BaseApplication
 import com.example.jibi.R
 import com.example.jibi.ui.BaseActivity
-import com.example.jibi.ui.main.transaction.BaseTransactionFragment
-import com.example.jibi.util.Response
-import com.example.jibi.util.StateMessageCallback
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.main_activity_root_view
-import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
@@ -40,11 +34,14 @@ class MainActivity : BaseActivity() {
 
     lateinit var navController: NavController
 
+    lateinit var appBarConfiguration:AppBarConfiguration
+
     override fun onCreate(savedInstanceState: Bundle?) {
         inject()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        setupActionBarWithNavController(toolbar_main, drawer_layout)
 //        setupActionBarWithNavController()
     }
 
@@ -54,23 +51,29 @@ class MainActivity : BaseActivity() {
             .inject(this)
     }
 
-    override fun setupActionBarWithNavController(toolbar: Toolbar) {
+    override fun setupActionBarWithNavController(toolbar: Toolbar, drawerLayout: DrawerLayout?) {
 //        val toolbar = findViewById<Toolbar>(R.id.toolbar_main)
         setSupportActionBar(toolbar)
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
-        val appBarConfiguration = AppBarConfiguration(setOf(R.id.transactionFragment))
+
+        appBarConfiguration = if (drawerLayout != null) {
+            navigation_view.setupWithNavController(navController)
+            AppBarConfiguration(setOf(R.id.transactionFragment), drawerLayout)
+        }else
+            AppBarConfiguration(setOf(R.id.transactionFragment))
+
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
 
     }
 
     override fun onSupportNavigateUp(): Boolean {
         hideSoftKeyboard()
-        navController.navigateUp()
-        return super.onSupportNavigateUp()
+//        navController.navigateUp()
+        return navController.navigateUp(appBarConfiguration) ||
+                super.onSupportNavigateUp()
     }
-
 
 
 //    override fun hideToolbar() {
