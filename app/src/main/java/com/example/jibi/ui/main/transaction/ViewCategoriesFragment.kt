@@ -31,7 +31,9 @@ class ViewCategoriesFragment
 constructor(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager
-) : BaseTransactionFragment(R.layout.fragment_view_categories, viewModelFactory) {
+) : BaseTransactionFragment(
+    R.layout.fragment_view_categories, viewModelFactory, R.id.viewCategoriesToolbar
+) {
     //vars
     private val viewPagerAdapter = ViewPagerAdapter()
 
@@ -41,10 +43,10 @@ constructor(
         viewPager_viewCategories.adapter = viewPagerAdapter
         //set titles
         TabLayoutMediator(tab_layout, viewPager_viewCategories) { tab, position ->
-            if (position ==0){
-                tab.text =  resources.getString(R.string.expenses)
-            }else{
-                tab.text =  resources.getString(R.string.income)
+            if (position == 0) {
+                tab.text = resources.getString(R.string.expenses)
+            } else {
+                tab.text = resources.getString(R.string.income)
             }
         }.attach()
 

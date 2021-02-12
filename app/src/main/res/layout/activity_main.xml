@@ -14,11 +14,7 @@
 
         android:orientation="vertical">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar_main"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/mtrl_toolbar_default_height"
-            android:background="@color/purple_500" />
+
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/nav_host_fragment"

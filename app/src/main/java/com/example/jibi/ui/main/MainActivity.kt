@@ -1,6 +1,7 @@
 package com.example.jibi.ui.main
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -22,6 +23,7 @@ import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 class MainActivity : BaseActivity() {
+    private val TAG = "MainActivity"
     @Inject
     lateinit var fragmentFactory: FragmentFactory
 
@@ -34,14 +36,16 @@ class MainActivity : BaseActivity() {
 
     lateinit var navController: NavController
 
-    lateinit var appBarConfiguration:AppBarConfiguration
+    lateinit var appBarConfiguration: AppBarConfiguration
+
+    lateinit var listener: NavController.OnDestinationChangedListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         inject()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        setupActionBarWithNavController(toolbar_main, drawer_layout)
+        firstSetup()
+//        setupActionBarWithNavController(toolbar_main, drawer_layout)
 //        setupActionBarWithNavController()
     }
 
@@ -51,20 +55,34 @@ class MainActivity : BaseActivity() {
             .inject(this)
     }
 
-    override fun setupActionBarWithNavController(toolbar: Toolbar, drawerLayout: DrawerLayout?) {
-//        val toolbar = findViewById<Toolbar>(R.id.toolbar_main)
-        setSupportActionBar(toolbar)
+    fun firstSetup() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
-        appBarConfiguration = if (drawerLayout != null) {
-            navigation_view.setupWithNavController(navController)
-            AppBarConfiguration(setOf(R.id.transactionFragment), drawerLayout)
-        }else
-            AppBarConfiguration(setOf(R.id.transactionFragment))
+        listener =
+            NavController.OnDestinationChangedListener { controller, destination, arguments ->
+                //disable toolbar for animation
+                //hide toolbar during animation
+                setSupportActionBar(Toolbar(this))
+            }
+
+        appBarConfiguration =
+//            if (drawerLayout != null) {
+            AppBarConfiguration(setOf(R.id.transactionFragment), drawer_layout)
+
+//        }else
+//            AppBarConfiguration(setOf(R.id.transactionFragment))
+
+    }
+
+    override fun setupActionBarWithNavController(toolbar: Toolbar, drawerLayout: DrawerLayout?) {
+//        val toolbar = findViewById<Toolbar>(R.id.toolbar_main)
+        setSupportActionBar(toolbar)
+        navigation_view.setupWithNavController(navController)
 
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
+
 
     }
 
@@ -75,6 +93,15 @@ class MainActivity : BaseActivity() {
                 super.onSupportNavigateUp()
     }
 
+    override fun onResume() {
+        super.onResume()
+        navController.addOnDestinationChangedListener(listener)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        navController.removeOnDestinationChangedListener(listener)
+    }
 
 //    override fun hideToolbar() {
 //        toolbar_main.visibility = View.GONE

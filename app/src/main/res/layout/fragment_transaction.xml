@@ -13,7 +13,16 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/transaction_fragment_view"
         android:layout_width="match_parent"
-        android:layout_height="244dp">
+        android:layout_height="300dp">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/transaction_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/mtrl_toolbar_default_height"
+            android:background="@color/purple_500"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
         <!--        android:layout_height="300dp">-->
 
         <!--        <androidx.appcompat.widget.Toolbar-->
@@ -35,7 +44,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@+id/transaction_toolbar">
             <!--            android:background="@drawable/main_card_bg"-->
 
             <TextView

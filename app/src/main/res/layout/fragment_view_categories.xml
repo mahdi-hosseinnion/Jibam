@@ -6,7 +6,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.main.transaction.ViewCategoriesFragment">
-
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/viewCategoriesToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/mtrl_toolbar_default_height"
+        android:background="@color/purple_500"
+ />
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

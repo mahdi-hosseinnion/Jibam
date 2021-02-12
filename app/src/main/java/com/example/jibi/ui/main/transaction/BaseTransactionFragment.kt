@@ -27,11 +27,17 @@ constructor(
         viewModelFactory
     }
     lateinit var uiCommunicationListener: UICommunicationListener
+    lateinit var _View: View
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        _View = view
+    }
+
+    override fun onResume() {
+        super.onResume()
         toolbar?.let {
-            uiCommunicationListener.setupActionBarWithNavController(view.findViewById(toolbar))
+            uiCommunicationListener.setupActionBarWithNavController(_View.findViewById(toolbar))
         }
     }
 

@@ -58,7 +58,8 @@ constructor(
     private val requestManager: RequestManager
 ) : BaseTransactionFragment(
     R.layout.fragment_transaction,
-    viewModelFactory
+    viewModelFactory,
+    R.id.transaction_toolbar
 ), TransactionListAdapter.Interaction {
 
     private val TAG = "TransactionFragment"
