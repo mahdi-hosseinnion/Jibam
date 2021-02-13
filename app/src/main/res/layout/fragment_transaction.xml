@@ -319,15 +319,7 @@
     </LinearLayout>
     <!--        </androidx.core.widget.NestedScrollView>-->
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_gravity="center|top"
-        android:layout_marginTop="32dp"
-        android:background="@color/white"
-        android:visibility="invisible" />
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"

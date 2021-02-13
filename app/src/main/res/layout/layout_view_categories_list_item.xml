@@ -54,6 +54,7 @@
 
 
     <ImageView
+        android:id="@+id/delete_category"
         android:layout_width="56dp"
         android:layout_height="match_parent"
         android:clickable="true"

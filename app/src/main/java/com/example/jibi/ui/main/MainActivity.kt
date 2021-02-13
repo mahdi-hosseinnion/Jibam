@@ -2,6 +2,7 @@ package com.example.jibi.ui.main
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -17,6 +18,7 @@ import com.example.jibi.BaseApplication
 import com.example.jibi.R
 import com.example.jibi.ui.BaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
@@ -24,6 +26,7 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 class MainActivity : BaseActivity() {
     private val TAG = "MainActivity"
+
     @Inject
     lateinit var fragmentFactory: FragmentFactory
 
@@ -84,6 +87,14 @@ class MainActivity : BaseActivity() {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
 
 
+    }
+
+    override fun showProgressBar(isLoading: Boolean) {
+        if (isLoading) {
+            progressBar.visibility = View.VISIBLE
+        } else {
+            progressBar.visibility = View.INVISIBLE
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

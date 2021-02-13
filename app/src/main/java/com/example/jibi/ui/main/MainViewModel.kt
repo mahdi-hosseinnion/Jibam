@@ -126,7 +126,11 @@ constructor(
                                 } else {
                                     if (it.isNotEmpty()) {
                                         //contain query params
-                                        setListOfTransactions(listOf(NO_RESULT_FOUND_FOR_THIS_QUERY_MARKER))
+                                        setListOfTransactions(
+                                            listOf(
+                                                NO_RESULT_FOUND_FOR_THIS_QUERY_MARKER
+                                            )
+                                        )
                                     } else {
                                         setListOfTransactions(listOf(NO_RESULT_FOUND_IN_DATABASE))
                                     }
@@ -164,6 +168,8 @@ constructor(
             is UpdateTransaction -> mainRepository.updateTransaction(stateEvent)
 
             is DeleteTransaction -> mainRepository.deleteTransaction(stateEvent)
+
+            is DeleteCategory -> mainRepository.deleteCategory(stateEvent)
 
             else -> {
                 DataState.error(

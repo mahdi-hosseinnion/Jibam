@@ -1,6 +1,7 @@
 package com.example.jibi.ui.main.transaction
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,8 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.jibi.R
 import com.example.jibi.models.Category
+import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
+import com.example.jibi.util.*
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.fragment_view_categories.*
 import kotlinx.android.synthetic.main.layout_transaction_list_item.view.*
@@ -54,8 +57,12 @@ constructor(
     }
 
     private fun subscribeObservers() {
-        viewModel.viewState.value?.categoryList?.let {
-            viewPagerAdapter.submitList(it)
+
+        viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
+
+            viewState.categoryList?.let {
+                viewPagerAdapter.submitList(it)
+            }
         }
     }
 
@@ -105,7 +112,7 @@ constructor(
                 itemView.recycler_viewCategories.apply {
                     layoutManager =
                         LinearLayoutManager(this@ViewCategoriesFragment.requireContext())
-                    adapter = ViewPagerRecyclerViewAdapter(categoryList)
+                    adapter = ViewPagerRecyclerViewAdapter(categoryList, categoryInteraction)
                 }
 
             }
@@ -114,9 +121,9 @@ constructor(
 
     private inner class ViewPagerRecyclerViewAdapter
         (
-        private val listOfCategories: List<Category>?
+        private val listOfCategories: List<Category>?,
+        private val interaction: CategoryInteraction
     ) : RecyclerView.Adapter<ViewPagerRecyclerViewAdapter.ViewPagerRecyclerViewHolder>() {
-
 
         private val packageName = this@ViewCategoriesFragment.requireActivity().packageName
 
@@ -126,11 +133,12 @@ constructor(
         ): ViewPagerRecyclerViewHolder = ViewPagerRecyclerViewHolder(
             LayoutInflater.from(
                 parent.context
+
             ).inflate(
                 R.layout.layout_view_categories_list_item,
                 parent,
                 false
-            )
+            ), interaction
         )
 
         override fun onBindViewHolder(holder: ViewPagerRecyclerViewHolder, position: Int) {
@@ -140,7 +148,10 @@ constructor(
         override fun getItemCount(): Int = listOfCategories?.size ?: 0
 
 
-        inner class ViewPagerRecyclerViewHolder(itemView: View) :
+        inner class ViewPagerRecyclerViewHolder(
+            itemView: View,
+            private val intercation: CategoryInteraction
+        ) :
             RecyclerView.ViewHolder(itemView) {
 
             fun bind(item: Category?) {
@@ -158,11 +169,52 @@ constructor(
                             .transition(DrawableTransitionOptions.withCrossFade())
                             .error(R.drawable.ic_error)
                             .into(itemView.category_image)
+
+                        delete_category.setOnClickListener {
+                            intercation.onDeleteClicked(adapterPosition, item)
+                        }
                     }
                 } else {
                     itemView.nameOfCategory.text = "UNKNOWN CATEGORY"
                 }
             }
         }
+
+
+    }
+
+    val categoryInteraction = object : CategoryInteraction {
+        override fun onDeleteClicked(position: Int, category: Category) {
+            val callback = object : AreYouSureCallback {
+                override fun proceed() {
+                    deleteCategory(category)
+                }
+
+                override fun cancel() {}
+            }
+            uiCommunicationListener.onResponseReceived(
+                Response(
+                    "Are You sure you want to delete this category?",
+                    UIComponentType.AreYouSureDialog(
+                        callback
+                    ), MessageType.Info
+                ),
+                object : StateMessageCallback {
+                    override fun removeMessageFromStack() {}
+                }
+            )
+        }
+    }
+
+    fun deleteCategory(category: Category) {
+        viewModel.launchNewJob(
+            TransactionStateEvent.OneShotOperationsTransactionStateEvent.DeleteCategory(
+                category
+            )
+        )
+    }
+
+    interface CategoryInteraction {
+        fun onDeleteClicked(position: Int, category: Category)
     }
 }

@@ -134,6 +134,7 @@ constructor(
 
         initRecyclerView()
         subscribeObservers()
+
         fab.setOnClickListener { view ->
 //            showBottomSheet()
             findNavController().navigate(R.id.action_transactionFragment_to_createTransactionFragment)
@@ -306,9 +307,7 @@ constructor(
 
 
     private fun subscribeObservers() {
-        viewModel.countOfActiveJobs.observe(viewLifecycleOwner, Observer {
-            showProgressBar(viewModel.areAnyJobsActive())
-        })
+
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
             viewState?.let {
                 Log.d(TAG, "submitList: called transacionLIst: ${it.transactionList}")
@@ -323,29 +322,7 @@ constructor(
                 }
             }
         }
-        viewModel.stateMessage.observe(viewLifecycleOwner) { stateMessage ->
-            stateMessage?.let {
-                /*               if (isPaginationDone(stateMessage.response.message)) {
-                viewModel.setQueryExhausted(true)
-                viewModel.clearStateMessage()
-            } else {
-            uiCommunicationListener.onResponseReceived(
-                response = it.response,
-                stateMessageCallback = object : StateMessageCallback {
-                    override fun removeMessageFromStack() {
-                        viewModel.clearStateMessage()
-                    }
-                }
-            )
-        }*/
-                Toast.makeText(
-                    this@TransactionFragment.context,
-                    "Message: ${it.response.message} \n Type: ${it.response.uiComponentType} \n MessageType: ${it.response.messageType}",
-                    Toast.LENGTH_LONG
-                ).show()
-                viewModel.clearStateMessage()
-            }
-        }
+
     }
 
     private fun separate3By3AndRoundIt(money: Double): String {
@@ -522,13 +499,7 @@ constructor(
         viewModel.setRecentlyDeletedTransToNull()
     }
 
-    private fun showProgressBar(isLoading: Boolean) {
-        if (isLoading) {
-            progressBar.visibility = View.VISIBLE
-        } else {
-            progressBar.visibility = View.INVISIBLE
-        }
-    }
+
 
     override fun onResume() {
         super.onResume()

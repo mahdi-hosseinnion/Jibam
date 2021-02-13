@@ -1,6 +1,6 @@
 package com.example.jibi.ui.main.transaction.state
 
-import android.icu.text.AlphabeticIndex
+import com.example.jibi.models.Category
 import com.example.jibi.models.Record
 import com.example.jibi.util.StateEvent
 
@@ -69,7 +69,8 @@ sealed class TransactionStateEvent : StateEvent {
         data class InsertTransaction(
             val record: Record
         ) : OneShotOperationsTransactionStateEvent() {
-            override fun errorInfo(): String = "ERROR: inserting record! recordMoney = ${record.money}"
+            override fun errorInfo(): String =
+                "ERROR: inserting record! recordMoney = ${record.money}"
 
             override fun getId(): String = "InsertTransaction $record ${this.hashCode()}"
         }
@@ -79,21 +80,35 @@ sealed class TransactionStateEvent : StateEvent {
         ) : OneShotOperationsTransactionStateEvent() {
             override fun errorInfo(): String = "ERROR: getting record! recordId = ${transactionId}"
 
-            override fun getId(): String = "GetSpecificTransaction id: $transactionId ${this.hashCode()}"
+            override fun getId(): String =
+                "GetSpecificTransaction id: $transactionId ${this.hashCode()}"
         }
+
         data class UpdateTransaction(
             val record: Record
         ) : OneShotOperationsTransactionStateEvent() {
-            override fun errorInfo(): String = "ERROR: updating record! recordMoney = ${record.money}"
+            override fun errorInfo(): String =
+                "ERROR: updating record! recordMoney = ${record.money}"
 
             override fun getId(): String = "UpdateTransaction $record ${this.hashCode()}"
         }
+
         data class DeleteTransaction(
             val record: Record
         ) : OneShotOperationsTransactionStateEvent() {
-            override fun errorInfo(): String = "ERROR: deleting record! recordMoney = ${record.money}"
+            override fun errorInfo(): String =
+                "ERROR: deleting record! recordMoney = ${record.money}"
 
             override fun getId(): String = "DeleteTransaction $record ${this.hashCode()}"
+        }
+
+        data class DeleteCategory(
+            val category: Category
+        ) : OneShotOperationsTransactionStateEvent() {
+            override fun errorInfo(): String =
+                "ERROR: deleting category! categoryName = ${category.name}"
+
+            override fun getId(): String = "DeleteCategory $category ${this.hashCode()}"
         }
 
     }
