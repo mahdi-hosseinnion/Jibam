@@ -41,6 +41,9 @@ constructor(
             ViewCategoriesFragment::class.java.name -> {
                 ViewCategoriesFragment(viewModelFactory, requestManager)
             }
+            SettingFragment::class.java.name -> {
+                SettingFragment(viewModelFactory)
+            }
 
             else -> {
                 TransactionFragment(viewModelFactory, requestManager)

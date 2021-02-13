@@ -40,4 +40,7 @@
     <string name="now">Now</string>
     <string name="search">Search</string>
     <string name="category_setting">Category setting</string>
+    <string name="about">About</string>
+    <string name="rate_us">Rate Us</string>
+    <string name="setting">Setting</string>
 </resources>

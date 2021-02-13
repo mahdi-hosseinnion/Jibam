@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#459825"
+    android:orientation="vertical"
+    tools:context=".ui.main.transaction.SettingFragment">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/setting_toolbar"
+
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/mtrl_toolbar_default_height"
+        android:background="@color/purple_500" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/setting"
+
+        android:textSize="180sp" />
+
+</LinearLayout>

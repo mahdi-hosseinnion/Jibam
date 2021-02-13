@@ -27,7 +27,18 @@
             app:popExitAnim="@anim/slide_out" />
         <action
             android:id="@+id/action_transactionFragment_to_viewCategoriesFragment"
-            app:destination="@id/viewCategoriesFragment" />
+            app:destination="@id/viewCategoriesFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"/>
+        <action
+            android:id="@+id/action_transactionFragment_to_settingFragment"
+            app:destination="@id/settingFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"/>
     </fragment>
     <fragment
         android:id="@+id/createTransactionFragment"
@@ -69,11 +80,28 @@
         tools:layout="@layout/fragment_view_categories">
         <action
             android:id="@+id/action_viewCategoriesFragment_to_transactionFragment"
-            app:destination="@id/transactionFragment" />
+            app:destination="@id/transactionFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"/>
     </fragment>
     <fragment
         android:id="@+id/addCategoryFragment"
         android:name="com.example.jibi.ui.main.transaction.AddCategoryFragment"
         android:label="fragment_add_category"
         tools:layout="@layout/fragment_add_category" />
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.example.jibi.ui.main.transaction.SettingFragment"
+        android:label="Setting"
+        tools:layout="@layout/fragment_setting" >
+        <action
+            android:id="@+id/action_settingFragment_to_transactionFragment"
+            app:destination="@id/transactionFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"/>
+    </fragment>
 </navigation>
