@@ -50,6 +50,20 @@ sealed class TransactionStateEvent : StateEvent {
 
         override fun getId(): String =
             "getSumOfMoney minDate: $minDate maxDate: $maxDate hashCode: ${this.hashCode()}"
+
+    }
+
+    object GetCategoryImages : TransactionStateEvent() {
+        override fun errorInfo(): String {
+            return "Error get category images"
+        }
+
+        override fun toString(): String {
+            return "GetCategoryImages"
+        }
+
+        override fun getId(): String =
+            "getSumOfMoney  hashCode: ${this.hashCode()}"
     }
 
     object None : TransactionStateEvent() {

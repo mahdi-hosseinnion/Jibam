@@ -2,18 +2,19 @@ package com.example.jibi.ui.main.transaction
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AbsListView
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.jibi.R
 import com.example.jibi.models.Category
+import com.example.jibi.ui.main.transaction.AddCategoryFragment.Companion.EXPENSES
+import com.example.jibi.ui.main.transaction.AddCategoryFragment.Companion.INCOME
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.*
 import com.google.android.material.tabs.TabLayoutMediator
@@ -44,14 +45,33 @@ constructor(
         super.onViewCreated(view, savedInstanceState)
 
         viewPager_viewCategories.adapter = viewPagerAdapter
+
         //set titles
-        TabLayoutMediator(tab_layout, viewPager_viewCategories) { tab, position ->
+        val tabLayout=TabLayoutMediator(tab_layout, viewPager_viewCategories) { tab, position ->
             if (position == 0) {
                 tab.text = resources.getString(R.string.expenses)
             } else {
                 tab.text = resources.getString(R.string.income)
             }
         }.attach()
+//        val int:Int=viewPager_viewCategories.currentItem
+        adfasdf.setOnClickListener {
+            Log.d("TAG123456", "onViewCreated: clicked ${viewPager_viewCategories.currentItem}")
+            val categoryType = when (viewPager_viewCategories.currentItem) {
+                0 -> EXPENSES
+                1 -> INCOME
+                else -> {
+                    showUnableToRecognizeCategoryTypeError()
+                    return@setOnClickListener
+                }
+            }
+
+            val action =
+                ViewCategoriesFragmentDirections.actionViewCategoriesFragmentToAddCategoryFragment(
+                    categoryType = categoryType
+                )
+            findNavController().navigate(action)
+        }
 
         subscribeObservers()
     }
@@ -75,7 +95,10 @@ constructor(
     private inner class ViewPagerAdapter(
 
     ) : RecyclerView.Adapter<ViewPagerAdapter.ViewPagerViewHolder>() {
+
         private var listOfCategories: List<Category>? = null
+
+        private var currentPage = 0
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewPagerViewHolder =
             ViewPagerViewHolder(
@@ -110,12 +133,22 @@ constructor(
         ) : RecyclerView.ViewHolder(itemView) {
             fun bind(categoryList: List<Category>?) {
                 itemView.recycler_viewCategories.apply {
+
                     layoutManager =
                         LinearLayoutManager(this@ViewCategoriesFragment.requireContext())
                     adapter = ViewPagerRecyclerViewAdapter(categoryList, categoryInteraction)
                 }
 
             }
+        }
+
+
+//        override fun onPageSelected(position: Int) {
+//            currentPage = position
+//        }
+
+        fun getCurrentPage(): Int {
+            return this.currentPage
         }
     }
 
@@ -216,5 +249,20 @@ constructor(
 
     interface CategoryInteraction {
         fun onDeleteClicked(position: Int, category: Category)
+    }
+
+    private fun showUnableToRecognizeCategoryTypeError() {
+        val stateCallback = object : StateMessageCallback {
+            override fun removeMessageFromStack() {}
+        }
+
+        uiCommunicationListener.onResponseReceived(
+            Response(
+                getString(R.string.unable_to_recognize_category_type),
+                //TODO SHOW OK DIALOG
+                UIComponentType.Dialog,
+                MessageType.Error
+            ), stateCallback
+        )
     }
 }

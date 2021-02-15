@@ -273,6 +273,7 @@ constructor(
     fun getCategoryList(
     ): Flow<List<Category>?> = categoriesDao.getCategories()
 
+    fun getCategoryImages() = categoriesDao.getCategoriesImages()
 /*    fun getSummaryMoney(): Flow<TransactionViewState> = flow {
         val result = MutableLiveData<TransactionViewState>()
         result.value = TransactionViewState(summeryMoney = SummaryMoney())

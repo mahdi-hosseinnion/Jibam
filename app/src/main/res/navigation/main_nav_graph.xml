@@ -9,8 +9,7 @@
         android:id="@+id/transactionFragment"
         android:name="com.example.jibi.ui.main.transaction.TransactionFragment"
         android:label=""
-        tools:layout="@layout/fragment_transaction"
-        >
+        tools:layout="@layout/fragment_transaction">
         <action
             android:id="@+id/action_transactionFragment_to_createTransactionFragment"
             app:destination="@id/createTransactionFragment"
@@ -31,14 +30,14 @@
             app:enterAnim="@anim/slide_in"
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/slide_out"/>
+            app:popExitAnim="@anim/slide_out" />
         <action
             android:id="@+id/action_transactionFragment_to_settingFragment"
             app:destination="@id/settingFragment"
             app:enterAnim="@anim/slide_in"
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/slide_out"/>
+            app:popExitAnim="@anim/slide_out" />
     </fragment>
     <fragment
         android:id="@+id/createTransactionFragment"
@@ -84,24 +83,36 @@
             app:enterAnim="@anim/slide_in"
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/slide_out"/>
+            app:popExitAnim="@anim/slide_out" />
+        <action
+            android:id="@+id/action_viewCategoriesFragment_to_addCategoryFragment"
+            app:destination="@id/addCategoryFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
     </fragment>
     <fragment
         android:id="@+id/addCategoryFragment"
         android:name="com.example.jibi.ui.main.transaction.AddCategoryFragment"
-        android:label="fragment_add_category"
-        tools:layout="@layout/fragment_add_category" />
+        android:label=""
+        tools:layout="@layout/fragment_add_category">
+        <argument
+            android:name="category_type"
+            android:defaultValue="0"
+            app:argType="integer" />
+    </fragment>
     <fragment
         android:id="@+id/settingFragment"
         android:name="com.example.jibi.ui.main.transaction.SettingFragment"
         android:label="Setting"
-        tools:layout="@layout/fragment_setting" >
+        tools:layout="@layout/fragment_setting">
         <action
             android:id="@+id/action_settingFragment_to_transactionFragment"
             app:destination="@id/transactionFragment"
             app:enterAnim="@anim/slide_in"
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/slide_out"/>
+            app:popExitAnim="@anim/slide_out" />
     </fragment>
 </navigation>

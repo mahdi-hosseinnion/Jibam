@@ -1,16 +1,10 @@
 package com.example.jibi.ui.main
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asFlow
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.navigation.fragment.DialogFragmentNavigatorDestinationBuilder
 import com.example.jibi.di.main.MainScope
-import com.example.jibi.models.Category
-import com.example.jibi.models.Record
-import com.example.jibi.models.SearchModel
-import com.example.jibi.models.SummaryMoney
+import com.example.jibi.models.*
 import com.example.jibi.repository.buildResponse
 import com.example.jibi.repository.main.MainRepository
 import com.example.jibi.ui.BaseViewModel
@@ -20,10 +14,7 @@ import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent.*
 import com.example.jibi.ui.main.transaction.state.TransactionViewState
-import com.example.jibi.util.Constants
-import com.example.jibi.util.DataState
-import com.example.jibi.util.UIComponentType
-import com.example.jibi.util.mahdiLog
+import com.example.jibi.util.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.BroadcastChannel
@@ -182,6 +173,8 @@ constructor(
 
         }
     }
+
+    fun getCategoryImages(): LiveData<List<CategoryImages>> = mainRepository.getCategoryImages()
 
     override fun initNewViewState(): TransactionViewState = TransactionViewState()
 
