@@ -47,6 +47,7 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edt_categoryName"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="Category name" />

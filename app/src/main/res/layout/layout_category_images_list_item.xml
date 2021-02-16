@@ -12,14 +12,14 @@
     android:focusable="true"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="8dp">
+ >
 
 
     <androidx.cardview.widget.CardView
         android:id="@+id/category_image_card_view"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_margin="4dp"
+        android:layout_margin="8dp"
         card_view:cardBackgroundColor="#D297EA"
         card_view:cardCornerRadius="20dp">
 

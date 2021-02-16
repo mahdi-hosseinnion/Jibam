@@ -3,11 +3,10 @@ package com.example.jibi.ui.main.transaction
 import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -46,20 +45,38 @@ constructor(
 
     private val args: AddCategoryFragmentArgs by navArgs()
 
+    private lateinit var newCategory: Category
+
     private lateinit var recyclerAdapter: AddCategoryListAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setHasOptionsMenu(true)
         //Showing the title
         findNavController()
             .currentDestination?.label = when (args.categoryType) {
-            EXPENSES -> getString(R.string.add_expenses_category)
-            INCOME -> getString(R.string.add_income_category)
+            EXPENSES -> {
+                //TODO FIX ORDER ISSUE
+                newCategory = Category(0, 1, edt_categoryName.text.toString(), "", 0)
+                getString(R.string.add_expenses_category)
+            }
+            INCOME -> {
+                //TODO FIX ORDER ISSUE
+                newCategory = Category(0, 2, edt_categoryName.text.toString(), "", 0)
+
+                getString(R.string.add_income_category)
+            }
             else -> {
                 showUnableToRecognizeCategoryTypeError()
                 getString(R.string.unable_to_recognize_category_type)
             }
         }
+
+        edt_categoryName.addTextChangedListener {
+            newCategory = newCategory.copy(name = it.toString())
+        }
+
         initRecyclerView()
         subscribeObservers()
     }
@@ -132,6 +149,7 @@ constructor(
 
 
     override fun onItemSelected(position: Int, categoryImages: CategoryImages) {
+        newCategory = newCategory.copy(img_res = categoryImages.image_res)
         //set image to image view
         setCategoryImageTo(categoryImages)
     }
@@ -163,6 +181,41 @@ constructor(
             .transition(DrawableTransitionOptions.withCrossFade())
             .error(R.drawable.ic_error)
             .into(category_image)
+    }
+
+    private fun insertNewCategory() {
+        val newCategory = newCategory
+        if (isValidForInsertion(newCategory)) {
+            viewModel.launchNewJob(
+                TransactionStateEvent.OneShotOperationsTransactionStateEvent.InsertCategory(
+                    newCategory
+                ), true
+            )
+            uiCommunicationListener.hideSoftKeyboard()
+            findNavController().navigateUp()
+        }
+    }
+
+    private fun isValidForInsertion(category: Category?): Boolean {
+        if (category == null) {
+            return false
+        }
+        return true
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.add_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.save -> {
+                insertNewCategory()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
 }

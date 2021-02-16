@@ -162,6 +162,8 @@ constructor(
 
             is DeleteCategory -> mainRepository.deleteCategory(stateEvent)
 
+            is InsertCategory -> mainRepository.insertCategory(stateEvent)
+
             else -> {
                 DataState.error(
                     buildResponse(

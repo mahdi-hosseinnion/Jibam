@@ -191,8 +191,9 @@ constructor(
                 if (item != null) {
                     itemView.apply {
                         itemView.nameOfCategory.text = item.name
+
                         val categoryImageUrl = this.resources.getIdentifier(
-                            "ic_cat_${item.name}",
+                            "ic_cat_${item.img_res}",
                             "drawable",
                             packageName
                         )

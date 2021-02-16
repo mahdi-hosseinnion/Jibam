@@ -265,6 +265,27 @@ constructor(
             }
         }.getResult()
     }
+    suspend fun insertCategory(
+        stateEvent: InsertCategory
+    ): DataState<TransactionViewState> {
+        val cacheResult = safeCacheCall {
+            categoriesDao.insertOrReplace(category = stateEvent.category)
+        }
+        return object : CacheResponseHandler<TransactionViewState, Long>(
+            response = cacheResult,
+            stateEvent = stateEvent
+        ) {
+            override suspend fun handleSuccess(resultObj: Long): DataState<TransactionViewState> {
+                return DataState.data(
+                    response = buildResponse(
+                        message = "Category Successfully Deleted",
+                        UIComponentType.Toast,
+                        MessageType.Success
+                    )
+                )
+            }
+        }.getResult()
+    }
 
     /*
     categories transactions

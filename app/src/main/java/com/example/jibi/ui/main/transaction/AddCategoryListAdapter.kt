@@ -1,12 +1,15 @@
 package com.example.jibi.ui.main.transaction
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.*
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.example.jibi.R
+import com.example.jibi.models.Category
 import com.example.jibi.models.CategoryImages
 import com.example.jibi.ui.main.transaction.TransactionListAdapter.Companion.listOfColor
 import kotlinx.android.synthetic.main.layout_category_images_header.view.*
@@ -24,8 +27,10 @@ class AddCategoryListAdapter(
 //    private var headersList: MutableSet<String> = emptySet<String>() as MutableSet<String>
 //    private var currentHeaderName: String? = null
 
+    private var currentSelectedItem: OnOthersSelectedListener? = null
+
     companion object {
-        private const val TAG: String = "AppDebug"
+        private const val TAG = "AddCategoryListAdapter"
 
         const val YESTERDAY = "Yesterday"
         const val TODAY = "Today"
@@ -219,12 +224,19 @@ class AddCategoryListAdapter(
         val requestManager: RequestManager?,
         private val interaction: Interaction?,
         val packageName: String
-    ) : RecyclerView.ViewHolder(itemView) {
+    ) : RecyclerView.ViewHolder(itemView), OnOthersSelectedListener {
 
         fun bind(item: CategoryImages) = with(itemView)
         {
+            restoreToDefaultBackground()
+
+            if (adapterPosition == 1 && currentSelectedItem == null) {
+                //this viewHolder is the first image
+                onClickedOnItem(item)
+            }
+
             itemView.setOnClickListener {
-                interaction?.onItemSelected(adapterPosition, item)
+                onClickedOnItem(item)
             }
 
             val categoryImageUrl = this.resources.getIdentifier(
@@ -233,16 +245,6 @@ class AddCategoryListAdapter(
                 packageName
             )
 
-            // set background
-            if (item.id > 0) {
-                itemView.category_image_card_view.setCardBackgroundColor(
-                    resources.getColor(
-                        listOfColor[(item.id.minus(
-                            1
-                        ))]
-                    )
-                )
-            }
             //load image
             requestManager
                 ?.load(categoryImageUrl)
@@ -252,9 +254,47 @@ class AddCategoryListAdapter(
                 ?.into(itemView.category_images)
         }
 
+        private fun onClickedOnItem(item: CategoryImages) {
+            Log.d(TAG, "onClickedOnItem: $item ")
+            interaction?.onItemSelected(adapterPosition, item)
+            //set last selected item to
+            currentSelectedItem?.restoreToDefaultBackground()
+            //set lister to new one
+            currentSelectedItem = this@ImageViewHolder
+            //change to new one
+            currentSelectedItem?.setSelectedBackground(item.id)
+        }
+
+        override fun restoreToDefaultBackground() {
+            //set to default (gray) background
+            itemView.category_images.setBackgroundColor(itemView.resources.getColor(R.color.imageDefaultBackground))
+            //change image tint to black
+            itemView.category_images.setColorFilter(
+                itemView.resources.getColor(R.color.black),
+                android.graphics.PorterDuff.Mode.SRC_IN
+            )
+        }
+
+        override fun setSelectedBackground(categoryId: Int) {
+            // set to selected mode
+            Log.d(TAG, "change background: $categoryId ")
+            if (categoryId > 0) {
+                itemView.category_images.setBackgroundColor(
+                    itemView.resources.getColor(
+                        listOfColor[(categoryId.minus(
+                            1
+                        ))]
+                    )
+                )
+                //change tint to white
+                itemView.category_images.setColorFilter(
+                    itemView.resources.getColor(R.color.white),
+                    android.graphics.PorterDuff.Mode.SRC_IN
+                )
+            }
+        }
 
     }
-
 
     class HeaderViewHolder
     constructor(
@@ -273,5 +313,15 @@ class AddCategoryListAdapter(
         fun onItemSelected(position: Int, categoryImages: CategoryImages)
 
         fun restoreListPosition()
+    }
+
+    interface OnOthersSelectedListener {
+
+        //gray background(not selected)
+        fun restoreToDefaultBackground()
+
+        //color background(selected)
+        fun setSelectedBackground(categoryId: Int)
+
     }
 }

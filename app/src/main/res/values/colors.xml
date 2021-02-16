@@ -66,6 +66,7 @@
     <color name="category_background_color_39">#e040fb</color>
     <color name="category_background_color_40">#7c4dff</color>
     <color name="category_background_color_41">#536dfe</color>
+    <color name="imageDefaultBackground">#e0e0e0</color>
 
 <!--    <color name="category_background_color_">#FF000000</color> defualt color-->
 </resources>

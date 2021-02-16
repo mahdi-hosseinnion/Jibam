@@ -124,6 +124,14 @@ sealed class TransactionStateEvent : StateEvent {
 
             override fun getId(): String = "DeleteCategory $category ${this.hashCode()}"
         }
+        data class InsertCategory(
+            val category: Category
+        ) : OneShotOperationsTransactionStateEvent() {
+            override fun errorInfo(): String =
+                "ERROR: inserting category! categoryName = ${category.name}"
+
+            override fun getId(): String = "InsertCategory $category ${this.hashCode()}"
+        }
 
     }
 }
