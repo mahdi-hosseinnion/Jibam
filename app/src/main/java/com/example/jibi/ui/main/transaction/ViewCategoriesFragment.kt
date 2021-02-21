@@ -20,12 +20,12 @@ import com.example.jibi.util.*
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.fragment_view_categories.*
 import kotlinx.android.synthetic.main.layout_transaction_list_item.view.*
+import kotlinx.android.synthetic.main.layout_view_categories_list_item.*
 import kotlinx.android.synthetic.main.layout_view_categories_list_item.view.*
 import kotlinx.android.synthetic.main.layout_view_categories_list_item.view.category_image
 import kotlinx.android.synthetic.main.layout_viewpager_list_item.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import java.util.*
 import javax.inject.Inject
 
 @FlowPreview
@@ -47,7 +47,7 @@ constructor(
         viewPager_viewCategories.adapter = viewPagerAdapter
 
         //set titles
-        val tabLayout=TabLayoutMediator(tab_layout, viewPager_viewCategories) { tab, position ->
+        val tabLayout = TabLayoutMediator(tab_layout, viewPager_viewCategories) { tab, position ->
             if (position == 0) {
                 tab.text = resources.getString(R.string.expenses)
             } else {
@@ -88,6 +88,7 @@ constructor(
 
     companion object {
         const val VIEWPAGER_SIZE = 2
+        const val CATEGORY_PIN_MARKER = -1
 
     }
 
@@ -128,6 +129,17 @@ constructor(
 
         override fun getItemCount(): Int = VIEWPAGER_SIZE
 
+        fun sorteCateogories(categoryList: List<Category>?): List<Category>? {
+            if (categoryList == null) {
+                return null
+            }
+            val tempList = ArrayList(categoryList.sortedByDescending { it.ordering })
+            val pinedList = categoryList.filter { it.ordering < 0 }.sortedByDescending { it.ordering }
+            tempList.removeAll(pinedList)
+            tempList.addAll(0, pinedList)
+            return tempList
+        }
+
         inner class ViewPagerViewHolder(
             itemView: View
         ) : RecyclerView.ViewHolder(itemView) {
@@ -136,7 +148,25 @@ constructor(
 
                     layoutManager =
                         LinearLayoutManager(this@ViewCategoriesFragment.requireContext())
-                    adapter = ViewPagerRecyclerViewAdapter(categoryList, categoryInteraction)
+                    var maxUnpinOrder = 0
+                    if (categoryList != null) {
+                        for (item in categoryList) {
+                            if (maxUnpinOrder < item.ordering) {
+                                maxUnpinOrder = item.ordering
+                            }
+                        }
+                    }
+                    adapter = ViewPagerRecyclerViewAdapter(
+                        sorteCateogories(categoryList),
+//                        categoryList?.sortedByDescending { category ->
+//                            if (category.ordering < 0) {
+//                                //manfi
+//                                category.ordering.times(-1).plus(maxUnpinOrder)
+//                            } else
+//                                category.ordering
+//                        },
+                        categoryInteraction
+                    )
                 }
 
             }
@@ -190,7 +220,9 @@ constructor(
             fun bind(item: Category?) {
                 if (item != null) {
                     itemView.apply {
-                        itemView.nameOfCategory.text = item.name
+                        itemView.nameOfCategory.text = "${item.name}| ${item.ordering} "
+
+                        changePinState(item.ordering < 0)
 
                         val categoryImageUrl = this.resources.getIdentifier(
                             "ic_cat_${item.img_res}",
@@ -207,13 +239,28 @@ constructor(
                         delete_category.setOnClickListener {
                             intercation.onDeleteClicked(adapterPosition, item)
                         }
+                        pin_category.setOnClickListener {
+                            intercation.onPinThisCategoryClicked(item)
+                            showLoadingForPiningCategory()
+                        }
                     }
                 } else {
                     itemView.nameOfCategory.text = "UNKNOWN CATEGORY"
                 }
             }
-        }
 
+            fun showLoadingForPiningCategory() {
+                itemView.pin_category.visibility = View.GONE
+                itemView.pin_category_progressBar.visibility = View.VISIBLE
+            }
+
+            fun changePinState(isPinned: Boolean) {
+                if (isPinned)
+                    itemView.pin_category.setImageResource(android.R.drawable.btn_star_big_on)
+                else
+                    itemView.pin_category.setImageResource(android.R.drawable.btn_star_big_off)
+            }
+        }
 
     }
 
@@ -238,6 +285,10 @@ constructor(
                 }
             )
         }
+
+        override fun onPinThisCategoryClicked(category: Category) {
+            pinOrUnpinCategory(category)
+        }
     }
 
     fun deleteCategory(category: Category) {
@@ -248,8 +299,17 @@ constructor(
         )
     }
 
+    fun pinOrUnpinCategory(category: Category) {
+        viewModel.launchNewJob(
+            TransactionStateEvent.OneShotOperationsTransactionStateEvent.PinOrUnpinCategory(
+                category
+            )
+        )
+    }
+
     interface CategoryInteraction {
         fun onDeleteClicked(position: Int, category: Category)
+        fun onPinThisCategoryClicked(category: Category)
     }
 
     private fun showUnableToRecognizeCategoryTypeError() {

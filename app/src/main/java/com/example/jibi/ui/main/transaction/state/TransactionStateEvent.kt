@@ -124,6 +124,7 @@ sealed class TransactionStateEvent : StateEvent {
 
             override fun getId(): String = "DeleteCategory $category ${this.hashCode()}"
         }
+
         data class InsertCategory(
             val category: Category
         ) : OneShotOperationsTransactionStateEvent() {
@@ -131,6 +132,15 @@ sealed class TransactionStateEvent : StateEvent {
                 "ERROR: inserting category! categoryName = ${category.name}"
 
             override fun getId(): String = "InsertCategory $category ${this.hashCode()}"
+        }
+
+        data class PinOrUnpinCategory(
+            val category: Category
+        ) : OneShotOperationsTransactionStateEvent() {
+            override fun errorInfo(): String =
+                "ERROR: pin or unpin category! categoryName = ${category.name}"
+
+            override fun getId(): String = "pin or unpin Category $category ${this.hashCode()}"
         }
 
     }

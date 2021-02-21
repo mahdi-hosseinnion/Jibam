@@ -1,5 +1,6 @@
 package com.example.jibi.repository.main
 
+import android.util.Log
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
 import com.example.jibi.models.Record
@@ -10,6 +11,7 @@ import com.example.jibi.repository.safeCacheCall
 import com.example.jibi.ui.main.transaction.TransactionListAdapter
 import com.example.jibi.ui.main.transaction.TransactionListAdapter.Companion.TODAY
 import com.example.jibi.ui.main.transaction.TransactionListAdapter.Companion.YESTERDAY
+import com.example.jibi.ui.main.transaction.ViewCategoriesFragment
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent.*
 import com.example.jibi.ui.main.transaction.state.TransactionViewState
 import com.example.jibi.util.*
@@ -265,6 +267,7 @@ constructor(
             }
         }.getResult()
     }
+
     suspend fun insertCategory(
         stateEvent: InsertCategory
     ): DataState<TransactionViewState> {
@@ -287,10 +290,61 @@ constructor(
         }.getResult()
     }
 
+    @FlowPreview
+    //TODO ADD SOME REORDER IF NEEDED
+    suspend fun pinOrUnpinCategory(
+        stateEvent: PinOrUnpinCategory
+    ): DataState<TransactionViewState> {
+        //TODO SYNC THE CATEGORIES ORDERING
+        val lastCategory = stateEvent.category
+        val newCategory =
+            if (lastCategory.ordering < 0) {//if pinned before so unpin
+                var newOrder = try {
+                    categoriesDao.getMaxOfOrdering().plus(1)
+                } catch (e: Exception) {
+                    1
+                }
+                if (newOrder < 1) {
+                    newOrder = 1
+                }
+                lastCategory.copy(ordering = newOrder)
+            } else { //if not pinned so pin this category
+                var newOrder = try {
+                    categoriesDao.getMinOfOrdering().minus(1)
+                } catch (e: Exception) {
+                    -1
+                }
+                if (newOrder > -1) {
+                    newOrder = -1
+                }
+                lastCategory.copy(ordering = newOrder)
+            }
+
+        val cacheResult = safeCacheCall {
+            categoriesDao.updateCategory(category = newCategory)
+        }
+
+        return object : CacheResponseHandler<TransactionViewState, Int>(
+            response = cacheResult,
+            stateEvent = stateEvent
+        ) {
+            override suspend fun handleSuccess(resultObj: Int): DataState<TransactionViewState> {
+                return DataState.data(
+                    response = buildResponse(
+                        message = "Category Successfully Deleted",
+                        UIComponentType.Toast,
+                        MessageType.Success
+                    )
+                )
+            }
+        }.getResult()
+    }
+
+
     /*
     categories transactions
      */
-    //queries
+//queries
     fun getCategoryList(
     ): Flow<List<Category>?> = categoriesDao.getCategories()
 

@@ -19,8 +19,17 @@ interface CategoriesDao {
     suspend fun insertOrReplace(category: Category): Long
 
     @Update
-    suspend fun updateCategory(category: Category)
+    suspend fun updateCategory(category: Category): Int
 
     @Delete
     suspend fun deleteCategory(category: Category): Int
+
+    @Query("SELECT MIN(ordering) FROM categories")
+    suspend fun getMinOfOrdering(): Int
+
+    @Query("SELECT MAX(ordering) FROM categories")
+    suspend fun getMaxOfOrdering(): Int
+
+    @Query("SELECT * FROM categories")
+    suspend fun getAllCategory(): List<Category>
 }
