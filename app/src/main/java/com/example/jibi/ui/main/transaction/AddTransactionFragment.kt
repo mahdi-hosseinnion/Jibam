@@ -60,7 +60,7 @@ constructor(
 
     private val textCalculator = TextCalculator()
 
-//    private val args: AddTransactionFragmentArgs by navArgs()
+    //    private val args: AddTransactionFragmentArgs by navArgs()
     private var category: Category? = null
     private val listOfNumbers = charArrayOf(
         '1',
@@ -92,6 +92,7 @@ constructor(
 
 
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

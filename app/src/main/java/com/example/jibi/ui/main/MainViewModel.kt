@@ -166,6 +166,8 @@ constructor(
 
             is PinOrUnpinCategory -> mainRepository.pinOrUnpinCategory(stateEvent)
 
+            is UpdateCategory -> mainRepository.updateCategory(stateEvent)
+
             else -> {
                 DataState.error(
                     buildResponse(

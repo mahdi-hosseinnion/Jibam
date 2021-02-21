@@ -220,7 +220,7 @@ constructor(
             fun bind(item: Category?) {
                 if (item != null) {
                     itemView.apply {
-                        itemView.nameOfCategory.text = "${item.name}| ${item.ordering} "
+                        itemView.nameOfCategory.text = "${item.ordering}| ${item.name}"
 
                         changePinState(item.ordering < 0)
 

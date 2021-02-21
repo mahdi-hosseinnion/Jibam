@@ -12,12 +12,15 @@ import com.example.jibi.ui.main.transaction.TransactionListAdapter
 import com.example.jibi.ui.main.transaction.TransactionListAdapter.Companion.TODAY
 import com.example.jibi.ui.main.transaction.TransactionListAdapter.Companion.YESTERDAY
 import com.example.jibi.ui.main.transaction.ViewCategoriesFragment
+import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent.*
 import com.example.jibi.ui.main.transaction.state.TransactionViewState
 import com.example.jibi.util.*
+import com.example.jibi.util.Constants.Companion.CACHE_TIMEOUT
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.withTimeout
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -167,6 +170,7 @@ constructor(
         ) {
             override suspend fun handleSuccess(resultObj: Long): DataState<TransactionViewState> {
                 mahdiLog(TAG, "insertTransaction 001 HAVE BEEN DONE called${stateEvent.record} ")
+                tryIncreaseCategoryOrdering(stateEvent.record.cat_id)
                 return DataState.data(
                     response = buildResponse(
                         message = "Transaction Successfully inserted",
@@ -177,6 +181,30 @@ constructor(
             }
         }.getResult()
     }
+
+    private suspend fun tryIncreaseCategoryOrdering(categoryId: Int) {
+        try {
+            withTimeout(CACHE_TIMEOUT.times(2)) {
+                val category =
+                    categoriesDao.getCategoryById(categoryId)
+                if (category == null ||
+                    category.ordering < 0 || //if category got pinned
+                    category.ordering > Int.MAX_VALUE.minus(2)//if its to big even bigger then int max value
+                ) {
+                    return@withTimeout
+                }
+                //increase category ordering
+                categoriesDao.updateCategory(category.copy(ordering = category.ordering.plus(1)))
+            }
+        } catch (e: Exception) {
+            Log.e(
+                TAG,
+                "tryIncreaseCategoryOrdering: unable to update category order with id:$categoryId",
+                e
+            )
+        }
+    }
+
 //        safeCacheCall { recordsDao.insertOrReplace(record) }
 
     suspend fun getTransaction(
@@ -333,6 +361,28 @@ constructor(
                     response = buildResponse(
                         message = "Category Successfully Deleted",
                         UIComponentType.Toast,
+                        MessageType.Success
+                    )
+                )
+            }
+        }.getResult()
+    }
+
+    suspend fun updateCategory(
+        stateEvent: UpdateCategory
+    ): DataState<TransactionViewState> {
+        val cacheResult = safeCacheCall {
+            categoriesDao.updateCategory(stateEvent.category)
+        }
+        return object : CacheResponseHandler<TransactionViewState, Int>(
+            response = cacheResult,
+            stateEvent = stateEvent
+        ) {
+            override suspend fun handleSuccess(resultObj: Int): DataState<TransactionViewState> {
+                return DataState.data(
+                    response = buildResponse(
+                        message = "Transaction Successfully Updated",
+                        UIComponentType.None,
                         MessageType.Success
                     )
                 )
