@@ -2,6 +2,7 @@ package com.example.jibi.ui.main.transaction.bottomSheet
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.DialogInterface
 import android.graphics.*
 import android.os.Build
 import android.util.Log
@@ -34,8 +35,8 @@ class CreateNewTransBottomSheet
 constructor(
     private val categoryList: List<Category>,
     private val requestManager: RequestManager,
-    private val onCategorySelected: OnCategorySelectedCallback,
-    private val isHideable: Boolean=true
+    private val onDismissCallback: OnDismissCallback,
+    private val isHideable: Boolean = true
 ) : ViewPagerBottomSheetDialogFragment(), BottomSheetListAdapter.Interaction,
     ViewPager.OnPageChangeListener {
 
@@ -50,6 +51,7 @@ constructor(
     //vars
     private var indicatorWidth = 0
     private var isLeftToRight: Boolean = true
+    private var selectedCategory: Category? = null
 
     @SuppressLint("RestrictedApi")
     override fun setupDialog(dialog: Dialog, style: Int) {
@@ -82,6 +84,9 @@ constructor(
                     hideAppBar()
                 }
                 if (BottomSheetBehavior.STATE_HIDDEN == newState) {
+                    Log.d("BOTTOMSHEET"
+                        , "1111 onHidden called")
+                    onDismissCallback.onDismissCalled(selectedCategory)
                     dismiss()
                 }
             }
@@ -101,6 +106,12 @@ constructor(
         setupViewPager()
     }
 
+    override fun onDismiss(dialog: DialogInterface) {
+        Log.d("BOTTOMSHEET"
+            , "1111 ON DISMISS called")
+        onDismissCallback.onDismissCalled(selectedCategory)
+        super.onDismiss(dialog)
+    }
     private fun setupViewPager() {
         viewPager?.offscreenPageLimit = 1
         viewPager?.adapter = SimplePagerAdapter()
@@ -154,8 +165,11 @@ constructor(
     }
 
     override fun onItemSelected(position: Int, item: Category) {
+        Log.d("BOTTOMSHEET"
+            , "1111 ON ITEM SELECTED")
+        selectedCategory = item
         this.dismiss()
-        onCategorySelected.onCategorySelected(item)
+//        onCategorySelected.onCategorySelected(item)
     }
 
 
@@ -249,8 +263,9 @@ constructor(
     override fun onPageSelected(position: Int) {}
 
     override fun onPageScrollStateChanged(state: Int) {}
-    interface OnCategorySelectedCallback {
-        fun onCategorySelected(item: Category)
+
+    interface OnDismissCallback {
+        fun onDismissCalled(selectedCategory: Category?)
 
     }
 }

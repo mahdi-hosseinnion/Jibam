@@ -60,7 +60,7 @@ constructor(
 
     private val textCalculator = TextCalculator()
 
-    //    private val args: AddTransactionFragmentArgs by navArgs()
+    private val args: AddTransactionFragmentArgs by navArgs()
     private var category: Category? = null
     private val listOfNumbers = charArrayOf(
         '1',
@@ -81,7 +81,6 @@ constructor(
 
         setHasOptionsMenu(true)
 //        category = findCategory(cat_id = args.categoryId)
-
         initUi(view)
 //        edt_money.addTextChangedListener(onTextChangedListener)
         edt_money.addTextChangedListener(onTextChangedListener)
@@ -93,37 +92,28 @@ constructor(
 
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        if (category == null) {
-            showBottomSheet()
-        } else {
-            setTransProperties(category = category)
-        }
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
+
 
     private fun showBottomSheet() {
         val modalBottomSheet =
             CreateNewTransBottomSheet(
                 viewModel.viewState.value!!.categoryList!!,
                 requestManager,
-                onCategorySelectedCallback,
+                onDismissCalled,
                 category != null
             )
         modalBottomSheet.isCancelable = category != null
         modalBottomSheet.show(parentFragmentManager, "CreateNewTransBottomSheet")
     }
 
-    private val onCategorySelectedCallback =
-        object : CreateNewTransBottomSheet.OnCategorySelectedCallback {
-            override fun onCategorySelected(item: Category) {
+    private val onDismissCalled =
+        object : CreateNewTransBottomSheet.OnDismissCallback {
+            override fun onDismissCalled(selectedCategory: Category?) {
+                if (selectedCategory == null)
+                    return
                 //on category changed
-                category = item
-                setTransProperties(category = item)
+                category = selectedCategory
+                setTransProperties(category = selectedCategory)
             }
 
         }
@@ -153,6 +143,8 @@ constructor(
     }
 
     private fun initUi(view: View) {
+
+        initCategory()
         //add date to date
         setDateToEditText()
         //Implementing an exposed dropdown menu for wallet editText
@@ -193,6 +185,15 @@ constructor(
 
         showCustomKeyboard(edt_money)
 
+    }
+
+    private fun initCategory(){
+        category = findCategory(cat_id = args.categoryId)
+        if (category == null) {
+            showBottomSheet()
+        } else {
+            setTransProperties(category = category)
+        }
     }
 
     private fun setDateToEditText(time: Int? = null) {

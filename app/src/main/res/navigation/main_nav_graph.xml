@@ -46,6 +46,8 @@
         tools:layout="@layout/fragment_add_transaction">
         <argument
             android:name="category_id"
+            android:defaultValue="-1"
+            app:argType="integer"
             app:enterAnim="@anim/slide_in"
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"

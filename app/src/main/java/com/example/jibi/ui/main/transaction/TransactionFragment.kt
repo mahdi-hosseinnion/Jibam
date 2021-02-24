@@ -1,6 +1,7 @@
 package com.example.jibi.ui.main.transaction
 
 import android.content.Context
+import android.content.DialogInterface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.Editable
@@ -136,8 +137,10 @@ constructor(
         subscribeObservers()
 
         fab.setOnClickListener { view ->
-//            showBottomSheet()
-            findNavController().navigate(R.id.action_transactionFragment_to_createTransactionFragment)
+            Log.d(TAG
+                , "1111 ON CLICK")
+            showBottomSheet()
+//            findNavController().navigate(R.id.action_transactionFragment_to_createTransactionFragment)
         }
 
         txt_balance.setOnClickListener {
@@ -292,15 +295,23 @@ constructor(
             CreateNewTransBottomSheet(
                 viewModel.viewState.value!!.categoryList!!,
                 requestManager,
-                onCategorySelectedCallback
+                onDismissCalled
             )
         modalBottomSheet.show(parentFragmentManager, "CreateNewTransBottomSheet")
     }
 
-    private val onCategorySelectedCallback =
-        object : CreateNewTransBottomSheet.OnCategorySelectedCallback {
-            override fun onCategorySelected(item: Category) {
-//                findNavController().navigate(action)
+    private val onDismissCalled =
+        object : CreateNewTransBottomSheet.OnDismissCallback {
+            override fun onDismissCalled(selectedCategory: Category?) {
+                Log.d(TAG, "1111 onDismissCalled: called")
+                if (selectedCategory == null)
+                    return
+                //on category selected and bottomSheet hided
+                val action =
+                    TransactionFragmentDirections.actionTransactionFragmentToCreateTransactionFragment(
+                        categoryId = selectedCategory.id
+                    )
+                findNavController().navigate(action)
             }
 
         }
@@ -498,7 +509,6 @@ constructor(
         }
         viewModel.setRecentlyDeletedTransToNull()
     }
-
 
 
     override fun onResume() {
