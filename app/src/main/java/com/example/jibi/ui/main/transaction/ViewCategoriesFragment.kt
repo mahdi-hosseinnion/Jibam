@@ -129,16 +129,6 @@ constructor(
 
         override fun getItemCount(): Int = VIEWPAGER_SIZE
 
-        fun sorteCateogories(categoryList: List<Category>?): List<Category>? {
-            if (categoryList == null) {
-                return null
-            }
-            val tempList = ArrayList(categoryList.sortedByDescending { it.ordering })
-            val pinedList = categoryList.filter { it.ordering < 0 }.sortedByDescending { it.ordering }
-            tempList.removeAll(pinedList)
-            tempList.addAll(0, pinedList)
-            return tempList
-        }
 
         inner class ViewPagerViewHolder(
             itemView: View
@@ -157,7 +147,7 @@ constructor(
                         }
                     }
                     adapter = ViewPagerRecyclerViewAdapter(
-                        sorteCateogories(categoryList),
+                        sortCategoriesWithPinned(categoryList),
 //                        categoryList?.sortedByDescending { category ->
 //                            if (category.ordering < 0) {
 //                                //manfi

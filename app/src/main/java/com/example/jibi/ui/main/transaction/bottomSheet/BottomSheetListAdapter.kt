@@ -10,6 +10,7 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.example.jibi.R
 import com.example.jibi.models.Category
+import com.example.jibi.util.sortCategoriesWithPinned
 import kotlinx.android.synthetic.main.layout_category_list_item.view.*
 import kotlinx.android.synthetic.main.layout_category_list_item.view.category_image
 import kotlinx.android.synthetic.main.layout_transaction_list_item.view.*
@@ -112,7 +113,8 @@ class BottomSheetListAdapter(
     fun submitList(
         blogList: List<Category>?,
     ) {
-        differ.submitList(blogList)
+        val sortedList = sortCategoriesWithPinned(blogList)
+        differ.submitList(sortedList)
     }
 
     class CategoryViewHolder
@@ -128,9 +130,10 @@ class BottomSheetListAdapter(
                 interaction?.onItemSelected(adapterPosition, item)
             }
 
-            requestManager?.load(item.img_res)
-                ?.transition(withCrossFade())
-                ?.into(itemView.category_image)
+//            requestManager?.load(item.img_res)
+//                ?.transition(withCrossFade())
+//                ?.into(itemView.category_image)
+
             itemView.category_name.text = item.name
 //            itemView.blog_update_date.text = DateUtils.convertLongToStringDate(item.date_updated)
             val categoryImageUrl = this.resources.getIdentifier(
@@ -146,6 +149,11 @@ class BottomSheetListAdapter(
                 ?.transition(withCrossFade())
                 ?.error(R.drawable.ic_error)
                 ?.into(itemView.category_image)
+
+            if (item.ordering < 0)
+                itemView.pinned_marker_image.visibility = View.VISIBLE
+            else
+                itemView.pinned_marker_image.visibility = View.INVISIBLE
         }
 
         private fun convertDpToPx(dp: Int): Int {

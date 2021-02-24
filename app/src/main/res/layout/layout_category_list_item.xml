@@ -12,31 +12,47 @@
     android:orientation="vertical"
     android:padding="4dp">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/category_image_card"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        card_view:cardBackgroundColor="#D297EA"
-        android:layout_margin="4dp"
-        card_view:cardCornerRadius="20dp">
+    <FrameLayout
+        android:layout_width="48dp"
+        android:layout_height="48dp">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/category_image_card"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="4dp"
+            card_view:cardBackgroundColor="#D297EA"
+            card_view:cardCornerRadius="20dp">
 
 
-        <ImageView
-            android:id="@+id/category_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:background="#e0e0e0"
-            android:padding="8dp"
-            android:scaleType="center"
-            app:tint="@color/black" />
-    </androidx.cardview.widget.CardView>
+            <ImageView
+                android:id="@+id/category_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="#e0e0e0"
+                android:padding="8dp"
+                android:scaleType="center"
+                app:tint="@color/black" />
+
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/pinned_marker_image"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_gravity="bottom|end"
+            android:visibility="invisible"
+            card_view:cardBackgroundColor="@color/purple_700"
+            card_view:cardCornerRadius="8dp" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/category_name"
         android:layout_width="match_parent"
         android:layout_height="24dp"
-        android:layout_margin="4dp"
         android:layout_gravity="center"
+        android:layout_margin="4dp"
         android:gravity="center" />
 </LinearLayout>
