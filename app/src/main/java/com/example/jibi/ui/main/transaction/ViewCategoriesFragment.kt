@@ -55,22 +55,11 @@ constructor(
             }
         }.attach()
 //        val int:Int=viewPager_viewCategories.currentItem
-        adfasdf.setOnClickListener {
-            Log.d("TAG123456", "onViewCreated: clicked ${viewPager_viewCategories.currentItem}")
-            val categoryType = when (viewPager_viewCategories.currentItem) {
-                0 -> EXPENSES
-                1 -> INCOME
-                else -> {
-                    showUnableToRecognizeCategoryTypeError()
-                    return@setOnClickListener
-                }
-            }
-
-            val action =
-                ViewCategoriesFragmentDirections.actionViewCategoriesFragmentToAddCategoryFragment(
-                    categoryType = categoryType
-                )
-            findNavController().navigate(action)
+        add_new_appbar.setOnClickListener {
+            navigateToAddCategoryFragment()
+        }
+        txt_addNewCategory.setOnClickListener {
+            navigateToAddCategoryFragment()
         }
 
         subscribeObservers()
@@ -84,6 +73,23 @@ constructor(
                 viewPagerAdapter.submitList(it)
             }
         }
+    }
+
+    private fun navigateToAddCategoryFragment() {
+        val categoryType = when (viewPager_viewCategories.currentItem) {
+            0 -> EXPENSES
+            1 -> INCOME
+            else -> {
+                showUnableToRecognizeCategoryTypeError()
+                return
+            }
+        }
+
+        val action =
+            ViewCategoriesFragmentDirections.actionViewCategoriesFragmentToAddCategoryFragment(
+                categoryType = categoryType
+            )
+        findNavController().navigate(action)
     }
 
     companion object {

@@ -42,8 +42,7 @@
         app:liftOnScroll="false">
 
         <TextView
-            android:id="@+id/adfasdf"
-            android:background="#123453"
+            android:id="@+id/txt_addNewCategory"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
