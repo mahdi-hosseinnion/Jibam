@@ -46,4 +46,5 @@
     <string name="add_expenses_category">Add expenses category</string>
     <string name="add_income_category">Add income category</string>
     <string name="unable_to_recognize_category_type">Unable to recognize category type</string>
+    <string name="jibi">Jibi</string>
 </resources>

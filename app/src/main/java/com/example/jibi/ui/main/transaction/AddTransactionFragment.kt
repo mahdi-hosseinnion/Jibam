@@ -1,7 +1,6 @@
 package com.example.jibi.ui.main.transaction
 
 import android.app.DatePickerDialog
-import android.app.DatePickerDialog.OnDateSetListener
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.res.Resources
@@ -36,6 +35,7 @@ import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.android.synthetic.main.keyboard_add_transaction.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.*
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -76,6 +76,7 @@ constructor(
 
     val combineCalender = GregorianCalendar(currentLocale)
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -91,7 +92,6 @@ constructor(
 
 
     }
-
 
 
     private fun showBottomSheet() {
@@ -187,7 +187,7 @@ constructor(
 
     }
 
-    private fun initCategory(){
+    private fun initCategory() {
         category = findCategory(cat_id = args.categoryId)
         if (category == null) {
             showBottomSheet()
