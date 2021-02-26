@@ -47,11 +47,7 @@
         <argument
             android:name="category_id"
             android:defaultValue="-1"
-            app:argType="integer"
-            app:enterAnim="@anim/slide_in"
-            app:exitAnim="@anim/fade_out"
-            app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/slide_out" />
+            app:argType="integer" />
         <action
             android:id="@+id/action_createTransactionFragment_to_transactionFragment"
             app:destination="@id/transactionFragment"

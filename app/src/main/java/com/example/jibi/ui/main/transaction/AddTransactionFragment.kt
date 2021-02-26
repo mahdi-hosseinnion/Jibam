@@ -61,7 +61,9 @@ constructor(
     private val textCalculator = TextCalculator()
 
     private val args: AddTransactionFragmentArgs by navArgs()
+
     private var category: Category? = null
+
     private val listOfNumbers = charArrayOf(
         '1',
         '2',
@@ -74,7 +76,7 @@ constructor(
         '9'
     )
 
-    val combineCalender = GregorianCalendar(currentLocale)
+    private val combineCalender = GregorianCalendar(currentLocale)
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -82,8 +84,15 @@ constructor(
 
         setHasOptionsMenu(true)
 //        category = findCategory(cat_id = args.categoryId)
-        initUi(view)
-//        edt_money.addTextChangedListener(onTextChangedListener)
+        val detailTransFields = viewModel.viewState.value?.detailTransFields
+        if (args.categoryId < 0 && //default value is -1
+            detailTransFields != null
+        ) {
+            initUiForViewTransaction(detailTransFields)
+        } else {
+            initUiForNewTransaction(view)
+        }
+
         edt_money.addTextChangedListener(onTextChangedListener)
 
         category_fab.setOnClickListener {
@@ -142,12 +151,13 @@ constructor(
         imm.showSoftInput(edt_money, InputMethodManager.SHOW_IMPLICIT)
     }
 
-    private fun initUi(view: View) {
+    private fun initUiForNewTransaction(view: View) {
 
-        initCategory()
+        initCategory(args.categoryId)
         //add date to date
         setDateToEditText()
         //Implementing an exposed dropdown menu for wallet editText
+        //TODO MAKE wallet work with transacion
         addOptionsToWallet()
         //force keyboard to open up when addFragment launches
 //        forceKeyBoardToOpenForMoneyEditText()
@@ -187,8 +197,56 @@ constructor(
 
     }
 
-    private fun initCategory() {
-        category = findCategory(cat_id = args.categoryId)
+    private fun initUiForViewTransaction(transaction: Record) {
+
+        initCategory(transaction.cat_id)
+        //change date
+        combineCalender.timeInMillis = ((transaction.date.toLong()) * 1000)
+        //add date to date
+        setDateToEditText()
+        //Implementing an exposed dropdown menu for wallet editText
+        addOptionsToWallet()
+        //set money & memo
+        edt_money.setText(transaction.money.toString())
+        textCalculator.calculateResult(transaction.money.toString())//we should calculate to prevent from error that will happens
+        edt_memo.setText(transaction.memo)
+
+        // prevent system keyboard from appearing when EditText is tapped
+        edt_money.setRawInputType(InputType.TYPE_CLASS_TEXT)
+        edt_money.setTextIsSelectable(true)
+
+        // pass the InputConnection from the EditText to the keyboard
+        val ic: InputConnection = edt_money.onCreateInputConnection(EditorInfo())
+        keyboard.inputConnection = ic
+        //controll visibity
+
+        // Make the custom keyboard appear
+        edt_money.setOnFocusChangeListener(OnFocusChangeListener { v, hasFocus ->
+            if (hasFocus)
+                showCustomKeyboard(v)
+            else
+                hideCustomKeyboard()
+        })
+        edt_money.requestFocus()
+        edt_money.setOnTouchListener { view, motionEvent ->
+            val inType: Int = edt_money.getInputType() // Backup the input type
+            edt_money.inputType = InputType.TYPE_NULL // Disable standard keyboard
+            edt_money.onTouchEvent(motionEvent)               // Call native handler
+            edt_money.inputType = inType // Restore input type
+
+            return@setOnTouchListener true // Consume touch event
+        }
+        edt_money.setOnClickListener {
+            showCustomKeyboard(it)
+        }
+        uiCommunicationListener.hideSoftKeyboard()
+
+        hideCustomKeyboard()
+
+    }
+
+    private fun initCategory(categoryId: Int) {
+        category = findCategory(cat_id = categoryId)
         if (category == null) {
             showBottomSheet()
         } else {

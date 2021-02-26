@@ -137,8 +137,9 @@ constructor(
         subscribeObservers()
 
         fab.setOnClickListener { view ->
-            Log.d(TAG
-                , "1111 ON CLICK")
+            Log.d(
+                TAG, "1111 ON CLICK"
+            )
             showBottomSheet()
 //            findNavController().navigate(R.id.action_transactionFragment_to_createTransactionFragment)
         }
@@ -554,7 +555,7 @@ constructor(
 
     override fun onItemSelected(position: Int, item: Record) {
         viewModel.setDetailTransFields(item)
-        findNavController().navigate(R.id.action_transactionFragment_to_detailTransFragment)
+        findNavController().navigate(R.id.action_transactionFragment_to_createTransactionFragment)
     }
 
     override fun restoreListPosition() {
