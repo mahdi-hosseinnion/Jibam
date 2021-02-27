@@ -17,7 +17,9 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputConnection
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.RequestManager
@@ -36,6 +38,7 @@ import kotlinx.android.synthetic.main.keyboard_add_transaction.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
@@ -79,11 +82,21 @@ constructor(
 
     private val combineCalender = GregorianCalendar(currentLocale)
 
+    //    private var _transaction: Record = Record(
+//        id = 0,
+//        money = 0.0,
+//        memo = null,
+//        cat_id = args.categoryId,
+//        date = getTimeInSecond()
+//    )
+    private var submitButtonState: SubmitButtonState? = null
+
+    private var detailTransactionId: Int? = null
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setHasOptionsMenu(true)
 //        category = findCategory(cat_id = args.categoryId)
         val detailTransFields = viewModel.viewState.value?.detailTransFields
         if (args.categoryId < 0 && //default value is -1
@@ -95,6 +108,10 @@ constructor(
         }
 
         edt_money.addTextChangedListener(onTextChangedListener)
+
+        edt_memo.addTextChangedListener {
+            submitButtonState?.onMemoChange(it.toString())
+        }
 
         category_fab.setOnClickListener {
             showBottomSheet()
@@ -123,6 +140,7 @@ constructor(
                     return
                 //on category changed
                 category = selectedCategory
+                submitButtonState?.onCategoryChange(selectedCategory.id)
                 setTransProperties(category = selectedCategory)
             }
 
@@ -153,6 +171,8 @@ constructor(
     }
 
     private fun initUiForNewTransaction(view: View) {
+        //enable option menu
+        setHasOptionsMenu(true)
 
         initCategory(args.categoryId)
         //add date to date
@@ -199,6 +219,20 @@ constructor(
     }
 
     private fun initUiForViewTransaction(transaction: Record) {
+
+        //change id
+        detailTransactionId = transaction.id
+
+        submitButtonState = SubmitButtonState(transaction)
+
+        lifecycleScope.launch {
+            submitButtonState?.isSubmitButtonEnable?.collect {
+                //sumbmit button state
+                setHasOptionsMenu(it)
+
+            }
+        }
+
 
         initCategory(transaction.cat_id)
         //change date
@@ -339,6 +373,7 @@ constructor(
                     combineCalender.set(year, monthOfYear, dayOfMonth)
                     //update time
                     setDateToEditText()
+                    submitButtonState?.onDateChange(getTimeInSecond())
                 },
                 combineCalender.get(Calendar.YEAR),
                 combineCalender.get(Calendar.MONTH),
@@ -359,6 +394,7 @@ constructor(
                     combineCalender.set(Calendar.HOUR_OF_DAY, hourOfDay)
                     combineCalender.set(Calendar.MINUTE, minute)
                     setDateToEditText()
+                    submitButtonState?.onDateChange(getTimeInSecond())
                 },
                 combineCalender.get(Calendar.HOUR_OF_DAY),
                 combineCalender.get(Calendar.MINUTE),
@@ -469,13 +505,14 @@ constructor(
             if (memo.isNullOrBlank()) {
                 memo = null
             }
-            var money: Double = (finalNUmber.text.toString().replace(",".toRegex(), "").toDouble())
+            val calculatedMoney=textCalculator.calculateResult(edt_money.text.toString())
+            var money: Double = (calculatedMoney.replace(",".toRegex(), "").toDouble())
 
             if (category?.type == 1) {
                 money *= -1
             }
             val transaction = Record(
-                id = 0,
+                id = detailTransactionId ?: 0,//we need detail id for replacing(updating)
                 money = money,
                 memo = memo,
                 cat_id = category!!.id,
@@ -494,12 +531,13 @@ constructor(
 
 
     private fun handleInsertingErrors(): Boolean {
-        if (finalNUmber.text.toString().replace(",".toRegex(), "").isBlank()) {
+        val calculatedMoney=textCalculator.calculateResult(edt_money.text.toString())
+        if (calculatedMoney.toString().replace(",".toRegex(), "").isBlank()) {
             Log.e(TAG, "MONEY IS NULL")
             edt_money.error = "Please insert some money"
             return false
         }
-        if (finalNUmber.text.toString().replace(",".toRegex(), "").toDouble() < 0) {
+        if (calculatedMoney.toString().replace(",".toRegex(), "").toDouble() < 0) {
             Log.e(TAG, "MONEY IS INVALID MOENY")
             edt_money.error = "money should be grater then 0"
             return false
@@ -590,8 +628,10 @@ constructor(
             ) {
                 val calculatedResult = textCalculator.calculateResult(p0.toString())
                 finalNUmber.text = convertDoubleToString(calculatedResult)
+                submitButtonState?.onMoneyChange(calculatedResult.toDoubleOrNull())
             } else {
                 finalNUmber.text = ""
+                submitButtonState?.onMoneyChange(0.0)
             }
 
             edt_money.addTextChangedListener(this)
@@ -622,15 +662,53 @@ constructor(
         }
     }
 
-    fun convertDoubleToString(transactionMoney: String): String =
-        if (transactionMoney.substring(transactionMoney.lastIndex.minus(1)) == ".0") //convert 13.0 to 13
-            transactionMoney.substring(0, transactionMoney.lastIndex.minus(1))
+    fun convertDoubleToString(text: String): String {//convert 13.0 to 13
+        if (text.length < 2) {
+            return text
+        }
+        return if (text.substring(text.lastIndex.minus(1)) == ".0") //convert 13.0 to 13
+            text.substring(0, text.lastIndex.minus(1))
         else
-            transactionMoney
-
+            text
+    }
 
     companion object {
         const val TIME_PATTERN = "KK:mm aa"
         const val DATE_PATTERN = "MM/dd/yy (E)"
+    }
+
+    inner class SubmitButtonState(private val defaultTransaction: Record) {
+        private val _doesMoneyChange = MutableStateFlow(false)
+        private val _doesMemoChange = MutableStateFlow(false)
+        private val _doesCategoryChange = MutableStateFlow(false)
+        private val _doesDateChange = MutableStateFlow(false)
+
+        val isSubmitButtonEnable: Flow<Boolean> = combine(
+            _doesMoneyChange,
+            _doesMemoChange,
+            _doesCategoryChange,
+            _doesDateChange
+        )
+        { money, memo, category, date ->
+            return@combine money || memo || category || date
+        }
+
+        fun onMoneyChange(newMoney: Double?) {
+            _doesMoneyChange.value = defaultTransaction.money != newMoney
+        }
+
+        fun onMemoChange(newMemo: String?) {
+            _doesMoneyChange.value = defaultTransaction.memo != newMemo
+        }
+
+        fun onCategoryChange(categoryId: Int) {
+            _doesMoneyChange.value = defaultTransaction.cat_id != categoryId
+
+        }
+
+        fun onDateChange(newDate: Int) {
+            _doesMoneyChange.value = defaultTransaction.date != newDate
+
+        }
     }
 }
