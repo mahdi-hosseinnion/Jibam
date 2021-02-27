@@ -166,6 +166,7 @@ class CalculatorKeyboard(
     }
 
     //TODO BUG CANNOT RESULV WHEN CORSUR MOVE
+    // TODO this method need real refactoring
     override fun onClick(v: View?) {
         // do nothing if the InputConnection has not been set yet
         if (inputConnection == null || v == null) {
@@ -222,7 +223,7 @@ class CalculatorKeyboard(
                         &&
                         value.lastIndexOfAny(listOfSigns) >= 0 //value is math sign too
                     ) {
-                        if (text.substring(text.lastIndex)!=value){ //if its different sign
+                        if (text.substring(text.lastIndex) != value) { //if its different sign
                             // delete the last one aka->0
                             inputConnection!!.deleteSurroundingText(1, 0)
                             text = text.removeLastIndex()
@@ -255,6 +256,17 @@ class CalculatorKeyboard(
                     }
                 }
             }
+        }
+    }
+
+    fun preloadKeyboard(value: String) {
+        try {
+            inputConnection!!.commitText(value, 1)
+            text.append(value)
+        } catch (e: NullPointerException) {
+            Log.e(TAG, "preloadKeyboard : cannot set text to inputConnection", e)
+        } catch (e: Exception) {
+            Log.e(TAG, "preloadKeyboard : cannot set text to inputConnection", e)
         }
     }
 

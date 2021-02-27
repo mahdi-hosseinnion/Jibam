@@ -36,6 +36,7 @@ import kotlinx.android.synthetic.main.keyboard_add_transaction.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
+import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -207,8 +208,17 @@ constructor(
         //Implementing an exposed dropdown menu for wallet editText
         addOptionsToWallet()
         //set money & memo
-        edt_money.setText(transaction.money.toString())
-        textCalculator.calculateResult(transaction.money.toString())//we should calculate to prevent from error that will happens
+        val transactionMoney = if (transaction.money > 0)
+            transaction.money.toString()//convert -13 to 12
+        else transaction.money.times(-1).toString()
+
+        val money = convertDoubleToString(transactionMoney)
+
+
+//        edt_money.setText(money)
+//        keyboard.inputConnection?.commitText(money,1)
+//        keyboard.text =
+//            StringBuilder(money)//we should calculate to prevent from error that will happens
         edt_memo.setText(transaction.memo)
 
         // prevent system keyboard from appearing when EditText is tapped
@@ -219,6 +229,8 @@ constructor(
         val ic: InputConnection = edt_money.onCreateInputConnection(EditorInfo())
         keyboard.inputConnection = ic
         //controll visibity
+        //this method should always called after setting input connection
+        keyboard.preloadKeyboard(money)
 
         // Make the custom keyboard appear
         edt_money.setOnFocusChangeListener(OnFocusChangeListener { v, hasFocus ->
@@ -577,7 +589,9 @@ constructor(
                 ) >= 0
             ) {
                 val calculatedResult = textCalculator.calculateResult(p0.toString())
-                finalNUmber.text = calculatedResult
+                finalNUmber.text = convertDoubleToString(calculatedResult)
+            } else {
+                finalNUmber.text = ""
             }
 
             edt_money.addTextChangedListener(this)
@@ -607,6 +621,13 @@ constructor(
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
         }
     }
+
+    fun convertDoubleToString(transactionMoney: String): String =
+        if (transactionMoney.substring(transactionMoney.lastIndex.minus(1)) == ".0") //convert 13.0 to 13
+            transactionMoney.substring(0, transactionMoney.lastIndex.minus(1))
+        else
+            transactionMoney
+
 
     companion object {
         const val TIME_PATTERN = "KK:mm aa"
