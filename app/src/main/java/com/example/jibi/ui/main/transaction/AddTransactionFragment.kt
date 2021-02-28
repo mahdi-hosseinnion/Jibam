@@ -3,20 +3,19 @@ package com.example.jibi.ui.main.transaction
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
 import android.text.*
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.util.Log
-import android.util.TypedValue
 import android.view.*
 import android.view.View.OnFocusChangeListener
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputConnection
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -30,16 +29,13 @@ import com.example.jibi.models.Record
 import com.example.jibi.ui.main.transaction.bottomSheet.CreateNewTransBottomSheet
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.TextCalculator
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
 import kotlinx.android.synthetic.main.fragment_add_transaction.view.*
-import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.android.synthetic.main.keyboard_add_transaction.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -60,51 +56,35 @@ constructor(
     viewModelFactory,
     R.id.fragment_add_toolbar_main
 ) {
-    private val TAG = "AddTransactionFragment"
-
-    private val textCalculator = TextCalculator()
 
     private val args: AddTransactionFragmentArgs by navArgs()
 
-    private var category: Category? = null
+    private var transactionCategory: Category? = null
 
-    private val listOfNumbers = charArrayOf(
-        '1',
-        '2',
-        '3',
-        '4',
-        '5',
-        '6',
-        '7',
-        '8',
-        '9'
-    )
+    private val textCalculator = TextCalculator()
 
     private val combineCalender = GregorianCalendar(currentLocale)
 
-    //    private var _transaction: Record = Record(
-//        id = 0,
-//        money = 0.0,
-//        memo = null,
-//        cat_id = args.categoryId,
-//        date = getTimeInSecond()
-//    )
+    //if this var doesn't be null it mean we are in viewing transaction State
     private var submitButtonState: SubmitButtonState? = null
 
-    private var detailTransactionId: Int? = null
+    //we use this int to save transaction id for updating
+    private var viewTransactionId: Int? = null
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        category = findCategory(cat_id = args.categoryId)
+        initUi()
+        //check if current state is ViewingTransaction or CreateTransaction
         val detailTransFields = viewModel.viewState.value?.detailTransFields
+
         if (args.categoryId < 0 && //default value is -1
-            detailTransFields != null
+            detailTransFields != null//there is transaction in viewState
         ) {
             initUiForViewTransaction(detailTransFields)
         } else {
-            initUiForNewTransaction(view)
+            initUiForNewTransaction()
         }
 
         edt_money.addTextChangedListener(onTextChangedListener)
@@ -127,9 +107,9 @@ constructor(
                 viewModel.viewState.value!!.categoryList!!,
                 requestManager,
                 onDismissCalled,
-                category != null
+                transactionCategory != null
             )
-        modalBottomSheet.isCancelable = category != null
+        modalBottomSheet.isCancelable = transactionCategory != null
         modalBottomSheet.show(parentFragmentManager, "CreateNewTransBottomSheet")
     }
 
@@ -139,22 +119,99 @@ constructor(
                 if (selectedCategory == null)
                     return
                 //on category changed
-                category = selectedCategory
+                transactionCategory = selectedCategory
                 submitButtonState?.onCategoryChange(selectedCategory.id)
                 setTransProperties(category = selectedCategory)
             }
 
         }
 
-    override fun onResume() {
-//        uiCommunicationListener.showToolbar()
-        super.onResume()
+
+    private fun initUi() {
+        //add date to dat
+        setDateToEditText()
+        //Implementing an exposed dropdown menu for wallet editText
+        //TODO MAKE wallet work with transacion
+        addOptionsToWallet()
+
+        // prevent system keyboard from appearing when EditText is tapped
+        edt_money.setRawInputType(InputType.TYPE_CLASS_TEXT)
+        edt_money.setTextIsSelectable(true)
+
+        // pass the InputConnection from the EditText to the keyboard
+        val ic: InputConnection = edt_money.onCreateInputConnection(EditorInfo())
+        keyboard.inputConnection = ic
+        //controll visibity
+
+        // Make the custom keyboard appear
+        edt_money.onFocusChangeListener = OnFocusChangeListener { v, hasFocus ->
+            if (hasFocus)
+                showCustomKeyboard(v)
+            else
+                hideCustomKeyboard()
+        }
+        edt_money.requestFocus()
+        edt_money.setOnTouchListener { view, motionEvent ->
+            val inType: Int = edt_money.getInputType() // Backup the input type
+            edt_money.inputType = InputType.TYPE_NULL // Disable standard keyboard
+            edt_money.onTouchEvent(motionEvent)               // Call native handler
+            edt_money.inputType = inType // Restore input type
+
+            return@setOnTouchListener true // Consume touch event
+        }
+        edt_money.setOnClickListener {
+            showCustomKeyboard(it)
+        }
+        uiCommunicationListener.hideSoftKeyboard()
+    }
+
+    private fun initUiForNewTransaction() {
+        //submit button should always be displayed
+        setHasOptionsMenu(true)
+
+        setTransProperties(categoryId = args.categoryId)
+
+        showCustomKeyboard(edt_money)
+    }
+
+    private fun initUiForViewTransaction(transaction: Record) {
+
+        //change id
+        viewTransactionId = transaction.id
+
+        //submit button state stuff
+        submitButtonState = SubmitButtonState(transaction)
+        lifecycleScope.launch {
+            submitButtonState?.isSubmitButtonEnable?.collect {
+                //submit button state
+                setHasOptionsMenu(it)
+
+            }
+        }
+
+        setTransProperties(categoryId = transaction.cat_id, memo = transaction.memo)
+        //change date to transaction date
+        combineCalender.timeInMillis = ((transaction.date.toLong()) * 1000)
+
+        //set money
+        //convert -13 to 12
+        val transactionMoney = if (transaction.money > 0)
+            transaction.money.toString()
+        else transaction.money.times(-1).toString()
+
+        val money = convertDoubleToString(transactionMoney)
+
+        keyboard.preloadKeyboard(money)
+
+        hideCustomKeyboard()
+
     }
 
     private fun addOptionsToWallet() {
+        //TODO GET LIST OF WALLET FROM DATABASE
         val items = listOf("Cash", "Bank Melli", "Bank Keshavarzi", "MasterCard")
         val adapter = ArrayAdapter(requireContext(), R.layout.list_item, items)
-        (txtField_wallet.edt_wallet as? AutoCompleteTextView)?.setAdapter(adapter)
+        txtField_wallet.edt_wallet?.setAdapter(adapter)
         //set default value for it
         edt_wallet.setText(items[0], false)
         //add listener to hide keyboard when clicked
@@ -163,170 +220,18 @@ constructor(
         }
     }
 
-    private fun forceKeyBoardToOpenForMoneyEditText() {
-        edt_money.requestFocus()
-        val imm: InputMethodManager =
-            activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.showSoftInput(edt_money, InputMethodManager.SHOW_IMPLICIT)
-    }
 
-    private fun initUiForNewTransaction(view: View) {
-        //enable option menu
-        setHasOptionsMenu(true)
-
-        initCategory(args.categoryId)
-        //add date to date
-        setDateToEditText()
-        //Implementing an exposed dropdown menu for wallet editText
-        //TODO MAKE wallet work with transacion
-        addOptionsToWallet()
-        //force keyboard to open up when addFragment launches
-//        forceKeyBoardToOpenForMoneyEditText()
-        // init keyboard
-
-        // prevent system keyboard from appearing when EditText is tapped
-        edt_money.setRawInputType(InputType.TYPE_CLASS_TEXT)
-        edt_money.setTextIsSelectable(true)
-
-        // pass the InputConnection from the EditText to the keyboard
-        val ic: InputConnection = edt_money.onCreateInputConnection(EditorInfo())
-        keyboard.inputConnection = ic
-        //controll visibity
-
-        // Make the custom keyboard appear
-        edt_money.setOnFocusChangeListener(OnFocusChangeListener { v, hasFocus ->
-            if (hasFocus)
-                showCustomKeyboard(v)
-            else
-                hideCustomKeyboard()
-        })
-        edt_money.requestFocus()
-        edt_money.setOnTouchListener { view, motionEvent ->
-            val inType: Int = edt_money.getInputType() // Backup the input type
-            edt_money.inputType = InputType.TYPE_NULL // Disable standard keyboard
-            edt_money.onTouchEvent(motionEvent)               // Call native handler
-            edt_money.inputType = inType // Restore input type
-
-            return@setOnTouchListener true // Consume touch event
-        }
-        edt_money.setOnClickListener {
-            showCustomKeyboard(it)
-        }
-        uiCommunicationListener.hideSoftKeyboard()
-
-        showCustomKeyboard(edt_money)
-
-    }
-
-    private fun initUiForViewTransaction(transaction: Record) {
-
-        //change id
-        detailTransactionId = transaction.id
-
-        submitButtonState = SubmitButtonState(transaction)
-
-        lifecycleScope.launch {
-            submitButtonState?.isSubmitButtonEnable?.collect {
-                //sumbmit button state
-                setHasOptionsMenu(it)
-
-            }
-        }
-
-
-        initCategory(transaction.cat_id)
-        //change date
-        combineCalender.timeInMillis = ((transaction.date.toLong()) * 1000)
-        //add date to date
-        setDateToEditText()
-        //Implementing an exposed dropdown menu for wallet editText
-        addOptionsToWallet()
-        //set money & memo
-        val transactionMoney = if (transaction.money > 0)
-            transaction.money.toString()//convert -13 to 12
-        else transaction.money.times(-1).toString()
-
-        val money = convertDoubleToString(transactionMoney)
-
-
-//        edt_money.setText(money)
-//        keyboard.inputConnection?.commitText(money,1)
-//        keyboard.text =
-//            StringBuilder(money)//we should calculate to prevent from error that will happens
-        edt_memo.setText(transaction.memo)
-
-        // prevent system keyboard from appearing when EditText is tapped
-        edt_money.setRawInputType(InputType.TYPE_CLASS_TEXT)
-        edt_money.setTextIsSelectable(true)
-
-        // pass the InputConnection from the EditText to the keyboard
-        val ic: InputConnection = edt_money.onCreateInputConnection(EditorInfo())
-        keyboard.inputConnection = ic
-        //controll visibity
-        //this method should always called after setting input connection
-        keyboard.preloadKeyboard(money)
-
-        // Make the custom keyboard appear
-        edt_money.setOnFocusChangeListener(OnFocusChangeListener { v, hasFocus ->
-            if (hasFocus)
-                showCustomKeyboard(v)
-            else
-                hideCustomKeyboard()
-        })
-        edt_money.requestFocus()
-        edt_money.setOnTouchListener { view, motionEvent ->
-            val inType: Int = edt_money.getInputType() // Backup the input type
-            edt_money.inputType = InputType.TYPE_NULL // Disable standard keyboard
-            edt_money.onTouchEvent(motionEvent)               // Call native handler
-            edt_money.inputType = inType // Restore input type
-
-            return@setOnTouchListener true // Consume touch event
-        }
-        edt_money.setOnClickListener {
-            showCustomKeyboard(it)
-        }
-        uiCommunicationListener.hideSoftKeyboard()
-
-        hideCustomKeyboard()
-
-    }
-
-    private fun initCategory(categoryId: Int) {
-        category = findCategory(cat_id = categoryId)
-        if (category == null) {
-            showBottomSheet()
-        } else {
-            setTransProperties(category = category)
-        }
-    }
-
-    private fun setDateToEditText(time: Int? = null) {
+    private fun setDateToEditText() {
         disableContentInteraction(edt_date)
-        val ss =
-            SpannableString("${dateWithPattern(DATE_PATTERN)}    ${dateWithPattern(TIME_PATTERN)}")
-        val dateOnClick = object : ClickableSpan() {
-            override fun onClick(p0: View) {
-                showDatePickerDialog()
 
-            }
+        val date = dateWithPattern(DATE_PATTERN)
+        val time = dateWithPattern(TIME_PATTERN)
 
-            override fun updateDrawState(ds: TextPaint) {
-                super.updateDrawState(ds)
-                ds.isUnderlineText = false
-                ds.color = edt_date.currentTextColor
-            }
-        }
-        val timeOnClick = object : ClickableSpan() {
-            override fun onClick(p0: View) {
-                showTimePickerDialog()
-            }
+        val ss = SpannableString("$date    $time")
 
-            override fun updateDrawState(ds: TextPaint) {
-                super.updateDrawState(ds)
-                ds.isUnderlineText = false
-                ds.color = edt_date.currentTextColor
-            }
-        }
+
+        //set onClick to date and show DatePicker
+        val dateOnClick = onClickedOnSpan { showDatePickerDialog() }
         val dateEndIndex = ss.indexOf(DATE_PATTERN[DATE_PATTERN.lastIndex]).plus(1)
         ss.setSpan(
             dateOnClick,
@@ -334,6 +239,8 @@ constructor(
             dateEndIndex,
             SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
         )
+        //set onClick to time and show timePicker
+        val timeOnClick = onClickedOnSpan { showTimePickerDialog() }
         var timeStartIndex =
             dateEndIndex.plus(ss.count { it == ' ' }).minus(DATE_PATTERN.count { it == ' ' }).minus(
                 TIME_PATTERN.count { it == ' ' })
@@ -351,9 +258,21 @@ constructor(
         edt_date.highlightColor = Color.TRANSPARENT
     }
 
+    private fun onClickedOnSpan(onClicked: (v: View) -> Unit): ClickableSpan =
+        object : ClickableSpan() {
+            override fun onClick(p0: View) {
+                onClicked(p0)
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                //remove under line and background color
+                ds.isUnderlineText = false
+                ds.color = edt_date.currentTextColor
+            }
+        }
+
     private fun dateWithPattern(pattern: String): String {
-//        val df: Date = Date(System.currentTimeMillis())
-        Log.d(TAG, "dateWithPattern 6859: --->>> ${combineCalender.timeInMillis}")
         val df = Date(combineCalender.timeInMillis)
         return SimpleDateFormat(pattern, currentLocale).format(df)
     }
@@ -365,7 +284,7 @@ constructor(
         val datePickerDialog =
             DatePickerDialog(
                 this.requireContext(),
-                { datePicker, year, monthOfYear, dayOfMonth ->
+                { _, year, monthOfYear, dayOfMonth ->
                     Log.d(
                         TAG,
                         "showDatePickerDialog 6859: year: $year month: $monthOfYear day: $dayOfMonth"
@@ -389,15 +308,15 @@ constructor(
         val timePickerDialog =
             TimePickerDialog(
                 this.requireContext(),
-                TimePickerDialog.OnTimeSetListener { datePicker, hourOfDay, minute ->
-                    Log.d(TAG, "showDatePickerDialog6859: hour: $hourOfDay || minute: $minute ")
-                    combineCalender.set(Calendar.HOUR_OF_DAY, hourOfDay)
-                    combineCalender.set(Calendar.MINUTE, minute)
+                { _, hourOfDay, minute ->
+                    Log.d(TAG, "showTimePickerDialog: hour: $hourOfDay || minute: $minute ")
+                    combineCalender.set(GregorianCalendar.HOUR_OF_DAY, hourOfDay)
+                    combineCalender.set(GregorianCalendar.MINUTE, minute)
                     setDateToEditText()
                     submitButtonState?.onDateChange(getTimeInSecond())
                 },
-                combineCalender.get(Calendar.HOUR_OF_DAY),
-                combineCalender.get(Calendar.MINUTE),
+                combineCalender.get(GregorianCalendar.HOUR_OF_DAY),
+                combineCalender.get(GregorianCalendar.MINUTE),
                 false
             )
         timePickerDialog.show()
@@ -411,184 +330,156 @@ constructor(
         edt.clearFocus()
     }
 
-    fun showCustomKeyboard(view: View) {
+    private fun showCustomKeyboard(view: View) {
         keyboard.visibility = View.VISIBLE
         val imm: InputMethodManager =
             activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    fun hideCustomKeyboard() {
+    private fun hideCustomKeyboard() {
         keyboard.visibility = View.GONE
-
-
-    }
-
-    private fun convertDpToPx(dp: Int): Int {
-        val r: Resources = resources
-        return TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            dp.toFloat(),
-            r.displayMetrics
-        ).toInt()
-    }
-
-    private fun findCategory(cat_id: Int?): Category? {
-        if (cat_id != null) {
-            viewModel.viewState.value?.categoryList?.let { categoryList ->
-                for (category in categoryList) {
-                    if (category.id == cat_id) {
-                        return category
-                    }
-                }
-            }
-        }
-        return null
-    }
-
-    private fun setTransProperties(record: Record) {
-
     }
 
     private fun setTransProperties(
         money: Int? = null,
         category: Category? = null,
-        memo: String? = null,
-        specificDate: Int? = null,
-        wallet_id: Int? = null,
-        with: String? = null,
+        categoryId: Int? = null,
+        memo: String? = null
+//        specificDate: Int? = null,
+//        wallet_id: Int? = null,
+//        with: String? = null
     ) {
         money?.let { edt_money.setText(it) }
+
         memo?.let { edt_memo.setText(memo) }
-        category?.let {
-            category_fab.setText(it.name)
-            category_fab.extend()
-            Log.d(TAG, "setTransProperties: amedemah:${it.name}")
 
-            val resourceId: Int = requireActivity().resources.getIdentifier(
-                "ic_cat_${category.name}",
-                "drawable",
-                requireActivity().packageName
-            )
-
-            category_fab.icon = resources.getDrawable(resourceId)
-            /*         category_fab.backgroundTintList = ColorStateList.valueOf(
-                         resources.getColor(
-                             TransactionListAdapter.listOfColor[(category.id.minus(
-                                 1
-                             ))]
-                         )
-                     )*/
-//            val categoryImageUrl = this.resources.getIdentifier(
-//                "ic_cat_${category.name}",
-//                "drawable",
-//                requireActivity().packageName
-//            )
-//            requestManager
-//                .load(categoryImageUrl)
-//                .centerInside()
-//                .transition(DrawableTransitionOptions.withCrossFade())
-//                .error(R.drawable.ic_error)
-//                .into(category_fab.icon)
+        //set category by category or category id
+        if (category != null) {
+            setCategoryNameAndIcon(category)
+        } else {
+            categoryId?.let { id ->
+                getCategoryById(id)?.let {
+                    setCategoryNameAndIcon(it)
+                }
+            }
         }
-/*      TODO HANDLE THIS vars
-        specificDate?.let {}
-        wallet_id?.let {}
-        with?.let { }
-        */
+    }
+
+    private fun setCategoryNameAndIcon(category: Category) {
+        category_fab.text = category.name
+        category_fab.extend()
+
+        val resourceId: Int = requireActivity().resources.getIdentifier(
+            "ic_cat_${category.img_res}",
+            "drawable",
+            requireActivity().packageName
+        )
+
+        category_fab.icon = ResourcesCompat.getDrawable(resources, resourceId, null)
+    }
+
+    private fun getCategoryById(categoryId: Int): Category? {
+        transactionCategory = findCategoryByIdFromViewState(cat_id = categoryId)
+
+        return if (transactionCategory == null) {
+            showBottomSheet()
+            null
+        } else {
+            transactionCategory
+        }
+    }
+
+    private fun findCategoryByIdFromViewState(cat_id: Int): Category? {
+        //getting list of all category from
+        viewModel.viewState.value?.categoryList?.let { categoryList ->
+            for (category in categoryList) {
+                if (category.id == cat_id) {
+                    return category
+                }
+            }
+        }
+        //TODO WRITE getting FORM database
+        return null
     }
 
     private fun insertNewTrans() {
-        if (handleInsertingErrors()) {
+        if (checkForInsertingErrors()) {
             var memo: String? = edt_memo.text.toString()
             //check if memo is blank then just save null
             if (memo.isNullOrBlank()) {
                 memo = null
             }
-            val calculatedMoney=textCalculator.calculateResult(edt_money.text.toString())
+            val calculatedMoney = textCalculator.calculateResult(edt_money.text.toString())
             var money: Double = (calculatedMoney.replace(",".toRegex(), "").toDouble())
 
-            if (category?.type == 1) {
+            if (transactionCategory?.type == 1) {//if its expenses we save it with - marker
                 money *= -1
             }
-            val transaction = Record(
-                id = detailTransactionId ?: 0,//we need detail id for replacing(updating)
-                money = money,
-                memo = memo,
-                cat_id = category!!.id,
-                date = getTimeInSecond()
-            )
+            val categoryId = transactionCategory?.id
+            if (categoryId != null) {
+                val transaction = Record(
+                    id = viewTransactionId ?: 0,//we need detail id for replacing(updating)
+                    money = money,
+                    memo = memo,
+                    cat_id = categoryId,
+                    date = getTimeInSecond()
+                )
 
-            viewModel.launchNewJob(
-                TransactionStateEvent.OneShotOperationsTransactionStateEvent.InsertTransaction(
-                    transaction
-                ), true
-            )
-            uiCommunicationListener.hideSoftKeyboard()
-            findNavController().navigateUp()
+                viewModel.launchNewJob(
+                    TransactionStateEvent.OneShotOperationsTransactionStateEvent.InsertTransaction(
+                        transaction
+                    ), true
+                )
+                uiCommunicationListener.hideSoftKeyboard()
+                findNavController().navigateUp()
+            } else {
+                //no category selected
+                unknownCategoryError()
+            }
+
         }
     }
 
 
-    private fun handleInsertingErrors(): Boolean {
-        val calculatedMoney=textCalculator.calculateResult(edt_money.text.toString())
-        if (calculatedMoney.toString().replace(",".toRegex(), "").isBlank()) {
+    private fun checkForInsertingErrors(): Boolean {
+        val calculatedMoney = textCalculator.calculateResult(edt_money.text.toString())
+            .replace(",".toRegex(), "")
+        if (calculatedMoney.isBlank()) {
             Log.e(TAG, "MONEY IS NULL")
-            edt_money.error = "Please insert some money"
+            edt_money.error = errorMsgMapper(ErrorMessages.EMPTY_MONEY)
             return false
         }
-        if (calculatedMoney.toString().replace(",".toRegex(), "").toDouble() < 0) {
-            Log.e(TAG, "MONEY IS INVALID MOENY")
-            edt_money.error = "money should be grater then 0"
+        if (calculatedMoney.toDouble() < 0) {
+            Log.e(TAG, "MONEY IS INVALID cannot save negative money ")
+            edt_money.error = errorMsgMapper(ErrorMessages.NEGATIVE_MONEY)
             return false
         }
-        if (category == null) {
-            Log.e(TAG, "CATEGORY == NULL")
-//            edt_category.error = "Please select category"
-        }
-        if (category?.id == null) {
-            Log.e(TAG, "CATEGORY ID == NULL")
-//            edt_category.error = "Please select category"
+        if (transactionCategory == null) {
+            unknownCategoryError()
             return false
         }
-        if (category?.id!! < 1) {
-            Log.e(TAG, "CATEGORY ID == -1")
-//            edt_category.error = "Please select category"
-            return false
-        }
-        if (category?.type == null) {
-            Log.e(TAG, "CATEGORY type == NULL")
-//            edt_category.error = "Please select category"
-            return false
-        }
-        if (category?.type!! < 1) {
-            Log.e(TAG, "CATEGORY type == -1")
-//            edt_category.error = "Please select category"
+        if (transactionCategory?.id!! < 1) {
+            unknownCategoryError()
             return false
         }
 
         return true
     }
 
+    private fun unknownCategoryError() {
+        Log.e(TAG, "unknownCategoryError: UNKNOWN CATEGORY $transactionCategory")
+        Toast.makeText(
+            this.requireContext(),
+            errorMsgMapper(ErrorMessages.PLEASE_SELECT_CATEGORY),
+            Toast.LENGTH_SHORT
+        )
+            .show()
+        showBottomSheet()
+    }
+
     private fun getTimeInSecond(): Int = ((combineCalender.timeInMillis) / 1000).toInt()
 
-//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-//        inflater.inflate(R.menu.add_menu, menu)
-//    }
-//
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        when (item.itemId) {
-//            R.id.save -> {
-//                insertNewTrans()
-//                return true
-//            }
-//        }
-//        return super.onOptionsItemSelected(item)
-//    }
-
-    override fun onPause() {
-        super.onPause()
-    }
 
     private val onTextChangedListener = object : TextWatcher {
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -653,15 +544,6 @@ constructor(
         return super.onOptionsItemSelected(item)
     }
 
-    private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
-
-        override fun onStateChanged(bottomSheet: View, newState: Int) {
-        }
-
-        override fun onSlide(bottomSheet: View, slideOffset: Float) {
-        }
-    }
-
     fun convertDoubleToString(text: String): String {//convert 13.0 to 13
         if (text.length < 2) {
             return text
@@ -672,12 +554,9 @@ constructor(
             text
     }
 
-    companion object {
-        const val TIME_PATTERN = "KK:mm aa"
-        const val DATE_PATTERN = "MM/dd/yy (E)"
-    }
 
     inner class SubmitButtonState(private val defaultTransaction: Record) {
+
         private val _doesMoneyChange = MutableStateFlow(false)
         private val _doesMemoChange = MutableStateFlow(false)
         private val _doesCategoryChange = MutableStateFlow(false)
@@ -711,4 +590,58 @@ constructor(
 
         }
     }
+
+    companion object {
+        private const val TAG = "AddTransactionFragment"
+
+        private const val TIME_PATTERN = "KK:mm aa"
+        private const val DATE_PATTERN = "MM/dd/yy (E)"
+        private val listOfNumbers = charArrayOf(
+            '1',
+            '2',
+            '3',
+            '4',
+            '5',
+            '6',
+            '7',
+            '8',
+            '9'
+        )
+
+        //errors
+        private enum class ErrorMessages {
+            PLEASE_SELECT_CATEGORY,
+            NEGATIVE_MONEY,
+            EMPTY_MONEY
+        }
+
+
+    }
+
+    private fun errorMsgMapper(error: ErrorMessages): String = when (error) {
+        ErrorMessages.PLEASE_SELECT_CATEGORY -> resources.getString(R.string.pls_select_category)
+
+        ErrorMessages.NEGATIVE_MONEY -> resources.getString(R.string.money_shouldnt_be_negative)
+
+        ErrorMessages.EMPTY_MONEY -> resources.getString(R.string.pls_insert_some_money)
+    }
+
 }
+//TODO TRASH
+/*
+private fun forceKeyBoardToOpenForMoneyEditText(edt: EditText) {
+    edt.requestFocus()
+    val imm: InputMethodManager =
+        activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.showSoftInput(edt, InputMethodManager.SHOW_IMPLICIT)
+}
+
+    private fun convertDpToPx(dp: Int): Int {
+        val r: Resources = resources
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dp.toFloat(),
+            r.displayMetrics
+        ).toInt()
+    }
+ */
