@@ -39,6 +39,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
+import kotlin.random.Random
 
 
 @FlowPreview
@@ -127,8 +128,6 @@ constructor(
 
 
     private fun initUi() {
-        //add date to dat
-        setDateToEditText()
         //Implementing an exposed dropdown menu for wallet editText
         //TODO MAKE wallet work with transacion
         addOptionsToWallet()
@@ -165,6 +164,8 @@ constructor(
     }
 
     private fun initUiForNewTransaction() {
+        //add date to dat
+        setDateToEditText()
         //submit button should always be displayed
         setHasOptionsMenu(true)
 
@@ -190,8 +191,10 @@ constructor(
 
         setTransProperties(categoryId = transaction.cat_id, memo = transaction.memo)
         //change date to transaction date
-        combineCalender.timeInMillis = ((transaction.date.toLong()) * 1000)
-
+        combineCalender.timeInMillis =
+            ((transaction.date.toLong()) * 1000)//ALWAYS CALL BEFORE SET DATE
+        //add date to dat
+        setDateToEditText()
         //set money
         //convert -13 to 12
         val transactionMoney = if (transaction.money > 0)
