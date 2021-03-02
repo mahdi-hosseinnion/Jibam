@@ -100,7 +100,6 @@ constructor(
 
     }
 
-
     private fun showBottomSheet() {
         val modalBottomSheet =
             CreateNewTransBottomSheet(
