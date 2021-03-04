@@ -1,7 +1,6 @@
 package com.example.jibi.ui.main.transaction
 
 import android.content.Context
-import android.content.DialogInterface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.Editable
@@ -14,7 +13,6 @@ import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -47,7 +45,6 @@ import java.text.NumberFormat
 import java.util.*
 import javax.inject.Inject
 import kotlin.random.Random
-
 
 @FlowPreview
 @ExperimentalCoroutinesApi
@@ -87,10 +84,6 @@ constructor(
         fun isVisible(): Boolean = this == VISIBLE
         fun isInvisible(): Boolean = this == INVISIBLE
     }
-
-//    private fun SearchViewState.isVisible(): Boolean {
-//        return (this == SearchViewStateEnum.VISIBLE)
-//    }
 
     private var searchViewState: SearchViewState = SearchViewState.INVISIBLE
 
@@ -170,11 +163,10 @@ constructor(
     private fun enableSearchMode() {
         if (searchViewState.isInvisible()) {
             bottomSheetBehavior.state = STATE_EXPANDED
-
-
-            //force to slide
-//            onBottomSheetStateChanged(BottomSheetBehavior.STATE_EXPANDED)
-//            onBottomSheetSlide(1f)
+            //user shouldn't be able to drag down when searchView is enable
+            bottomSheetBehavior.isDraggable = false
+            //disconnect recyclerView to bottomSheet
+            transaction_recyclerView.isNestedScrollingEnabled = false
 
             //visible search stuff
             bottom_sheet_search_edt.visibility = View.VISIBLE
@@ -184,7 +176,6 @@ constructor(
             forceKeyBoardToOpenForMoneyEditText(bottom_sheet_search_edt)
             //invisible search stuff
             main_bottom_sheet_search_btn.visibility = View.GONE
-            main_bottom_sheet_filter_btn.visibility = View.GONE
             bottom_sheet_title.visibility = View.GONE
             //this should come after all
             searchViewState = SearchViewState.VISIBLE
@@ -204,13 +195,18 @@ constructor(
             bottom_sheet_search_edt.setText("")
             //visible search stuff
             main_bottom_sheet_search_btn.visibility = View.VISIBLE
-            main_bottom_sheet_filter_btn.visibility = View.VISIBLE
             bottom_sheet_title.visibility = View.VISIBLE
 
             //this should come after all
             searchViewState = SearchViewState.INVISIBLE
             //clear search
             searchModel = searchModel.copy(query = "")
+
+            //make bottom sheet draggable again after disabling searchView
+            bottomSheetBehavior.isDraggable = true
+            //connect recyclerView to bottomSheet
+            transaction_recyclerView.isNestedScrollingEnabled = true
+
             //submit that
             lifecycleScope.launch {
 //                viewModel.queryChannel.value = SearchModel(query = p0.toString())
@@ -636,7 +632,6 @@ constructor(
             buttonsViewParams.width = (normalAppBarHeight + (bottomSheetRadios - topHeight.toInt()))
 
             main_bottom_sheet_search_btn.layoutParams = buttonsViewParams
-            main_bottom_sheet_filter_btn.layoutParams = buttonsViewParams
 //            main_standardBottomSheet.setPadding(0, topHeight.toInt(), 0, 0)
             //change top of bottomSheet height
             val viewParams = view_hastam.layoutParams
@@ -688,7 +683,6 @@ constructor(
         buttonsViewParams.width = (normalAppBarHeight + (bottomSheetRadios - topHeight.toInt()))
 
         main_bottom_sheet_search_btn.layoutParams = buttonsViewParams
-        main_bottom_sheet_filter_btn.layoutParams = buttonsViewParams
 //            main_standardBottomSheet.setPadding(0, topHeight.toInt(), 0, 0)
         //change top of bottomSheet height
         val viewParams = view_hastam.layoutParams

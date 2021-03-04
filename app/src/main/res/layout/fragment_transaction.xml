@@ -291,16 +291,6 @@
                     android:visibility="visible"
                     app:srcCompat="@drawable/ic_baseline_search_24" />
 
-                <ImageButton
-                    android:id="@+id/main_bottom_sheet_filter_btn"
-                    android:layout_width="40dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/white"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:tint="@color/black"
-                    android:visibility="visible"
-                    app:srcCompat="@android:drawable/stat_notify_sync" />
             </LinearLayout>
             <!--            </androidx.appcompat.widget.Toolbar>-->
         </com.google.android.material.appbar.AppBarLayout>
