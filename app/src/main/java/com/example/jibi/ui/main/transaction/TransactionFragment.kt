@@ -325,7 +325,7 @@ constructor(
                 it.summeryMoney?.let { summeryMoney ->
                     summeryMoney.balance = (summeryMoney.income + summeryMoney.expenses)
                     txt_balance.text = separate3By3AndRoundIt(summeryMoney.balance)
-                    txt_expenses.text = separate3By3AndRoundIt(summeryMoney.expenses)
+                    txt_expenses.text = separate3By3AndRoundIt(summeryMoney.expenses.times(-1))
                     txt_income.text = separate3By3AndRoundIt(summeryMoney.income)
                 }
             }
