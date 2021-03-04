@@ -115,7 +115,7 @@ constructor(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        requireActivity().onBackPressedDispatcher.addCallback(backStackForBottomSheet)
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,backStackForBottomSheet)
         //set width for closeButtonAnimation
         closeBottomWidth = convertDpToPx(56)
         bottomSheetRadios = convertDpToPx(16)
@@ -510,7 +510,6 @@ constructor(
 
     override fun onResume() {
         super.onResume()
-        Log.d(TAG, "onResume: called")
         //set bottom sheet peek height
         if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED)
             resetIt(1f)
