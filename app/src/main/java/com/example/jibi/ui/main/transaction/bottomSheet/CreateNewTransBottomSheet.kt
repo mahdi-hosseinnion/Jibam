@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.DialogInterface
 import android.graphics.*
+import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.util.Log
 import android.view.*
@@ -25,9 +26,9 @@ import com.bumptech.glide.RequestManager
 import com.example.jibi.R
 import com.example.jibi.models.Category
 import com.example.jibi.ui.main.transaction.TransactionFragmentDirections
+import com.example.jibi.util.convertDpToPx
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayout
-import kotlinx.android.synthetic.main.bottom_sheet_create_new_trans.*
 import java.util.*
 
 
@@ -52,6 +53,7 @@ constructor(
     private var indicatorWidth = 0
     private var isLeftToRight: Boolean = true
     private var selectedCategory: Category? = null
+    private val bottomSheetTopRadios by lazy { convertDpToPx(16) }
 
     @SuppressLint("RestrictedApi")
     override fun setupDialog(dialog: Dialog, style: Int) {
@@ -77,22 +79,24 @@ constructor(
         bottomSheetBehavior.setBottomSheetCallback(object :
             ViewPagerBottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                if (BottomSheetBehavior.STATE_EXPANDED == newState) {
-                    showAppBar()
-                } else {
-//                if (BottomSheetBehavior.STATE_COLLAPSED == newState) {
+                if (BottomSheetBehavior.STATE_COLLAPSED == newState) {
                     hideAppBar()
+                } else {
+                    showAppBar()
                 }
                 if (BottomSheetBehavior.STATE_HIDDEN == newState) {
-                    Log.d("BOTTOMSHEET"
-                        , "1111 onHidden called")
+                    Log.d(
+                        "BOTTOMSHEET", "1111 onHidden called"
+                    )
                     onDismissCallback.onDismissCalled(selectedCategory)
                     dismiss()
                 }
             }
 
 
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                onBottomSheetSlide(slideOffset)
+            }
 
         })
 
@@ -107,11 +111,13 @@ constructor(
     }
 
     override fun onDismiss(dialog: DialogInterface) {
-        Log.d("BOTTOMSHEET"
-            , "1111 ON DISMISS called")
+        Log.d(
+            "BOTTOMSHEET", "1111 ON DISMISS called"
+        )
         onDismissCallback.onDismissCalled(selectedCategory)
         super.onDismiss(dialog)
     }
+
     private fun setupViewPager() {
         viewPager?.offscreenPageLimit = 1
         viewPager?.adapter = SimplePagerAdapter()
@@ -148,7 +154,6 @@ constructor(
             STYLE_NORMAL,
             R.style.BottomSheetDialogThemeRoundCorner
         )
-        rootLayout?.setBackgroundResource(R.drawable.bottom_sheet_bg)
         backArrow?.visibility = View.INVISIBLE
         shadowDividerView?.visibility = View.GONE
 
@@ -159,14 +164,14 @@ constructor(
             STYLE_NORMAL,
             R.style.BottomSheetDefaultDialogTheme
         )
-        rootLayout?.setBackgroundResource(R.color.white)
         backArrow?.visibility = View.VISIBLE
         shadowDividerView?.visibility = View.VISIBLE
     }
 
     override fun onItemSelected(position: Int, item: Category) {
-        Log.d("BOTTOMSHEET"
-            , "1111 ON ITEM SELECTED")
+        Log.d(
+            "BOTTOMSHEET", "1111 ON ITEM SELECTED"
+        )
         selectedCategory = item
         this.dismiss()
 //        onCategorySelected.onCategorySelected(item)
@@ -268,4 +273,15 @@ constructor(
         fun onDismissCalled(selectedCategory: Category?)
 
     }
+
+    private fun onBottomSheetSlide(slideOffset: Float) {
+        //change alpha of backArrow
+        backArrow?.alpha = slideOffset
+        //change background radius
+        val bottomSheetBackGround = rootLayout?.background as GradientDrawable ?: return
+        val topHeight = (bottomSheetTopRadios * (1f - slideOffset))
+        bottomSheetBackGround.cornerRadius = topHeight
+
+    }
+
 }

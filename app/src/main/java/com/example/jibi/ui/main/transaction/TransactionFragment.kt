@@ -68,10 +68,9 @@ constructor(
 
     private var bottomSheetPeekHeight = 0
 
-    private var closeBottomWidth = 0
-    private var bottomSheetRadios = 0
-    private var normalAppBarHeight = 0
-
+    private val closeBottomWidth by lazy { convertDpToPx(56) }
+    private val bottomSheetRadios by lazy { convertDpToPx(16) }
+    private val normalAppBarHeight by lazy { convertDpToPx(40) }
 
     private var lastSlideValue = -1f
 
@@ -91,7 +90,6 @@ constructor(
 
         override fun onStateChanged(bottomSheet: View, newState: Int) {
             onBottomSheetStateChanged(newState)
-
         }
 
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
@@ -115,11 +113,10 @@ constructor(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,backStackForBottomSheet)
-        //set width for closeButtonAnimation
-        closeBottomWidth = convertDpToPx(56)
-        bottomSheetRadios = convertDpToPx(16)
-        normalAppBarHeight = convertDpToPx(40)
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            backStackForBottomSheet
+        )
 
         bottomSheetBehavior = BottomSheetBehavior.from(main_standardBottomSheet)
 
@@ -278,14 +275,6 @@ constructor(
         }
     }
 
-    private fun convertDpToPx(dp: Int): Int {
-        val r = resources
-        return TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            dp.toFloat(),
-            r.displayMetrics
-        ).toInt()
-    }
 
     private fun showBottomSheet() {
         val modalBottomSheet =
@@ -606,9 +595,7 @@ constructor(
             )
 
             main_bottom_sheet_back_arrow.alpha = slideOffset
-            if (bottomSheetRadios < 1) {
-                bottomSheetRadios = convertDpToPx(16)
-            }
+
             val bottomSheetBackGround = main_standardBottomSheet.background as GradientDrawable
 
             val topHeight = (bottomSheetRadios * (1f - slideOffset))
@@ -617,9 +604,7 @@ constructor(
             bottomSheetBackGround.cornerRadius = topHeight
             main_standardBottomSheet.background = bottomSheetBackGround
             //change app bar
-            if (normalAppBarHeight < 1) {
-                normalAppBarHeight = convertDpToPx(40)
-            }
+
             last_transacion_app_bar.background = bottomSheetBackGround
 //            last_transacion_app_bar.setPadding(topHeight.toInt(), 0, topHeight.toInt(), 0)
             //change app bar height
@@ -639,9 +624,6 @@ constructor(
             view_hastam2.alpha = (1f - slideOffset)
 
             // make the toolbar close button animation
-            if (closeBottomWidth < 1) {
-                closeBottomWidth = convertDpToPx(56)
-            }
             val closeButtonParams =
                 main_bottom_sheet_back_arrow.layoutParams as ViewGroup.LayoutParams
             closeButtonParams.width = (slideOffset * closeBottomWidth).toInt()
@@ -655,11 +637,14 @@ constructor(
         }
     }
 
-    fun resetIt(slideOffset: Float) {
-        main_bottom_sheet_back_arrow.alpha = slideOffset
-        if (bottomSheetRadios < 1) {
-            bottomSheetRadios = convertDpToPx(16)
+    private fun resetIt(slideOffset: Float) {
+
+        if (slideOffset == 1f) {//if its full screen then set it to liftable
+            last_transacion_app_bar.isLiftOnScroll = false
+            last_transacion_app_bar.setLiftable(false)
         }
+
+        main_bottom_sheet_back_arrow.alpha = slideOffset
         val bottomSheetBackGround = main_standardBottomSheet.background as GradientDrawable
 
         val topHeight = (bottomSheetRadios * (1f - slideOffset))
@@ -668,9 +653,6 @@ constructor(
         bottomSheetBackGround.cornerRadius = topHeight
         main_standardBottomSheet.background = bottomSheetBackGround
         //change app bar
-        if (normalAppBarHeight < 1) {
-            normalAppBarHeight = convertDpToPx(40)
-        }
         last_transacion_app_bar.background = bottomSheetBackGround
 //            last_transacion_app_bar.setPadding(topHeight.toInt(), 0, topHeight.toInt(), 0)
         //change app bar height
@@ -690,9 +672,6 @@ constructor(
         view_hastam2.alpha = (1f - slideOffset)
 
         // make the toolbar close button animation
-        if (closeBottomWidth < 1) {
-            closeBottomWidth = convertDpToPx(56)
-        }
         val closeButtonParams =
             main_bottom_sheet_back_arrow.layoutParams as ViewGroup.LayoutParams
         closeButtonParams.width = (slideOffset * closeBottomWidth).toInt()
