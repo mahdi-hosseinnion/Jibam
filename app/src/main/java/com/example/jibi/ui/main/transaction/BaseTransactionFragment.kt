@@ -65,7 +65,7 @@ constructor(
                 Toast.makeText(
                     this.requireContext(),
                     "Message: ${it.response.message} \n Type: ${it.response.uiComponentType} \n MessageType: ${it.response.messageType}",
-                    Toast.LENGTH_LONG
+                    Toast.LENGTH_SHORT
                 ).show()
                 viewModel.clearStateMessage()
             }

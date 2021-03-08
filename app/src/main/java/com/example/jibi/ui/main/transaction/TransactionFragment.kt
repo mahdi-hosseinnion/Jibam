@@ -3,6 +3,7 @@ package com.example.jibi.ui.main.transaction
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.os.Parcelable
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -126,10 +127,19 @@ constructor(
         initRecyclerView()
         subscribeObservers()
 
+        savedInstanceState?.getString(SEARCH_QUERY)?.let { query ->
+            //if user rotate the screen and fragment get rebuild
+            Log.d(TAG, "onViewCreated:savedInstanceState withThisQuery: $query")
+            if (query.isNotEmpty()) {
+                enableSearchMode(query)
+            }
+        }
+
+        if (searchViewState.isVisible()) {
+            enableSearchMode()
+        }
+
         fab.setOnClickListener { view ->
-            Log.d(
-                TAG, "1111 ON CLICK"
-            )
             showBottomSheet()
 //            findNavController().navigate(R.id.action_transactionFragment_to_createTransactionFragment)
         }
@@ -157,60 +167,60 @@ constructor(
 
     }
 
-    private fun enableSearchMode() {
-        if (searchViewState.isInvisible()) {
-            bottomSheetBehavior.state = STATE_EXPANDED
-            //user shouldn't be able to drag down when searchView is enable
-            bottomSheetBehavior.isDraggable = false
-            //disconnect recyclerView to bottomSheet
-            transaction_recyclerView.isNestedScrollingEnabled = false
+    private fun enableSearchMode(query: String? = null) {
+        bottomSheetBehavior.state = STATE_EXPANDED
+        //user shouldn't be able to drag down when searchView is enable
+        bottomSheetBehavior.isDraggable = false
+        //disconnect recyclerView to bottomSheet
+        transaction_recyclerView.isNestedScrollingEnabled = false
 
-            //visible search stuff
-            bottom_sheet_search_edt.visibility = View.VISIBLE
-            bottom_sheet_search_clear.visibility = View.INVISIBLE
+        //visible search stuff
+        bottom_sheet_search_edt.visibility = View.VISIBLE
+        bottom_sheet_search_clear.visibility = View.INVISIBLE
 
-            bottom_sheet_search_edt.addTextChangedListener(onSearchViewTextChangeListener)
-            forceKeyBoardToOpenForMoneyEditText(bottom_sheet_search_edt)
-            //invisible search stuff
-            main_bottom_sheet_search_btn.visibility = View.GONE
-            bottom_sheet_title.visibility = View.GONE
-            //this should come after all
-            searchViewState = SearchViewState.VISIBLE
+        bottom_sheet_search_edt.addTextChangedListener(onSearchViewTextChangeListener)
+        forceKeyBoardToOpenForMoneyEditText(bottom_sheet_search_edt)
+        //invisible search stuff
+        main_bottom_sheet_search_btn.visibility = View.GONE
+        bottom_sheet_title.visibility = View.GONE
+        //this should come after all
+        searchViewState = SearchViewState.VISIBLE
+
+        query?.let {
+            bottom_sheet_search_edt.setText(it)
         }
     }
 
     private fun disableSearchMode() {
-        if (searchViewState.isVisible()) {
-            Log.d(TAG, "disableSearchMode: 765 called and setted to invisible")
+        Log.d(TAG, "disableSearchMode: 765 called and setted to invisible")
 
-            //invisible search stuff
-            bottom_sheet_search_edt.visibility = View.GONE
-            bottom_sheet_search_clear.visibility = View.GONE
+        //invisible search stuff
+        bottom_sheet_search_edt.visibility = View.GONE
+        bottom_sheet_search_clear.visibility = View.GONE
 
-            uiCommunicationListener.hideSoftKeyboard()
-            bottom_sheet_search_edt.removeTextChangedListener(onSearchViewTextChangeListener)
-            bottom_sheet_search_edt.setText("")
-            //visible search stuff
-            main_bottom_sheet_search_btn.visibility = View.VISIBLE
-            bottom_sheet_title.visibility = View.VISIBLE
+        uiCommunicationListener.hideSoftKeyboard()
+        bottom_sheet_search_edt.removeTextChangedListener(onSearchViewTextChangeListener)
+        bottom_sheet_search_edt.setText("")
+        //visible search stuff
+        main_bottom_sheet_search_btn.visibility = View.VISIBLE
+        bottom_sheet_title.visibility = View.VISIBLE
 
-            //this should come after all
-            searchViewState = SearchViewState.INVISIBLE
-            //clear search
-            searchModel = searchModel.copy(query = "")
+        //this should come after all
+        searchViewState = SearchViewState.INVISIBLE
+        //clear search
+        searchModel = searchModel.copy(query = "")
 
-            //make bottom sheet draggable again after disabling searchView
-            bottomSheetBehavior.isDraggable = true
-            //connect recyclerView to bottomSheet
-            transaction_recyclerView.isNestedScrollingEnabled = true
+        //make bottom sheet draggable again after disabling searchView
+        bottomSheetBehavior.isDraggable = true
+        //connect recyclerView to bottomSheet
+        transaction_recyclerView.isNestedScrollingEnabled = true
 
-            //submit that
-            lifecycleScope.launch {
+        //submit that
+        lifecycleScope.launch {
 //                viewModel.queryChannel.value = SearchModel(query = p0.toString())
-                viewModel.queryChannel.emit(searchModel)
-                //add new search query
-                Log.d(TAG, "searchDEBUG: clear")
-            }
+            viewModel.queryChannel.emit(searchModel)
+            //add new search query
+            Log.d(TAG, "searchDEBUG: clear")
         }
     }
 
@@ -683,5 +693,19 @@ constructor(
         val imm: InputMethodManager =
             activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        val searchQuery =
+            if (searchViewState.isVisible()) (bottom_sheet_search_edt.text.toString())
+            else null
+
+        outState.putString(SEARCH_QUERY, searchQuery)
+        super.onSaveInstanceState(outState)
+    }
+
+    companion object {
+        private const val SEARCH_QUERY = "SEARCHVIEWWSTATE VISIBLE >>>>"
+
     }
 }
