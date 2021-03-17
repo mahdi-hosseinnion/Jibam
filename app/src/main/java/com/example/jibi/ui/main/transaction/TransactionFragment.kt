@@ -411,15 +411,22 @@ constructor(
 
                     }
                 }
-//                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-//                    super.onScrollStateChanged(recyclerView, newState)
-//                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-//                    val lastPosition = layoutManager.findLastVisibleItemPosition()
-//                    if (lastPosition == recyclerAdapter.itemCount.minus(1)) {
-//                        Log.d(TAG, "BlogFragment: attempting to load next page...")
-//                        viewModel.nextPage()
-//                    }
-//                }
+
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                    val lastPosition = layoutManager.findFirstCompletelyVisibleItemPosition()
+                    if (lastPosition == 0) {
+                        //user should be able to only drag the bottom sheet down when it's in first
+                        //position
+                        if (searchViewState.isInvisible()) {
+                            //while searching you should not be able to drag down
+                            bottomSheetBehavior.isDraggable = true
+                        }
+                    } else {
+                        bottomSheetBehavior.isDraggable = false
+                    }
+                }
             })
 
 //            //swipe to delete
@@ -556,19 +563,13 @@ constructor(
     }
 
     private fun onBottomSheetStateChanged(newState: Int) {
-
         if (STATE_EXPANDED == newState) {
             last_transacion_app_bar.isLiftOnScroll = false
 //            last_transacion_app_bar.liftOnScrollTargetViewId = R.id.transaction_recyclerView
             last_transacion_app_bar.setLiftable(false)
-
             //enable backStack
             backStackForBottomSheet.isEnabled = true
         } else {
-            if (searchViewState.isVisible()) {
-                //when searching user should not be able to scroll down
-                return
-            }
             last_transacion_app_bar.isLiftOnScroll = true
             last_transacion_app_bar.setLiftable(true)
             //disable backStack
