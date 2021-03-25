@@ -139,9 +139,8 @@ constructor(
             enableSearchMode()
         }
 
-        fab.setOnClickListener { view ->
+        fab.setOnClickListener {
             showBottomSheet()
-//            findNavController().navigate(R.id.action_transactionFragment_to_createTransactionFragment)
         }
 
         txt_balance.setOnClickListener {
@@ -192,13 +191,12 @@ constructor(
     }
 
     private fun disableSearchMode() {
-        Log.d(TAG, "disableSearchMode: 765 called and setted to invisible")
 
+        uiCommunicationListener.hideSoftKeyboard()
         //invisible search stuff
         bottom_sheet_search_edt.visibility = View.GONE
         bottom_sheet_search_clear.visibility = View.GONE
 
-        uiCommunicationListener.hideSoftKeyboard()
         bottom_sheet_search_edt.removeTextChangedListener(onSearchViewTextChangeListener)
         bottom_sheet_search_edt.setText("")
         //visible search stuff
