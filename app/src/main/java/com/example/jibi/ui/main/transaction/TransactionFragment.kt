@@ -514,6 +514,12 @@ constructor(
 
     override fun onResume() {
         super.onResume()
+        Log.d(TAG, "onResume: CALLED!@#$")
+
+        //enable backStack listener when user  navigate to next fragment or rotate screen
+        if (bottomSheetBehavior.state == STATE_EXPANDED || searchViewState.isVisible()) {
+            backStackForBottomSheet.isEnabled = true
+        }
         //set bottom sheet peek height
         if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED)
             resetIt(1f)
@@ -695,11 +701,15 @@ constructor(
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
+
+        Log.d(TAG, "onSaveInstanceState: CALLED!@#$")
+        //save searchResult and search state for screen rotation
         val searchQuery =
             if (searchViewState.isVisible()) (bottom_sheet_search_edt.text.toString())
             else null
 
         outState.putString(SEARCH_QUERY, searchQuery)
+
         super.onSaveInstanceState(outState)
     }
 
