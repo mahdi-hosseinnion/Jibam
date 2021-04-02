@@ -1,8 +1,6 @@
 package com.example.jibi.ui.main.transaction
 
-import android.content.ContentResolver
 import android.content.res.Resources
-import android.net.Uri
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -10,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.*
-import androidx.viewpager.widget.PagerAdapter
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.example.jibi.R
@@ -30,6 +27,7 @@ import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.random.Random
 
 
 abstract class TransactionListAdapter(
@@ -412,13 +410,22 @@ abstract class TransactionListAdapter(
             //TODO
 //            itemView.card
             if (category.id > 0) {
-                itemView.cardView.setCardBackgroundColor(
-                    resources.getColor(
-                        listOfColor[(category.id.minus(
-                            1
-                        ))]
+                try {
+                    itemView.cardView.setCardBackgroundColor(
+                        resources.getColor(
+                            listOfColor[(category.id.minus(
+                                1
+                            ))]
+                        )
                     )
-                )
+                } catch (e: Exception) {
+                    //apply random color
+                    itemView.cardView.setCardBackgroundColor(
+                        resources.getColor(
+                            listOfColor[Random.nextInt(listOfColor.size)]
+                        )
+                    )
+                }
             }
             requestManager
                 ?.load(categoryImageUrl)

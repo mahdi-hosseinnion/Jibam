@@ -3,11 +3,9 @@ package com.example.jibi.ui.main.transaction
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.os.Parcelable
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
@@ -514,7 +512,6 @@ constructor(
 
     override fun onResume() {
         super.onResume()
-        Log.d(TAG, "onResume: CALLED!@#$")
 
         //enable backStack listener when user  navigate to next fragment or rotate screen
         if (bottomSheetBehavior.state == STATE_EXPANDED || searchViewState.isVisible()) {
@@ -595,20 +592,9 @@ constructor(
             //some bugs happens when keyboard get opened so we should do this
             //when keyboard opens this onSlide method called with value 0
             //the issue is when is bottom sheet set to state expanded and then scrolled onSlide called with value 0
-            Log.d(
-                TAG,
-                "onBottomSheetSlide:1990 NOOOOOOOOOOOOOOOOOOOOOOOO APPLLYYYYYYYYYYYYED with $slideOffset && and last $lastSlideValue"
-            )
             if (lastSlideValue > 0.90) {
                 onBottomSheetSlide(1f)
             }
-
-        } else {
-            Log.d(
-                TAG,
-                "onBottomSheetSlide:1990 APPLLYYYYYYYYYYYYED $slideOffset and last $lastSlideValue"
-            )
-
             main_bottom_sheet_back_arrow.alpha = slideOffset
 
             val bottomSheetBackGround = main_standardBottomSheet.background as GradientDrawable
@@ -702,7 +688,6 @@ constructor(
 
     override fun onSaveInstanceState(outState: Bundle) {
 
-        Log.d(TAG, "onSaveInstanceState: CALLED!@#$")
         //save searchResult and search state for screen rotation
         val searchQuery =
             if (searchViewState.isVisible()) (bottom_sheet_search_edt.text.toString())
