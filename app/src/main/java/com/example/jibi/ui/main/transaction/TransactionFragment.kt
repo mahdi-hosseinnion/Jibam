@@ -511,7 +511,7 @@ constructor(
 
     override fun onResume() {
         super.onResume()
-
+        uiCommunicationListener.changeDrawerState(false)
         //enable backStack listener when user  navigate to next fragment or rotate screen
         if (bottomSheetBehavior.state == STATE_EXPANDED || searchViewState.isVisible()) {
             backStackForBottomSheet.isEnabled = true
@@ -553,6 +553,10 @@ constructor(
 
     }
 
+    override fun onStop() {
+        super.onStop()
+        uiCommunicationListener.changeDrawerState(true)
+    }
 
     override fun onItemSelected(position: Int, item: Record) {
         viewModel.setDetailTransFields(item)
@@ -687,4 +691,5 @@ constructor(
         private const val SEARCH_QUERY = "SEARCHVIEWWSTATE VISIBLE >>>>"
 
     }
+
 }

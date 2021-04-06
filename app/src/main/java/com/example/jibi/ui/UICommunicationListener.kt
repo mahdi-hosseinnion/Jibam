@@ -26,5 +26,7 @@ interface UICommunicationListener {
     fun setupActionBarWithNavController(toolbar: Toolbar, drawerLayout: DrawerLayout? = null)
 
     fun showProgressBar(isLoading: Boolean)
+
+    fun changeDrawerState(closeIt: Boolean)
 //    fun isStoragePermissionGranted(): Boolean
 }

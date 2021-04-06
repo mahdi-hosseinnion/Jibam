@@ -114,12 +114,10 @@ class MainActivity : BaseActivity() {
         navController.removeOnDestinationChangedListener(listener)
     }
 
-//    override fun hideToolbar() {
-//        toolbar_main.visibility = View.GONE
-//    }
-//
-//    override fun showToolbar() {
-//        toolbar_main.visibility = View.VISIBLE
-//    }
-
+    override fun changeDrawerState(closeIt: Boolean) {
+        if (closeIt)
+            drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+        else
+            drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+    }
 }
