@@ -148,7 +148,8 @@ constructor(
             else
                 hideCustomKeyboard()
         }
-        edt_money.requestFocus()
+        edt_money.requestFocusFromTouch()
+
         edt_money.setOnTouchListener { view, motionEvent ->
             val inType: Int = edt_money.getInputType() // Backup the input type
             edt_money.inputType = InputType.TYPE_NULL // Disable standard keyboard
@@ -333,10 +334,10 @@ constructor(
     }
 
     private fun showCustomKeyboard(view: View) {
-        keyboard.visibility = View.VISIBLE
         val imm: InputMethodManager =
             activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
+        keyboard.visibility = View.VISIBLE
     }
 
     private fun hideCustomKeyboard() {
