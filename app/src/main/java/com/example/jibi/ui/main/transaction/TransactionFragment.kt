@@ -71,7 +71,6 @@ constructor(
     private val bottomSheetRadios by lazy { convertDpToPx(16) }
     private val normalAppBarHeight by lazy { convertDpToPx(40) }
 
-    private var lastSlideValue = -1f
 
     private var searchModel = SearchModel()
 
@@ -564,6 +563,8 @@ constructor(
     }
 
     private fun onBottomSheetStateChanged(newState: Int) {
+        Log.d(TAG, "onBottomSheetStateChanged: state changed to $newState ")
+
         if (STATE_EXPANDED == newState) {
             last_transacion_app_bar.isLiftOnScroll = false
 //            last_transacion_app_bar.liftOnScrollTargetViewId = R.id.transaction_recyclerView
@@ -586,56 +587,40 @@ constructor(
     }
 
     private fun onBottomSheetSlide(slideOffset: Float) {
+        main_bottom_sheet_back_arrow.alpha = slideOffset
 
+        val bottomSheetBackGround = main_standardBottomSheet.background as GradientDrawable
 
-        if (slideOffset <= 0f && bottomSheetBehavior.state != STATE_COLLAPSED) {
-            //some bugs happens when keyboard get opened so we should do this
-            //when keyboard opens this onSlide method called with value 0
-            //the issue is when is bottom sheet set to state expanded and then scrolled onSlide called with value 0
-            if (lastSlideValue > 0.90) {
-                onBottomSheetSlide(1f)
-            }
-            main_bottom_sheet_back_arrow.alpha = slideOffset
+        val topHeight = (bottomSheetRadios * (1f - slideOffset))
 
-            val bottomSheetBackGround = main_standardBottomSheet.background as GradientDrawable
+        //change bottom sheet raidus
+        bottomSheetBackGround.cornerRadius = topHeight
+        main_standardBottomSheet.background = bottomSheetBackGround
+        //change app bar
 
-            val topHeight = (bottomSheetRadios * (1f - slideOffset))
-
-            //change bottom sheet raidus
-            bottomSheetBackGround.cornerRadius = topHeight
-            main_standardBottomSheet.background = bottomSheetBackGround
-            //change app bar
-
-            last_transacion_app_bar.background = bottomSheetBackGround
+        last_transacion_app_bar.background = bottomSheetBackGround
 //            last_transacion_app_bar.setPadding(topHeight.toInt(), 0, topHeight.toInt(), 0)
-            //change app bar height
-            val appbarViewParams = last_transacion_app_bar.layoutParams
-            appbarViewParams.height = (normalAppBarHeight + (bottomSheetRadios - topHeight.toInt()))
-            last_transacion_app_bar.layoutParams = appbarViewParams
-            //change buttons height
-            val buttonsViewParams = main_bottom_sheet_search_btn.layoutParams
-            buttonsViewParams.width = (normalAppBarHeight + (bottomSheetRadios - topHeight.toInt()))
+        //change app bar height
+        val appbarViewParams = last_transacion_app_bar.layoutParams
+        appbarViewParams.height = (normalAppBarHeight + (bottomSheetRadios - topHeight.toInt()))
+        last_transacion_app_bar.layoutParams = appbarViewParams
+        //change buttons height
+        val buttonsViewParams = main_bottom_sheet_search_btn.layoutParams
+        buttonsViewParams.width = (normalAppBarHeight + (bottomSheetRadios - topHeight.toInt()))
 
-            main_bottom_sheet_search_btn.layoutParams = buttonsViewParams
+        main_bottom_sheet_search_btn.layoutParams = buttonsViewParams
 //            main_standardBottomSheet.setPadding(0, topHeight.toInt(), 0, 0)
-            //change top of bottomSheet height
-            val viewParams = view_hastam.layoutParams
-            viewParams.height = topHeight.toInt()
-            view_hastam.layoutParams = viewParams
-            view_hastam2.alpha = (1f - slideOffset)
+        //change top of bottomSheet height
+        val viewParams = view_hastam.layoutParams
+        viewParams.height = topHeight.toInt()
+        view_hastam.layoutParams = viewParams
+        view_hastam2.alpha = (1f - slideOffset)
 
-            // make the toolbar close button animation
-            val closeButtonParams =
-                main_bottom_sheet_back_arrow.layoutParams as ViewGroup.LayoutParams
-            closeButtonParams.width = (slideOffset * closeBottomWidth).toInt()
-            main_bottom_sheet_back_arrow.layoutParams = closeButtonParams
-        }
-        //prevent from calling when recyclerview scrolled
-        if (slideOffset == lastSlideValue) {
-            return
-        } else {
-            lastSlideValue = slideOffset
-        }
+        // make the toolbar close button animation
+        val closeButtonParams =
+            main_bottom_sheet_back_arrow.layoutParams as ViewGroup.LayoutParams
+        closeButtonParams.width = (slideOffset * closeBottomWidth).toInt()
+        main_bottom_sheet_back_arrow.layoutParams = closeButtonParams
     }
 
     private fun resetIt(slideOffset: Float) {

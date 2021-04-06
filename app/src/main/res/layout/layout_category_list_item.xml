@@ -54,5 +54,6 @@
         android:layout_height="24dp"
         android:layout_gravity="center"
         android:layout_margin="4dp"
+        android:textColor="@color/black"
         android:gravity="center" />
 </LinearLayout>
