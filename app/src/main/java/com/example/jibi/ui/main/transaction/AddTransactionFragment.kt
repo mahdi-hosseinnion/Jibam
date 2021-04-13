@@ -39,7 +39,6 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
-import kotlin.random.Random
 
 
 @FlowPreview
@@ -234,7 +233,9 @@ constructor(
 
 
         //set onClick to date and show DatePicker
-        val dateOnClick = onClickedOnSpan { showDatePickerDialog() }
+        val dateOnClick = onClickedOnSpan(textColor = edt_date.currentTextColor) {
+            showDatePickerDialog()
+        }
         val dateEndIndex = ss.indexOf(DATE_PATTERN[DATE_PATTERN.lastIndex]).plus(1)
         ss.setSpan(
             dateOnClick,
@@ -243,7 +244,9 @@ constructor(
             SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
         )
         //set onClick to time and show timePicker
-        val timeOnClick = onClickedOnSpan { showTimePickerDialog() }
+        val timeOnClick = onClickedOnSpan(textColor = edt_date.currentTextColor) {
+            showTimePickerDialog()
+        }
         var timeStartIndex =
             dateEndIndex.plus(ss.count { it == ' ' }).minus(DATE_PATTERN.count { it == ' ' }).minus(
                 TIME_PATTERN.count { it == ' ' })
@@ -261,7 +264,7 @@ constructor(
         edt_date.highlightColor = Color.TRANSPARENT
     }
 
-    private fun onClickedOnSpan(onClicked: (v: View) -> Unit): ClickableSpan =
+    private fun onClickedOnSpan(textColor: Int, onClicked: (v: View) -> Unit): ClickableSpan =
         object : ClickableSpan() {
             override fun onClick(p0: View) {
                 onClicked(p0)
@@ -271,7 +274,8 @@ constructor(
                 super.updateDrawState(ds)
                 //remove under line and background color
                 ds.isUnderlineText = false
-                ds.color = edt_date.currentTextColor
+                //this line cause fail during rotation so we get text color every time
+                ds.color = textColor
             }
         }
 
