@@ -11,6 +11,7 @@ import android.text.style.ClickableSpan
 import android.util.Log
 import android.view.*
 import android.view.View.OnFocusChangeListener
+import android.view.ViewGroup.MarginLayoutParams
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputConnection
 import android.view.inputmethod.InputMethodManager
@@ -29,11 +30,13 @@ import com.example.jibi.models.Record
 import com.example.jibi.ui.main.transaction.bottomSheet.CreateNewTransBottomSheet
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.TextCalculator
+import com.example.jibi.util.convertDpToPx
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
 import kotlinx.android.synthetic.main.fragment_add_transaction.view.*
 import kotlinx.android.synthetic.main.keyboard_add_transaction.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -95,6 +98,9 @@ constructor(
 
         category_fab.setOnClickListener {
             showBottomSheet()
+        }
+        fab_submit.setOnClickListener {
+            insertNewTrans()
         }
 
 
@@ -167,8 +173,7 @@ constructor(
         //add date to dat
         setDateToEditText()
         //submit button should always be displayed
-        setHasOptionsMenu(true)
-
+        fab_submit.show()
         setTransProperties(categoryId = args.categoryId)
 
         showCustomKeyboard(edt_money)
@@ -184,8 +189,11 @@ constructor(
         lifecycleScope.launch {
             submitButtonState?.isSubmitButtonEnable?.collect {
                 //submit button state
-                setHasOptionsMenu(it)
-
+                if (it) {
+                    fab_submit.show()
+                } else {
+                    fab_submit.hide()
+                }
             }
         }
 
@@ -342,10 +350,54 @@ constructor(
             activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
         keyboard.visibility = View.VISIBLE
+
+        //change bottom margin of fab
+        val _16Dp = convertDpToPx(16)
+
+        changeFabBottomMargin(keyboard.height.plus(_16Dp))
+        //b/c when fragment is created keyboard is not visible and keyboard height is 0
+        //so we check 10 times with 100 wait each time for keyboard to show up if it does'nt
+        //show up we don't care b/c if focus change this method will be call again
+        lifecycleScope.launch {
+            for (i in 1..10) {
+                delay(100)
+                if (keyboard.height > 0) {
+                    changeFabBottomMargin(keyboard.height.plus(_16Dp))
+                    break
+                }
+            }
+        }
+
+
     }
 
     private fun hideCustomKeyboard() {
         keyboard.visibility = View.GONE
+        val _16Dp = convertDpToPx(16)
+        //change bottom margin of fab
+        Log.d(TAG, "showCustomKeyboard: HIDDEE Height is ${keyboard.height}")
+        changeFabBottomMargin()
+    }
+
+
+    fun View.setMargins(l: Int, t: Int, r: Int, b: Int) {
+        if (this.layoutParams is MarginLayoutParams) {
+            val p = this.layoutParams as MarginLayoutParams
+            p.setMargins(l, t, r, b)
+            this.requestLayout()
+        }
+    }
+
+    private fun changeFabBottomMargin(marginBottom: Int? = null) {
+        val _16Dp = convertDpToPx(16)
+        if (fab_submit.isShown) {
+            //TODO ADD SLIDE ANIMATION HERE
+            fab_submit.hide()
+            fab_submit.setMargins(_16Dp, _16Dp, _16Dp, marginBottom ?: _16Dp)
+            fab_submit.show()
+        } else {
+            fab_submit.setMargins(_16Dp, _16Dp, _16Dp, marginBottom ?: _16Dp)
+        }
     }
 
     private fun setTransProperties(
@@ -526,7 +578,13 @@ constructor(
             ) {
                 val calculatedResult = textCalculator.calculateResult(p0.toString())
                 finalNUmber.text = convertDoubleToString(calculatedResult)
-                submitButtonState?.onMoneyChange(calculatedResult.toDoubleOrNull())
+                var newMoney = calculatedResult.toDoubleOrNull()
+                Log.d(TAG, "CHANGES: ${transactionCategory.toString()} ")
+                if (transactionCategory?.type == 1 && newMoney != null) {
+                    //if its expenses we save it with - marker
+                    newMoney *= -1
+                }
+                submitButtonState?.onMoneyChange(newMoney)
             } else {
                 finalNUmber.text = ""
                 submitButtonState?.onMoneyChange(0.0)
@@ -537,19 +595,6 @@ constructor(
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.add_menu, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.save -> {
-                insertNewTrans()
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
 
     fun convertDoubleToString(text: String): String {//convert 13.0 to 13
         if (text.length < 2) {

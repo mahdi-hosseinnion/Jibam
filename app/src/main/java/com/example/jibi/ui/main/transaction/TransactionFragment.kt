@@ -139,7 +139,7 @@ constructor(
         fab.setOnClickListener {
             showBottomSheet()
         }
-
+        //TODO DELETE THIS LINE FOR FINAL PROJECT JUST OF TESTING
         txt_balance.setOnClickListener {
             insertRandomTransaction()
         }
@@ -247,14 +247,21 @@ constructor(
     }
 
     private fun insertRandomTransaction() {
+        val categoryId = Random.nextInt(42)
+        var money = Random.nextInt(0, 1000).toDouble()
+        //it just hardcoded TODO CHANGE IT LATER
+        //we mark money with "-" base of category id
+        if (categoryId <= 30) {
+            money *= -1
+        }
         if (Random.nextBoolean()) {
             viewModel.launchNewJob(
                 TransactionStateEvent.OneShotOperationsTransactionStateEvent.InsertTransaction(
                     Record(
                         id = 0,
-                        money = Random.nextInt(-1000, 1000).toDouble(),
+                        money = money,
                         memo = null,
-                        cat_id = Random.nextInt(42),
+                        cat_id = categoryId,
                         date = Random.nextInt(
                             System.currentTimeMillis().minus(604_800L).toInt(),
                             System.currentTimeMillis().toInt()
@@ -267,9 +274,9 @@ constructor(
                 TransactionStateEvent.OneShotOperationsTransactionStateEvent.InsertTransaction(
                     Record(
                         id = 0,
-                        money = Random.nextInt(-1000, 1000).toDouble(),
+                        money = money,
                         memo = "memo ${Random.nextInt(451252)}",
-                        cat_id = Random.nextInt(42),
+                        cat_id = categoryId,
                         date = Random.nextInt(
                             System.currentTimeMillis().minus(604_800L).toInt(),
                             System.currentTimeMillis().toInt()
