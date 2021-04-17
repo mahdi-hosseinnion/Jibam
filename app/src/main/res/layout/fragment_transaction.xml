@@ -109,8 +109,8 @@
 
                     <TextView
                         android:id="@+id/txt_income"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_width="173dp"
+                        android:layout_height="61dp"
                         android:foregroundGravity="top|center"
                         android:gravity="center"
                         android:textColor="@color/white"
@@ -240,7 +240,7 @@
                     android:scaleType="centerInside"
                     android:tint="@color/black"
                     android:visibility="visible"
-                    app:srcCompat="@drawable/md_nav_back" />
+                    app:srcCompat="@drawable/ic_baseline_arrow_back_24" />
 
 
                 <TextView
@@ -251,7 +251,7 @@
                     android:layout_weight="1"
                     android:gravity="start|center"
                     android:paddingStart="8dp"
-                    android:text="Transactions"
+                    android:text="@string/transactions"
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     android:textStyle="normal" />

@@ -469,14 +469,14 @@ abstract class TransactionListAdapter(
             //money for expenses
             Log.d(TAG, "bind: sum of all expenses = ${item.money}")
             if (item.money != 0.0) {
-                itemView.header_expenses_sum.text = "Expenses: ${item.money}"
+                itemView.header_expenses_sum.text = "${resources.getString(R.string.expenses)}: ${item.money}"
             } else {
                 itemView.header_expenses_sum.text = ""
 
             }
             //cat_id for income
             if (item.incomeSum != null && item.incomeSum != 0.0) {
-                itemView.header_income_sum.text = "Income: ${item.incomeSum}"
+                itemView.header_income_sum.text = "${resources.getString(R.string.income)}: ${item.incomeSum}"
             } else {
                 itemView.header_income_sum.text = ""
             }
@@ -531,14 +531,14 @@ abstract class TransactionListAdapter(
         fun bind(header: Record, items: List<Record>) = with(itemView) {
             //bind header
             if (header.money != 0.0) {
-                itemView.header_expenses_sum.text = "Expenses: ${header.money}"
+                itemView.header_expenses_sum.text = "${resources.getString(R.string.expenses)}: ${header.money}"
             } else {
                 itemView.header_expenses_sum.text = ""
 
             }
             //cat_id for income
             if (header.cat_id != 0) {
-                itemView.header_income_sum.text = "Income: ${header.cat_id}"
+                itemView.header_income_sum.text = "${resources.getString(R.string.income)}: ${header.cat_id}"
             } else {
                 itemView.header_income_sum.text = ""
             }

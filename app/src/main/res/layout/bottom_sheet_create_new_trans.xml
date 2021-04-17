@@ -28,7 +28,7 @@
                 android:focusable="true"
                 android:tint="@color/black"
                 android:visibility="invisible"
-                app:srcCompat="@drawable/abc_vector_test" />
+                app:srcCompat="@drawable/ic_baseline_arrow_back_24" />
 
             <FrameLayout
                 android:id="@+id/bottom_sheet_tab_view_container"

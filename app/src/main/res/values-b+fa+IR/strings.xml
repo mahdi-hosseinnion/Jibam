@@ -1,0 +1,57 @@
+<resources>
+    <string name="app_name">جیبی</string>
+    <string name="expenses">هزینه ها</string>
+    <string name="income">درآمد ها</string>
+    <string name="create_new_transaction">ایجاد تراکنش جدید</string>
+    <string name="write_note">یادداشت بگذارید</string>
+    <string name="today">امروز</string>
+    <string name="cash">پول نقد</string>
+    <string name="with">به همراه</string>
+    <string name="select_category">یک دسته انتخاب کنید</string>
+    <string name="add_transaction">ایجاد تراکنش جدید</string>
+    <string name="empty" />
+    <string name="money">پول</string>
+    <string name="note">یادداشت</string>
+    <string name="total_balance">تراز مالی </string>
+    <string name="zero">۰</string>
+    <string name="price">قیمت</string>
+    <string name="wallet">کیف پول</string>
+    <string name="category">دسته</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="bottom_sheet_behavior" translatable="false">com.google.android.material.bottomsheet.BottomSheetBehavior</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">سلام این یک فرگنت خالیه!</string>
+    <string name="date">تاریخ</string>
+    <string name="memo">یادداشت</string>
+    <string name="detail">جزئیات</string>
+
+
+    <string name="are_you_sure">آیا شما مطمئن هستید؟</string>
+    <string name="text_success">موفقیت</string>
+    <string name="text_ok">باشه</string>
+    <string name="text_error">خطا</string>
+    <string name="text_info">اطلاعات</string>
+    <string name="text_cancel">لغو</string>
+    <string name="text_yes">بله</string>
+    <string name="are_you_sure_delete">آیا شما مطمئن هستید که میخواهید این تراکنش را حذف کنید؟</string>
+    <string name="snack_bar_delete_text">آیا شما مطمئن هستید که میخواهید این تراکنش را حذف کنید؟</string>
+    <string name="snack_bar_undo">بازگردانی</string>
+    <string name="add_new_category">اضافه کردن یک دسته جدید</string>
+    <string name="now">الان</string>
+    <string name="search">جست‌وجو</string>
+    <string name="category_setting">تنظیمات دسته ها</string>
+    <string name="about">درباره</string>
+    <string name="rate_us">به ما امتیاز دهید</string>
+    <string name="setting">تنظیمات</string>
+    <string name="add_expenses_category">اضافه کردن یک دسته بندی برای هزینه ها</string>
+    <string name="add_income_category">اضافه کردن یک دسته بندی برای درآمد ها</string>
+    <string name="unable_to_recognize_category_type">خطایی در هنگام شناسایی دسته بندی رخ داد</string>
+    <string name="jibi">جیبی</string>
+
+<!--    ERRORS-->
+    <string name="pls_select_category">لطفا یک کتگوری انتخاب کنید!</string>
+    <string name="money_shouldnt_be_negative">از اعداد منفی برای مقدار هزینه نمیتوان استفاده کرد!</string>
+    <string name="pls_insert_some_money">لطفا برای تراکنش هزینه اضافه کنید!</string>
+    <string name="transactions">تراکنش ها</string>
+
+</resources>
