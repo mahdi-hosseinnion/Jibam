@@ -14,6 +14,7 @@ import com.example.jibi.R
 import com.example.jibi.models.Category
 import com.example.jibi.models.Record
 import com.example.jibi.util.GenericViewHolder
+import com.example.jibi.util.separate3By3
 import kotlinx.android.synthetic.main.fragment_add_transaction.view.*
 import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.android.synthetic.main.fragment_transaction.view.*
@@ -33,7 +34,8 @@ import kotlin.random.Random
 abstract class TransactionListAdapter(
     private val requestManager: RequestManager?,
     private val interaction: Interaction? = null,
-    private val packageName: String
+    private val packageName: String,
+    private val currentLocale: Locale
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -47,11 +49,12 @@ abstract class TransactionListAdapter(
 
         const val DATABASE_IS_EMPTY = -4
 
+        //MAKE THIS PERSIAN
         const val YESTERDAY = "Yesterday"
         const val TODAY = "Today"
 
         const val HEADER_ITEM = -3
-        private const val BLOG_ITEM = 0
+        private const val TRANSACTION_ITEM = 0
         private val NO_MORE_RESULTS_BLOG_MARKER = Record(
             NO_MORE_RESULTS,
             0.0,
@@ -77,7 +80,9 @@ abstract class TransactionListAdapter(
         //list of supported patter
         //https://stackoverflow.com/a/12781297/10362460
 //        "E MM/dd/yy",
-        const val HEADER_DATE_PATTERN = "E, MMM dd yyyy"
+        //"^" is just marker
+        const val DAY_OF_WEEK_MARKER = '^'
+        const val HEADER_DATE_PATTERN = "E,$DAY_OF_WEEK_MARKER MMM dd yyyy"
 //        const val HEADER_DATE_PATTERN="MM/dd/yy (E)"
 
 
@@ -179,7 +184,7 @@ abstract class TransactionListAdapter(
                     )
                 )
             }
-            BLOG_ITEM -> {
+            TRANSACTION_ITEM -> {
                 return TransViewHolder(
                     LayoutInflater.from(parent.context).inflate(
                         R.layout.layout_transaction_list_item,
@@ -198,7 +203,8 @@ abstract class TransactionListAdapter(
                         parent,
                         false
                     ),
-                    interaction = interaction
+                    interaction = interaction,
+                    currentLocale = currentLocale
                 )
             }
             else -> {
@@ -291,7 +297,7 @@ abstract class TransactionListAdapter(
 
     override fun getItemViewType(position: Int): Int {
         if (differ.currentList[position].id > -1) {
-            return BLOG_ITEM
+            return TRANSACTION_ITEM
         }
         return differ.currentList[position].id
     }
@@ -394,11 +400,11 @@ abstract class TransactionListAdapter(
                 itemView.main_text.text = item.memo
             }
             if (item.money >= 0.0) {
-                itemView.price.text = "+$${separate3By3(item.money)}"
+                itemView.price.text = separate3By3(item.money, currentLocale)
                 itemView.price.setTextColor(resources.getColor(R.color.incomeTextColor))
                 itemView.priceCard.setCardBackgroundColor(resources.getColor(R.color.incomeColor))
             } else {
-                itemView.price.text = "-$${separate3By3(item.money)}"
+                itemView.price.text = separate3By3(item.money, currentLocale)
                 itemView.price.setTextColor(resources.getColor(R.color.expensesTextColor))
                 itemView.priceCard.setCardBackgroundColor(resources.getColor(R.color.expensesColor))
             }
@@ -435,26 +441,14 @@ abstract class TransactionListAdapter(
                 ?.into(itemView.category_image)
         }
 
-
-        private fun separate3By3(money1: Double): String {
-            var money = money1
-            if (money < 0.0) {
-                money *= -1.0
-            }
-            if (money < 1000.0) {
-                return money.toString()
-            }
-            val formatter: DecimalFormat = NumberFormat.getInstance(Locale.US) as DecimalFormat
-            formatter.applyPattern("#,###,###,###.###")
-            return formatter.format(money)
-        }
     }
 
 
     class HeaderViewHolder
     constructor(
         itemView: View,
-        private val interaction: Interaction?
+        private val interaction: Interaction?,
+        private val currentLocale: Locale
     ) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(item: Record) = with(itemView) {
@@ -469,14 +463,24 @@ abstract class TransactionListAdapter(
             //money for expenses
             Log.d(TAG, "bind: sum of all expenses = ${item.money}")
             if (item.money != 0.0) {
-                itemView.header_expenses_sum.text = "${resources.getString(R.string.expenses)}: ${item.money}"
+                itemView.header_expenses_sum.text = "${resources.getString(R.string.expenses)}: ${
+                    separate3By3(
+                        item.money,
+                        currentLocale
+                    )
+                }"
             } else {
                 itemView.header_expenses_sum.text = ""
 
             }
             //cat_id for income
             if (item.incomeSum != null && item.incomeSum != 0.0) {
-                itemView.header_income_sum.text = "${resources.getString(R.string.income)}: ${item.incomeSum}"
+                itemView.header_income_sum.text = "${resources.getString(R.string.income)}: ${
+                    separate3By3(
+                        item.incomeSum,
+                        currentLocale
+                    )
+                }"
             } else {
                 itemView.header_income_sum.text = ""
             }
@@ -485,8 +489,14 @@ abstract class TransactionListAdapter(
                 itemView.header_date_name.text = item.memo
                 itemView.header_date.text = ""
             } else {
-                itemView.header_date_name.text = item.memo?.substring(0, 3)
-                itemView.header_date.text = item.memo?.substring(4)
+                Log.d(TAG, "bind: IM HERE !$: ${item.memo}")
+                itemView.header_date_name.text = item.memo?.substring(
+                    0, item.memo.indexOf(
+                        DAY_OF_WEEK_MARKER
+                    )
+                )
+                itemView.header_date.text =
+                    item.memo?.substring(item.memo.indexOf(DAY_OF_WEEK_MARKER).plus(1))
             }
 //            itemView.header_date.text = DateUtils.convertLongToStringDate(item.date)
         }
@@ -515,123 +525,6 @@ abstract class TransactionListAdapter(
     }
 
     abstract fun getCategoryByIdFromRoot(id: Int): Category
-
-
-    inner class TransCardViewHolder
-    constructor(
-        itemView: View,
-        private val interaction: Interaction?,
-        val requestManager: RequestManager?
-    ) : RecyclerView.ViewHolder(itemView), SubTransactionListAdapter.Interaction {
-
-        private var recyclerAdapter: SubTransactionListAdapter? = null
-        private val transactionContainer: LinearLayout =
-            itemView.findViewById(R.id.card_linearLayout);
-
-        fun bind(header: Record, items: List<Record>) = with(itemView) {
-            //bind header
-            if (header.money != 0.0) {
-                itemView.header_expenses_sum.text = "${resources.getString(R.string.expenses)}: ${header.money}"
-            } else {
-                itemView.header_expenses_sum.text = ""
-
-            }
-            //cat_id for income
-            if (header.cat_id != 0) {
-                itemView.header_income_sum.text = "${resources.getString(R.string.income)}: ${header.cat_id}"
-            } else {
-                itemView.header_income_sum.text = ""
-            }
-            itemView.header_date.text = header.memo
-            //bind items
-            if (items.size < 6) {
-                itemView.card_linearLayout.visibility = View.VISIBLE
-                itemView.card_recycler_view.visibility = View.INVISIBLE
-                bindWithLinearLayout(items)
-            } else {
-                itemView.card_linearLayout.visibility = View.INVISIBLE
-                itemView.card_recycler_view.visibility = View.VISIBLE
-                initRecyclerView()
-                submitListToRecyclerView(items)
-            }
-        }
-
-        private fun bindWithLinearLayout(items: List<Record>) {
-            val view: View = LayoutInflater.from(itemView.context)
-                .inflate(R.layout.layout_transaction_list_item, null)
-//            val view: View = LayoutInflater.from(itemView.context).inflate(
-//                R.layout.layout_transaction_list_item,
-//                (itemView.getParent() as ViewGroup),
-//                false
-//            )
-            transactionContainer.removeAllViews()
-            for (i in items.indices) {
-                val childItem = items[i]
-                var childCategory = getCategoryById(childItem.cat_id)
-                //hide the divider
-//                if (items.size == i.plus(1)) {
-//                    view.transaction_divider.visibility = View.GONE
-//                } else {
-//                    view.transaction_divider.visibility = View.VISIBLE
-//                }
-                //set the texts
-                if (childItem.memo.isNullOrBlank()) {
-                    view.main_text.text = childCategory.name
-                } else {
-                    view.main_text.text = childItem.memo
-                }
-                view.price.text = "${separate3By3(childItem.money)}"
-                if (childItem.money >= 0) {
-                    view.price.setTextColor(itemView.resources.getColor(R.color.incomeTextColor))
-                    view.priceCard.setCardBackgroundColor(itemView.resources.getColor(R.color.incomeColor))
-                } else {
-                    view.price.setTextColor(itemView.resources.getColor(R.color.expensesTextColor))
-                    view.priceCard.setCardBackgroundColor(itemView.resources.getColor(R.color.expensesColor))
-                }
-                //add to linearLayout
-                if (view.getParent() != null) {
-                    (view.getParent() as ViewGroup).removeView(view) // <- fix
-                }
-                transactionContainer.addView(view)
-
-            }
-        }
-
-        private fun separate3By3(money1: Double): String {
-            var money = money1
-            if (money < 0.0) {
-                money *= -1.0
-            }
-            if (money < 1000.0) {
-                return money.toString()
-            }
-            val formatter: DecimalFormat = NumberFormat.getInstance(Locale.US) as DecimalFormat
-            formatter.applyPattern("#,###,###,###.###")
-            return formatter.format(money)
-        }
-
-        fun submitListToRecyclerView(items: List<Record>) {
-            recyclerAdapter?.submitList(items)
-        }
-
-        private fun initRecyclerView() {
-
-            itemView.card_recycler_view.apply {
-                layoutManager = LinearLayoutManager(itemView.context)
-                recyclerAdapter = SubTransactionListAdapter(
-                    null,
-                    this@TransCardViewHolder
-                )
-
-                adapter = recyclerAdapter
-            }
-
-        }
-
-        override fun onItemSelected(position: Int, item: Record) {
-        }
-
-    }
 
 
     interface Interaction {

@@ -49,9 +49,10 @@
     <string name="jibi">جیبی</string>
 
 <!--    ERRORS-->
-    <string name="pls_select_category">لطفا یک کتگوری انتخاب کنید!</string>
+    <string name="pls_select_category">لطفا یک دسته انتخاب کنید!</string>
     <string name="money_shouldnt_be_negative">از اعداد منفی برای مقدار هزینه نمیتوان استفاده کرد!</string>
     <string name="pls_insert_some_money">لطفا برای تراکنش هزینه اضافه کنید!</string>
     <string name="transactions">تراکنش ها</string>
 
 </resources>
+<!--source https://developer.android.com/training/basics/supporting-devices/languages-->

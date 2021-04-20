@@ -250,7 +250,8 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:gravity="start|center"
-                    android:paddingStart="8dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="8dp"
                     android:text="@string/transactions"
                     android:textColor="@color/black"
                     android:textSize="20sp"
@@ -308,7 +309,6 @@
 
     </LinearLayout>
     <!--        </androidx.core.widget.NestedScrollView>-->
-
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

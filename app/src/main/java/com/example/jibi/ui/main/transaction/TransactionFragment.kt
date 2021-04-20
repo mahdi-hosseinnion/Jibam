@@ -52,7 +52,8 @@ class TransactionFragment
 @Inject
 constructor(
     viewModelFactory: ViewModelProvider.Factory,
-    private val requestManager: RequestManager
+    private val requestManager: RequestManager,
+    private val currentLocale: Locale
 ) : BaseTransactionFragment(
     R.layout.fragment_transaction,
     viewModelFactory,
@@ -325,50 +326,12 @@ constructor(
                 }
                 it.summeryMoney?.let { summeryMoney ->
                     summeryMoney.balance = (summeryMoney.income + summeryMoney.expenses)
-                    txt_balance.text = separate3By3AndRoundIt(summeryMoney.balance)
-                    txt_expenses.text = separate3By3AndRoundIt(summeryMoney.expenses.times(-1))
-                    txt_income.text = separate3By3AndRoundIt(summeryMoney.income)
+                    txt_balance.text = separate3By3AndRoundIt(summeryMoney.balance, currentLocale)
+                    txt_expenses.text =
+                        separate3By3AndRoundIt(summeryMoney.expenses.times(-1), currentLocale)
+                    txt_income.text = separate3By3AndRoundIt(summeryMoney.income, currentLocale)
                 }
             }
-        }
-
-    }
-
-    private fun separate3By3AndRoundIt(money: Double): String {
-        //TIP this method will round -354.3999999999942 to -354.4
-        Log.d("456987", "separate3By3AndRoundIt: start with $money")
-
-        //seprate 3 by 3 part
-//        val finalResult = if (money > 1_000.0 && money < -1_000.0) {
-//            money.toString()
-//        } else {
-        val formatter: DecimalFormat = NumberFormat.getInstance(Locale.US) as DecimalFormat
-        formatter.applyPattern("#,###,###,###.###")
-        //if you use this pattern it will round to two decimal
-//        formatter.applyPattern("#,###,###,###.##")
-        val finalResult = formatter.format(money).toString()
-//        }
-
-        if ((finalResult.indexOf('.')) == -1) {
-            return finalResult
-        }
-
-        //round part
-        if (finalResult.substring(finalResult.lastIndex.minus(1)) == ".0") {
-            //convert 15.0 to 15
-            return finalResult.substring(
-                startIndex = 0,
-                endIndex = finalResult.lastIndex.minus(1)
-            )
-        }
-
-        val periodPosition = finalResult.indexOf('.')
-
-        return if (periodPosition > -1 && periodPosition.plus(3) < finalResult.length) {
-            //convert 19.23423424 to 19.23
-            finalResult.substring(0, periodPosition.plus(3))
-        } else {
-            finalResult
         }
 
     }
@@ -381,7 +344,8 @@ constructor(
             recyclerAdapter = object : TransactionListAdapter(
                 requestManager,
                 this@TransactionFragment,
-                this@TransactionFragment.requireActivity().packageName
+                this@TransactionFragment.requireActivity().packageName,
+                currentLocale
             ) {
 
                 override fun getCategoryByIdFromRoot(id: Int): Category {

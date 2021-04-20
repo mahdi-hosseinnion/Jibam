@@ -26,7 +26,7 @@ constructor(
         when (className) {
 
             TransactionFragment::class.java.name -> {
-                TransactionFragment(viewModelFactory, requestManager)
+                TransactionFragment(viewModelFactory, requestManager, currentLocale)
             }
 
             AddTransactionFragment::class.java.name -> {
@@ -46,7 +46,7 @@ constructor(
             }
 
             else -> {
-                TransactionFragment(viewModelFactory, requestManager)
+                TransactionFragment(viewModelFactory, requestManager, currentLocale)
             }
         }
 
