@@ -395,7 +395,12 @@ abstract class TransactionListAdapter(
             }
 
             if (item.memo.isNullOrBlank()) {
-                itemView.main_text.text = category.name
+                itemView.main_text.text = category.getCategoryNameFromStringFile(
+                    resources,
+                    this@TransViewHolder.packageName
+                ) {
+                    it.name
+                }
             } else {
                 itemView.main_text.text = item.memo
             }

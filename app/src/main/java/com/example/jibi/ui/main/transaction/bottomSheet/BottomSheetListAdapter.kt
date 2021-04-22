@@ -134,7 +134,10 @@ class BottomSheetListAdapter(
 //                ?.transition(withCrossFade())
 //                ?.into(itemView.category_image)
 
-            itemView.category_name.text = item.name
+            itemView.category_name.text =
+                item.getCategoryNameFromStringFile(resources, this@CategoryViewHolder.packageName) {
+                    it.name
+                }
 //            itemView.blog_update_date.text = DateUtils.convertLongToStringDate(item.date_updated)
             val categoryImageUrl = this.resources.getIdentifier(
                 "ic_cat_${item.name}",

@@ -216,7 +216,13 @@ constructor(
             fun bind(item: Category?) {
                 if (item != null) {
                     itemView.apply {
-                        itemView.nameOfCategory.text = "${item.ordering}| ${item.name}"
+                        val categoryName = item.getCategoryNameFromStringFile(
+                            resources,
+                            requireActivity().packageName
+                        ) {
+                            it.name
+                        }
+                        itemView.nameOfCategory.text = "${item.ordering}| $categoryName"
 
                         changePinState(item.ordering < 0)
 

@@ -20,7 +20,7 @@ import kotlin.random.Random
 @ExperimentalCoroutinesApi
 class RecordsDaoTest : AppDatabaseTest() {
     private val TAG = "RecordsDaoTest"
-
+/*
     @Test
     fun insertReadDelete() = runBlockingTest {
         //setup
@@ -217,9 +217,9 @@ class RecordsDaoTest : AppDatabaseTest() {
 
     }
 
-    /*
+    *//*
         ++TEST FOR SUM QUERIES
-     */
+     *//*
 
     @Test
     fun testQuery_returnTheSumOfAllIncome() = runBlockingTest {
@@ -687,5 +687,5 @@ class RecordsDaoTest : AppDatabaseTest() {
     }
     fun mahdiLo1g(className: String?, message: String ) {
             println("195 $className: $message")
-    }
+    }*/
 }

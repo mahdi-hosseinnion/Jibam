@@ -426,7 +426,11 @@ constructor(
     }
 
     private fun setCategoryNameAndIcon(category: Category) {
-        category_fab.text = category.name
+
+        category_fab.text =
+            category.getCategoryNameFromStringFile(resources, requireActivity().packageName) {
+                it.name
+            }
         category_fab.extend()
 
         val resourceId: Int = requireActivity().resources.getIdentifier(

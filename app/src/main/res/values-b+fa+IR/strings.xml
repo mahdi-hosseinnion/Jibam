@@ -54,5 +54,50 @@
     <string name="pls_insert_some_money">لطفا برای تراکنش هزینه اضافه کنید!</string>
     <string name="transactions">تراکنش ها</string>
 
+    <!--    CATEGORY NAMES-->
+    <string name="food">غذا</string>
+    <string name="hamburger">همبرگر</string>
+    <string name="vegetables">سبزیجات</string>
+    <string name="fruits">میوه ها</string>
+    <string name="transportation">حمل و نقل</string>
+    <string name="shopping">خريد كردن</string>
+    <string name="sport">ورزش</string>
+    <string name="social">اجتماعی</string>
+    <string name="baby">کودک</string>
+    <string name="entertainment">سرگرمی</string>
+    <string name="clothing">پوشاک</string>
+    <string name="beauty">لوازم آرایشی</string>
+    <string name="telephone">تلفن</string>
+    <string name="home">خانه</string>
+    <string name="pet">حیوان خانگی</string>
+    <string name="bills">قبوض</string>
+    <string name="electronics">الکترونیک</string>
+    <string name="cigarette">سیگار</string>
+    <string name="wine">شراب</string>
+    <string name="snacks">تنقلات</string>
+    <string name="travel">مسافرت</string>
+    <string name="book">کتاب</string>
+    <string name="education">تحصیلات</string>
+    <string name="health">سلامت</string>
+    <string name="gift">هدیه</string>
+    <string name="office">دفتر</string>
+    <string name="insurance">بیمه</string>
+    <string name="car">ماشین</string>
+    <string name="tax">مالیات</string>
+    <string name="salary">حقوق</string>
+    <string name="awards">جایزه</string>
+    <string name="grants">کمک هزینه</string>
+    <string name="sale">فروش</string>
+    <string name="rental">اجاره</string>
+    <string name="refunds">باز پرداخت</string>
+    <string name="coupons">کوپن</string>
+    <string name="lottery">قرعه کشی</string>
+    <string name="dividends">سود سهام</string>
+    <string name="investments">سرمایه گذاری ها</string>
+    <string name="others">غیره</string>
+
+
+
+    <string name="testing_string">این فقط برای تست هسستش</string>
 </resources>
 <!--source https://developer.android.com/training/basics/supporting-devices/languages-->

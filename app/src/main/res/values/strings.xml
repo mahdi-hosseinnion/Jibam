@@ -48,10 +48,53 @@
     <string name="unable_to_recognize_category_type">Unable to recognize category type</string>
     <string name="jibi">Jibi</string>
 
-<!--    ERRORS-->
+    <!--    ERRORS-->
     <string name="pls_select_category">Please select category</string>
     <string name="money_shouldnt_be_negative">money should be grater then 0</string>
     <string name="pls_insert_some_money">Please insert some money</string>
     <string name="transactions">Transactions</string>
 
+    <!--    CATEGORY NAMES-->
+    <string name="food">food</string>
+    <string name="hamburger">hamburger</string>
+    <string name="vegetables">vegetables</string>
+    <string name="fruits">fruits</string>
+    <string name="transportation">transportation</string>
+    <string name="shopping">shopping</string>
+    <string name="sport">sport</string>
+    <string name="social">social</string>
+    <string name="baby">baby</string>
+    <string name="entertainment">entertainment</string>
+    <string name="clothing">clothing</string>
+    <string name="beauty">beauty</string>
+    <string name="telephone">telephone</string>
+    <string name="home">home</string>
+    <string name="pet">pet</string>
+    <string name="bills">bills</string>
+    <string name="electronics">electronics</string>
+    <string name="cigarette">cigarette</string>
+    <string name="wine">wine</string>
+    <string name="snacks">snacks</string>
+    <string name="travel">travel</string>
+    <string name="book">book</string>
+    <string name="education">education</string>
+    <string name="health">health</string>
+    <string name="gift">gift</string>
+    <string name="office">office</string>
+    <string name="insurance">insurance</string>
+    <string name="car">car</string>
+    <string name="tax">tax</string>
+    <string name="salary">salary</string>
+    <string name="awards">awards</string>
+    <string name="grants">grants</string>
+    <string name="sale">sale</string>
+    <string name="rental">rental</string>
+    <string name="refunds">refunds</string>
+    <string name="coupons">coupons</string>
+    <string name="lottery">lottery</string>
+    <string name="dividends">dividends</string>
+    <string name="investments">investments</string>
+    <string name="others">others</string>
+
+    <string name="testing_string">it just for testing</string>
 </resources>

@@ -11,7 +11,7 @@ import org.junit.Test
 
 class RecordQueryUtilTest {
     //system under test ("RecordQueryUtil")
-    val recordsDao = mockk<RecordsDao>()
+/*    val recordsDao = mockk<RecordsDao>()
 
     @Before
     fun init() {
@@ -71,5 +71,5 @@ class RecordQueryUtilTest {
         verify { recordsDao.returnTheSumOfExpensesBeforeThan(8) }
         recordsDao.getSumOfExpenses(minDate = 5, maxDate = 10)
         verify { recordsDao.returnTheSumOfExpensesBetweenDates(5, 10) }
-    }
+    }*/
 }
