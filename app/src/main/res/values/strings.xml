@@ -5,6 +5,7 @@
     <string name="create_new_transaction">Create New Transaction</string>
     <string name="write_note">Write Some note</string>
     <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
     <string name="cash">Cash</string>
     <string name="with">With</string>
     <string name="select_category">Select category</string>

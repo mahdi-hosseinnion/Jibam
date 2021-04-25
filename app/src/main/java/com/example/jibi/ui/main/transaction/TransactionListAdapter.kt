@@ -489,12 +489,13 @@ abstract class TransactionListAdapter(
             } else {
                 itemView.header_income_sum.text = ""
             }
-            if (item.memo == (YESTERDAY) || item.memo == (TODAY)
-            ) {
-                itemView.header_date_name.text = item.memo
-                itemView.header_date.text = ""
+            itemView.header_date.text = ""
+
+            if (item.memo == TODAY) {
+                itemView.header_date_name.text = resources.getString(R.string.today)
+            } else if (item.memo == YESTERDAY) {
+                itemView.header_date_name.text = resources.getString(R.string.yesterday)
             } else {
-                Log.d(TAG, "bind: IM HERE !$: ${item.memo}")
                 itemView.header_date_name.text = item.memo?.substring(
                     0, item.memo.indexOf(
                         DAY_OF_WEEK_MARKER
@@ -503,7 +504,6 @@ abstract class TransactionListAdapter(
                 itemView.header_date.text =
                     item.memo?.substring(item.memo.indexOf(DAY_OF_WEEK_MARKER).plus(1))
             }
-//            itemView.header_date.text = DateUtils.convertLongToStringDate(item.date)
         }
 
         private fun convertDpToPx(dp: Int): Int {
