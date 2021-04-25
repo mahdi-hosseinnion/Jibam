@@ -30,7 +30,9 @@ import com.example.jibi.models.Record
 import com.example.jibi.ui.main.transaction.bottomSheet.CreateNewTransBottomSheet
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.TextCalculator
+import com.example.jibi.util.convertDoubleToString
 import com.example.jibi.util.convertDpToPx
+import com.example.jibi.util.localizeDoubleNumber
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
 import kotlinx.android.synthetic.main.fragment_add_transaction.view.*
 import kotlinx.android.synthetic.main.keyboard_add_transaction.*
@@ -581,7 +583,7 @@ constructor(
                 ) >= 0
             ) {
                 val calculatedResult = textCalculator.calculateResult(p0.toString())
-                finalNUmber.text = convertDoubleToString(calculatedResult)
+                finalNUmber.text=localizeDoubleNumber(calculatedResult.toDouble(),currentLocale)
                 var newMoney = calculatedResult.toDoubleOrNull()
                 Log.d(TAG, "CHANGES: ${transactionCategory.toString()} ")
                 if (transactionCategory?.type == 1 && newMoney != null) {
@@ -600,15 +602,7 @@ constructor(
     }
 
 
-    fun convertDoubleToString(text: String): String {//convert 13.0 to 13
-        if (text.length < 2) {
-            return text
-        }
-        return if (text.substring(text.lastIndex.minus(1)) == ".0") //convert 13.0 to 13
-            text.substring(0, text.lastIndex.minus(1))
-        else
-            text
-    }
+
 
 
     inner class SubmitButtonState(private val defaultTransaction: Record) {

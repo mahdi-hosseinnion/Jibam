@@ -244,6 +244,7 @@
             android:id="@+id/keyboard"
             android:layout_width="match_parent"
             android:layout_height="288dp"
+            android:layoutDirection="ltr"
             android:orientation="vertical" />
     </LinearLayout>
 

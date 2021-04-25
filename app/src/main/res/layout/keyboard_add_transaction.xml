@@ -33,25 +33,25 @@
                 style="@style/calcutorTextViewStyle"
 
 
-                android:text="7" />
+                android:text="@string/_7" />
 
             <Button
                 android:id="@+id/btn_4"
                 style="@style/calcutorTextViewStyle"
 
-                android:text="4" />
+                android:text="@string/_4" />
 
             <Button
                 android:id="@+id/btn_1"
                 style="@style/calcutorTextViewStyle"
 
-                android:text="1" />
+                android:text="@string/_1" />
 
             <Button
                 android:id="@+id/btn_00"
                 style="@style/calcutorTextViewStyle"
 
-                android:text="00" />
+                android:text="@string/_00" />
         </LinearLayout>
 
         <LinearLayout
@@ -71,26 +71,26 @@
                 android:id="@+id/btn_8"
                 style="@style/calcutorTextViewStyle"
 
-                android:text="8" />
+                android:text="@string/_8" />
 
 
             <Button
                 android:id="@+id/btn_5"
                 style="@style/calcutorTextViewStyle"
 
-                android:text="5" />
+                android:text="@string/_5" />
 
             <Button
                 android:id="@+id/btn_2"
                 style="@style/calcutorTextViewStyle"
 
-                android:text="2" />
+                android:text="@string/_2" />
 
             <Button
                 android:id="@+id/btn_0"
                 style="@style/calcutorTextViewStyle"
 
-                android:text="0" />
+                android:text="@string/_0" />
 
         </LinearLayout>
 
@@ -112,19 +112,19 @@
                 android:id="@+id/btn_9"
                 style="@style/calcutorTextViewStyle"
 
-                android:text="9" />
+                android:text="@string/_9" />
 
             <Button
                 android:id="@+id/btn_6"
                 style="@style/calcutorTextViewStyle"
 
-                android:text="6" />
+                android:text="@string/_6" />
 
             <Button
                 android:id="@+id/btn_3"
                 style="@style/calcutorTextViewStyle"
 
-                android:text="3" />
+                android:text="@string/_3" />
 
             <Button
                 android:id="@+id/btn_period"

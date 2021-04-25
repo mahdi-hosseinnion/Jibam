@@ -97,7 +97,17 @@
     <string name="investments">سرمایه گذاری ها</string>
     <string name="others">غیره</string>
 
-
+    <string name="_1">۱</string>
+    <string name="_2">۲</string>
+    <string name="_3">۳</string>
+    <string name="_4">۴</string>
+    <string name="_5">۵</string>
+    <string name="_6">۶</string>
+    <string name="_7">۷</string>
+    <string name="_8">۸</string>
+    <string name="_9">۹</string>
+    <string name="_0">۰</string>
+    <string name="_00">۰۰</string>
 
     <string name="testing_string">این فقط برای تست هسستش</string>
 </resources>
