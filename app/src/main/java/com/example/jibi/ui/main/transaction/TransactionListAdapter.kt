@@ -496,13 +496,17 @@ abstract class TransactionListAdapter(
             } else if (item.memo == YESTERDAY) {
                 itemView.header_date_name.text = resources.getString(R.string.yesterday)
             } else {
-                itemView.header_date_name.text = item.memo?.substring(
-                    0, item.memo.indexOf(
-                        DAY_OF_WEEK_MARKER
+                try {
+                    itemView.header_date_name.text = item.memo?.substring(
+                        0, item.memo.indexOf(
+                            DAY_OF_WEEK_MARKER
+                        )
                     )
-                )
-                itemView.header_date.text =
-                    item.memo?.substring(item.memo.indexOf(DAY_OF_WEEK_MARKER).plus(1))
+                    itemView.header_date.text =
+                        item.memo?.substring(item.memo.indexOf(DAY_OF_WEEK_MARKER).plus(1))
+                } catch (e: Exception) {
+                    itemView.header_date.text = "${item.memo}"
+                }
             }
         }
 

@@ -36,7 +36,7 @@ constructor(
     val categoriesDao: CategoriesDao,
     val currentLocale: Locale
 ) {
-
+    var solarCalendar = SolarCalendar()
     var today: String? = null
     var yesterday: String? = null
 
@@ -129,22 +129,14 @@ constructor(
 
     private fun currentDateInString(time: Int): String {
         val dv: Long = ((time.toLong()) * 1000) // its need to be in milisecond
-        val df: Date = Date(dv)
 
-        val transDate =
-            SimpleDateFormat(TransactionListAdapter.HEADER_DATE_PATTERN, currentLocale).format(df)
+        val transDate =getFormattedDate(dv)
 
         if (today == null) {
-            today = SimpleDateFormat(
-                TransactionListAdapter.HEADER_DATE_PATTERN,
-                currentLocale
-            ).format(Date(System.currentTimeMillis()))
+            today = getFormattedDate(System.currentTimeMillis())
         }
         if (yesterday == null) {
-            yesterday = SimpleDateFormat(
-                TransactionListAdapter.HEADER_DATE_PATTERN,
-                currentLocale
-            ).format(Date(System.currentTimeMillis().minus(86_400_000L)))
+            yesterday = getFormattedDate(System.currentTimeMillis().minus(86_400_000L))
         }
         if (transDate == today) {
             return TODAY
@@ -153,6 +145,20 @@ constructor(
             return YESTERDAY
         }
         return transDate
+    }
+
+    private fun getFormattedDate(unixTimeStamp: Long): String {
+        val df: Date = Date(unixTimeStamp)
+
+        return if (currentLocale.country=="IR") {
+            solarCalendar.calcSolarCalendar(df, currentLocale)
+        } else {
+            SimpleDateFormat(
+                TransactionListAdapter.HEADER_DATE_PATTERN,
+                currentLocale
+            ).format(df)
+        }
+
     }
 
     //dataBase main dao
