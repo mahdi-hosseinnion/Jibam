@@ -18,7 +18,9 @@ class TextCalculator {
 
     }
 
-    fun calculateResult(value: String): String {
+    fun calculateResult(value1: String): String {
+        var value = value1
+        value = value.convertFarsiDigitsToEnglishDigits()//convert farsi digits to english if needed
         try {
 
 

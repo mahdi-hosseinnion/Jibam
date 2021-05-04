@@ -16,6 +16,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputConnection
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.annotation.StringRes
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
@@ -579,11 +580,11 @@ constructor(
 
             //calculate result of main edittext
             if (p0.toString().indexOfAny(
-                    chars = listOfNumbers
+                    chars = listOfNumbers()
                 ) >= 0
             ) {
                 val calculatedResult = textCalculator.calculateResult(p0.toString())
-                finalNUmber.text=localizeDoubleNumber(calculatedResult.toDouble(),currentLocale)
+                finalNUmber.text = localizeDoubleNumber(calculatedResult.toDouble(), currentLocale)
                 var newMoney = calculatedResult.toDoubleOrNull()
                 Log.d(TAG, "CHANGES: ${transactionCategory.toString()} ")
                 if (transactionCategory?.type == 1 && newMoney != null) {
@@ -600,9 +601,6 @@ constructor(
         }
 
     }
-
-
-
 
 
     inner class SubmitButtonState(private val defaultTransaction: Record) {
@@ -646,17 +644,7 @@ constructor(
 
         private const val TIME_PATTERN = "KK:mm aa"
         private const val DATE_PATTERN = "MM/dd/yy (E)"
-        private val listOfNumbers = charArrayOf(
-            '1',
-            '2',
-            '3',
-            '4',
-            '5',
-            '6',
-            '7',
-            '8',
-            '9'
-        )
+
 
         //errors
         private enum class ErrorMessages {
@@ -667,6 +655,19 @@ constructor(
 
 
     }
+
+    private fun listOfNumbers(): CharArray =
+        charArrayOf(
+            getString(R.string._1)[0],
+            getString(R.string._2)[0],
+            getString(R.string._3)[0],
+            getString(R.string._4)[0],
+            getString(R.string._5)[0],
+            getString(R.string._6)[0],
+            getString(R.string._7)[0],
+            getString(R.string._8)[0],
+            getString(R.string._9)[0]
+        )
 
     private fun errorMsgMapper(error: ErrorMessages): String = when (error) {
         ErrorMessages.PLEASE_SELECT_CATEGORY -> resources.getString(R.string.pls_select_category)

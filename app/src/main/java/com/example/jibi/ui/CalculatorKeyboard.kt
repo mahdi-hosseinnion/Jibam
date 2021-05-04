@@ -10,8 +10,11 @@ import android.view.inputmethod.ExtractedTextRequest
 import android.view.inputmethod.InputConnection
 import android.widget.Button
 import android.widget.LinearLayout
+import androidx.annotation.StringRes
 import com.example.jibi.R
+import com.example.jibi.util.convertEnglishDigitsToFarsiDigits
 import java.lang.StringBuilder
+import java.util.*
 
 //copy from this
 // https://stackoverflow.com/a/45005691/10362460
@@ -32,15 +35,15 @@ class CalculatorKeyboard(
     var text = StringBuilder("")
 
     private val listOfNumbers = charArrayOf(
-        '1',
-        '2',
-        '3',
-        '4',
-        '5',
-        '6',
-        '7',
-        '8',
-        '9'
+        getString(R.string._1)[0],
+        getString(R.string._2)[0],
+        getString(R.string._3)[0],
+        getString(R.string._4)[0],
+        getString(R.string._5)[0],
+        getString(R.string._6)[0],
+        getString(R.string._7)[0],
+        getString(R.string._8)[0],
+        getString(R.string._9)[0]
     )
 
     private val listOfSigns = listOf(
@@ -139,20 +142,22 @@ class CalculatorKeyboard(
             R.id.btn_plus to PLUS,
             R.id.btn_period to PERIOD,
             R.id.btn_equal to "=",
-            R.id.btn_1 to "1",
-            R.id.btn_2 to "2",
-            R.id.btn_3 to "3",
-            R.id.btn_4 to "4",
-            R.id.btn_5 to "5",
-            R.id.btn_6 to "6",
-            R.id.btn_7 to "7",
-            R.id.btn_8 to "8",
-            R.id.btn_9 to "9",
-            R.id.btn_0 to "0",
-            R.id.btn_00 to "00"
+            R.id.btn_1 to getString(R.string._1),
+            R.id.btn_2 to getString(R.string._2),
+            R.id.btn_3 to getString(R.string._3),
+            R.id.btn_4 to getString(R.string._4),
+            R.id.btn_5 to getString(R.string._5),
+            R.id.btn_6 to getString(R.string._6),
+            R.id.btn_7 to getString(R.string._7),
+            R.id.btn_8 to getString(R.string._8),
+            R.id.btn_9 to getString(R.string._9),
+            R.id.btn_0 to getString(R.string._0),
+            R.id.btn_00 to getString(R.string._00)
         )
 
     }
+
+    fun getString(@StringRes id: Int) = resources.getString(id)
 
     companion object {
         private const val TAG = "CalculatorKeyboard"
@@ -208,7 +213,7 @@ class CalculatorKeyboard(
 
                 if (text.isBlank()) {
                     //nothing inserted yet
-                    if (value.indexOfAny(listOfNumbers) >= 0 || value == "0") {
+                    if (value.indexOfAny(listOfNumbers) >= 0 || value == getString(R.string._0)) {
                         //contain number
                         inputConnection!!.commitText(value, 1)
                         text.append(value)
@@ -236,7 +241,7 @@ class CalculatorKeyboard(
                     }
 
                     //something inserted
-                    if (text.toString() == "0") {
+                    if (text.toString() == getString(R.string._0)) {
                         if (v.id == R.id.btn_period) {
                             //only . allowed after 0
                             inputConnection!!.commitText(value, 1)
@@ -261,7 +266,11 @@ class CalculatorKeyboard(
 
     fun preloadKeyboard(value: String) {
         try {
-            inputConnection!!.commitText(value, 1)
+            val value1 =
+                if (getString(R.string._1) != "1") value.convertEnglishDigitsToFarsiDigits()
+                else value
+
+            inputConnection!!.commitText(value1, 1)
             text.append(value)
         } catch (e: NullPointerException) {
             Log.e(TAG, "preloadKeyboard : cannot set text to inputConnection", e)
