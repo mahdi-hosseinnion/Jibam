@@ -52,6 +52,7 @@
             android:gravity="center"
             android:paddingStart="28dp"
             android:paddingEnd="28dp"
+            android:textColor="@color/black"
             android:text="@string/add_new_category"
             android:textSize="16sp"
             app:drawableStartCompat="@android:drawable/ic_input_add"

@@ -41,7 +41,7 @@
     <string name="now">الان</string>
     <string name="search">جست‌وجو</string>
     <string name="category_setting">تنظیمات دسته ها</string>
-    <string name="about">درباره</string>
+    <string name="about">درباره ما</string>
     <string name="rate_us">به ما امتیاز دهید</string>
     <string name="setting">تنظیمات</string>
     <string name="add_expenses_category">اضافه کردن یک دسته بندی برای هزینه ها</string>
@@ -110,5 +110,8 @@
     <string name="_00">۰۰</string>
 
     <string name="testing_string">این فقط برای تست هسستش</string>
+    <string name="about_us">توسعه دهنده: سید مهدی حسینیون</string>
+    <string name="are_you_sure_delete_category">آیا شما مطمئن هستید که میخواهید این دسته را حذف کنید؟"</string>
+
 </resources>
 <!--source https://developer.android.com/training/basics/supporting-devices/languages-->

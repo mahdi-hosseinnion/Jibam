@@ -277,7 +277,7 @@ constructor(
             }
             uiCommunicationListener.onResponseReceived(
                 Response(
-                    "Are You sure you want to delete this category?",
+                    getString(R.string.are_you_sure_delete_category),
                     UIComponentType.AreYouSureDialog(
                         callback
                     ), MessageType.Info

@@ -3,12 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#459825"
     android:orientation="vertical"
-    tools:context=".ui.main.transaction.SettingFragment">
+    tools:context=".ui.main.transaction.AboutUsFragment">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/setting_toolbar"
+        android:id="@+id/about_us_toolbar"
 
         android:layout_width="match_parent"
         android:layout_height="@dimen/mtrl_toolbar_default_height"
@@ -17,9 +16,12 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/setting"
         android:layout_gravity="center"
+        android:layout_margin="8dp"
         android:gravity="center"
+        android:text="@string/about_us"
+        android:textColor="@color/black"
         android:textSize="18sp" />
+
 
 </LinearLayout>

@@ -85,12 +85,5 @@
         app:srcCompat="@drawable/ic_delete_"
         app:tint="@android:color/holo_red_light" />
 
-    <ImageView
-        android:layout_width="56dp"
-        android:layout_height="match_parent"
-        android:clickable="true"
-        android:focusable="true"
-        android:padding="16dp"
-        app:srcCompat="@android:drawable/ic_menu_sort_by_size" />
 
 </LinearLayout>

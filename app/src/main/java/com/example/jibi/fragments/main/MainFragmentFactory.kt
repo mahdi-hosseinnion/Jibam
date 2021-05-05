@@ -44,6 +44,9 @@ constructor(
             SettingFragment::class.java.name -> {
                 SettingFragment(viewModelFactory)
             }
+            AboutUsFragment::class.java.name -> {
+                AboutUsFragment(viewModelFactory)
+            }
 
             else -> {
                 TransactionFragment(viewModelFactory, requestManager, currentLocale)

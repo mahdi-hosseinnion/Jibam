@@ -28,6 +28,7 @@
 
 
     <string name="are_you_sure">Are you sure?</string>
+    <string name="are_you_sure_delete_category">"Are You sure you want to delete this category?"</string>
     <string name="text_success">Success</string>
     <string name="text_ok">OK</string>
     <string name="text_error">Error</string>
@@ -41,7 +42,7 @@
     <string name="now">Now</string>
     <string name="search">Search</string>
     <string name="category_setting">Category setting</string>
-    <string name="about">About</string>
+    <string name="about">About us</string>
     <string name="rate_us">Rate Us</string>
     <string name="setting">Setting</string>
     <string name="add_expenses_category">Add expenses category</string>
@@ -110,4 +111,7 @@
     <string name="_9">9</string>
     <string name="_0">0</string>
     <string name="_00">00</string>
+
+    <string name="about_us">Developed by: seyed mahdi hosseinniun</string>
+
 </resources>

@@ -4,22 +4,22 @@
 
     <item
         android:id="@+id/viewCategoriesFragment"
-        android:icon="@drawable/ic_cat_food"
+        android:icon="@drawable/ic_category_setting"
         android:iconTint="@color/black"
         android:title="@string/category_setting" />
     <item
         android:id="@+id/settingFragment"
-        android:icon="@drawable/ic_cat_education"
+        android:icon="@drawable/ic_settings"
         android:iconTint="@color/black"
         android:title="@string/setting" />
     <item
         android:id="@+id/rate_us"
-        android:icon="@drawable/ic_cat_entertainment"
+        android:icon="@drawable/ic_rate_us"
         android:iconTint="@color/black"
         android:title="@string/rate_us" />
     <item
-        android:id="@+id/about"
-        android:icon="@drawable/ic_cat_car"
+        android:id="@+id/aboutUsFragment"
+        android:icon="@drawable/ic_about"
         android:iconTint="@color/black"
         android:title="@string/about" />
 </menu>
