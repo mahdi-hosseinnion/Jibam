@@ -112,6 +112,7 @@
     <string name="testing_string">این فقط برای تست هسستش</string>
     <string name="about_us">توسعه دهنده: سید مهدی حسینیون</string>
     <string name="are_you_sure_delete_category">آیا شما مطمئن هستید که میخواهید این دسته را حذف کنید؟"</string>
+    <string name="unable_to_get_date">تاریخ انتخاب شده ثبت نشد لطفا مجددا تلاش کنید!"</string>
 
 </resources>
 <!--source https://developer.android.com/training/basics/supporting-devices/languages-->

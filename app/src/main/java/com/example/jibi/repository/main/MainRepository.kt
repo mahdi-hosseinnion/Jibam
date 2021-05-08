@@ -17,6 +17,7 @@ import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotO
 import com.example.jibi.ui.main.transaction.state.TransactionViewState
 import com.example.jibi.util.*
 import com.example.jibi.util.Constants.Companion.CACHE_TIMEOUT
+import com.example.jibi.util.SolarCalendar.ShamsiPatterns.RECYCLER_VIEW
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
@@ -36,7 +37,6 @@ constructor(
     val categoriesDao: CategoriesDao,
     val currentLocale: Locale
 ) {
-    var solarCalendar = SolarCalendar()
     var today: String? = null
     var yesterday: String? = null
 
@@ -151,7 +151,7 @@ constructor(
         val df: Date = Date(unixTimeStamp)
 
         return if (currentLocale.country=="IR") {
-            solarCalendar.calcSolarCalendar(df, currentLocale)
+            SolarCalendar.calcSolarCalendar(df, RECYCLER_VIEW,currentLocale )
         } else {
             SimpleDateFormat(
                 TransactionListAdapter.HEADER_DATE_PATTERN,

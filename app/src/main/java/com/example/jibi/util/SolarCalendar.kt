@@ -4,7 +4,14 @@ import com.example.jibi.ui.main.transaction.TransactionListAdapter
 import java.util.*
 
 //  this algorithm for years and it is very accurate between 1901 and 2099.
-class SolarCalendar {
+//TIP this class only work in date between 2029-03-19/OR/1407/12/29 and 1370/1/1
+//b/c 1408 is kabise but 1407 is'nt kabise and 1403 is kabise its all about 33 year kabise in shamsi
+//tarikh
+//To solve this proble check this two project
+//https://github.com/alirezaafkar/SunDatePicker/blob/master/sundatepicker/src/main/java/com/alirezaafkar/sundatepicker/components/JDF.java
+//https://github.com/persian-calendar/DroidPersianCalendar
+object SolarCalendar {
+
 
     private var date: Int = 0
     private var month = 0
@@ -14,11 +21,20 @@ class SolarCalendar {
 
     var isThisTest = false
 
-    fun calcSolarCalendar(unixTimeStamp: Long, loc: Locale = Locale("en_US")): String =
-        calcSolarCalendar(Date(unixTimeStamp), loc)
+    fun calcSolarCalendar(
+        unixTimeStamp: Long,
+        pattern: ShamsiPatterns,
+        loc: Locale
+    ): String =
+        calcSolarCalendar(Date(unixTimeStamp), pattern, loc)
 
-
-    fun calcSolarCalendar(gregorianDate: Date, loc: Locale = Locale("en_US")): String {
+//    = Locale("en_US")
+    fun calcSolarCalendar(
+        gregorianDate: Date,
+        pattern: ShamsiPatterns,
+        loc: Locale
+    ): String {
+        val int: Int = 1868613935
 
         val ld: Int
         val miladiYear: Int = gregorianDate.year + 1900
@@ -173,23 +189,67 @@ class SolarCalendar {
             5 -> strWeekDay = "جمعه"
             6 -> strWeekDay = "شنبه"
         }
-        return if (isThisTest) {
-            "$year/" + java.lang.String.format(
-                loc, "%02d",
-                month
-            ) + "/" + java.lang.String.format(loc, "%02d", date) + "/" + strMonth + "/" + strWeekDay
-        } else {
-            "$strWeekDay، ${TransactionListAdapter.DAY_OF_WEEK_MARKER}" +
-                    java.lang.String.format(loc, "%d", date) +
-                    " " +
-                    strMonth +
-                    " " +
-                    java.lang.String.format(loc, "%02d", year)
-            //sample
-//        دوشنبه، ۱۶ اسفند ۱۴۰۰
+        //TODO REFACTOR THIS
+        return when (pattern) {
+            ShamsiPatterns.RECYCLER_VIEW -> {
+                "$strWeekDay، ${TransactionListAdapter.DAY_OF_WEEK_MARKER}" +
+                        java.lang.String.format(loc, "%d", date) +
+                        " " +
+                        strMonth +
+                        " " +
+                        java.lang.String.format(loc, "%02d", year)
+            }
+            ShamsiPatterns.DETAIL_FRAGMENT -> {
+                "" + java.lang.String.format(loc, "%d", year) + "/" + java.lang.String.format(
+                    loc,
+                    "%d",
+                    month
+                ) + "/" +
+                        java.lang.String.format(loc, "%02d", date) + " (" + strWeekDay + ")"
+
+            }
+            ShamsiPatterns.TEST -> {
+                "$year/" + java.lang.String.format(
+                    loc, "%02d",
+                    month
+                ) + "/" + java.lang.String.format(
+                    loc,
+                    "%02d",
+                    date
+                ) + "/" + strMonth + "/" + strWeekDay
+            }
         }
 
     }
 
+    //* CONST--------------
+    //////Shamsi
+    //min
+    const val minShamsiYear = 1370
+    const val minShamsiMonth = 1
+    const val minShamsiDay = 1
+
+    //max
+    const val maxShamsiYear = 1407
+    const val maxShamsiMonth = 12
+    const val maxShamsiDay = 29
+
+    //////Gregorian
+    //min
+    const val minGregorianDate = 669554735_000
+
+    //        const val minGregorianYear = 1991/03/21
+//        const val minGregorianMonth = 3
+//        const val minGregorianDay = 21
+    //max
+    const val maxGregorianDate = 1868613935_000
+
+    //        const val maxGregorianYear = 2029/03/19
+//        const val maxGregorianMonth = 3
+//        const val maxGregorianDay = 19
+    //yea integer max value
+    enum class ShamsiPatterns {
+        RECYCLER_VIEW, DETAIL_FRAGMENT, TEST
+    }
 
 }

@@ -16,13 +16,13 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputConnection
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import androidx.annotation.StringRes
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.alirezaafkar.sundatepicker.DatePicker
 import com.bumptech.glide.RequestManager
 import com.example.jibi.R
 import com.example.jibi.di.main.MainScope
@@ -30,10 +30,8 @@ import com.example.jibi.models.Category
 import com.example.jibi.models.Record
 import com.example.jibi.ui.main.transaction.bottomSheet.CreateNewTransBottomSheet
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
-import com.example.jibi.util.TextCalculator
-import com.example.jibi.util.convertDoubleToString
-import com.example.jibi.util.convertDpToPx
-import com.example.jibi.util.localizeDoubleNumber
+import com.example.jibi.util.*
+import com.example.jibi.util.SolarCalendar.ShamsiPatterns.DETAIL_FRAGMENT
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
 import kotlinx.android.synthetic.main.fragment_add_transaction.view.*
 import kotlinx.android.synthetic.main.keyboard_add_transaction.*
@@ -237,17 +235,17 @@ constructor(
     private fun setDateToEditText() {
         disableContentInteraction(edt_date)
 
-        val date = dateWithPattern(DATE_PATTERN)
-        val time = dateWithPattern(TIME_PATTERN)
-
-        val ss = SpannableString("$date    $time")
+        val date = dateWithPattern()
+        val time = timeWithPattern()
+        val spaceBetweenDateAndTime = "   "
+        val ss = SpannableString("$date$spaceBetweenDateAndTime$time")
 
 
         //set onClick to date and show DatePicker
         val dateOnClick = onClickedOnSpan(textColor = edt_date.currentTextColor) {
             showDatePickerDialog()
         }
-        val dateEndIndex = ss.indexOf(DATE_PATTERN[DATE_PATTERN.lastIndex]).plus(1)
+        val dateEndIndex = date.length
         ss.setSpan(
             dateOnClick,
             0,
@@ -258,9 +256,8 @@ constructor(
         val timeOnClick = onClickedOnSpan(textColor = edt_date.currentTextColor) {
             showTimePickerDialog()
         }
-        var timeStartIndex =
-            dateEndIndex.plus(ss.count { it == ' ' }).minus(DATE_PATTERN.count { it == ' ' }).minus(
-                TIME_PATTERN.count { it == ' ' })
+        var timeStartIndex = dateEndIndex.plus(spaceBetweenDateAndTime.length)
+
         if (timeStartIndex < dateEndIndex)
             timeStartIndex = dateEndIndex
         ss.setSpan(
@@ -290,15 +287,69 @@ constructor(
             }
         }
 
-    private fun dateWithPattern(pattern: String): String {
+    private fun dateWithPattern(): String {
+        return if (currentLocale.country == "IR") {
+            SolarCalendar.calcSolarCalendar(
+                combineCalender.timeInMillis, DETAIL_FRAGMENT, currentLocale
+            )
+        } else {
+            val df = Date(combineCalender.timeInMillis)
+            SimpleDateFormat(DATE_PATTERN, currentLocale).format(df)
+        }
+    }
+
+    private fun timeWithPattern(): String {
         val df = Date(combineCalender.timeInMillis)
-        return SimpleDateFormat(pattern, currentLocale).format(df)
+        return SimpleDateFormat(TIME_PATTERN, currentLocale).format(df)
     }
 
     private fun showDatePickerDialog() {
         //hide money keyboard
         hideCustomKeyboard()
+        if (currentLocale.country == "IR") {
+            showShamsiDatePicker()
+        } else {
+            showGregorianDatePicker()
+        }
+    }
 
+    private fun showShamsiDatePicker() {
+        DatePicker.Builder()
+            .date(combineCalender)
+            .minDate(
+                SolarCalendar.minShamsiYear,
+                SolarCalendar.minShamsiMonth,
+                SolarCalendar.minShamsiDay
+            )
+            .maxDate(
+                SolarCalendar.maxShamsiYear,
+                SolarCalendar.maxShamsiMonth,
+                SolarCalendar.maxShamsiDay
+            )
+            .build { id, calendar, day, month, year ->
+                if (calendar != null) {
+                    combineCalender.set(
+                        calendar[Calendar.YEAR],
+                        calendar[Calendar.MONTH],
+                        calendar[Calendar.DAY_OF_MONTH]
+                    )
+                    //update time
+                    setDateToEditText()
+                    submitButtonState?.onDateChange(getTimeInSecond())
+                } else {
+                    Log.e(TAG, "showShamsiDatePicker: NULL GREGORIAN CALENDER")
+                    //TODO add backup plan and shamsi to gregorian converter
+                    Toast.makeText(
+                        this.requireContext(),
+                        getString(R.string.unable_to_get_date),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+            .show(childFragmentManager, "ShamsiDatePicker")
+    }
+
+    private fun showGregorianDatePicker() {
         val datePickerDialog =
             DatePickerDialog(
                 this.requireContext(),
@@ -316,6 +367,8 @@ constructor(
                 combineCalender.get(Calendar.MONTH),
                 combineCalender.get(Calendar.DAY_OF_MONTH)
             )
+        datePickerDialog.datePicker.minDate = SolarCalendar.minGregorianDate
+        datePickerDialog.datePicker.maxDate = SolarCalendar.maxGregorianDate
         datePickerDialog.show()
     }
 
@@ -643,6 +696,8 @@ constructor(
         private const val TAG = "AddTransactionFragment"
 
         private const val TIME_PATTERN = "KK:mm aa"
+
+        //for shamsi date it's hard coded in SolarCalendar class
         private const val DATE_PATTERN = "MM/dd/yy (E)"
 
 
