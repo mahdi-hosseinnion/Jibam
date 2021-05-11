@@ -1,5 +1,6 @@
 package com.example.jibi.fragments.main
 
+import android.content.SharedPreferences
 import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
@@ -18,7 +19,9 @@ class MainFragmentFactory
 constructor(
     private val viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager,
-    private val currentLocale: Locale
+    private val currentLocale: Locale,
+    private val sharedPreferences: SharedPreferences,
+    private val sharedPrefsEditor: SharedPreferences.Editor
 ) : FragmentFactory() {
 
     override fun instantiate(classLoader: ClassLoader, className: String) =
@@ -26,7 +29,13 @@ constructor(
         when (className) {
 
             TransactionFragment::class.java.name -> {
-                TransactionFragment(viewModelFactory, requestManager, currentLocale)
+                TransactionFragment(
+                    viewModelFactory,
+                    requestManager,
+                    currentLocale,
+                    sharedPreferences,
+                    sharedPrefsEditor
+                )
             }
 
             AddTransactionFragment::class.java.name -> {
@@ -49,7 +58,10 @@ constructor(
             }
 
             else -> {
-                TransactionFragment(viewModelFactory, requestManager, currentLocale)
+                TransactionFragment(
+                    viewModelFactory, requestManager, currentLocale, sharedPreferences,
+                    sharedPrefsEditor
+                )
             }
         }
 

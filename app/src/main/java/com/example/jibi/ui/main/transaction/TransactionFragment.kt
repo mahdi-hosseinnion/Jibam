@@ -1,6 +1,7 @@
 package com.example.jibi.ui.main.transaction
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.Editable
@@ -12,6 +13,7 @@ import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -31,6 +33,7 @@ import com.example.jibi.repository.buildResponse
 import com.example.jibi.ui.main.transaction.bottomSheet.CreateNewTransBottomSheet
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.*
+import com.example.jibi.util.PreferenceKeys.PROMOTE_FAB_TRANSACTION_FRAGMENT
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -40,6 +43,7 @@ import kotlinx.android.synthetic.main.layout_transaction_list_item.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
@@ -54,7 +58,9 @@ class TransactionFragment
 constructor(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager,
-    private val currentLocale: Locale
+    private val currentLocale: Locale,
+    private val sharedPreferences: SharedPreferences,
+    private val sharedPrefsEditor: SharedPreferences.Editor
 ) : BaseTransactionFragment(
     R.layout.fragment_transaction,
     viewModelFactory,
@@ -144,6 +150,11 @@ constructor(
         //TODO DELETE THIS LINE FOR FINAL PROJECT JUST OF TESTING
         txt_balance.setOnClickListener {
             insertRandomTransaction()
+
+        }
+        txt_expenses.setOnClickListener {
+            //TODD JUST FOR TESTING
+            resetPromoteState()
         }
         main_bottom_sheet_back_arrow.setOnClickListener {
             //check for search view
@@ -161,8 +172,15 @@ constructor(
         bottom_sheet_search_clear.setOnClickListener {
             bottom_sheet_search_edt.setText("")
         }
+        checkForGuidePromote()
+    }
 
-
+    private fun resetPromoteState() {
+        sharedPrefsEditor.putBoolean(
+            PROMOTE_FAB_TRANSACTION_FRAGMENT,
+            true
+        ).apply()
+        Toast.makeText(requireContext(), "PROMOTE GUIDE STATE RESET", Toast.LENGTH_SHORT).show()
     }
 
     private fun enableSearchMode(query: String? = null) {
@@ -658,6 +676,38 @@ constructor(
 
         super.onSaveInstanceState(outState)
     }
+
+    private fun checkForGuidePromote() {
+        if (sharedPreferences.getBoolean(PROMOTE_FAB_TRANSACTION_FRAGMENT, true)) {
+            trySafe { showFabPromote() }
+        }
+
+    }
+
+    fun showFabPromote() {
+        val mFabPrompt = MaterialTapTargetPrompt.Builder(this)
+            .setTarget(R.id.fab)
+            .setPrimaryText(R.string.fab_tap_target_primary)
+            .setSecondaryText(R.string.fab_tap_target_secondary)
+            .setPromptStateChangeListener { _, state ->
+                if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED || state == MaterialTapTargetPrompt.STATE_DISMISSING) {
+                    sharedPrefsEditor.putBoolean(
+                        PROMOTE_FAB_TRANSACTION_FRAGMENT,
+                        false
+                    ).apply()
+                }
+            }
+            .create()
+        mFabPrompt!!.show()
+    }
+
+    private fun trySafe(method: () -> Unit) =
+        try {
+            method()
+        } catch (e: Exception) {
+            Log.d(TAG, "trySafe: e: $e")
+        }
+
 
     companion object {
         private const val SEARCH_QUERY = "SEARCHVIEWWSTATE VISIBLE >>>>"

@@ -114,6 +114,9 @@
 
     <string name="about_us">Developed by: seyed mahdi hosseinniun</string>
     <string name="unable_to_get_date">"Unable to save the date please try again!"</string>
+<!--    tap targets-->
+    <string name="fab_tap_target_primary">"Create your first transaction"</string>
+    <string name="fab_tap_target_secondary">"Tap to create your first transaction"</string>
 
 
 </resources>

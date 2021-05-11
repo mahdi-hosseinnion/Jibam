@@ -159,4 +159,7 @@ dependencies {
     implementation "com.afollestad.material-dialogs:core:$matieral_dialogs_version"
     //shamsi date picker
     implementation 'com.alirezaafkar:sundatepicker:2.1.2'
+    //MaterialTapTargetPrompt
+    //https://github.com/sjwall/MaterialTapTargetPrompt
+    implementation 'uk.co.samuelwall:material-tap-target-prompt:3.1.1'
 }

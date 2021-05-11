@@ -1,6 +1,8 @@
 package com.example.jibi.di
 
 import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Build
 import androidx.core.os.ConfigurationCompat
 import androidx.room.Room
@@ -12,6 +14,7 @@ import com.example.jibi.persistence.AppDatabase
 import com.example.jibi.persistence.AppDatabase.Companion.DATABASE_NAME
 import com.example.jibi.persistence.CategoriesDao
 import com.example.jibi.persistence.RecordsDao
+import com.example.jibi.util.PreferenceKeys
 import dagger.Module
 import dagger.Provides
 import java.util.*
@@ -19,6 +22,29 @@ import javax.inject.Singleton
 
 @Module
 object AppModule {
+
+    @JvmStatic
+    @Singleton
+    @Provides
+    fun provideSharedPreferences(
+        application: Application
+    ): SharedPreferences {
+        return application
+            .getSharedPreferences(
+                PreferenceKeys.APP_MAIN_PREFERENCES,
+                Context.MODE_PRIVATE
+            )
+    }
+
+    @JvmStatic
+    @Singleton
+    @Provides
+    fun provideSharedPrefsEditor(
+        sharedPreferences: SharedPreferences
+    ): SharedPreferences.Editor {
+        return sharedPreferences.edit()
+    }
+
     @JvmStatic
     @Singleton
     @Provides
