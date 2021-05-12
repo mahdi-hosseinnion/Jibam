@@ -18,13 +18,6 @@
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/slide_out" />
         <action
-            android:id="@+id/action_transactionFragment_to_detailTransFragment"
-            app:destination="@id/detailTransFragment"
-            app:enterAnim="@anim/slide_in"
-            app:exitAnim="@anim/fade_out"
-            app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/slide_out" />
-        <action
             android:id="@+id/action_transactionFragment_to_viewCategoriesFragment"
             app:destination="@id/viewCategoriesFragment"
             app:enterAnim="@anim/slide_in"
@@ -48,9 +41,9 @@
         android:label="@string/add_transaction"
         tools:layout="@layout/fragment_add_transaction">
         <argument
-            android:name="category_id"
-            android:defaultValue="-1"
-            app:argType="integer" />
+            android:name="isNewTransaction"
+            android:defaultValue="true"
+            app:argType="boolean" />
         <action
             android:id="@+id/action_createTransactionFragment_to_transactionFragment"
             app:destination="@id/transactionFragment"
@@ -60,19 +53,7 @@
             app:popExitAnim="@anim/slide_out" />
 
     </fragment>
-    <fragment
-        android:id="@+id/detailTransFragment"
-        android:name="com.example.jibi.ui.main.transaction.DetailTransFragment"
-        android:label="@string/detail"
-        tools:layout="@layout/fragment_detail_trans">
-        <action
-            android:id="@+id/action_detailTransFragment_to_transactionFragment"
-            app:destination="@id/transactionFragment"
-            app:enterAnim="@anim/slide_in"
-            app:exitAnim="@anim/fade_out"
-            app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/slide_out" />
-    </fragment>
+
     <fragment
         android:id="@+id/viewCategoriesFragment"
         android:name="com.example.jibi.ui.main.transaction.ViewCategoriesFragment"

@@ -41,9 +41,6 @@ constructor(
             AddTransactionFragment::class.java.name -> {
                 AddTransactionFragment(viewModelFactory, requestManager, currentLocale)
             }
-            DetailTransFragment::class.java.name -> {
-                DetailTransFragment(viewModelFactory, requestManager, currentLocale)
-            }
             AddCategoryFragment::class.java.name -> {
                 AddCategoryFragment(viewModelFactory, requestManager)
             }

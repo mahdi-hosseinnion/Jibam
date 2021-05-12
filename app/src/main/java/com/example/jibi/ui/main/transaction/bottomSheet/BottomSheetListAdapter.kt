@@ -1,24 +1,33 @@
 package com.example.jibi.ui.main.transaction.bottomSheet
 
+import android.content.res.Resources
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.*
+import androidx.room.ColumnInfo
+import androidx.room.PrimaryKey
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.example.jibi.R
 import com.example.jibi.models.Category
+import com.example.jibi.models.CategoryImages
+import com.example.jibi.ui.main.transaction.AddCategoryListAdapter
+import com.example.jibi.ui.main.transaction.TransactionListAdapter
 import com.example.jibi.util.sortCategoriesWithPinned
+import kotlinx.android.synthetic.main.layout_category_images_list_item.view.*
 import kotlinx.android.synthetic.main.layout_category_list_item.view.*
 import kotlinx.android.synthetic.main.layout_category_list_item.view.category_image
 import kotlinx.android.synthetic.main.layout_transaction_list_item.view.*
+import kotlin.random.Random
 
 class BottomSheetListAdapter(
     private val requestManager: RequestManager?,
     private val interaction: Interaction? = null,
-    private val packageName: String
+    private val packageName: String,
+    private val selectedCategoryId: Int
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -52,7 +61,8 @@ class BottomSheetListAdapter(
             ),
             interaction = interaction,
             requestManager = requestManager,
-            packageName = packageName
+            packageName = packageName,
+            selectedCategoryId = selectedCategoryId
         )
     }
 
@@ -97,7 +107,7 @@ class BottomSheetListAdapter(
         return differ.currentList.size
     }
 
-//    // Prepare the images that will be displayed in the RecyclerView.
+    //    // Prepare the images that will be displayed in the RecyclerView.
 //    // This also ensures if the network connection is lost, they will be in the cache
 //    fun preloadGlideImages(
 //        requestManager: RequestManager,
@@ -109,6 +119,17 @@ class BottomSheetListAdapter(
 //                .preload()
 //        }
 //    }
+    fun setSelectedCategory(categoryId: Int) {
+        var category1: Category? = null
+        for (category in differ.currentList) {
+            if (category.id == categoryId) {
+                category1 = category
+            }
+        }
+        category1?.let {
+            notifyItemChanged(differ.currentList.indexOf(it))
+        }
+    }
 
     fun submitList(
         blogList: List<Category>?,
@@ -122,12 +143,17 @@ class BottomSheetListAdapter(
         itemView: View,
         val requestManager: RequestManager?,
         private val interaction: Interaction?,
-        private val packageName: String
+        private val packageName: String,
+        private val selectedCategoryId: Int
     ) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(item: Category) = with(itemView) {
             itemView.setOnClickListener {
+                setSelectedBackground(item.id)
                 interaction?.onItemSelected(adapterPosition, item)
+            }
+            if (item.id == selectedCategoryId && item.id > 0) {
+                setSelectedBackground(selectedCategoryId)
             }
 
 //            requestManager?.load(item.img_res)
@@ -159,6 +185,37 @@ class BottomSheetListAdapter(
                 itemView.pinned_marker_image.visibility = View.INVISIBLE
         }
 
+
+        private fun setSelectedBackground(categoryId: Int) {
+            // set to selected mode
+            try {
+                itemView.category_image.setBackgroundColor(
+
+                    itemView.resources.getColor(
+                        TransactionListAdapter.listOfColor[(categoryId.minus(
+                            1
+                        ))]
+                    )
+                )
+            } catch (e: Exception) {
+                //apply random color
+                itemView.category_image.setBackgroundColor(
+                    itemView.resources.getColor(
+                        TransactionListAdapter.listOfColor[Random.nextInt(
+                            TransactionListAdapter.listOfColor.size
+                        )]
+                    )
+                )
+            }
+
+            //change tint to white
+            itemView.category_image.setColorFilter(
+                itemView.resources.getColor(R.color.white),
+                android.graphics.PorterDuff.Mode.SRC_IN
+            )
+        }
+
+
         private fun convertDpToPx(dp: Int): Int {
             val r = itemView.resources
             return TypedValue.applyDimension(
@@ -172,6 +229,5 @@ class BottomSheetListAdapter(
     interface Interaction {
 
         fun onItemSelected(position: Int, item: Category)
-
     }
 }

@@ -145,7 +145,7 @@ constructor(
         }
 
         fab.setOnClickListener {
-            showBottomSheet()
+            navigateToAddTransactionFragment(true)
         }
         //TODO DELETE THIS LINE FOR FINAL PROJECT JUST OF TESTING
         txt_balance.setOnClickListener {
@@ -308,32 +308,14 @@ constructor(
     }
 
 
-    private fun showBottomSheet() {
-        val modalBottomSheet =
-            CreateNewTransBottomSheet(
-                viewModel.viewState.value!!.categoryList!!,
-                requestManager,
-                onDismissCalled
+    private fun navigateToAddTransactionFragment(isNewTransaction:Boolean) {
+        //on category selected and bottomSheet hided
+        val action =
+            TransactionFragmentDirections.actionTransactionFragmentToCreateTransactionFragment(
+                isNewTransaction = isNewTransaction
             )
-        modalBottomSheet.show(parentFragmentManager, "CreateNewTransBottomSheet")
+        findNavController().navigate(action)
     }
-
-    private val onDismissCalled =
-        object : CreateNewTransBottomSheet.OnDismissCallback {
-            override fun onDismissCalled(selectedCategory: Category?) {
-                Log.d(TAG, "1111 onDismissCalled: called")
-                if (selectedCategory == null)
-                    return
-                //on category selected and bottomSheet hided
-                val action =
-                    TransactionFragmentDirections.actionTransactionFragmentToCreateTransactionFragment(
-                        categoryId = selectedCategory.id
-                    )
-                findNavController().navigate(action)
-            }
-
-        }
-
 
     private fun subscribeObservers() {
 
@@ -550,7 +532,7 @@ constructor(
 
     override fun onItemSelected(position: Int, item: Record) {
         viewModel.setDetailTransFields(item)
-        findNavController().navigate(R.id.action_transactionFragment_to_createTransactionFragment)
+        navigateToAddTransactionFragment(false)
     }
 
     override fun restoreListPosition() {

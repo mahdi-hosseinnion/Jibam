@@ -279,6 +279,7 @@ class AddCategoryListAdapter(
             // set to selected mode
             Log.d(TAG, "change background: $categoryId ")
             if (categoryId > 0) {
+                //TODO ADD TRY
                 itemView.category_images.setBackgroundColor(
                     itemView.resources.getColor(
                         listOfColor[(categoryId.minus(

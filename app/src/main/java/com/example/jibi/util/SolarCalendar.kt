@@ -19,13 +19,12 @@ object SolarCalendar {
     private var strMonth: String? = null
     private var strWeekDay: String? = null
 
-    var isThisTest = false
-
     fun calcSolarCalendar(
         unixTimeStamp: Long,
         pattern: ShamsiPatterns,
         loc: Locale
     ): String =
+        //TODO ADD LOCAL TO DATE FOR TIME ACCURANCY
         calcSolarCalendar(Date(unixTimeStamp), pattern, loc)
 
 //    = Locale("en_US")
@@ -34,8 +33,6 @@ object SolarCalendar {
         pattern: ShamsiPatterns,
         loc: Locale
     ): String {
-        val int: Int = 1868613935
-
         val ld: Int
         val miladiYear: Int = gregorianDate.year + 1900
         val miladiMonth: Int = gregorianDate.month + 1
@@ -253,3 +250,4 @@ object SolarCalendar {
     }
 
 }
+///

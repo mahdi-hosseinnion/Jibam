@@ -4,6 +4,7 @@ import android.content.res.Resources
 import android.util.Log
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.example.jibi.ui.main.transaction.AddTransactionFragment
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
@@ -45,7 +46,7 @@ data class Category(
                 "Category",
                 "getCategoryNameFromStringFile: UNABLE TO FIND $this name in strings ",
             )
-            Log.e("Category", "getCategoryNameFromStringFile: add >${this.name}< to strings file",)
+            Log.e("Category", "getCategoryNameFromStringFile: add >${this.name}< to strings file")
             onUnableToFindName(this)
         }
     }

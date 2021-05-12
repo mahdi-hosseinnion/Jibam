@@ -83,7 +83,7 @@ constructor(
         //check if current state is ViewingTransaction or CreateTransaction
         val detailTransFields = viewModel.viewState.value?.detailTransFields
 
-        if (args.categoryId < 0 && //default value is -1
+        if (!args.isNewTransaction && //default value is -1
             detailTransFields != null//there is transaction in viewState
         ) {
             initUiForViewTransaction(detailTransFields)
@@ -113,9 +113,8 @@ constructor(
                 viewModel.viewState.value!!.categoryList!!,
                 requestManager,
                 onDismissCalled,
-                transactionCategory != null
+                transactionCategory?.id ?: 0
             )
-        modalBottomSheet.isCancelable = transactionCategory != null
         modalBottomSheet.show(parentFragmentManager, "CreateNewTransBottomSheet")
     }
 
@@ -154,7 +153,6 @@ constructor(
             else
                 hideCustomKeyboard()
         }
-        edt_money.requestFocusFromTouch()
 
         edt_money.setOnTouchListener { view, motionEvent ->
             val inType: Int = edt_money.getInputType() // Backup the input type
@@ -171,17 +169,28 @@ constructor(
     }
 
     private fun initUiForNewTransaction() {
+        findNavController()
+            .currentDestination?.label=getString(R.string.add_transaction)
+        lifecycleScope.launch {
+            delay(300)
+            showBottomSheet()
+        }
         //add date to dat
         setDateToEditText()
         //submit button should always be displayed
         fab_submit.show()
-        setTransProperties(categoryId = args.categoryId)
 
+        val defaultCategory = viewModel.viewState.value?.categoryList?.let { categoryList ->
+            sortCategoriesWithPinned(categoryList)?.get(0)
+        }
+        setTransProperties(category = defaultCategory)
+        edt_money.requestFocus()
         showCustomKeyboard(edt_money)
     }
 
     private fun initUiForViewTransaction(transaction: Record) {
-
+        findNavController()
+            .currentDestination?.label=getString(R.string.details)
         //change id
         viewTransactionId = transaction.id
 
@@ -472,6 +481,7 @@ constructor(
         //set category by category or category id
         if (category != null) {
             setCategoryNameAndIcon(category)
+            transactionCategory=category
         } else {
             categoryId?.let { id ->
                 getCategoryById(id)?.let {

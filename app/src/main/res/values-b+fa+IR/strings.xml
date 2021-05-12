@@ -9,7 +9,7 @@
     <string name="cash">پول نقد</string>
     <string name="with">به همراه</string>
     <string name="select_category">یک دسته انتخاب کنید</string>
-    <string name="add_transaction">ایجاد تراکنش جدید</string>
+
     <string name="empty" />
     <string name="money">پول</string>
     <string name="note">یادداشت</string>
@@ -24,8 +24,8 @@
     <string name="hello_blank_fragment">سلام این یک فرگنت خالیه!</string>
     <string name="date">تاریخ</string>
     <string name="memo">یادداشت</string>
-    <string name="detail">جزئیات</string>
-
+    <string name="details">جزئیات</string>
+    <string name="add_transaction">ایجاد تراکنش جدید</string>
 
     <string name="are_you_sure">آیا شما مطمئن هستید؟</string>
     <string name="text_success">موفقیت</string>

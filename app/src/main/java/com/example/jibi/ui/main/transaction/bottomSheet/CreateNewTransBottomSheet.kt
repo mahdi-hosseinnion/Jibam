@@ -37,7 +37,7 @@ constructor(
     private val categoryList: List<Category>,
     private val requestManager: RequestManager,
     private val onDismissCallback: OnDismissCallback,
-    private val isHideable: Boolean = true
+    private val selectedCategoryId:Int
 ) : ViewPagerBottomSheetDialogFragment(), BottomSheetListAdapter.Interaction,
     ViewPager.OnPageChangeListener {
 
@@ -75,7 +75,7 @@ constructor(
 
         //creating bottom sheet behavior
         val bottomSheetBehavior = ViewPagerBottomSheetBehavior.from((view.parent) as View)
-        bottomSheetBehavior.isHideable = isHideable
+
         bottomSheetBehavior.setBottomSheetCallback(object :
             ViewPagerBottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -220,7 +220,8 @@ constructor(
                 recyclerAdapter = BottomSheetListAdapter(
                     requestManager,
                     this@CreateNewTransBottomSheet,
-                    this@CreateNewTransBottomSheet.requireActivity().packageName
+                    this@CreateNewTransBottomSheet.requireActivity().packageName,
+                    selectedCategoryId =selectedCategoryId
                 )
                 adapter = recyclerAdapter
             }

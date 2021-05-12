@@ -45,7 +45,19 @@
             android:layout_gravity="bottom|end"
             android:visibility="invisible"
             card_view:cardBackgroundColor="@color/purple_700"
-            card_view:cardCornerRadius="8dp" />
+            card_view:cardCornerRadius="8dp" >
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_margin="2dp"
+                android:background="@color/purple_700"
+                android:rotation="45"
+                android:scaleType="center"
+                app:srcCompat="@drawable/ic_outline_push_pin_16"
+                app:tint="@color/black" />
+        </androidx.cardview.widget.CardView>
     </FrameLayout>
 
     <TextView
