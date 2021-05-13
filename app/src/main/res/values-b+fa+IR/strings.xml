@@ -57,11 +57,11 @@
 
     <!--    CATEGORY NAMES-->
     <string name="food">غذا</string>
-    <string name="hamburger">همبرگر</string>
+    <string name="hamburger">پیتزا</string>
     <string name="vegetables">سبزیجات</string>
     <string name="fruits">میوه ها</string>
     <string name="transportation">حمل و نقل</string>
-    <string name="shopping">خريد كردن</string>
+    <string name="shopping">خريد</string>
     <string name="sport">ورزش</string>
     <string name="social">اجتماعی</string>
     <string name="baby">کودک</string>
@@ -73,15 +73,15 @@
     <string name="pet">حیوان خانگی</string>
     <string name="bills">قبوض</string>
     <string name="electronics">الکترونیک</string>
-    <string name="cigarette">سیگار</string>
-    <string name="wine">شراب</string>
+    <string name="dairy_product">لبنیات</string>
+    <string name="dried_fruits">خشکبار</string>
     <string name="snacks">تنقلات</string>
     <string name="travel">مسافرت</string>
     <string name="book">کتاب</string>
     <string name="education">تحصیلات</string>
     <string name="health">سلامت</string>
     <string name="gift">هدیه</string>
-    <string name="office">دفتر</string>
+    <string name="office">دفتر کار</string>
     <string name="insurance">بیمه</string>
     <string name="car">ماشین</string>
     <string name="tax">مالیات</string>

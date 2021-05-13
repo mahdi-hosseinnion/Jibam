@@ -73,8 +73,8 @@
     <string name="pet">pet</string>
     <string name="bills">bills</string>
     <string name="electronics">electronics</string>
-    <string name="cigarette">cigarette</string>
-    <string name="wine">wine</string>
+    <string name="dairy_product">dairy product</string>
+    <string name="dried_fruits">dried fruits</string>
     <string name="snacks">snacks</string>
     <string name="travel">travel</string>
     <string name="book">book</string>
