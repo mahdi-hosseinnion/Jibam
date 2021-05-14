@@ -1,10 +1,12 @@
 package com.example.jibi.ui.main.transaction
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,6 +28,9 @@ import kotlinx.android.synthetic.main.layout_view_categories_list_item.view.cate
 import kotlinx.android.synthetic.main.layout_viewpager_list_item.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt
+import uk.co.samuelwall.materialtaptargetprompt.extras.backgrounds.RectanglePromptBackground
+import uk.co.samuelwall.materialtaptargetprompt.extras.focals.RectanglePromptFocal
 import javax.inject.Inject
 
 @FlowPreview
@@ -34,7 +39,9 @@ class ViewCategoriesFragment
 @Inject
 constructor(
     viewModelFactory: ViewModelProvider.Factory,
-    private val requestManager: RequestManager
+    private val requestManager: RequestManager,
+    private val sharedPreferences: SharedPreferences,
+    private val sharedPrefsEditor: SharedPreferences.Editor
 ) : BaseTransactionFragment(
     R.layout.fragment_view_categories, viewModelFactory, R.id.viewCategoriesToolbar
 ) {
@@ -154,13 +161,6 @@ constructor(
                     }
                     adapter = ViewPagerRecyclerViewAdapter(
                         sortCategoriesWithPinned(categoryList),
-//                        categoryList?.sortedByDescending { category ->
-//                            if (category.ordering < 0) {
-//                                //manfi
-//                                category.ordering.times(-1).plus(maxUnpinOrder)
-//                            } else
-//                                category.ordering
-//                        },
                         categoryInteraction
                     )
                 }
@@ -206,7 +206,6 @@ constructor(
 
         override fun getItemCount(): Int = listOfCategories?.size ?: 0
 
-
         inner class ViewPagerRecyclerViewHolder(
             itemView: View,
             private val intercation: CategoryInteraction
@@ -215,6 +214,15 @@ constructor(
 
             fun bind(item: Category?) {
                 if (item != null) {
+                    // Check that the view exists for the item
+                    if (adapterPosition == 0 &&
+                        sharedPreferences.getBoolean(
+                            PreferenceKeys.PROMOTE_VIEW_CATEGORY_LIST,
+                            true
+                        )
+                    ) {
+                        showPromote()
+                    }
                     itemView.apply {
                         val categoryName = item.getCategoryNameFromStringFile(
                             resources,
@@ -247,7 +255,7 @@ constructor(
                         }
                     }
                 } else {
-                    itemView.nameOfCategory.text = "UNKNOWN CATEGORY"
+                    itemView.nameOfCategory.text = getString(R.string.UNKNOWN_CATEGORY)
                 }
             }
 
@@ -261,6 +269,24 @@ constructor(
                     itemView.pin_category.setImageResource(android.R.drawable.btn_star_big_on)
                 else
                     itemView.pin_category.setImageResource(android.R.drawable.btn_star_big_off)
+            }
+
+            private fun showPromote() {
+                MaterialTapTargetPrompt.Builder(this@ViewCategoriesFragment)
+                    .setTarget(itemView.findViewById(R.id.root_transaction_item))
+                    .setPrimaryText(R.string.view_category_tap_target_primary)
+                    .setSecondaryText(R.string.view_category_tap_target_secondary)
+                    .setPromptBackground(RectanglePromptBackground())
+                    .setPromptFocal(RectanglePromptFocal())
+                    .setPromptStateChangeListener { _, state ->
+                        if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED || state == MaterialTapTargetPrompt.STATE_DISMISSING) {
+                            sharedPrefsEditor.putBoolean(
+                                PreferenceKeys.PROMOTE_VIEW_CATEGORY_LIST,
+                                false
+                            ).apply()
+                        }
+                    }
+                    .show()
             }
         }
 

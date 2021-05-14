@@ -3,6 +3,7 @@ package com.example.jibi.ui.main.transaction
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.text.*
@@ -40,6 +41,9 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt
+import uk.co.samuelwall.materialtaptargetprompt.extras.backgrounds.RectanglePromptBackground
+import uk.co.samuelwall.materialtaptargetprompt.extras.focals.RectanglePromptFocal
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -53,8 +57,9 @@ class AddTransactionFragment
 constructor(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager,
-    private val currentLocale: Locale
-
+    private val currentLocale: Locale,
+    private val sharedPreferences: SharedPreferences,
+    private val sharedPrefsEditor: SharedPreferences.Editor
 ) : BaseTransactionFragment(
     R.layout.fragment_add_transaction,
     viewModelFactory,
@@ -113,7 +118,9 @@ constructor(
                 viewModel.viewState.value!!.categoryList!!,
                 requestManager,
                 onDismissCalled,
-                transactionCategory?.id ?: 0
+                transactionCategory?.id ?: 0,
+                sharedPreferences,
+                sharedPrefsEditor
             )
         modalBottomSheet.show(parentFragmentManager, "CreateNewTransBottomSheet")
     }
@@ -121,6 +128,7 @@ constructor(
     private val onDismissCalled =
         object : CreateNewTransBottomSheet.OnDismissCallback {
             override fun onDismissCalled(selectedCategory: Category?) {
+                checkForGuidePromote()
                 if (selectedCategory == null)
                     return
                 //on category changed
@@ -133,9 +141,6 @@ constructor(
 
 
     private fun initUi() {
-        //Implementing an exposed dropdown menu for wallet editText
-        //TODO MAKE wallet work with transacion
-        addOptionsToWallet()
 
         // prevent system keyboard from appearing when EditText is tapped
         edt_money.setRawInputType(InputType.TYPE_CLASS_TEXT)
@@ -170,7 +175,7 @@ constructor(
 
     private fun initUiForNewTransaction() {
         findNavController()
-            .currentDestination?.label=getString(R.string.add_transaction)
+            .currentDestination?.label = getString(R.string.add_transaction)
         lifecycleScope.launch {
             delay(300)
             showBottomSheet()
@@ -190,7 +195,7 @@ constructor(
 
     private fun initUiForViewTransaction(transaction: Record) {
         findNavController()
-            .currentDestination?.label=getString(R.string.details)
+            .currentDestination?.label = getString(R.string.details)
         //change id
         viewTransactionId = transaction.id
 
@@ -226,20 +231,6 @@ constructor(
         hideCustomKeyboard()
 
     }
-
-    private fun addOptionsToWallet() {
-        //TODO GET LIST OF WALLET FROM DATABASE
-        val items = listOf("Cash", "Bank Melli", "Bank Keshavarzi", "MasterCard")
-        val adapter = ArrayAdapter(requireContext(), R.layout.list_item, items)
-        txtField_wallet.edt_wallet?.setAdapter(adapter)
-        //set default value for it
-        edt_wallet.setText(items[0], false)
-        //add listener to hide keyboard when clicked
-        edt_wallet.setOnClickListener {
-            uiCommunicationListener.hideSoftKeyboard()
-        }
-    }
-
 
     private fun setDateToEditText() {
         disableContentInteraction(edt_date)
@@ -481,7 +472,7 @@ constructor(
         //set category by category or category id
         if (category != null) {
             setCategoryNameAndIcon(category)
-            transactionCategory=category
+            transactionCategory = category
         } else {
             categoryId?.let { id ->
                 getCategoryById(id)?.let {
@@ -665,6 +656,84 @@ constructor(
 
     }
 
+    private fun checkForGuidePromote() {
+        if (sharedPreferences.getBoolean(PreferenceKeys.PROMOTE_ADD_TRANSACTION, true)) {
+            trySafe { showCategoryFabPromote() }
+        }
+    }
+
+    private fun showCategoryFabPromote() {
+        val categoryFabPrompt = MaterialTapTargetPrompt.Builder(this)
+            .setTarget(R.id.category_fab)
+            .setPrimaryText(R.string.category_fab_tap_target_primary)
+            .setSecondaryText(R.string.category_fab_tap_target_secondary)
+            .setPromptBackground(RectanglePromptBackground())
+            .setPromptFocal(RectanglePromptFocal())
+            .setPromptStateChangeListener { _, state ->
+                if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED || state == MaterialTapTargetPrompt.STATE_DISMISSING) {
+                    trySafe { showMoneyPromote() }
+
+                }
+            }
+            .create()
+        categoryFabPrompt!!.show()
+    }
+
+    private fun showMoneyPromote() {
+        val edtMoneyPrompt = MaterialTapTargetPrompt.Builder(this)
+            .setTarget(R.id.edt_money)
+            .setPrimaryText(R.string.edt_money_tap_target_primary)
+            .setSecondaryText(R.string.edt_money_tap_target_secondary)
+            .setPromptBackground(RectanglePromptBackground())
+            .setPromptFocal(RectanglePromptFocal())
+
+            .setPromptStateChangeListener { _, state ->
+                if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED || state == MaterialTapTargetPrompt.STATE_DISMISSING) {
+                    trySafe { showDatePickerPromote() }
+
+                }
+            }
+            .create()
+        edtMoneyPrompt!!.show()
+    }
+
+
+    private fun showDatePickerPromote() {
+        val datePrompt = MaterialTapTargetPrompt.Builder(this)
+            .setTarget(R.id.txtField_date)
+            .setPrimaryText(R.string.date_tap_target_primary)
+            .setSecondaryText(R.string.date_tap_target_secondary)
+            .setPromptBackground(RectanglePromptBackground())
+            .setPromptFocal(RectanglePromptFocal())
+
+            .setPromptStateChangeListener { _, state ->
+                if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED || state == MaterialTapTargetPrompt.STATE_DISMISSING) {
+                    trySafe { showNotePromote() }
+
+                }
+            }
+            .create()
+        datePrompt!!.show()
+    }
+
+    private fun showNotePromote() {
+        val datePrompt = MaterialTapTargetPrompt.Builder(this)
+            .setTarget(R.id.txtField_memo)
+            .setPrimaryText(R.string.note_tap_target_primary)
+            .setPromptBackground(RectanglePromptBackground())
+            .setPromptFocal(RectanglePromptFocal())
+
+            .setPromptStateChangeListener { _, state ->
+                if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED || state == MaterialTapTargetPrompt.STATE_DISMISSING) {
+                    sharedPrefsEditor.putBoolean(
+                        PreferenceKeys.PROMOTE_ADD_TRANSACTION,
+                        false
+                    ).apply()
+                }
+            }
+            .create()
+        datePrompt!!.show()
+    }
 
     inner class SubmitButtonState(private val defaultTransaction: Record) {
 

@@ -1,6 +1,7 @@
 package com.example.jibi.util
 
 import android.app.Activity
+import android.util.Log
 import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import com.example.jibi.models.Category
@@ -128,3 +129,10 @@ fun String.convertEnglishDigitsToFarsiDigits() =
         .replace("7", "۷")
         .replace("8", "۸")
         .replace("9", "۹")
+
+fun trySafe(method: () -> Unit) =
+    try {
+        method()
+    } catch (e: Exception) {
+        Log.d(TAG, "trySafe: e: $e")
+    }

@@ -1,20 +1,13 @@
 package com.example.jibi.ui.main.transaction.bottomSheet
 
-import android.content.res.Resources
-import android.util.Log
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.*
-import androidx.room.ColumnInfo
-import androidx.room.PrimaryKey
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.example.jibi.R
 import com.example.jibi.models.Category
-import com.example.jibi.models.CategoryImages
-import com.example.jibi.ui.main.transaction.AddCategoryListAdapter
 import com.example.jibi.ui.main.transaction.TransactionListAdapter
 import com.example.jibi.util.sortCategoriesWithPinned
 import kotlinx.android.synthetic.main.layout_category_images_list_item.view.*
@@ -166,7 +159,7 @@ class BottomSheetListAdapter(
                 }
 //            itemView.blog_update_date.text = DateUtils.convertLongToStringDate(item.date_updated)
             val categoryImageUrl = this.resources.getIdentifier(
-                "ic_cat_${item.name}",
+                "ic_cat_${item.img_res}",
                 "drawable",
                 packageName
             )
@@ -215,15 +208,6 @@ class BottomSheetListAdapter(
             )
         }
 
-
-        private fun convertDpToPx(dp: Int): Int {
-            val r = itemView.resources
-            return TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                dp.toFloat(),
-                r.displayMetrics
-            ).toInt()
-        }
     }
 
     interface Interaction {

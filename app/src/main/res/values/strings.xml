@@ -99,6 +99,10 @@
 
     <string name="testing_string">it just for testing</string>
 
+    <string name="category_name">Category name</string>
+
+    <string name="UNKNOWN_CATEGORY">Unknown category</string>
+
     <string name="_1">1</string>
     <string name="_2">2</string>
     <string name="_3">3</string>
@@ -112,10 +116,34 @@
     <string name="_00">00</string>
 
     <string name="about_us">Developed by: seyed mahdi hosseinniun</string>
-    <string name="unable_to_get_date">"Unable to save the date please try again!"</string>
+    <string name="unable_to_get_date">Unable to save the date please try again!</string>
 <!--    tap targets-->
-    <string name="fab_tap_target_primary">"Create your first transaction"</string>
-    <string name="fab_tap_target_secondary">"Tap to create your first transaction"</string>
+    <string name="fab_tap_target_primary">Create your first transaction</string>
+    <string name="fab_tap_target_secondary">"ap to create your first transaction</string>
+
+    <string name="edt_money_tap_target_primary">Insert amount of money for transaction</string>
+    <string name="edt_money_tap_target_secondary">You can use calculator</string>
+
+    <string name="date_tap_target_primary">Set date and time for transaction</string>
+    <string name="date_tap_target_secondary">Tap on date or time to change them</string>
+
+    <string name="note_tap_target_primary">Write some note here</string>
+
+    <string name="category_fab_tap_target_primary">Selected  category</string>
+    <string name="category_fab_tap_target_secondary">You can change it by tap on it</string>
+
+    <string name="category_list_tap_target_primary">"Select category"</string>
+    <string name="category_list_tap_target_secondary">"Select one of categories"</string>
+
+
+    <string name="category_bottom_sheet_tap_target_primary">"Select category"</string>
+    <string name="category_bottom_sheet_tap_target_secondary">Select category for transaction</string>
+
+    <string name="view_category_tap_target_primary">"Edit category"</string>
+    <string name="view_category_tap_target_secondary">
+        Tap on trash icon to delete category
+        Tap on pin icon to pin category
+    </string>
 
 
 </resources>

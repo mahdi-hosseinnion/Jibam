@@ -113,11 +113,37 @@
     <string name="about_us">توسعه دهنده: سید مهدی حسینیون</string>
     <string name="are_you_sure_delete_category">آیا شما مطمئن هستید که میخواهید این دسته را حذف کنید؟"</string>
     <string name="unable_to_get_date">تاریخ انتخاب شده ثبت نشد لطفا مجددا تلاش کنید!"</string>
-<!--    tap targets-->
+
+    <string name="category_name">نام دسته</string>
+
+    <string name="UNKNOWN_CATEGORY">دسته ناشناخته</string>
+
+    <!--    tap targets-->
     <string name="fab_tap_target_primary">"اولین تراکنش خود را ایجاد کنید"</string>
-    <string name="fab_tap_target_secondary">"برای ایجاد اولین تراکنش خود کلید کنید"</string>
+    <string name="fab_tap_target_secondary">"برای ایجاد اولین تراکنش خود کلیک کنید"</string>
 
+    <string name="edt_money_tap_target_primary">"مقدار هزینه تراکنش را وارد کنید"</string>
+    <string name="edt_money_tap_target_secondary">"از ماشین حساب داخل اپیکیشن میتوانید استفاده کنید"</string>
 
+    <string name="date_tap_target_primary">"زمان و تاریخ تراکنش را مشخص کنید"</string>
+    <string name="date_tap_target_secondary">"با کلیک کردن روی زمان یا تاریخ مشخص شده میتوایند آنها را تغییر دهید"</string>
+
+    <string name="note_tap_target_primary">"برای هر تراکنش یک یادداشت بگزارید"</string>
+
+    <string name="category_fab_tap_target_primary">"دسته بندی که انتخاب کردید"</string>
+    <string name="category_fab_tap_target_secondary">"با کلید کردن میتوانید آن را تغییر دهید"</string>
+
+    <string name="category_list_tap_target_primary">"انتخاب دسته"</string>
+    <string name="category_list_tap_target_secondary">"یکی از دسته های را انتخاب کنید"</string>
+
+    <string name="category_bottom_sheet_tap_target_primary">"انتخاب دسته"</string>
+    <string name="category_bottom_sheet_tap_target_secondary">"یکی از دسته های زیر را برای تراکنش خود انتخاب کنید"</string>
+
+    <string name="view_category_tap_target_primary">ویرایش دسته</string>
+    <string name="view_category_tap_target_secondary">
+        برای حذف کردن یک دسته روی علامت سطل زباله کلید کنید
+        برای سنجاق یک دسته روی علامت سنجاق کلید کنید
+    </string>
 
 </resources>
 <!--source https://developer.android.com/training/basics/supporting-devices/languages-->

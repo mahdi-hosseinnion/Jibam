@@ -1,19 +1,12 @@
 package com.example.jibi.ui.main.transaction
 
 import android.os.Bundle
-import android.os.Parcel
-import android.os.Parcelable
 import android.view.*
-import androidx.fragment.app.Fragment
-import android.widget.ImageView
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.jibi.R
@@ -21,7 +14,6 @@ import com.example.jibi.models.Category
 import com.example.jibi.models.CategoryImages
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.*
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.fragment_add_category.*
 import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.android.synthetic.main.layout_category_images_list_item.view.*

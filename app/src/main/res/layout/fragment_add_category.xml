@@ -50,13 +50,13 @@
             android:id="@+id/edt_categoryName"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="Category name" />
+            android:hint="@string/category_name" />
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="8dp"
-        android:background="@android:color/darker_gray" />
+        android:background="@color/white" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/insert_category_recyclerView"

@@ -3,6 +3,7 @@ package com.example.jibi.ui.main.transaction.bottomSheet
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.DialogInterface
+import android.content.SharedPreferences
 import android.graphics.*
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
@@ -11,10 +12,11 @@ import android.view.*
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.text.TextUtilsCompat
 import androidx.core.view.ViewCompat
-import androidx.navigation.fragment.findNavController
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
@@ -25,10 +27,14 @@ import biz.laenger.android.vpbs.ViewPagerBottomSheetDialogFragment
 import com.bumptech.glide.RequestManager
 import com.example.jibi.R
 import com.example.jibi.models.Category
-import com.example.jibi.ui.main.transaction.TransactionFragmentDirections
+import com.example.jibi.util.PreferenceKeys
 import com.example.jibi.util.convertDpToPx
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayout
+import uk.co.samuelwall.materialtaptargetprompt.DialogResourceFinder
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt
+import uk.co.samuelwall.materialtaptargetprompt.extras.backgrounds.RectanglePromptBackground
+import uk.co.samuelwall.materialtaptargetprompt.extras.focals.RectanglePromptFocal
 import java.util.*
 
 
@@ -37,7 +43,9 @@ constructor(
     private val categoryList: List<Category>,
     private val requestManager: RequestManager,
     private val onDismissCallback: OnDismissCallback,
-    private val selectedCategoryId:Int
+    private val selectedCategoryId: Int,
+    private val sharedPreferences: SharedPreferences,
+    private val sharedPrefsEditor: SharedPreferences.Editor
 ) : ViewPagerBottomSheetDialogFragment(), BottomSheetListAdapter.Interaction,
     ViewPager.OnPageChangeListener {
 
@@ -108,6 +116,36 @@ constructor(
         hideAppBar()
 
         setupViewPager()
+
+        showCategoryPromote(dialog)
+    }
+
+    private fun showCategoryPromote(dialog: Dialog) {
+        if (sharedPreferences.getBoolean(PreferenceKeys.PROMOTE_CATEGORY_LIST, true)) {
+
+            dialog.setOnShowListener { dialog1 ->
+                MaterialTapTargetPrompt.Builder(
+                    DialogResourceFinder(
+                        getDialog()!!
+                    ), 0
+                )
+                    .setPrimaryText(R.string.category_bottom_sheet_tap_target_primary)
+                    .setSecondaryText(R.string.category_bottom_sheet_tap_target_secondary)
+                    .setAnimationInterpolator(FastOutSlowInInterpolator())
+                    .setTarget(R.id.parent_bottomSHeet)
+                    .setPromptBackground(RectanglePromptBackground())
+                    .setPromptFocal(RectanglePromptFocal())
+                    .setPromptStateChangeListener { _, state ->
+                        if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED || state == MaterialTapTargetPrompt.STATE_DISMISSING) {
+                            sharedPrefsEditor.putBoolean(
+                                PreferenceKeys.PROMOTE_CATEGORY_LIST,
+                                false
+                            ).apply()
+                        }
+                    }
+                    .show()
+            }
+        }
     }
 
     override fun onDismiss(dialog: DialogInterface) {
@@ -221,7 +259,7 @@ constructor(
                     requestManager,
                     this@CreateNewTransBottomSheet,
                     this@CreateNewTransBottomSheet.requireActivity().packageName,
-                    selectedCategoryId =selectedCategoryId
+                    selectedCategoryId = selectedCategoryId
                 )
                 adapter = recyclerAdapter
             }

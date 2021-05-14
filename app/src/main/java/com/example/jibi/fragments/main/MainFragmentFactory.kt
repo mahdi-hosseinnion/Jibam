@@ -39,13 +39,13 @@ constructor(
             }
 
             AddTransactionFragment::class.java.name -> {
-                AddTransactionFragment(viewModelFactory, requestManager, currentLocale)
+                AddTransactionFragment(viewModelFactory, requestManager, currentLocale,sharedPreferences,sharedPrefsEditor)
             }
             AddCategoryFragment::class.java.name -> {
                 AddCategoryFragment(viewModelFactory, requestManager)
             }
             ViewCategoriesFragment::class.java.name -> {
-                ViewCategoriesFragment(viewModelFactory, requestManager)
+                ViewCategoriesFragment(viewModelFactory, requestManager,sharedPreferences,sharedPrefsEditor)
             }
             SettingFragment::class.java.name -> {
                 SettingFragment(viewModelFactory)

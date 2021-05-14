@@ -152,6 +152,7 @@ constructor(
             insertRandomTransaction()
 
         }
+        //TODO DELETE THIS LINE FOR FINAL PROJECT JUST OF TESTING
         txt_expenses.setOnClickListener {
             //TODD JUST FOR TESTING
             resetPromoteState()
@@ -178,6 +179,22 @@ constructor(
     private fun resetPromoteState() {
         sharedPrefsEditor.putBoolean(
             PROMOTE_FAB_TRANSACTION_FRAGMENT,
+            true
+        ).apply()
+        sharedPrefsEditor.putBoolean(
+            PreferenceKeys.PROMOTE_ADD_TRANSACTION,
+            true
+        ).apply()
+        sharedPrefsEditor.putBoolean(
+            PreferenceKeys.PROMOTE_CATEGORY_LIST,
+            true
+        ).apply()
+        sharedPrefsEditor.putBoolean(
+            PreferenceKeys.PROMOTE_VIEW_CATEGORY_LIST,
+            true
+        ).apply()
+        sharedPrefsEditor.putBoolean(
+            PreferenceKeys.PROMOTE_ADD_CATEGORY_NAME,
             true
         ).apply()
         Toast.makeText(requireContext(), "PROMOTE GUIDE STATE RESET", Toast.LENGTH_SHORT).show()
@@ -683,12 +700,6 @@ constructor(
         mFabPrompt!!.show()
     }
 
-    private fun trySafe(method: () -> Unit) =
-        try {
-            method()
-        } catch (e: Exception) {
-            Log.d(TAG, "trySafe: e: $e")
-        }
 
 
     companion object {
