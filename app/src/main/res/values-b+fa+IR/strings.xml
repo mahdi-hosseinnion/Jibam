@@ -49,7 +49,7 @@
     <string name="unable_to_recognize_category_type">خطایی در هنگام شناسایی دسته بندی رخ داد</string>
     <string name="jibi">جیبی</string>
 
-<!--    ERRORS-->
+    <!--    ERRORS-->
     <string name="pls_select_category">لطفا یک دسته انتخاب کنید!</string>
     <string name="money_shouldnt_be_negative">از اعداد منفی برای مقدار هزینه نمیتوان استفاده کرد!</string>
     <string name="pls_insert_some_money">لطفا برای تراکنش هزینه اضافه کنید!</string>
@@ -110,7 +110,13 @@
     <string name="_00">۰۰</string>
 
     <string name="testing_string">این فقط برای تست هسستش</string>
-    <string name="about_us">توسعه دهنده: سید مهدی حسینیون</string>
+    <string name="about_us">
+    \n برنامه نویس
+    \n سید مهدی حسینیون
+    \n
+    \n طراح لوگو
+    \n امیر حسین طاهریان
+    </string>
     <string name="are_you_sure_delete_category">آیا شما مطمئن هستید که میخواهید این دسته را حذف کنید؟"</string>
     <string name="unable_to_get_date">تاریخ انتخاب شده ثبت نشد لطفا مجددا تلاش کنید!"</string>
 
@@ -145,5 +151,4 @@
         برای سنجاق یک دسته روی علامت سنجاق کلید کنید
     </string>
 
-</resources>
-<!--source https://developer.android.com/training/basics/supporting-devices/languages-->
+</resources><!--source https://developer.android.com/training/basics/supporting-devices/languages-->
