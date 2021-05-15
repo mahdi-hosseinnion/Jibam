@@ -3,6 +3,7 @@ package com.example.jibi.di
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.os.Build
 import androidx.core.os.ConfigurationCompat
 import androidx.room.Room
@@ -77,6 +78,7 @@ object AppModule {
         return ConfigurationCompat.getLocales(app.resources.configuration)[0]
 
     }
+
     @Singleton
     @Provides
     fun provideRequestOptions(): RequestOptions {
@@ -88,8 +90,18 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideGlideInstance(application: Application, requestOptions: RequestOptions): RequestManager {
+    fun provideGlideInstance(
+        application: Application,
+        requestOptions: RequestOptions
+    ): RequestManager {
         return Glide.with(application)
             .setDefaultRequestOptions(requestOptions)
+    }
+
+    @JvmStatic
+    @Singleton
+    @Provides
+    fun provideResources(application: Application): Resources {
+        return application.resources
     }
 }

@@ -76,7 +76,8 @@ class AddCategoryListAdapter(
                         parent,
                         false
                     ),
-                    interaction = interaction
+                    interaction = interaction,
+                    packageName = packageName
                 )
             }
             else -> {
@@ -122,7 +123,7 @@ class AddCategoryListAdapter(
                 holder.bind(differ.currentList[position])
             }
             is HeaderViewHolder -> {
-                holder.bind(differ.currentList[position].group_name)
+                holder.bind(differ.currentList[position])
             }
         }
     }
@@ -300,11 +301,17 @@ class AddCategoryListAdapter(
     class HeaderViewHolder
     constructor(
         itemView: View,
-        private val interaction: Interaction?
+        private val interaction: Interaction?,
+        private val packageName: String
     ) : RecyclerView.ViewHolder(itemView) {
 
-        fun bind(headerName: String) = with(itemView) {
-            itemView.header_name.text = headerName
+        fun bind(headerName: CategoryImages) = with(itemView) {
+            itemView.header_name.text = headerName.getCategoryGroupNameFromStringFile(
+                resources,
+                packageName = packageName
+            ) {
+                it.group_name
+            }
         }
     }
 

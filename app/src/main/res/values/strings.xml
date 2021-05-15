@@ -96,6 +96,20 @@
     <string name="dividends">dividends</string>
     <string name="investments">investments</string>
     <string name="others">others</string>
+    <!--    CATEGORY GROUP NAMES-->
+    <string name="Education">Education</string>
+    <string name="Electronics">Electronics</string>
+    <string name="Entertainment">Entertainment</string>
+    <string name="Family">Family</string>
+    <string name="Finance">Finance</string>
+    <string name="Food">Food</string>
+    <string name="Income">Income</string>
+    <string name="Medical">Medical</string>
+    <string name="Personal">Personal</string>
+    <string name="Shopping">Shopping</string>
+    <string name="Transportation">Transportation</string>
+    <string name="Work">Work</string>
+
 
     <string name="testing_string">it just for testing</string>
 
@@ -151,6 +165,15 @@
         Tap on trash icon to delete category
         Tap on pin icon to pin category
     </string>
+
+    <string name="transaction_successfully_inserted">Transaction successfully inserted</string>
+
+    <string name="transaction_successfully_updated">"Transaction successfully updated"</string>
+    <string name="transaction_successfully_deleted">"Transaction successfully deleted"</string>
+    <string name="category_successfully_deleted">Category successfully deleted</string>
+    <string name="category_successfully_inserted">Category successfully inserted</string>
+    <string name="category_pinned">Category pinned</string>
+
 
 
 </resources>

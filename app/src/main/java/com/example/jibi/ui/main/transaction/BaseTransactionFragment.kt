@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.jibi.ui.UICommunicationListener
 import com.example.jibi.ui.main.MainViewModel
+import com.example.jibi.util.StateMessageCallback
 import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -49,25 +50,14 @@ constructor(
 
         viewModel.stateMessage.observe(viewLifecycleOwner) { stateMessage ->
             stateMessage?.let {
-                /*               if (isPaginationDone(stateMessage.response.message)) {
-                viewModel.setQueryExhausted(true)
-                viewModel.clearStateMessage()
-            } else {
-            uiCommunicationListener.onResponseReceived(
-                response = it.response,
-                stateMessageCallback = object : StateMessageCallback {
-                    override fun removeMessageFromStack() {
-                        viewModel.clearStateMessage()
+                uiCommunicationListener.onResponseReceived(
+                    response = it.response,
+                    stateMessageCallback = object : StateMessageCallback {
+                        override fun removeMessageFromStack() {
+                            viewModel.clearStateMessage()
+                        }
                     }
-                }
-            )
-        }*/
-                Toast.makeText(
-                    this.requireContext(),
-                    "Message: ${it.response.message} \n Type: ${it.response.uiComponentType} \n MessageType: ${it.response.messageType}",
-                    Toast.LENGTH_SHORT
-                ).show()
-                viewModel.clearStateMessage()
+                )
             }
         }
     }

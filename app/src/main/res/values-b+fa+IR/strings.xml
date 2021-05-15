@@ -44,8 +44,8 @@
     <string name="about">درباره ما</string>
     <string name="rate_us">به ما امتیاز دهید</string>
     <string name="setting">تنظیمات</string>
-    <string name="add_expenses_category">اضافه کردن یک دسته بندی برای هزینه ها</string>
-    <string name="add_income_category">اضافه کردن یک دسته بندی برای درآمد ها</string>
+    <string name="add_expenses_category">اضافه کردن دسته جدید برای هزینه ها</string>
+    <string name="add_income_category">اضافه کردن دسته جدید برای درآمد ها</string>
     <string name="unable_to_recognize_category_type">خطایی در هنگام شناسایی دسته بندی رخ داد</string>
     <string name="jibi">جیبی</string>
 
@@ -96,6 +96,21 @@
     <string name="dividends">سود سهام</string>
     <string name="investments">سرمایه گذاری ها</string>
     <string name="others">غیره</string>
+
+    <!--    CATEGORY GROUP NAMES-->
+    <string name="Education">تحصیلات</string>
+    <string name="Electronics">وسایل الکترونیکی</string>
+    <string name="Entertainment">سرگرمی</string>
+    <string name="Family">خانواده</string>
+    <string name="Finance">مالی</string>
+    <string name="Food">غذا</string>
+    <string name="Income">درآمد</string>
+    <string name="Medical">پزشکی</string>
+    <string name="Personal">شخصی</string>
+    <string name="Shopping">خرید</string>
+    <string name="Transportation">حمل و نقل</string>
+    <string name="Work">کار</string>
+
 
     <string name="_1">۱</string>
     <string name="_2">۲</string>
@@ -150,5 +165,13 @@
         برای حذف کردن یک دسته روی علامت سطل زباله کلید کنید
         برای سنجاق یک دسته روی علامت سنجاق کلید کنید
     </string>
+
+    <string name="transaction_successfully_inserted">"تراکنش با موفقیت ثبت شد"</string>
+    <string name="transaction_successfully_updated">"تراکنش با موفقیت بروزرسانی شد"</string>
+    <string name="transaction_successfully_deleted">"تراکنش با موفقیت حذف شد"</string>
+    <string name="category_successfully_inserted">"دسته با موفقیت ثبت شد"</string>
+    <string name="category_successfully_deleted">"دسته با موفقیت حذف شد"</string>
+    <string name="category_pinned">"دسته به بالا سنجاق شد"</string>
+
 
 </resources><!--source https://developer.android.com/training/basics/supporting-devices/languages-->

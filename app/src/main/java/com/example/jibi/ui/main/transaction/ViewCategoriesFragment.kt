@@ -230,7 +230,7 @@ constructor(
                         ) {
                             it.name
                         }
-                        itemView.nameOfCategory.text = "${item.ordering}| $categoryName"
+                        itemView.nameOfCategory.text = "$categoryName"
 
                         changePinState(item.ordering < 0)
 

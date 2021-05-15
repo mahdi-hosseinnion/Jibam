@@ -24,11 +24,11 @@ object MainFragmentsModule {
         requestManager: RequestManager,
         currentLocal: Locale,
         sharedPreferences: SharedPreferences,
-        sharedPrefEditor:SharedPreferences.Editor
+        sharedPrefEditor: SharedPreferences.Editor
 
     ): FragmentFactory {
         return MainFragmentFactory(
-            viewModelFactory, requestManager, currentLocal,sharedPreferences,sharedPrefEditor
+            viewModelFactory, requestManager, currentLocal, sharedPreferences, sharedPrefEditor
         )
     }
 

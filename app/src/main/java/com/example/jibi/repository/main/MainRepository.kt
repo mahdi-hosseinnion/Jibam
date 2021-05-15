@@ -1,6 +1,10 @@
 package com.example.jibi.repository.main
 
+import android.content.res.Resources
 import android.util.Log
+import androidx.annotation.IdRes
+import androidx.annotation.StringRes
+import com.example.jibi.R
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
 import com.example.jibi.models.Record
@@ -33,9 +37,10 @@ import kotlin.math.exp
 class MainRepository
 @Inject
 constructor(
-    val recordsDao: RecordsDao,
-    val categoriesDao: CategoriesDao,
-    val currentLocale: Locale
+    private val recordsDao: RecordsDao,
+    private val categoriesDao: CategoriesDao,
+    private val currentLocale: Locale,
+    private val resources: Resources
 ) {
     var today: String? = null
     var yesterday: String? = null
@@ -51,7 +56,7 @@ constructor(
         maxDate: Int? = null
     ): Flow<Double?> = recordsDao.getSumOfExpenses(minDate, maxDate)
 
-
+    fun getString(@StringRes id: Int) = resources.getString(id)
 //    recordsDao.getSumOfExpenses(minDate, maxDate)
 
     //queries
@@ -130,7 +135,7 @@ constructor(
     private fun currentDateInString(time: Int): String {
         val dv: Long = ((time.toLong()) * 1000) // its need to be in milisecond
 
-        val transDate =getFormattedDate(dv)
+        val transDate = getFormattedDate(dv)
 
         if (today == null) {
             today = getFormattedDate(System.currentTimeMillis())
@@ -150,8 +155,8 @@ constructor(
     private fun getFormattedDate(unixTimeStamp: Long): String {
         val df: Date = Date(unixTimeStamp)
 
-        return if (currentLocale.country=="IR") {
-            SolarCalendar.calcSolarCalendar(df, RECYCLER_VIEW,currentLocale )
+        return if (currentLocale.country == "IR") {
+            SolarCalendar.calcSolarCalendar(df, RECYCLER_VIEW, currentLocale)
         } else {
             SimpleDateFormat(
                 TransactionListAdapter.HEADER_DATE_PATTERN,
@@ -165,7 +170,6 @@ constructor(
     suspend fun insertTransaction(
         stateEvent: InsertTransaction
     ): DataState<TransactionViewState> {
-        mahdiLog(TAG, "insertTransaction 001 called${stateEvent.record} ")
         val cacheResult = safeCacheCall {
             recordsDao.insertOrReplace(stateEvent.record)
         }
@@ -175,11 +179,10 @@ constructor(
             stateEvent = stateEvent
         ) {
             override suspend fun handleSuccess(resultObj: Long): DataState<TransactionViewState> {
-                mahdiLog(TAG, "insertTransaction 001 HAVE BEEN DONE called${stateEvent.record} ")
                 tryIncreaseCategoryOrdering(stateEvent.record.cat_id)
                 return DataState.data(
                     response = buildResponse(
-                        message = "Transaction Successfully inserted",
+                        message = getString(R.string.transaction_successfully_inserted),
                         UIComponentType.Toast,
                         MessageType.Success
                     )
@@ -249,7 +252,7 @@ constructor(
             override suspend fun handleSuccess(resultObj: Int): DataState<TransactionViewState> {
                 return DataState.data(
                     response = buildResponse(
-                        message = "Transaction Successfully Updated",
+                        message = getString(R.string.transaction_successfully_updated),
                         UIComponentType.Toast,
                         MessageType.Success
                     )
@@ -271,7 +274,7 @@ constructor(
             override suspend fun handleSuccess(resultObj: Int): DataState<TransactionViewState> {
                 return DataState.data(
                     response = buildResponse(
-                        message = "Transaction Successfully Deleted",
+                        message = getString(R.string.transaction_successfully_deleted),
                         UIComponentType.Toast,
                         MessageType.Success
                     )
@@ -293,7 +296,7 @@ constructor(
             override suspend fun handleSuccess(resultObj: Int): DataState<TransactionViewState> {
                 return DataState.data(
                     response = buildResponse(
-                        message = "Category Successfully Deleted",
+                        message = getString(R.string.category_successfully_deleted),
                         UIComponentType.Toast,
                         MessageType.Success
                     )
@@ -315,7 +318,7 @@ constructor(
             override suspend fun handleSuccess(resultObj: Long): DataState<TransactionViewState> {
                 return DataState.data(
                     response = buildResponse(
-                        message = "Category Successfully Deleted",
+                        message = getString(R.string.category_successfully_inserted),
                         UIComponentType.Toast,
                         MessageType.Success
                     )
@@ -365,7 +368,7 @@ constructor(
             override suspend fun handleSuccess(resultObj: Int): DataState<TransactionViewState> {
                 return DataState.data(
                     response = buildResponse(
-                        message = "Category Successfully Deleted",
+                        message = getString(R.string.category_pinned),
                         UIComponentType.Toast,
                         MessageType.Success
                     )
