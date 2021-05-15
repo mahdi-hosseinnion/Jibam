@@ -645,7 +645,13 @@ constructor(
                 ) >= 0
             ) {
                 val calculatedResult = textCalculator.calculateResult(p0.toString())
-                finalNUmber.text = localizeDoubleNumber(calculatedResult.toDouble(), currentLocale)
+
+                val finalNumberText =
+                    localizeDoubleNumber(calculatedResult.toDouble(), currentLocale)
+                finalNUmber.text =
+                    if (finalNumberText == edt_money.text.toString().removeOperationSigns()) ""
+                    else finalNumberText
+
                 var newMoney = calculatedResult.toDoubleOrNull()
                 Log.d(TAG, "CHANGES: ${transactionCategory.toString()} ")
                 if (transactionCategory?.type == 1 && newMoney != null) {
@@ -661,6 +667,14 @@ constructor(
             edt_money.addTextChangedListener(this)
         }
 
+    }
+
+    fun String.removeOperationSigns(): String {
+        var result = this
+        for (values in CalculatorKeyboard.listOfSigns) {
+            result = result.replace(values, "")
+        }
+        return result
     }
 
     private fun checkForGuidePromote() {

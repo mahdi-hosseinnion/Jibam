@@ -1,7 +1,6 @@
 package com.example.jibi.ui
 
 import android.content.Context
-import android.renderscript.ScriptGroup
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,8 +12,6 @@ import android.widget.LinearLayout
 import androidx.annotation.StringRes
 import com.example.jibi.R
 import com.example.jibi.util.convertEnglishDigitsToFarsiDigits
-import java.lang.StringBuilder
-import java.util.*
 
 //copy from this
 // https://stackoverflow.com/a/45005691/10362460
@@ -49,13 +46,6 @@ class CalculatorKeyboard(
         getString(R.string._9)[0]
     )
 
-    private val listOfSigns = listOf(
-        DIVISION,
-        TIMES,
-        MINES,
-        PLUS,
-        PERIOD
-    )
 
     // keyboard keys (buttons)
     private val mButton1: Button
@@ -171,6 +161,14 @@ class CalculatorKeyboard(
         const val PLUS = "+"
         const val MINES = "-"
         const val PERIOD = "."
+
+        val listOfSigns = listOf(
+            DIVISION,
+            TIMES,
+            MINES,
+            PLUS,
+            PERIOD
+        )
     }
 
     //TODO BUG CANNOT RESULV WHEN CORSUR MOVE
