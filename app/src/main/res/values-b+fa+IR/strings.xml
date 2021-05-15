@@ -173,5 +173,6 @@
     <string name="category_successfully_deleted">"دسته با موفقیت حذف شد"</string>
     <string name="category_pinned">"دسته به بالا سنجاق شد"</string>
 
-
+    <string name="no_result_found_for_this_search">هیج تراکنشی برای سرچ شما یافت نشد :(</string>
+    <string name="insert_some_transacion_with_add_button">هیچ تراکنشی وجود ندارد!</string>
 </resources><!--source https://developer.android.com/training/basics/supporting-devices/languages-->

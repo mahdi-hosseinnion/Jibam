@@ -563,6 +563,11 @@ constructor(
 
 
     private fun checkForInsertingErrors(): Boolean {
+        if (edt_money.text.toString().isBlank()){
+            Log.e(TAG, "MONEY IS NULL")
+            edt_money.error = errorMsgMapper(ErrorMessages.EMPTY_MONEY)
+            return false
+        }
         val calculatedMoney = textCalculator.calculateResult(edt_money.text.toString())
             .replace(",".toRegex(), "")
         if (calculatedMoney.isBlank()) {

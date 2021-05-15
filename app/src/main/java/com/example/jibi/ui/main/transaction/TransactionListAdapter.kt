@@ -1,4 +1,4 @@
-package com.example.jibi.ui.main.transaction
+  package com.example.jibi.ui.main.transaction
 
 import android.content.res.Resources
 import android.util.Log
@@ -414,7 +414,7 @@ abstract class TransactionListAdapter(
                 itemView.priceCard.setCardBackgroundColor(resources.getColor(R.color.expensesColor))
             }
             val categoryImageUrl = this.resources.getIdentifier(
-                "ic_cat_${category.name}",
+                "ic_cat_${category.img_res }",
                 "drawable",
                 packageName
             )

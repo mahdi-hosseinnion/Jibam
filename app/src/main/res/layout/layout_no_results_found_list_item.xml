@@ -10,5 +10,6 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:layout_margin="16dp"
-        android:text=" NO RESULT FOUND FOR THIS SEARCH :(" />
+        android:textColor="@color/black"
+        android:text="@string/no_result_found_for_this_search" />
 </FrameLayout>

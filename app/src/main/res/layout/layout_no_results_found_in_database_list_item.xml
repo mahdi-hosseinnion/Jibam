@@ -10,5 +10,7 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:layout_margin="16dp"
-        android:text=" INSERT SOME TRANSACION WITH ADD BUTTON :)" />
+        android:textColor="@color/black"
+
+        android:text="@string/insert_some_transacion_with_add_button" />
 </FrameLayout>
