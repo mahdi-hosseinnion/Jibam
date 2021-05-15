@@ -29,6 +29,7 @@ import com.example.jibi.R
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
 import com.example.jibi.models.Record
+import com.example.jibi.ui.CalculatorKeyboard
 import com.example.jibi.ui.main.transaction.bottomSheet.CreateNewTransBottomSheet
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.*
@@ -64,7 +65,7 @@ constructor(
     R.layout.fragment_add_transaction,
     viewModelFactory,
     R.id.fragment_add_toolbar_main
-) {
+), CalculatorKeyboard.CalculatorInteraction {
 
     private val args: AddTransactionFragmentArgs by navArgs()
 
@@ -149,6 +150,7 @@ constructor(
         // pass the InputConnection from the EditText to the keyboard
         val ic: InputConnection = edt_money.onCreateInputConnection(EditorInfo())
         keyboard.inputConnection = ic
+        keyboard.calculatorInteraction = this
         //controll visibity
 
         // Make the custom keyboard appear
@@ -563,7 +565,7 @@ constructor(
 
 
     private fun checkForInsertingErrors(): Boolean {
-        if (edt_money.text.toString().isBlank()){
+        if (edt_money.text.toString().isBlank()) {
             Log.e(TAG, "MONEY IS NULL")
             edt_money.error = errorMsgMapper(ErrorMessages.EMPTY_MONEY)
             return false
@@ -814,6 +816,10 @@ constructor(
         ErrorMessages.NEGATIVE_MONEY -> resources.getString(R.string.money_shouldnt_be_negative)
 
         ErrorMessages.EMPTY_MONEY -> resources.getString(R.string.pls_insert_some_money)
+    }
+
+    override fun onEqualClicked() {
+        keyboard.preloadKeyboard(finalNUmber.text.toString())
     }
 
 }

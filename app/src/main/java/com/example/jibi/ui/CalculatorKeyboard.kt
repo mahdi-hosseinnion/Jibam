@@ -34,6 +34,9 @@ class CalculatorKeyboard(
 
     var text = StringBuilder("")
 
+    var calculatorInteraction: CalculatorInteraction? = null
+
+
     private val listOfNumbers = charArrayOf(
         getString(R.string._1)[0],
         getString(R.string._2)[0],
@@ -178,7 +181,10 @@ class CalculatorKeyboard(
             Log.e(TAG, "onClick: inputConnection: $inputConnection & v: $v")
             return
         }
-
+        if (v.id == R.id.btn_equal) {
+            calculatorInteraction?.onEqualClicked()
+            return
+        }
         // Delete text or input key value
         // All communication goes through the InputConnection
         if (v.id == R.id.btn_c) {
@@ -269,7 +275,10 @@ class CalculatorKeyboard(
             val value1 =
                 if (getString(R.string._1) != "1") value.convertEnglishDigitsToFarsiDigits()
                 else value
-
+            //clear last text
+            inputConnection!!.clearText()
+            text.clear()
+            //add current text
             inputConnection!!.commitText(value1, 1)
             text.append(value)
         } catch (e: NullPointerException) {
@@ -305,5 +314,9 @@ class CalculatorKeyboard(
 
     private fun printText() {
         Log.d(TAG, "onClick: text: -${text.toString()}-")
+    }
+
+    interface CalculatorInteraction {
+        fun onEqualClicked()
     }
 }
