@@ -4,17 +4,16 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
-import android.os.Build
 import androidx.core.os.ConfigurationCompat
 import androidx.room.Room
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
-import com.example.jibi.R
 import com.example.jibi.persistence.AppDatabase
 import com.example.jibi.persistence.AppDatabase.Companion.DATABASE_NAME
 import com.example.jibi.persistence.CategoriesDao
 import com.example.jibi.persistence.RecordsDao
+import com.example.jibi.util.LocaleHelper
 import com.example.jibi.util.PreferenceKeys
 import dagger.Module
 import dagger.Provides
@@ -75,6 +74,7 @@ object AppModule {
     @Singleton
     @Provides
     fun provideCurrentLocal(app: Application): Locale {
+        //TODO ADD FA/EN for differnet languages in case it didnet work or even _resource
         return ConfigurationCompat.getLocales(app.resources.configuration)[0]
 
     }
@@ -102,6 +102,13 @@ object AppModule {
     @Singleton
     @Provides
     fun provideResources(application: Application): Resources {
-        return application.resources
+        return LocaleHelper.getLocale(application)?.resources ?: application.resources;
     }
+
+//    @JvmStatic
+//    @Singleton
+//    @Provides
+//    fun provideAppLanguage(locale: Locale): String {
+//        return locale.language
+//    }
 }

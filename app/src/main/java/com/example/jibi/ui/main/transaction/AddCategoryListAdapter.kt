@@ -1,26 +1,25 @@
 package com.example.jibi.ui.main.transaction
 
+import android.content.res.Resources
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.*
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.example.jibi.R
-import com.example.jibi.models.Category
 import com.example.jibi.models.CategoryImages
 import com.example.jibi.ui.main.transaction.TransactionListAdapter.Companion.listOfColor
 import kotlinx.android.synthetic.main.layout_category_images_header.view.*
 import kotlinx.android.synthetic.main.layout_category_images_list_item.view.*
-import kotlin.collections.ArrayList
 
 
 class AddCategoryListAdapter(
     private val requestManager: RequestManager?,
     private val interaction: Interaction? = null,
-    private val packageName: String
+    private val packageName: String,
+    private val _resources: Resources
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -77,7 +76,7 @@ class AddCategoryListAdapter(
                         false
                     ),
                     interaction = interaction,
-                    packageName = packageName
+                    packageName = packageName, _resources = _resources
                 )
             }
             else -> {
@@ -302,12 +301,13 @@ class AddCategoryListAdapter(
     constructor(
         itemView: View,
         private val interaction: Interaction?,
-        private val packageName: String
+        private val packageName: String,
+        private val _resources: Resources
     ) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(headerName: CategoryImages) = with(itemView) {
             itemView.header_name.text = headerName.getCategoryGroupNameFromStringFile(
-                resources,
+                _resources,
                 packageName = packageName
             ) {
                 it.group_name

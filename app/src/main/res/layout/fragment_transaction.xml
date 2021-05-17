@@ -97,7 +97,7 @@
                         android:id="@+id/txt_income_viewHolder"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="4dp"
                         android:foregroundGravity="center"
                         android:gravity="center"
                         android:text="@string/income"

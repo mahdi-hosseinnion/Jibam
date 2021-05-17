@@ -2,7 +2,7 @@ package com.example.jibi.repository
 
 import android.util.Log
 import com.example.jibi.util.*
-import com.example.jibi.util.Constants.Companion.CACHE_TIMEOUT
+import com.example.jibi.util.Constants.CACHE_TIMEOUT
 import com.example.jibi.util.ErrorHandling.Companion.CACHE_ERROR_TIMEOUT
 import com.example.jibi.util.ErrorHandling.Companion.UNKNOWN_ERROR
 import kotlinx.coroutines.*

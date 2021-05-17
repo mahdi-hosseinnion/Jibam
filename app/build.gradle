@@ -60,6 +60,12 @@ android {
         exclude 'META-INF/LGPL2.1'
         exclude("META-INF/*.kotlin_module")
     }
+//    https://gunhansancar.com/change-language-programmatically-in-android/
+    bundle {
+        language {
+            enableSplit = false
+        }
+    }
 }
 
 dependencies {
@@ -162,4 +168,8 @@ dependencies {
     //MaterialTapTargetPrompt
     //https://github.com/sjwall/MaterialTapTargetPrompt
     implementation 'uk.co.samuelwall:material-tap-target-prompt:3.1.1'
+
+    //app restarted
+    //https://github.com/JakeWharton/ProcessPhoenix
+    implementation 'com.jakewharton:process-phoenix:2.0.0'
 }

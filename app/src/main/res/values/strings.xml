@@ -176,6 +176,11 @@
 
     <string name="no_result_found_for_this_search">NO RESULT FOUND FOR THIS SEARCH :(</string>
     <string name="insert_some_transacion_with_add_button">INSERT SOME TRANSACTION WITH ADD BUTTON :)</string>
+    <string name="language">Language</string>
+    <string name="system_default">System Default (Recommended)</string>
+    <string name="farsi">فارسی</string>
+    <string name="english">English</string>
+    <string name="changelanugaealart">Change app language cause app to restart</string>
 
 
 </resources>

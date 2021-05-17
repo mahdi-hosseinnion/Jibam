@@ -1,5 +1,6 @@
 package com.example.jibi.ui.main.transaction.bottomSheet
 
+import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +21,8 @@ class BottomSheetListAdapter(
     private val requestManager: RequestManager?,
     private val interaction: Interaction? = null,
     private val packageName: String,
-    private val selectedCategoryId: Int
+    private val selectedCategoryId: Int,
+    private val _resources: Resources
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -55,7 +57,8 @@ class BottomSheetListAdapter(
             interaction = interaction,
             requestManager = requestManager,
             packageName = packageName,
-            selectedCategoryId = selectedCategoryId
+            selectedCategoryId = selectedCategoryId,
+            _resources = _resources
         )
     }
 
@@ -137,7 +140,8 @@ class BottomSheetListAdapter(
         val requestManager: RequestManager?,
         private val interaction: Interaction?,
         private val packageName: String,
-        private val selectedCategoryId: Int
+        private val selectedCategoryId: Int,
+        private val _resources: Resources
     ) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(item: Category) = with(itemView) {
@@ -154,7 +158,10 @@ class BottomSheetListAdapter(
 //                ?.into(itemView.category_image)
 
             itemView.category_name.text =
-                item.getCategoryNameFromStringFile(resources, this@CategoryViewHolder.packageName) {
+                item.getCategoryNameFromStringFile(
+                    _resources,
+                    this@CategoryViewHolder.packageName
+                ) {
                     it.name
                 }
 //            itemView.blog_update_date.text = DateUtils.convertLongToStringDate(item.date_updated)

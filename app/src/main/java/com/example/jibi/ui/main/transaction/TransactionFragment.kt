@@ -2,6 +2,7 @@ package com.example.jibi.ui.main.transaction
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.Editable
@@ -15,6 +16,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.StringRes
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -30,7 +32,6 @@ import com.example.jibi.models.Category
 import com.example.jibi.models.Record
 import com.example.jibi.models.SearchModel
 import com.example.jibi.repository.buildResponse
-import com.example.jibi.ui.main.transaction.bottomSheet.CreateNewTransBottomSheet
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.*
 import com.example.jibi.util.PreferenceKeys.PROMOTE_FAB_TRANSACTION_FRAGMENT
@@ -44,8 +45,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt
-import java.text.DecimalFormat
-import java.text.NumberFormat
 import java.util.*
 import javax.inject.Inject
 import kotlin.random.Random
@@ -60,11 +59,13 @@ constructor(
     private val requestManager: RequestManager,
     private val currentLocale: Locale,
     private val sharedPreferences: SharedPreferences,
-    private val sharedPrefsEditor: SharedPreferences.Editor
+    private val sharedPrefsEditor: SharedPreferences.Editor,
+    private val _resources: Resources
 ) : BaseTransactionFragment(
     R.layout.fragment_transaction,
     viewModelFactory,
-    R.id.transaction_toolbar
+    R.id.transaction_toolbar,
+    _resources
 ), TransactionListAdapter.Interaction {
 
     private val TAG = "TransactionFragment"
@@ -149,7 +150,7 @@ constructor(
         }
         //TODO DELETE THIS LINE FOR FINAL PROJECT JUST OF TESTING
         txt_balance.setOnClickListener {
-//            insertRandomTransaction()
+            insertRandomTransaction()
 
         }
         //TODO DELETE THIS LINE FOR FINAL PROJECT JUST OF TESTING
@@ -325,7 +326,7 @@ constructor(
     }
 
 
-    private fun navigateToAddTransactionFragment(isNewTransaction:Boolean) {
+    private fun navigateToAddTransactionFragment(isNewTransaction: Boolean) {
         //on category selected and bottomSheet hided
         val action =
             TransactionFragmentDirections.actionTransactionFragmentToCreateTransactionFragment(
@@ -343,7 +344,7 @@ constructor(
                     recyclerAdapter.submitList(transactionList, true)
                 }
                 it.summeryMoney?.let { summeryMoney ->
-                    summeryMoney.balance = (summeryMoney.income + summeryMoney.expenses)
+                    summeryMoney.balance = (summeryMoney.income.plus(summeryMoney.expenses))
                     txt_balance.text = separate3By3AndRoundIt(summeryMoney.balance, currentLocale)
                     txt_expenses.text =
                         separate3By3AndRoundIt(summeryMoney.expenses.times(-1), currentLocale)
@@ -363,7 +364,7 @@ constructor(
                 requestManager,
                 this@TransactionFragment,
                 this@TransactionFragment.requireActivity().packageName,
-                currentLocale
+                currentLocale, _resources
             ) {
 
                 override fun getCategoryByIdFromRoot(id: Int): Category {
@@ -686,8 +687,8 @@ constructor(
     fun showFabPromote() {
         val mFabPrompt = MaterialTapTargetPrompt.Builder(this)
             .setTarget(R.id.fab)
-            .setPrimaryText(R.string.fab_tap_target_primary)
-            .setSecondaryText(R.string.fab_tap_target_secondary)
+            .setPrimaryText(_getString(R.string.fab_tap_target_primary))
+            .setSecondaryText(_getString(R.string.fab_tap_target_secondary))
             .setPromptStateChangeListener { _, state ->
                 if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED || state == MaterialTapTargetPrompt.STATE_DISMISSING) {
                     sharedPrefsEditor.putBoolean(
@@ -701,6 +702,14 @@ constructor(
     }
 
 
+    override fun setTextToAllViews() {
+        txt_balance_viewHolder.text = _getString(R.string.total_balance)
+        txt_income_viewHolder.text = _getString(R.string.income)
+        txt_expenses_viewHolder.text = _getString(R.string.expenses)
+        bottom_sheet_title.text = _getString(R.string.transactions)
+        bottom_sheet_title.text = _getString(R.string.transactions)
+        bottom_sheet_search_edt.hint = _getString(R.string.search)
+    }
 
     companion object {
         private const val SEARCH_QUERY = "SEARCHVIEWWSTATE VISIBLE >>>>"

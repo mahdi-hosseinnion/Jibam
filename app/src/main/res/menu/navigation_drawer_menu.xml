@@ -7,11 +7,11 @@
         android:icon="@drawable/ic_category_setting"
         android:iconTint="@color/black"
         android:title="@string/category_setting" />
-<!--    <item-->
-<!--        android:id="@+id/settingFragment"-->
-<!--        android:icon="@drawable/ic_settings"-->
-<!--        android:iconTint="@color/black"-->
-<!--        android:title="@string/setting" />-->
+    <item
+        android:id="@+id/settingFragment"
+        android:icon="@drawable/ic_settings"
+        android:iconTint="@color/black"
+        android:title="@string/setting" />
 <!--    <item-->
 <!--        android:id="@+id/rate_us"-->
 <!--        android:icon="@drawable/ic_rate_us"-->

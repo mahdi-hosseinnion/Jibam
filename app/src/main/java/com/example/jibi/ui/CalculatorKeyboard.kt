@@ -1,6 +1,7 @@
 package com.example.jibi.ui
 
 import android.content.Context
+import android.content.res.Resources
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
@@ -33,18 +34,24 @@ class CalculatorKeyboard(
 
     var calculatorInteraction: CalculatorInteraction? = null
 
+    var _resources: Resources? = null
 
-    private val listOfNumbers = charArrayOf(
-        getString(R.string._1)[0],
-        getString(R.string._2)[0],
-        getString(R.string._3)[0],
-        getString(R.string._4)[0],
-        getString(R.string._5)[0],
-        getString(R.string._6)[0],
-        getString(R.string._7)[0],
-        getString(R.string._8)[0],
-        getString(R.string._9)[0]
-    )
+    private fun _getString(@StringRes resId: Int): String {
+        return _resources?.getString(resId) ?: resources.getString(resId)
+    }
+
+    private fun listOfNumbers(): CharArray =
+        charArrayOf(
+            _getString(R.string._1)[0],
+            _getString(R.string._2)[0],
+            _getString(R.string._3)[0],
+            _getString(R.string._4)[0],
+            _getString(R.string._5)[0],
+            _getString(R.string._6)[0],
+            _getString(R.string._7)[0],
+            _getString(R.string._8)[0],
+            _getString(R.string._9)[0]
+        )
 
 
     // keyboard keys (buttons)
@@ -71,7 +78,7 @@ class CalculatorKeyboard(
 
     // This will map the button resource id to the String value that we want to
     // input when that button is clicked.
-    private val keyValues: Map<Int, String>
+    private var keyValues: Map<Int, String>
 
     // Our communication link to the EditText
     var inputConnection: InputConnection? = null
@@ -125,6 +132,23 @@ class CalculatorKeyboard(
         mButtonPeriod.setOnClickListener(this)
         mButtonEqual.setOnClickListener(this)
 
+        keyValues = mapOf()
+
+    }
+
+    fun setTextToAllViews() {
+        //text
+        mButton1.text = _getString(R.string._1)
+        mButton2.text = _getString(R.string._2)
+        mButton3.text = _getString(R.string._3)
+        mButton4.text = _getString(R.string._4)
+        mButton5.text = _getString(R.string._5)
+        mButton6.text = _getString(R.string._6)
+        mButton7.text = _getString(R.string._7)
+        mButton8.text = _getString(R.string._8)
+        mButton9.text = _getString(R.string._9)
+        mButton0.text = _getString(R.string._0)
+        mButton00.text = _getString(R.string._00)
         // map buttons IDs to input strings
         keyValues = mapOf(
             R.id.btn_c to CLEAR,
@@ -135,22 +159,19 @@ class CalculatorKeyboard(
             R.id.btn_plus to PLUS,
             R.id.btn_period to PERIOD,
             R.id.btn_equal to "=",
-            R.id.btn_1 to getString(R.string._1),
-            R.id.btn_2 to getString(R.string._2),
-            R.id.btn_3 to getString(R.string._3),
-            R.id.btn_4 to getString(R.string._4),
-            R.id.btn_5 to getString(R.string._5),
-            R.id.btn_6 to getString(R.string._6),
-            R.id.btn_7 to getString(R.string._7),
-            R.id.btn_8 to getString(R.string._8),
-            R.id.btn_9 to getString(R.string._9),
-            R.id.btn_0 to getString(R.string._0),
-            R.id.btn_00 to getString(R.string._00)
+            R.id.btn_1 to _getString(R.string._1),
+            R.id.btn_2 to _getString(R.string._2),
+            R.id.btn_3 to _getString(R.string._3),
+            R.id.btn_4 to _getString(R.string._4),
+            R.id.btn_5 to _getString(R.string._5),
+            R.id.btn_6 to _getString(R.string._6),
+            R.id.btn_7 to _getString(R.string._7),
+            R.id.btn_8 to _getString(R.string._8),
+            R.id.btn_9 to _getString(R.string._9),
+            R.id.btn_0 to _getString(R.string._0),
+            R.id.btn_00 to _getString(R.string._00)
         )
-
     }
-
-    fun getString(@StringRes id: Int) = resources.getString(id)
 
     companion object {
         private const val TAG = "CalculatorKeyboard"
@@ -217,7 +238,7 @@ class CalculatorKeyboard(
 
                 if (text.isBlank()) {
                     //nothing inserted yet
-                    if (value.indexOfAny(listOfNumbers) >= 0 || value == getString(R.string._0)) {
+                    if (value.indexOfAny(listOfNumbers()) >= 0 || value == _getString(R.string._0)) {
                         //contain number
                         inputConnection!!.commitText(value, 1)
                         text.append(value)
@@ -245,14 +266,14 @@ class CalculatorKeyboard(
                     }
 
                     //something inserted
-                    if (text.toString() == getString(R.string._0)) {
+                    if (text.toString() == _getString(R.string._0)) {
                         if (v.id == R.id.btn_period) {
                             //only . allowed after 0
                             inputConnection!!.commitText(value, 1)
                             text.append(value)
                         } else {
                             //if it's number (not 0) remove 0
-                            if (value.indexOfAny(listOfNumbers) >= 0) {
+                            if (value.indexOfAny(listOfNumbers()) >= 0) {
                                 // delete the last one aka->0
                                 inputConnection!!.deleteSurroundingText(1, 0)
                                 inputConnection!!.commitText(value, 1)
@@ -271,7 +292,7 @@ class CalculatorKeyboard(
     fun preloadKeyboard(value: String) {
         try {
             val value1 =
-                if (getString(R.string._1) != "1") value.convertEnglishDigitsToFarsiDigits()
+                if (_getString(R.string._1) != "1") value.convertEnglishDigitsToFarsiDigits()
                 else value
             //clear last text
             inputConnection!!.clearText()

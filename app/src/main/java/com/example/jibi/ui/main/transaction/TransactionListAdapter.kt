@@ -1,4 +1,4 @@
-  package com.example.jibi.ui.main.transaction
+package com.example.jibi.ui.main.transaction
 
 import android.content.res.Resources
 import android.util.Log
@@ -6,7 +6,6 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.recyclerview.widget.*
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
@@ -24,8 +23,6 @@ import kotlinx.android.synthetic.main.layout_transacion_header.view.header_date
 import kotlinx.android.synthetic.main.layout_transacion_header.view.header_expenses_sum
 import kotlinx.android.synthetic.main.layout_transacion_header.view.header_income_sum
 import kotlinx.android.synthetic.main.layout_transaction_list_item.view.*
-import java.text.DecimalFormat
-import java.text.NumberFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.random.Random
@@ -35,7 +32,9 @@ abstract class TransactionListAdapter(
     private val requestManager: RequestManager?,
     private val interaction: Interaction? = null,
     private val packageName: String,
-    private val currentLocale: Locale
+    private val currentLocale: Locale,
+    private val _resources: Resources
+
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -204,7 +203,7 @@ abstract class TransactionListAdapter(
                         false
                     ),
                     interaction = interaction,
-                    currentLocale = currentLocale
+                    currentLocale = currentLocale, _resources
                 )
             }
             else -> {
@@ -396,7 +395,7 @@ abstract class TransactionListAdapter(
 
             if (item.memo.isNullOrBlank()) {
                 itemView.main_text.text = category.getCategoryNameFromStringFile(
-                    resources,
+                    _resources,
                     this@TransViewHolder.packageName
                 ) {
                     it.name
@@ -414,7 +413,7 @@ abstract class TransactionListAdapter(
                 itemView.priceCard.setCardBackgroundColor(resources.getColor(R.color.expensesColor))
             }
             val categoryImageUrl = this.resources.getIdentifier(
-                "ic_cat_${category.img_res }",
+                "ic_cat_${category.img_res}",
                 "drawable",
                 packageName
             )
@@ -453,7 +452,8 @@ abstract class TransactionListAdapter(
     constructor(
         itemView: View,
         private val interaction: Interaction?,
-        private val currentLocale: Locale
+        private val currentLocale: Locale,
+        private val _resources: Resources
     ) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(item: Record) = with(itemView) {
@@ -468,7 +468,7 @@ abstract class TransactionListAdapter(
             //money for expenses
             Log.d(TAG, "bind: sum of all expenses = ${item.money}")
             if (item.money != 0.0) {
-                itemView.header_expenses_sum.text = "${resources.getString(R.string.expenses)}: ${
+                itemView.header_expenses_sum.text = "${_resources.getString(R.string.expenses)}: ${
                     separate3By3(
                         item.money,
                         currentLocale
@@ -480,7 +480,7 @@ abstract class TransactionListAdapter(
             }
             //cat_id for income
             if (item.incomeSum != null && item.incomeSum != 0.0) {
-                itemView.header_income_sum.text = "${resources.getString(R.string.income)}: ${
+                itemView.header_income_sum.text = "${_resources.getString(R.string.income)}: ${
                     separate3By3(
                         item.incomeSum,
                         currentLocale
@@ -492,9 +492,9 @@ abstract class TransactionListAdapter(
             itemView.header_date.text = ""
 
             if (item.memo == TODAY) {
-                itemView.header_date_name.text = resources.getString(R.string.today)
+                itemView.header_date_name.text = _resources.getString(R.string.today)
             } else if (item.memo == YESTERDAY) {
-                itemView.header_date_name.text = resources.getString(R.string.yesterday)
+                itemView.header_date_name.text = _resources.getString(R.string.yesterday)
             } else {
                 try {
                     itemView.header_date_name.text = item.memo?.substring(

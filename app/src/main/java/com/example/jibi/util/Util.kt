@@ -1,6 +1,5 @@
 package com.example.jibi.util
 
-import android.app.Activity
 import android.util.Log
 import android.util.TypedValue
 import androidx.fragment.app.Fragment
@@ -32,17 +31,33 @@ public fun Fragment.convertDpToPx(dp: Int): Int {
 
 fun separate3By3(money1: Double, locale: Locale): String {
     var money = money1
+    var isMoneyNegative = false
     if (money < 0.0) {
         money *= -1.0
+        isMoneyNegative = true
     }
     //we use formatter to apply local(farsi digits) and ,
     val formatter: DecimalFormat = NumberFormat.getInstance(locale) as DecimalFormat
     if (money < 1000.0) {
-        return formatter.format(money)
+        return if (isMoneyNegative)
+            if (locale.language == Constants.PERSIAN_LANG_CODE)
+                "${formatter.format(money)}-"
+            else
+                "-${formatter.format(money)}"
+        else
+            formatter.format(money)
     }
     formatter.applyPattern("#,###,###,###.###")
-    return formatter.format(money)
+
+    return if (isMoneyNegative)
+        if (locale.language == Constants.PERSIAN_LANG_CODE)
+            "${formatter.format(money)}-"
+        else
+            "-${formatter.format(money)}"
+    else
+        formatter.format(money)
 }
+
 fun localizeDoubleNumber(money1: Double, locale: Locale): String {
     var money = money1
     if (money < 0.0) {
@@ -117,6 +132,7 @@ fun String.convertFarsiDigitsToEnglishDigits() =
         .replace("۷", "7")
         .replace("۸", "8")
         .replace("۹", "9")
+
 //TODO REPLACE THIS WITH R.string.-0
 fun String.convertEnglishDigitsToFarsiDigits() =
     this.replace("0", "۰")

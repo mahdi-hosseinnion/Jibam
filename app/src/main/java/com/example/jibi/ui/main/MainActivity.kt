@@ -1,8 +1,9 @@
 package com.example.jibi.ui.main
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -17,8 +18,8 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.jibi.BaseApplication
 import com.example.jibi.R
 import com.example.jibi.ui.BaseActivity
+import com.jakewharton.processphoenix.ProcessPhoenix
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
@@ -47,11 +48,33 @@ class MainActivity : BaseActivity() {
         inject()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        firstSetup()
-//        setupActionBarWithNavController(toolbar_main, drawer_layout)
-//        setupActionBarWithNavController()
+        if (savedInstanceState == null) {
+            firstSetup()
+
+        }
+        uiSetup()
     }
 
+    private fun uiSetup() {
+        val menu = navigation_view.menu
+        menu.findItem(R.id.viewCategoriesFragment).title =
+            _resources.getString(R.string.category_setting)
+        menu.findItem(R.id.aboutUsFragment).title =
+            _resources.getString(R.string.about)
+        menu.findItem(R.id.settingFragment).title =
+            _resources.getString(R.string.setting)
+
+        val header_layout = navigation_view.getHeaderView(0)
+        val navHeaderText = header_layout.findViewById<TextView>(R.id.drawer_name)
+        navHeaderText.text = _resources.getString(R.string.jibi)
+
+    }
+
+
+    override fun recreateActivity() {
+        val nextIntent = Intent(this, MainActivity::class.java)
+        ProcessPhoenix.triggerRebirth(this, nextIntent);
+    }
 
     override fun inject() {
         (application as BaseApplication).mainComponent()

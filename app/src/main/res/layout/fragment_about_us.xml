@@ -14,6 +14,7 @@
         android:background="@color/purple_500" />
 
     <TextView
+        android:id="@+id/about_us"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"

@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
 import android.text.*
@@ -60,11 +61,12 @@ constructor(
     private val requestManager: RequestManager,
     private val currentLocale: Locale,
     private val sharedPreferences: SharedPreferences,
-    private val sharedPrefsEditor: SharedPreferences.Editor
+    private val sharedPrefsEditor: SharedPreferences.Editor,
+    private val _resources: Resources
 ) : BaseTransactionFragment(
     R.layout.fragment_add_transaction,
     viewModelFactory,
-    R.id.fragment_add_toolbar_main
+    R.id.fragment_add_toolbar_main, _resources
 ), CalculatorKeyboard.CalculatorInteraction {
 
     private val args: AddTransactionFragmentArgs by navArgs()
@@ -121,7 +123,7 @@ constructor(
                 onDismissCalled,
                 transactionCategory?.id ?: 0,
                 sharedPreferences,
-                sharedPrefsEditor
+                sharedPrefsEditor, _resources
             )
         modalBottomSheet.show(parentFragmentManager, "CreateNewTransBottomSheet")
     }
@@ -151,6 +153,8 @@ constructor(
         val ic: InputConnection = edt_money.onCreateInputConnection(EditorInfo())
         keyboard.inputConnection = ic
         keyboard.calculatorInteraction = this
+        keyboard._resources = _resources
+        keyboard.setTextToAllViews()
         //controll visibity
 
         // Make the custom keyboard appear
@@ -177,7 +181,7 @@ constructor(
 
     private fun initUiForNewTransaction() {
         findNavController()
-            .currentDestination?.label = getString(R.string.add_transaction)
+            .currentDestination?.label = _getString(R.string.add_transaction)
         lifecycleScope.launch {
             delay(300)
             showBottomSheet()
@@ -197,7 +201,7 @@ constructor(
 
     private fun initUiForViewTransaction(transaction: Record) {
         findNavController()
-            .currentDestination?.label = getString(R.string.details)
+            .currentDestination?.label = _getString(R.string.details)
         //change id
         viewTransactionId = transaction.id
 
@@ -308,7 +312,7 @@ constructor(
     private fun showDatePickerDialog() {
         //hide money keyboard
         hideCustomKeyboard()
-        if (currentLocale.country == "IR") {
+        if (currentLocale.language == Constants.PERSIAN_LANG_CODE) {
             showShamsiDatePicker()
         } else {
             showGregorianDatePicker()
@@ -343,7 +347,7 @@ constructor(
                     //TODO add backup plan and shamsi to gregorian converter
                     Toast.makeText(
                         this.requireContext(),
-                        getString(R.string.unable_to_get_date),
+                        _getString(R.string.unable_to_get_date),
                         Toast.LENGTH_LONG
                     ).show()
                 }
@@ -487,7 +491,7 @@ constructor(
     private fun setCategoryNameAndIcon(category: Category) {
 
         category_fab.text =
-            category.getCategoryNameFromStringFile(resources, requireActivity().packageName) {
+            category.getCategoryNameFromStringFile(_resources, requireActivity().packageName) {
                 it.name
             }
         category_fab.extend()
@@ -686,8 +690,8 @@ constructor(
     private fun showCategoryFabPromote() {
         val categoryFabPrompt = MaterialTapTargetPrompt.Builder(this)
             .setTarget(R.id.category_fab)
-            .setPrimaryText(R.string.category_fab_tap_target_primary)
-            .setSecondaryText(R.string.category_fab_tap_target_secondary)
+            .setPrimaryText(_getString(R.string.category_fab_tap_target_primary))
+            .setSecondaryText(_getString(R.string.category_fab_tap_target_secondary))
             .setPromptBackground(RectanglePromptBackground())
             .setPromptFocal(RectanglePromptFocal())
             .setPromptStateChangeListener { _, state ->
@@ -703,8 +707,8 @@ constructor(
     private fun showMoneyPromote() {
         val edtMoneyPrompt = MaterialTapTargetPrompt.Builder(this)
             .setTarget(R.id.edt_money)
-            .setPrimaryText(R.string.edt_money_tap_target_primary)
-            .setSecondaryText(R.string.edt_money_tap_target_secondary)
+            .setPrimaryText(_getString(R.string.edt_money_tap_target_primary))
+            .setSecondaryText(_getString(R.string.edt_money_tap_target_secondary))
             .setPromptBackground(RectanglePromptBackground())
             .setPromptFocal(RectanglePromptFocal())
 
@@ -722,8 +726,8 @@ constructor(
     private fun showDatePickerPromote() {
         val datePrompt = MaterialTapTargetPrompt.Builder(this)
             .setTarget(R.id.txtField_date)
-            .setPrimaryText(R.string.date_tap_target_primary)
-            .setSecondaryText(R.string.date_tap_target_secondary)
+            .setPrimaryText(_getString(R.string.date_tap_target_primary))
+            .setSecondaryText(_getString(R.string.date_tap_target_secondary))
             .setPromptBackground(RectanglePromptBackground())
             .setPromptFocal(RectanglePromptFocal())
 
@@ -740,7 +744,7 @@ constructor(
     private fun showNotePromote() {
         val datePrompt = MaterialTapTargetPrompt.Builder(this)
             .setTarget(R.id.txtField_memo)
-            .setPrimaryText(R.string.note_tap_target_primary)
+            .setPrimaryText(_getString(R.string.note_tap_target_primary))
             .setPromptBackground(RectanglePromptBackground())
             .setPromptFocal(RectanglePromptFocal())
 
@@ -813,29 +817,34 @@ constructor(
 
     private fun listOfNumbers(): CharArray =
         charArrayOf(
-            getString(R.string._1)[0],
-            getString(R.string._2)[0],
-            getString(R.string._3)[0],
-            getString(R.string._4)[0],
-            getString(R.string._5)[0],
-            getString(R.string._6)[0],
-            getString(R.string._7)[0],
-            getString(R.string._8)[0],
-            getString(R.string._9)[0]
+            _getString(R.string._1)[0],
+            _getString(R.string._2)[0],
+            _getString(R.string._3)[0],
+            _getString(R.string._4)[0],
+            _getString(R.string._5)[0],
+            _getString(R.string._6)[0],
+            _getString(R.string._7)[0],
+            _getString(R.string._8)[0],
+            _getString(R.string._9)[0]
         )
 
     private fun errorMsgMapper(error: ErrorMessages): String = when (error) {
-        ErrorMessages.PLEASE_SELECT_CATEGORY -> resources.getString(R.string.pls_select_category)
+        ErrorMessages.PLEASE_SELECT_CATEGORY -> _getString(R.string.pls_select_category)
 
-        ErrorMessages.NEGATIVE_MONEY -> resources.getString(R.string.money_shouldnt_be_negative)
+        ErrorMessages.NEGATIVE_MONEY -> _getString(R.string.money_shouldnt_be_negative)
 
-        ErrorMessages.EMPTY_MONEY -> resources.getString(R.string.pls_insert_some_money)
+        ErrorMessages.EMPTY_MONEY -> _getString(R.string.pls_insert_some_money)
     }
 
     override fun onEqualClicked() {
         keyboard.preloadKeyboard(finalNUmber.text.toString())
     }
 
+    override fun setTextToAllViews() {
+        txtField_memo.hint = _getString(R.string.write_note)
+        txtField_date.hint = _getString(R.string.date)
+        edt_money.hint = _getString(R.string._0)
+    }
 }
 //TODO TRASH
 /*

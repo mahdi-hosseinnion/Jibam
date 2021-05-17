@@ -1,5 +1,6 @@
 package com.example.jibi.ui.main.transaction
 
+import android.content.res.Resources
 import android.os.Bundle
 import android.view.*
 import androidx.core.widget.addTextChangedListener
@@ -28,12 +29,16 @@ class AddCategoryFragment
 @Inject
 constructor(
     viewModelFactory: ViewModelProvider.Factory,
-    private val requestManager: RequestManager
+    private val requestManager: RequestManager,
+    private val _resources: Resources
 ) : BaseTransactionFragment(
     R.layout.fragment_add_category,
     viewModelFactory,
-    R.id.add_category_toolbar
+    R.id.add_category_toolbar, _resources
 ), AddCategoryListAdapter.Interaction {
+    override fun setTextToAllViews() {
+        edt_categoryName.hint = _getString(R.string.category_name)
+    }
 
     private val args: AddCategoryFragmentArgs by navArgs()
 
@@ -51,17 +56,17 @@ constructor(
             EXPENSES -> {
                 //TODO FIX ORDER ISSUE
                 newCategory = Category(0, 1, edt_categoryName.text.toString(), "", 0)
-                getString(R.string.add_expenses_category)
+                _getString(R.string.add_expenses_category)
             }
             INCOME -> {
                 //TODO FIX ORDER ISSUE
                 newCategory = Category(0, 2, edt_categoryName.text.toString(), "", 0)
 
-                getString(R.string.add_income_category)
+                _getString(R.string.add_income_category)
             }
             else -> {
                 showUnableToRecognizeCategoryTypeError()
-                getString(R.string.unable_to_recognize_category_type)
+                _getString(R.string.unable_to_recognize_category_type)
             }
         }
 
@@ -98,7 +103,7 @@ constructor(
 
         uiCommunicationListener.onResponseReceived(
             Response(
-                getString(R.string.unable_to_recognize_category_type),
+                _getString(R.string.unable_to_recognize_category_type),
                 //TODO SHOW OK DIALOG
                 UIComponentType.AreYouSureDialog(callback),
                 MessageType.Error
@@ -120,7 +125,8 @@ constructor(
             recyclerAdapter = AddCategoryListAdapter(
                 requestManager,
                 this@AddCategoryFragment,
-                this@AddCategoryFragment.requireActivity().packageName
+                this@AddCategoryFragment.requireActivity().packageName,
+                _resources
             )
             //control span size for full size item
             mLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {

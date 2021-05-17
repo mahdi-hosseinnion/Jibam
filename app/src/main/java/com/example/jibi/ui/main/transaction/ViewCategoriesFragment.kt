@@ -1,12 +1,11 @@
 package com.example.jibi.ui.main.transaction
 
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -41,10 +40,15 @@ constructor(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager,
     private val sharedPreferences: SharedPreferences,
-    private val sharedPrefsEditor: SharedPreferences.Editor
+    private val sharedPrefsEditor: SharedPreferences.Editor,
+    private val _resources: Resources
 ) : BaseTransactionFragment(
-    R.layout.fragment_view_categories, viewModelFactory, R.id.viewCategoriesToolbar
+    R.layout.fragment_view_categories, viewModelFactory, R.id.viewCategoriesToolbar, _resources
 ) {
+    override fun setTextToAllViews() {
+        txt_addNewCategory.text = _getString(R.string.add_new_category)
+    }
+
     //vars
     private val viewPagerAdapter = ViewPagerAdapter()
 
@@ -52,13 +56,14 @@ constructor(
         super.onViewCreated(view, savedInstanceState)
 
         viewPager_viewCategories.adapter = viewPagerAdapter
-
+        findNavController()
+            .currentDestination?.label = _getString(R.string.category_setting)
         //set titles
         val tabLayout = TabLayoutMediator(tab_layout, viewPager_viewCategories) { tab, position ->
             if (position == 0) {
-                tab.text = resources.getString(R.string.expenses)
+                tab.text = _getString(R.string.expenses)
             } else {
-                tab.text = resources.getString(R.string.income)
+                tab.text = _getString(R.string.income)
             }
         }.attach()
 //        val int:Int=viewPager_viewCategories.currentItem
@@ -225,7 +230,7 @@ constructor(
                     }
                     itemView.apply {
                         val categoryName = item.getCategoryNameFromStringFile(
-                            resources,
+                            _resources,
                             requireActivity().packageName
                         ) {
                             it.name
@@ -255,7 +260,7 @@ constructor(
                         }
                     }
                 } else {
-                    itemView.nameOfCategory.text = getString(R.string.UNKNOWN_CATEGORY)
+                    itemView.nameOfCategory.text = _getString(R.string.UNKNOWN_CATEGORY)
                 }
             }
 
@@ -274,8 +279,8 @@ constructor(
             private fun showPromote() {
                 MaterialTapTargetPrompt.Builder(this@ViewCategoriesFragment)
                     .setTarget(itemView.findViewById(R.id.root_transaction_item))
-                    .setPrimaryText(R.string.view_category_tap_target_primary)
-                    .setSecondaryText(R.string.view_category_tap_target_secondary)
+                    .setPrimaryText(_getString(R.string.view_category_tap_target_primary))
+                    .setSecondaryText(_getString(R.string.view_category_tap_target_secondary))
                     .setPromptBackground(RectanglePromptBackground())
                     .setPromptFocal(RectanglePromptFocal())
                     .setPromptStateChangeListener { _, state ->
@@ -303,7 +308,7 @@ constructor(
             }
             uiCommunicationListener.onResponseReceived(
                 Response(
-                    getString(R.string.are_you_sure_delete_category),
+                    _getString(R.string.are_you_sure_delete_category),
                     UIComponentType.AreYouSureDialog(
                         callback
                     ), MessageType.Info
@@ -347,7 +352,7 @@ constructor(
 
         uiCommunicationListener.onResponseReceived(
             Response(
-                getString(R.string.unable_to_recognize_category_type),
+                _getString(R.string.unable_to_recognize_category_type),
                 //TODO SHOW OK DIALOG
                 UIComponentType.Dialog,
                 MessageType.Error

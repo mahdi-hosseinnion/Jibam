@@ -1,6 +1,7 @@
 package com.example.jibi.di.main
 
 import android.content.SharedPreferences
+import android.content.res.Resources
 import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
@@ -24,11 +25,16 @@ object MainFragmentsModule {
         requestManager: RequestManager,
         currentLocal: Locale,
         sharedPreferences: SharedPreferences,
-        sharedPrefEditor: SharedPreferences.Editor
-
+        sharedPrefEditor: SharedPreferences.Editor,
+        resources: Resources
     ): FragmentFactory {
         return MainFragmentFactory(
-            viewModelFactory, requestManager, currentLocal, sharedPreferences, sharedPrefEditor
+            viewModelFactory,
+            requestManager,
+            currentLocal,
+            sharedPreferences,
+            sharedPrefEditor,
+            resources
         )
     }
 

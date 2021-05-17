@@ -1,19 +1,19 @@
 package com.example.jibi.ui.main.transaction
 
 import android.content.Context
+import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.jibi.ui.UICommunicationListener
 import com.example.jibi.ui.main.MainViewModel
 import com.example.jibi.util.StateMessageCallback
-import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
@@ -26,6 +26,7 @@ constructor(
     private val viewModelFactory: ViewModelProvider.Factory,
     @IdRes
     private val toolbar: Int? = null,
+    private val _resources: Resources
 ) : Fragment(layoutRes) {
     private val TAG = "BaseTransactionFragment"
     protected val viewModel: MainViewModel by viewModels(ownerProducer = { requireParentFragment() }) {
@@ -65,10 +66,18 @@ constructor(
 
     override fun onResume() {
         super.onResume()
+        setTextToAllViews()
         toolbar?.let {
             uiCommunicationListener.setupActionBarWithNavController(_View.findViewById(toolbar))
         }
     }
+
+    fun _getString(@StringRes resId: Int): String {
+        return _resources.getString(resId)
+    }
+
+    //its needed to farsi support
+    abstract fun setTextToAllViews()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

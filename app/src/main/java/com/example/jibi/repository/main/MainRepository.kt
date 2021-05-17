@@ -20,7 +20,7 @@ import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent.*
 import com.example.jibi.ui.main.transaction.state.TransactionViewState
 import com.example.jibi.util.*
-import com.example.jibi.util.Constants.Companion.CACHE_TIMEOUT
+import com.example.jibi.util.Constants.CACHE_TIMEOUT
 import com.example.jibi.util.SolarCalendar.ShamsiPatterns.RECYCLER_VIEW
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -155,7 +155,7 @@ constructor(
     private fun getFormattedDate(unixTimeStamp: Long): String {
         val df: Date = Date(unixTimeStamp)
 
-        return if (currentLocale.country == "IR") {
+        return if (currentLocale.language == Constants.PERSIAN_LANG_CODE) {
             SolarCalendar.calcSolarCalendar(df, RECYCLER_VIEW, currentLocale)
         } else {
             SimpleDateFormat(

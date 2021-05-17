@@ -1,6 +1,7 @@
 package com.example.jibi.fragments.main
 
 import android.content.SharedPreferences
+import android.content.res.Resources
 import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
@@ -21,7 +22,8 @@ constructor(
     private val requestManager: RequestManager,
     private val currentLocale: Locale,
     private val sharedPreferences: SharedPreferences,
-    private val sharedPrefsEditor: SharedPreferences.Editor
+    private val sharedPrefsEditor: SharedPreferences.Editor,
+    private val resources: Resources
 ) : FragmentFactory() {
 
     override fun instantiate(classLoader: ClassLoader, className: String) =
@@ -34,30 +36,44 @@ constructor(
                     requestManager,
                     currentLocale,
                     sharedPreferences,
-                    sharedPrefsEditor
+                    sharedPrefsEditor,
+                    resources
                 )
             }
 
             AddTransactionFragment::class.java.name -> {
-                AddTransactionFragment(viewModelFactory, requestManager, currentLocale,sharedPreferences,sharedPrefsEditor)
+                AddTransactionFragment(
+                    viewModelFactory,
+                    requestManager,
+                    currentLocale,
+                    sharedPreferences,
+                    sharedPrefsEditor,
+                    resources
+                )
             }
             AddCategoryFragment::class.java.name -> {
-                AddCategoryFragment(viewModelFactory, requestManager)
+                AddCategoryFragment(viewModelFactory, requestManager, resources)
             }
             ViewCategoriesFragment::class.java.name -> {
-                ViewCategoriesFragment(viewModelFactory, requestManager,sharedPreferences,sharedPrefsEditor)
+                ViewCategoriesFragment(
+                    viewModelFactory,
+                    requestManager,
+                    sharedPreferences,
+                    sharedPrefsEditor,
+                    resources
+                )
             }
             SettingFragment::class.java.name -> {
-                SettingFragment(viewModelFactory)
+                SettingFragment(viewModelFactory, resources, sharedPreferences)
             }
             AboutUsFragment::class.java.name -> {
-                AboutUsFragment(viewModelFactory)
+                AboutUsFragment(viewModelFactory, resources)
             }
 
             else -> {
                 TransactionFragment(
                     viewModelFactory, requestManager, currentLocale, sharedPreferences,
-                    sharedPrefsEditor
+                    sharedPrefsEditor, resources
                 )
             }
         }

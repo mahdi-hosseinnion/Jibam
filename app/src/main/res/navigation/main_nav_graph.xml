@@ -87,7 +87,7 @@
     <fragment
         android:id="@+id/settingFragment"
         android:name="com.example.jibi.ui.main.transaction.SettingFragment"
-        android:label="Setting"
+        android:label="@string/setting"
         tools:layout="@layout/fragment_setting">
         <action
             android:id="@+id/action_settingFragment_to_transactionFragment"

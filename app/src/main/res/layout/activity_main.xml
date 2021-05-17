@@ -28,7 +28,7 @@
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_gravity="center|top"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="64dp"
             android:visibility="invisible" />
 
     </FrameLayout>

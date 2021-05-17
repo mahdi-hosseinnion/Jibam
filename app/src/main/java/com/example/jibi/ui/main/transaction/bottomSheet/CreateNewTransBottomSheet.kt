@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.DialogInterface
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.graphics.*
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
@@ -12,7 +13,6 @@ import android.view.*
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.ImageButton
-import android.widget.LinearLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.text.TextUtilsCompat
 import androidx.core.view.ViewCompat
@@ -27,6 +27,7 @@ import biz.laenger.android.vpbs.ViewPagerBottomSheetDialogFragment
 import com.bumptech.glide.RequestManager
 import com.example.jibi.R
 import com.example.jibi.models.Category
+import com.example.jibi.util.Constants
 import com.example.jibi.util.PreferenceKeys
 import com.example.jibi.util.convertDpToPx
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -45,7 +46,8 @@ constructor(
     private val onDismissCallback: OnDismissCallback,
     private val selectedCategoryId: Int,
     private val sharedPreferences: SharedPreferences,
-    private val sharedPrefsEditor: SharedPreferences.Editor
+    private val sharedPrefsEditor: SharedPreferences.Editor,
+    private val _resources: Resources
 ) : ViewPagerBottomSheetDialogFragment(), BottomSheetListAdapter.Interaction,
     ViewPager.OnPageChangeListener {
 
@@ -63,6 +65,11 @@ constructor(
     private var selectedCategory: Category? = null
     private val bottomSheetTopRadios by lazy { convertDpToPx(16) }
 
+    val appLanguage = sharedPreferences.getString(
+        PreferenceKeys.APP_LANGUAGE_PREF,
+        Constants.PERSIAN_LANG_CODE
+    )
+
     @SuppressLint("RestrictedApi")
     override fun setupDialog(dialog: Dialog, style: Int) {
         super.setupDialog(dialog, style)
@@ -76,11 +83,12 @@ constructor(
         backArrow = view.findViewById(R.id.bottom_sheet_back_arrow)
         shadowDividerView = view.findViewById(R.id.shadow_divider_view)
         //for indicator place
-        isLeftToRight =
+
+        isLeftToRight = if (appLanguage == Constants.PERSIAN_LANG_CODE)
+            false
+        else
             (TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == ViewCompat.LAYOUT_DIRECTION_LTR)
-
         dialog.setContentView(view)
-
         //creating bottom sheet behavior
         val bottomSheetBehavior = ViewPagerBottomSheetBehavior.from((view.parent) as View)
 
@@ -161,13 +169,17 @@ constructor(
         viewPager?.adapter = SimplePagerAdapter()
         if (!isLeftToRight) {
             viewPager?.currentItem = VIEW_PAGER_SIZE
-
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             tabLayout?.layoutDirection = View.LAYOUT_DIRECTION_LTR
         } else {
             //TODO TEST THIS
-            ViewCompat.setLayoutDirection(tabLayout!!, ViewCompat.LAYOUT_DIRECTION_LTR)
+            tabLayout?.let {
+                ViewCompat.setLayoutDirection(
+                    it,
+                    ViewCompat.LAYOUT_DIRECTION_LTR
+                )
+            }
         }
 
 
@@ -181,6 +193,9 @@ constructor(
             //Assign new width
             val indicatorParams = mIndicator!!.layoutParams as FrameLayout.LayoutParams
             indicatorParams.width = indicatorWidth
+            if (appLanguage == Constants.PERSIAN_LANG_CODE) {
+                indicatorParams.leftMargin = indicatorWidth
+            }
             mIndicator!!.layoutParams = indicatorParams
 
         }
@@ -259,7 +274,7 @@ constructor(
                     requestManager,
                     this@CreateNewTransBottomSheet,
                     this@CreateNewTransBottomSheet.requireActivity().packageName,
-                    selectedCategoryId = selectedCategoryId
+                    selectedCategoryId = selectedCategoryId, _resources = _resources
                 )
                 adapter = recyclerAdapter
             }
@@ -277,10 +292,11 @@ constructor(
 
 
         override fun getPageTitle(position: Int): CharSequence {
-            val expenses = resources.getString(R.string.expenses)
-            val income = resources.getString(R.string.income)
+            val expenses = _resources.getString(R.string.expenses)
+            val income = _resources.getString(R.string.income)
+//            return if (!isLeftToRight)
             return if (isLeftToRight)
-                if (position == 0) expenses else income
+                 if (position == 0) expenses else income
             else
                 if (position == 0) income else expenses
         }
