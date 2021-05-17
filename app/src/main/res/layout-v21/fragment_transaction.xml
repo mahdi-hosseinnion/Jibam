@@ -40,10 +40,12 @@
                 android:id="@+id/txt_balance_viewHolder"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:elevation="8dp"
                 android:foregroundGravity="center"
                 android:gravity="center"
                 android:text="@string/total_balance"
                 android:textColor="@color/white"
+
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -55,10 +57,12 @@
                 android:layout_height="0dp"
                 android:layout_marginTop="8dp"
                 android:layout_weight="10"
+                android:elevation="8dp"
                 android:foregroundGravity="center"
                 android:gravity="center"
                 android:textColor="@color/white"
                 android:textSize="48sp"
+
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -82,6 +86,7 @@
                     android:layout_margin="8dp"
                     android:layout_weight="1"
                     android:background="@drawable/income_background"
+                    android:elevation="8dp"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -117,8 +122,8 @@
                     android:layout_height="match_parent"
                     android:layout_margin="8dp"
                     android:layout_weight="1"
-
                     android:background="@drawable/expenses_background"
+                    android:elevation="8dp"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -131,6 +136,7 @@
                         android:gravity="center"
                         android:text="@string/expenses"
                         android:textColor="@color/black"
+
                         android:textSize="16sp" />
 
                     <TextView
