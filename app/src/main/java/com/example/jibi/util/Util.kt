@@ -29,7 +29,10 @@ public fun Fragment.convertDpToPx(dp: Int): Int {
     ).toInt()
 }
 
-fun separate3By3(money1: Double, locale: Locale): String {
+fun separate3By3(money1: Double, locale: Locale): String =
+    separate3By3_(money1, locale).replace('٬', ',')
+
+private fun separate3By3_(money1: Double, locale: Locale): String {
     var money = money1
     var isMoneyNegative = false
     if (money < 0.0) {
