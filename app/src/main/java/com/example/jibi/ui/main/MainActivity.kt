@@ -21,9 +21,10 @@ import com.example.jibi.ui.BaseActivity
 import com.jakewharton.processphoenix.ProcessPhoenix
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
-
+@FlowPreview
 @ExperimentalCoroutinesApi
 class MainActivity : BaseActivity() {
     private val TAG = "MainActivity"
@@ -87,7 +88,7 @@ class MainActivity : BaseActivity() {
         navController = navHostFragment.navController
 
         listener =
-            NavController.OnDestinationChangedListener { controller, destination, arguments ->
+            NavController.OnDestinationChangedListener { _, _, _ ->
                 //disable toolbar for animation
                 //hide toolbar during animation
                 setSupportActionBar(Toolbar(this))

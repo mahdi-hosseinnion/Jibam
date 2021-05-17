@@ -168,15 +168,6 @@ constructor(
 
             is UpdateCategory -> mainRepository.updateCategory(stateEvent)
 
-            else -> {
-                DataState.error(
-                    buildResponse(
-                        message = "UNKNOWN STATE EVENT!",
-                        uiComponentType = UIComponentType.Toast
-                    )
-                )
-            }
-
         }
     }
 
