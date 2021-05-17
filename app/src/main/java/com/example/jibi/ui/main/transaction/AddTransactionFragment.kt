@@ -294,7 +294,7 @@ constructor(
         }
 
     private fun dateWithPattern(): String {
-        return if (currentLocale.country == "IR") {
+        return if (currentLocale.language==Constants.PERSIAN_LANG_CODE) {
             SolarCalendar.calcSolarCalendar(
                 combineCalender.timeInMillis, DETAIL_FRAGMENT, currentLocale
             )
