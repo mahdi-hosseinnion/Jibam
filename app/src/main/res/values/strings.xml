@@ -181,6 +181,7 @@
     <string name="farsi">فارسی</string>
     <string name="english">English</string>
     <string name="changelanugaealart">Change app language cause app to restart</string>
+    <string name="jibi_capital">JIBI</string>
 
 
 </resources>

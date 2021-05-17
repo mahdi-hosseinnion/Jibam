@@ -336,7 +336,9 @@ constructor(
     }
 
     private fun subscribeObservers() {
-
+        txt_balance.text = separate3By3AndRoundIt(0.0, currentLocale)
+        txt_expenses.text = separate3By3AndRoundIt(0.0, currentLocale)
+        txt_income.text = separate3By3AndRoundIt(0.0, currentLocale)
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
             viewState?.let {
                 Log.d(TAG, "submitList: called transacionLIst: ${it.transactionList}")

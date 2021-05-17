@@ -5,6 +5,7 @@
     android:background="#F0F0F0">
 
     <TextView
+        android:id="@+id/no_result_found"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"

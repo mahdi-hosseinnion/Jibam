@@ -180,4 +180,5 @@
     <string name="system_default">پیشفرض سیستم (پیشنهادی)</string>
     <string name="english">English</string>
     <string name="changelanugaealart">تغییر دادن زبان اپیکیشن باعث راه اندازی مجدد اپیکیشن خواهد شد</string>
+    <string name="jibi_capital">جیبی</string>
 </resources><!--source https://developer.android.com/training/basics/supporting-devices/languages-->

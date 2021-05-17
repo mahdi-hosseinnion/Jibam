@@ -11,6 +11,6 @@
         android:gravity="center"
         android:layout_margin="16dp"
         android:textColor="@color/black"
-
+        android:id="@+id/nullTRANSACTION"
         android:text="@string/insert_some_transacion_with_add_button" />
 </FrameLayout>

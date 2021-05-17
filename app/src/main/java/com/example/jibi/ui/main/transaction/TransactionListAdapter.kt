@@ -160,7 +160,10 @@ abstract class TransactionListAdapter(
                         R.layout.layout_no_more_results,
                         parent,
                         false
-                    )
+                    ),
+                    _resources,
+                    R.id.big_JIBI,
+                    R.string.jibi_capital
                 )
             }
             NO_RESULT_FOUND -> {
@@ -170,7 +173,10 @@ abstract class TransactionListAdapter(
                         R.layout.layout_no_results_found_list_item,
                         parent,
                         false
-                    )
+                    ),
+                    _resources,
+                    R.id.no_result_found,
+                    R.string.no_result_found_for_this_search
                 )
             }
             DATABASE_IS_EMPTY -> {
@@ -180,7 +186,10 @@ abstract class TransactionListAdapter(
                         R.layout.layout_no_results_found_in_database_list_item,
                         parent,
                         false
-                    )
+                    ),
+                    _resources,
+                    R.id.nullTRANSACTION,
+                    R.string.insert_some_transacion_with_add_button
                 )
             }
             TRANSACTION_ITEM -> {
