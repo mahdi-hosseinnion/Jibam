@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.layout_transaction_list_item.view.*
 import kotlin.random.Random
 
 class BottomSheetListAdapter(
-    private val requestManager: RequestManager?,
+    private val requestManager: RequestManager,
     private val interaction: Interaction? = null,
     private val packageName: String,
     private val selectedCategoryId: Int,
@@ -137,7 +137,7 @@ class BottomSheetListAdapter(
     class CategoryViewHolder
     constructor(
         itemView: View,
-        val requestManager: RequestManager?,
+        val requestManager: RequestManager,
         private val interaction: Interaction?,
         private val packageName: String,
         private val selectedCategoryId: Int,
@@ -173,11 +173,11 @@ class BottomSheetListAdapter(
             //TODO
 //            itemView.card
             requestManager
-                ?.load(categoryImageUrl)
-                ?.centerInside()
-                ?.transition(withCrossFade())
-                ?.error(R.drawable.ic_error)
-                ?.into(itemView.category_image)
+                .load(categoryImageUrl)
+                .centerInside()
+                .transition(withCrossFade())
+                .error(R.drawable.ic_error)
+                .into(itemView.category_image)
 
             if (item.ordering < 0)
                 itemView.pinned_marker_image.visibility = View.VISIBLE

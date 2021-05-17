@@ -50,6 +50,7 @@ constructor(
     private val _resources: Resources
 ) : ViewPagerBottomSheetDialogFragment(), BottomSheetListAdapter.Interaction,
     ViewPager.OnPageChangeListener {
+    private val TAG = "CreateNewTransBottomSheet"
 
     //widgets
     private var tabLayout: TabLayout? = null
@@ -84,10 +85,17 @@ constructor(
         shadowDividerView = view.findViewById(R.id.shadow_divider_view)
         //for indicator place
 
-        isLeftToRight = if (appLanguage == Constants.PERSIAN_LANG_CODE)
-            false
-        else
+//        isLeftToRight = if (appLanguage == Constants.PERSIAN_LANG_CODE)
+//            false
+//        else
+        isLeftToRight =
             (TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == ViewCompat.LAYOUT_DIRECTION_LTR)
+
+        Log.d(TAG, "setupDialog: isLeftToRight: $isLeftToRight ")
+        Log.d(
+            TAG,
+            "setupDialog: TextUtilsCompat: ${(TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == ViewCompat.LAYOUT_DIRECTION_LTR)} "
+        )
         dialog.setContentView(view)
         //creating bottom sheet behavior
         val bottomSheetBehavior = ViewPagerBottomSheetBehavior.from((view.parent) as View)
@@ -193,7 +201,16 @@ constructor(
             //Assign new width
             val indicatorParams = mIndicator!!.layoutParams as FrameLayout.LayoutParams
             indicatorParams.width = indicatorWidth
-            if (appLanguage == Constants.PERSIAN_LANG_CODE) {
+//            if (appLanguage == Constants.PERSIAN_LANG_CODE) {
+//                indicatorParams.leftMargin = indicatorWidth
+//            }else if (appLanguage == Constants.ENGLISH_LANG_CODE){
+//                indicatorParams.rightMargin = indicatorWidth
+//            }
+            if (isLeftToRight) {
+                //english
+                indicatorParams.rightMargin = indicatorWidth
+            } else {
+                //farsi
                 indicatorParams.leftMargin = indicatorWidth
             }
             mIndicator!!.layoutParams = indicatorParams
@@ -296,26 +313,48 @@ constructor(
             val income = _resources.getString(R.string.income)
 //            return if (!isLeftToRight)
             return if (isLeftToRight)
-                 if (position == 0) expenses else income
+                if (position == 0) expenses else income
             else
                 if (position == 0) income else expenses
         }
     }
 
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-
+        Log.d(TAG, "onPageScrolled: position: $position positionOffset: $positionOffset")
         val params: FrameLayout.LayoutParams =
             mIndicator?.layoutParams as (FrameLayout.LayoutParams)
 
         //Multiply positionOffset with indicatorWidth to get translation
         var translationOffset: Float = ((positionOffset + position) * indicatorWidth)
 
-        if (isLeftToRight) {
-            params.leftMargin = translationOffset.toInt()
-        } else {
-            translationOffset = (indicatorWidth - translationOffset)
-            params.rightMargin = translationOffset.toInt()
-        }
+//        if (isLeftToRight) {
+//            if (appLanguage == Constants.ENGLISH_LANG_CODE) {
+////                translationOffset = (indicatorWidth - translationOffset)
+//                params.rightMargin = translationOffset.toInt()
+//            } else {
+//                params.leftMargin = translationOffset.toInt()
+//            }
+//        } else {
+        Log.d(TAG, "onPageScrolled: translationOffset: ${translationOffset.toInt()}")
+//            if (appLanguage == Constants.PERSIAN_LANG_CODE) {
+//                translationOffset = (indicatorWidth - translationOffset)
+//                params.rightMargin = translationOffset.toInt()
+////                params.leftMargin = translationOffset.toInt()
+//            } else {
+//                translationOffset = (indicatorWidth - translationOffset)
+//                params.rightMargin = translationOffset.toInt()
+//            }
+//
+//        }
+//        if (isLeftToRight) {
+//            //english
+////            translationOffset = (indicatorWidth - translationOffset)
+//            params.leftMargin = translationOffset.toInt()
+//        } else {
+//            //farsi
+        params.leftMargin = translationOffset.toInt()
+
+//        }
 
         mIndicator?.layoutParams = params
     }

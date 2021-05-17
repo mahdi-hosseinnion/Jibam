@@ -44,7 +44,7 @@
                     android:id="@+id/indicator"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_gravity="start"
+                    android:layout_gravity="left"
                     android:background="@drawable/gradient_bg" />
 
                 <com.google.android.material.tabs.TabLayout

@@ -18,12 +18,12 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputConnection
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.alirezaafkar.sundatepicker.DatePicker
 import com.bumptech.glide.RequestManager
 import com.example.jibi.R
@@ -294,7 +294,7 @@ constructor(
         }
 
     private fun dateWithPattern(): String {
-        return if (currentLocale.language==Constants.PERSIAN_LANG_CODE) {
+        return if (currentLocale.language == Constants.PERSIAN_LANG_CODE) {
             SolarCalendar.calcSolarCalendar(
                 combineCalender.timeInMillis, DETAIL_FRAGMENT, currentLocale
             )
@@ -501,8 +501,9 @@ constructor(
             "drawable",
             requireActivity().packageName
         )
-
-        category_fab.icon = ResourcesCompat.getDrawable(resources, resourceId, null)
+//        ResourcesCompat.getDrawable(resources, resourceId, null)
+        category_fab.icon =
+            VectorDrawableCompat.create(resources, resourceId, null)
     }
 
     private fun getCategoryById(categoryId: Int): Category? {
