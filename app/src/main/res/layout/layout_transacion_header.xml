@@ -26,7 +26,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Mon" />
+        tools:text="Mon"
+        android:layout_marginLeft="8dp" />
 
     <TextView
         android:id="@+id/header_date"
@@ -40,7 +41,8 @@
         app:layout_constraintBottom_toBottomOf="@id/header_date_name"
         app:layout_constraintStart_toEndOf="@id/header_date_name"
         app:layout_constraintTop_toTopOf="@id/header_date_name"
-        tools:text="12/13" />
+        tools:text="12/13"
+        android:layout_marginLeft="4dp" />
 
 
     <TextView
@@ -58,7 +60,8 @@
         app:layout_constraintEnd_toStartOf="@+id/header_expenses_sum"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.39"
-        tools:text="Income: 5000" />
+        tools:text="Income: 5000"
+        android:layout_marginRight="8dp" />
 
     <TextView
         android:id="@+id/header_expenses_sum"
@@ -73,7 +76,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Expenses: 1500" />
+        tools:text="Expenses: 1500"
+        android:layout_marginRight="4dp" />
 
     <!--        <View
                 android:layout_width="match_parent"

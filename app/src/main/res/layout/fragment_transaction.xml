@@ -226,7 +226,9 @@
                     android:text="@string/transactions"
                     android:textColor="@color/black"
                     android:textSize="20sp"
-                    android:textStyle="normal" />
+                    android:textStyle="normal"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="8dp" />
 
                 <EditText
                     android:id="@+id/bottom_sheet_search_edt"

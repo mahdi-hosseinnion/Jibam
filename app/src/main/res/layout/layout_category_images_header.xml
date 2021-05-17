@@ -19,7 +19,8 @@
         android:text=""
         android:textColor="@color/black"
         android:textSize="20sp"
-        tools:text="Education" />
+        tools:text="Education"
+        android:layout_marginLeft="4dp" />
     <!--        <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"

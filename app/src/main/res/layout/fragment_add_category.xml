@@ -32,7 +32,9 @@
             android:layout_marginBottom="8dp"
             android:foregroundGravity="center"
             card_view:cardBackgroundColor="#D297EA"
-            card_view:cardCornerRadius="20dp">
+            card_view:cardCornerRadius="20dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="12dp">
 
             <ImageView
                 android:id="@+id/category_image"

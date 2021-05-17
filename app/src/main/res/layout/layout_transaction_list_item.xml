@@ -27,7 +27,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         card_view:cardBackgroundColor="#D297EA"
-        card_view:cardCornerRadius="20dp">
+        card_view:cardCornerRadius="20dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="12dp">
 
         <ImageView
             android:id="@+id/category_image"
@@ -131,5 +133,7 @@
         android:background="#EBEBEB"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="4dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,14 +8,15 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="center|start"
-        android:paddingStart="16dp"
         android:layout_weight="100"
         android:gravity="center|start"
         android:text="@string/jibi"
         android:id="@+id/drawer_name"
         android:background="@color/purple_700"
         android:textColor="@color/black"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:paddingLeft="16dp"
+        android:paddingStart="16dp" />
 
     <View
         android:layout_width="match_parent"
