@@ -94,17 +94,13 @@ class MainActivity : BaseActivity() {
                 setSupportActionBar(Toolbar(this))
             }
 
-        appBarConfiguration =
-//            if (drawerLayout != null) {
-            AppBarConfiguration(setOf(R.id.transactionFragment), drawer_layout)
+        appBarConfiguration = AppBarConfiguration(setOf(R.id.transactionFragment), drawer_layout)
 
-//        }else
-//            AppBarConfiguration(setOf(R.id.transactionFragment))
+
 
     }
 
     override fun setupActionBarWithNavController(toolbar: Toolbar, drawerLayout: DrawerLayout?) {
-//        val toolbar = findViewById<Toolbar>(R.id.toolbar_main)
         setSupportActionBar(toolbar)
         navigation_view.setupWithNavController(navController)
 

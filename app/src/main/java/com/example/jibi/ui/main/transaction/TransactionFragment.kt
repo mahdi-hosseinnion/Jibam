@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -16,6 +17,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -515,7 +517,10 @@ constructor(
         fragment_transacion_root.viewTreeObserver.addOnGlobalLayoutListener(object :
             ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
-                fragment_transacion_root.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                //TODO BIG BUG HERE
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                    fragment_transacion_root.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                }
                 val rootHeight = fragment_transacion_root.height
                 val layoutHeight = transaction_fragment_view.height
                 Log.d(TAG, "onGlobalLayout: rootHeight:$rootHeight and layoutHeight $layoutHeight ")
@@ -591,10 +596,18 @@ constructor(
 
         //change bottom sheet raidus
         bottomSheetBackGround.cornerRadius = topHeight
-        main_standardBottomSheet.background = bottomSheetBackGround
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            main_standardBottomSheet.background = bottomSheetBackGround
+        } else {
+            main_standardBottomSheet.setBackgroundColor(resources.getColor(R.color.white))
+        }
         //change app bar
 
-        last_transacion_app_bar.background = bottomSheetBackGround
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            last_transacion_app_bar.background = bottomSheetBackGround
+        } else {
+            last_transacion_app_bar.setBackgroundColor(resources.getColor(R.color.white))
+        }
 //            last_transacion_app_bar.setPadding(topHeight.toInt(), 0, topHeight.toInt(), 0)
         //change app bar height
         val appbarViewParams = last_transacion_app_bar.layoutParams
@@ -633,9 +646,17 @@ constructor(
 
         //change bottom sheet raidus
         bottomSheetBackGround.cornerRadius = topHeight
-        main_standardBottomSheet.background = bottomSheetBackGround
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            main_standardBottomSheet.background = bottomSheetBackGround
+        } else {
+            main_standardBottomSheet.setBackgroundColor(resources.getColor(R.color.white))
+        }
         //change app bar
-        last_transacion_app_bar.background = bottomSheetBackGround
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            last_transacion_app_bar.background = bottomSheetBackGround
+        } else {
+            last_transacion_app_bar.setBackgroundColor(resources.getColor(R.color.white))
+        }
 //            last_transacion_app_bar.setPadding(topHeight.toInt(), 0, topHeight.toInt(), 0)
         //change app bar height
         val appbarViewParams = last_transacion_app_bar.layoutParams

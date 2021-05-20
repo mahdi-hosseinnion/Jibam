@@ -396,6 +396,9 @@ constructor(
                 combineCalender.get(GregorianCalendar.MINUTE),
                 false
             )
+        //TODO MAKE farst time picker SUPPORT IN FARSI
+//        timePickerDialog.setButton(TimePickerDialog.BUTTON_POSITIVE,_getString(R.string.capital_ok),timePickerDialog)
+//        timePickerDialog.setButton(TimePickerDialog.BUTTON_NEGATIVE,_getString(R.string.capital_cancel),timePickerDialog)
         timePickerDialog.show()
     }
 

@@ -12,10 +12,10 @@ android {
 
     defaultConfig {
         applicationId "com.example.jibi"
-        minSdkVersion 16
+        minSdkVersion 15
         targetSdkVersion 30
-        versionCode 4
-        versionName "1.0.3"
+        versionCode 5
+        versionName "1.0.4"
 
         vectorDrawables.useSupportLibrary = true // for support .svg file api < 21
 
@@ -160,9 +160,6 @@ dependencies {
     //card view
     implementation "androidx.cardview:cardview:1.0.0"
 
-    // material dialogs
-    def matieral_dialogs_version = "3.1.0"
-    implementation "com.afollestad.material-dialogs:core:$matieral_dialogs_version"
     //shamsi date picker
     implementation 'com.alirezaafkar:sundatepicker:2.1.2'
     //MaterialTapTargetPrompt

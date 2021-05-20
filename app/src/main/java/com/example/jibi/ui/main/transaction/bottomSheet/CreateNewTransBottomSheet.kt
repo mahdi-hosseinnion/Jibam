@@ -145,8 +145,8 @@ constructor(
                         getDialog()!!
                     ), 0
                 )
-                    .setPrimaryText(R.string.category_bottom_sheet_tap_target_primary)
-                    .setSecondaryText(R.string.category_bottom_sheet_tap_target_secondary)
+                    .setPrimaryText(_resources.getString(R.string.category_bottom_sheet_tap_target_primary))
+                    .setSecondaryText(_resources.getString(R.string.category_bottom_sheet_tap_target_secondary))
                     .setAnimationInterpolator(FastOutSlowInInterpolator())
                     .setTarget(R.id.parent_bottomSHeet)
                     .setPromptBackground(RectanglePromptBackground())
