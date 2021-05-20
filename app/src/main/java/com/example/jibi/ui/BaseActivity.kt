@@ -1,7 +1,6 @@
 package com.example.jibi.ui
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.os.Bundle
@@ -15,7 +14,6 @@ import com.example.jibi.BaseApplication
 import com.example.jibi.R
 import com.example.jibi.util.*
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
@@ -35,7 +33,7 @@ abstract class BaseActivity : AppCompatActivity(),
 
         val appLanguage = sharedPreferences.getString(
             PreferenceKeys.APP_LANGUAGE_PREF,
-            Constants.PERSIAN_LANG_CODE
+            Constants.APP_DEFAULT_LANGUAGE
         )
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {

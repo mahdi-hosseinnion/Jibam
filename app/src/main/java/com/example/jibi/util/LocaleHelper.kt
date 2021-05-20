@@ -6,25 +6,24 @@ import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Build
-import android.preference.PreferenceManager
 import com.example.jibi.util.PreferenceKeys.APP_LANGUAGE_PREF
 import java.util.*
 
 
 object LocaleHelper {
-    const val defaultLanguage = Constants.PERSIAN_LANG_CODE
+    private const val defaultLanguage = Constants.APP_DEFAULT_LANGUAGE
 
     fun onAttach(context: Context?): Context? {
         if (context == null) return null
         val lang = getPersistedData(context)
-        if (lang==Constants.SYSTEM_DEFAULT_LANG_CODE) return context
+        if (lang == Constants.SYSTEM_DEFAULT_LANG_CODE) return context
         return setLocale(context, lang)
     }
 
     fun onAttachToApplication(context: Context?): Context? {
         if (context == null) return null
         val lang = getPersistedData(context)
-        if (lang==Constants.SYSTEM_DEFAULT_LANG_CODE) return context
+        if (lang == Constants.SYSTEM_DEFAULT_LANG_CODE) return context
         return setLocale(context, lang)
     }
 
@@ -34,7 +33,7 @@ object LocaleHelper {
 
     fun setLocale(context: Context, language: String?): Context? {
         persist(context, language)
-        if (language==Constants.SYSTEM_DEFAULT_LANG_CODE) return context
+        if (language == Constants.SYSTEM_DEFAULT_LANG_CODE) return context
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             updateResources(context, language)
         } else updateResourcesLegacy(context, language)
@@ -42,7 +41,7 @@ object LocaleHelper {
 
     fun getLocale(context: Context): Context? {
         val language = getLanguage(context)
-        if (language==Constants.SYSTEM_DEFAULT_LANG_CODE) return context
+        if (language == Constants.SYSTEM_DEFAULT_LANG_CODE) return context
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             updateResources(context, language)
         } else updateResourcesLegacy(context, language)

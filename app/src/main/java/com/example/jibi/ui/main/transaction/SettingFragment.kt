@@ -52,7 +52,7 @@ constructor(
 
         val appLanguage = sharedPreferences.getString(
             PreferenceKeys.APP_LANGUAGE_PREF,
-            Constants.PERSIAN_LANG_CODE
+            Constants.APP_DEFAULT_LANGUAGE
         )
 
         if (appLanguage == Constants.SYSTEM_DEFAULT_LANG_CODE) {

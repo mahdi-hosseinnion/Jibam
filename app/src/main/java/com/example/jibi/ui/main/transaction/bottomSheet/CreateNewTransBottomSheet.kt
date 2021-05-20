@@ -27,7 +27,6 @@ import biz.laenger.android.vpbs.ViewPagerBottomSheetDialogFragment
 import com.bumptech.glide.RequestManager
 import com.example.jibi.R
 import com.example.jibi.models.Category
-import com.example.jibi.util.Constants
 import com.example.jibi.util.PreferenceKeys
 import com.example.jibi.util.convertDpToPx
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -66,10 +65,6 @@ constructor(
     private var selectedCategory: Category? = null
     private val bottomSheetTopRadios by lazy { convertDpToPx(16) }
 
-    val appLanguage = sharedPreferences.getString(
-        PreferenceKeys.APP_LANGUAGE_PREF,
-        Constants.PERSIAN_LANG_CODE
-    )
 
     @SuppressLint("RestrictedApi")
     override fun setupDialog(dialog: Dialog, style: Int) {

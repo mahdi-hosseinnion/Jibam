@@ -23,5 +23,6 @@ object Constants {
     const val PERSIAN_LANG_CODE = "fa"
     const val ENGLISH_LANG_CODE = "en"
     const val SYSTEM_DEFAULT_LANG_CODE = "SYSTEM_DEFAULT_LANG_CODE"
+    const val APP_DEFAULT_LANGUAGE = SYSTEM_DEFAULT_LANG_CODE
 
 }
