@@ -1,8 +1,10 @@
 package com.example.jibi.util
 
+import android.content.res.Resources
 import android.util.Log
 import android.util.TypedValue
 import androidx.fragment.app.Fragment
+import com.example.jibi.R
 import com.example.jibi.models.Category
 import java.text.DecimalFormat
 import java.text.NumberFormat
@@ -148,6 +150,18 @@ fun String.convertEnglishDigitsToFarsiDigits() =
         .replace("7", "۷")
         .replace("8", "۸")
         .replace("9", "۹")
+
+fun String.localizeNumber(resources: Resources) =
+    this.replace("0", resources.getString(R.string._0))
+        .replace("1", resources.getString(R.string._1))
+        .replace("2", resources.getString(R.string._2))
+        .replace("3", resources.getString(R.string._3))
+        .replace("4", resources.getString(R.string._4))
+        .replace("5", resources.getString(R.string._5))
+        .replace("6", resources.getString(R.string._6))
+        .replace("7", resources.getString(R.string._7))
+        .replace("8", resources.getString(R.string._8))
+        .replace("9", resources.getString(R.string._9))
 
 fun trySafe(method: () -> Unit) =
     try {

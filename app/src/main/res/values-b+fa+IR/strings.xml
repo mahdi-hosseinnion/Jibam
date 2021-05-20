@@ -124,9 +124,15 @@
     <string name="_0">۰</string>
     <string name="_00">۰۰</string>
 
+    <string name="developement_title">جیبی توسعه داده شده توسط</string>
+    <string name="about_app">
+        جیبی یک اپیکیشن اندروید است که به شما کمک میکند فعالیت های مالی خود را به راحتی رصد کنید.
+        به کمک این اپیکیشن شما پول بیشتری پس انداز خواهید کرد.
+    </string>
+    <string name="version">نسخه</string>
     <string name="testing_string">این فقط برای تست هسستش</string>
-    <string name="about_us">
-    \n برنامه نویس
+    <string name="developement_members">
+    برنامه نویس
     \n سید مهدی حسینیون
     \n
     \n طراح لوگو

@@ -130,13 +130,19 @@
     <string name="_00">00</string>
 
 
-    <string name="about_us">
-    \n Developer
+    <string name="developement_title">Jibi is Developed By</string>
+    <string name="developement_members">
+    Developer
     \n Seyed mahdi hosseinnion
     \n
     \n Logo designer
     \n Amir hossein taherain
     </string>
+    <string name="about_app">
+        Jibi is an android application that helps you track your financial activity efficiently
+        . With this application you will save more money
+    </string>
+    <string name="version">Version</string>
     <string name="unable_to_get_date">Unable to save the date please try again!</string>
     <!--    tap targets-->
     <string name="fab_tap_target_primary">Create your first transaction</string>
