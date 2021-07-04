@@ -44,6 +44,8 @@
     <string name="about">درباره ما</string>
     <string name="rate_us">به ما امتیاز دهید</string>
     <string name="setting">تنظیمات</string>
+    <string name="chart">نمودار</string>
+
     <string name="add_expenses_category">اضافه کردن دسته جدید برای هزینه ها</string>
     <string name="add_income_category">اضافه کردن دسته جدید برای درآمد ها</string>
     <string name="unable_to_recognize_category_type">خطایی در هنگام شناسایی دسته بندی رخ داد</string>
