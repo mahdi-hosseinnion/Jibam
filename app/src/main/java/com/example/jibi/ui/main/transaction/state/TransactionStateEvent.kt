@@ -142,6 +142,7 @@ sealed class TransactionStateEvent : StateEvent {
 
             override fun getId(): String = "pin or unpin Category $category ${this.hashCode()}"
         }
+
         data class UpdateCategory(
             val category: Category
         ) : OneShotOperationsTransactionStateEvent() {
@@ -149,6 +150,13 @@ sealed class TransactionStateEvent : StateEvent {
                 "ERROR: updating category! categoryName = ${category.name}"
 
             override fun getId(): String = "updating Category $category ${this.hashCode()}"
+        }
+
+        object GetPieChartData : OneShotOperationsTransactionStateEvent() {
+            override fun errorInfo(): String =
+                "ERROR: getting pie chart data!"
+
+            override fun getId(): String = "getting pie chart data ${this.hashCode()}"
         }
 
     }

@@ -1,9 +1,9 @@
 package com.example.jibi.persistence
 
 import androidx.room.*
+import com.example.jibi.models.PieChartData
 import com.example.jibi.models.Record
 import kotlinx.coroutines.flow.Flow
-import java.util.logging.Filter
 
 @Dao
 interface RecordsDao {
@@ -114,6 +114,17 @@ interface RecordsDao {
 
     @Query("SELECT SUM(money) FROM records WHERE (date < :maxDate) AND (money > 0) ")
     fun returnTheSumOfIncomeBeforeThan(maxDate: Int): Flow<Double>
+
+    //chart fragment query
+//    @Query("SELECT SUM(money) as sumOfMoney ,cat_id as cat_id FROM records GROUP BY cat_id")
+//    suspend fun sumOfMoneyGroupByCountry(): List<PieChartData>
+    //TODO test this JOIN
+    //TODO https://www.w3schools.com/sql/sql_join.asp
+    @Query(
+        """SELECT SUM(money) as sumOfMoney, categories.category_Name as categoryName, categories.type as categoryType
+            FROM records LEFT JOIN categories ON records.cat_id=categories.cId GROUP BY cat_id"""
+    )
+    suspend fun sumOfMoneyGroupByCountry(): List<PieChartData>
 
     companion object {
         const val ORDER_BY_DATE = "ORDER BY date DESC"

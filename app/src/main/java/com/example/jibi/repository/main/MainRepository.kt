@@ -2,11 +2,11 @@ package com.example.jibi.repository.main
 
 import android.content.res.Resources
 import android.util.Log
-import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import com.example.jibi.R
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
+import com.example.jibi.models.PieChartData
 import com.example.jibi.models.Record
 import com.example.jibi.models.SearchModel
 import com.example.jibi.persistence.*
@@ -15,8 +15,6 @@ import com.example.jibi.repository.safeCacheCall
 import com.example.jibi.ui.main.transaction.TransactionListAdapter
 import com.example.jibi.ui.main.transaction.TransactionListAdapter.Companion.TODAY
 import com.example.jibi.ui.main.transaction.TransactionListAdapter.Companion.YESTERDAY
-import com.example.jibi.ui.main.transaction.ViewCategoriesFragment
-import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent.*
 import com.example.jibi.ui.main.transaction.state.TransactionViewState
 import com.example.jibi.util.*
@@ -30,7 +28,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
-import kotlin.math.exp
 
 @ExperimentalCoroutinesApi
 @MainScope
@@ -390,11 +387,39 @@ constructor(
             override suspend fun handleSuccess(resultObj: Int): DataState<TransactionViewState> {
                 return DataState.data(
                     response = buildResponse(
-                        message = "Transaction Successfully Updated",
+                        message = "Category Successfully Updated",
                         UIComponentType.None,
                         MessageType.Success
                     )
                 )
+            }
+        }.getResult()
+    }
+
+    suspend fun getPieChartData(
+        stateEvent: GetPieChartData
+    ): DataState<TransactionViewState> {
+        val cacheResult = safeCacheCall {
+            recordsDao.sumOfMoneyGroupByCountry()
+        }
+        mahdiLog(TAG, cacheResult.toString())
+        return object : CacheResponseHandler<TransactionViewState, List<PieChartData>>(
+            response = cacheResult,
+            stateEvent = stateEvent
+        ) {
+            override suspend fun handleSuccess(resultObj: List<PieChartData>): DataState<TransactionViewState> {
+                return DataState.data(
+                    response = buildResponse(
+                        message = "Pie chart data successfully returned",
+                        UIComponentType.None,
+                        MessageType.Success
+
+                    ),
+                    data = TransactionViewState(
+                        pieChartData = resultObj
+                    )
+                )
+
             }
         }.getResult()
     }

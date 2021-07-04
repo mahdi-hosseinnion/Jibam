@@ -8,11 +8,15 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
 import com.example.jibi.R
+import com.example.jibi.models.PieChartData
 import com.example.jibi.ui.main.transaction.TransactionListAdapter.Companion.listOfColor
+import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
+import com.example.jibi.util.mahdiLog
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.Entry
@@ -28,6 +32,7 @@ import kotlinx.android.synthetic.main.fragment_chart.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
+import kotlin.math.abs
 import kotlin.random.Random
 
 
@@ -48,36 +53,39 @@ constructor(
     _resources
 ), OnChartValueSelectedListener {
     override fun setTextToAllViews() {}
-
+    private val TAG = "ChartFragment"
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initPieChart()
+        viewModel.launchNewJob(TransactionStateEvent.OneShotOperationsTransactionStateEvent.GetPieChartData)
+        subscribeObservers()
     }
-    private fun initPieChart(){
-        pie_chart.setUsePercentValues(true)
-        pie_chart.getDescription().setEnabled(false)
-        pie_chart.setExtraOffsets(5f, 10f, 5f, 5f)
 
-        pie_chart.setDragDecelerationFrictionCoef(0.95f)
+    private fun initPieChart() {
+        pie_chart.setUsePercentValues(true)
+        pie_chart.description.isEnabled = false
+        pie_chart.setExtraOffsets(5f, 5f, 5f, 5f)
+
+        pie_chart.dragDecelerationFrictionCoef = 0.50f
 
 //        pie_chart.setCenterTextTypeface(tfLight)
 //        pie_chart.setCenterText(generateCenterSpannableText())
 
-        pie_chart.setDrawHoleEnabled(true)
+        pie_chart.isDrawHoleEnabled = true
         pie_chart.setHoleColor(Color.WHITE)
 
         pie_chart.setTransparentCircleColor(Color.WHITE)
         pie_chart.setTransparentCircleAlpha(110)
 
-        pie_chart.setHoleRadius(58f)
-        pie_chart.setTransparentCircleRadius(61f)
+        pie_chart.holeRadius = 42f
+        pie_chart.transparentCircleRadius = pie_chart.holeRadius.plus(3)
 
         pie_chart.setDrawCenterText(true)
 
-        pie_chart.setRotationAngle(0f)
+        pie_chart.rotationAngle = 0f
         // enable rotation of the chart by touch
-        pie_chart.setRotationEnabled(true)
-        pie_chart.setHighlightPerTapEnabled(true)
+        pie_chart.isRotationEnabled = true
+        pie_chart.isHighlightPerTapEnabled = true
 
         // pie_chart.setUnit(" €");
         // pie_chart.setDrawUnitsInChart(true);
@@ -87,11 +95,10 @@ constructor(
 
 
         pie_chart.animateY(1400, Easing.EaseInOutQuad)
-        // pie_chart.spin(2000, 0, 360);
-
-        // pie_chart.spin(2000, 0, 360);
-        val l: Legend = pie_chart.getLegend()
-        l.verticalAlignment = Legend.LegendVerticalAlignment.TOP
+//         pie_chart.spin(2000, 0, 360);
+        //legend: list next to chart
+        val l: Legend = pie_chart.legend
+        l.verticalAlignment = Legend.LegendVerticalAlignment.CENTER
         l.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
         l.orientation = Legend.LegendOrientation.VERTICAL
         l.setDrawInside(false)
@@ -99,24 +106,28 @@ constructor(
         l.yEntrySpace = 0f
         l.yOffset = 0f
 
-        // entry label styling
 
         // entry label styling
         pie_chart.setEntryLabelColor(Color.BLACK)
 //        pie_chart.setEntryLabelTypeface(tfRegular)
         pie_chart.setEntryLabelTextSize(12f)
 
-        setDataToChart()
     }
-    private fun setDataToChart(){
-        val entries=ArrayList<PieEntry>()
+
+    private fun setDataToChart(data: List<PieChartData>) {
+        val entries = ArrayList<PieEntry>()
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
         // the chart.
-        val range=7
-        for(i in 1..5){
-            entries.add(PieEntry(i.times(10f), "number: $i"))
+        val range = 7
+//        for(i in 1..32){
+//            entries.add(PieEntry(i.times(10f), "number: $i"))
+//        }
+        for (item in data) {
+            if (item.categoryType == 1) {
+                entries.add(PieEntry(abs(item.sumOfMoney.toFloat()), item.categoryName))
+            }
         }
-        val dataSet=PieDataSet(entries, "")
+        val dataSet = PieDataSet(entries, "")
         dataSet.setDrawIcons(false)
 
         dataSet.sliceSpace = 3f
@@ -155,6 +166,17 @@ constructor(
         s.setSpan(StyleSpan(Typeface.ITALIC), s.length - 14, s.length, 0)
         s.setSpan(ForegroundColorSpan(ColorTemplate.getHoloBlue()), s.length - 14, s.length, 0)
         return s
+    }
+
+    private fun subscribeObservers() {
+        viewModel.viewState.observe(viewLifecycleOwner) {
+            it?.let { viewState ->
+                viewState.pieChartData?.let { data ->
+                    mahdiLog(TAG, "subscribeObservers: data:$data")
+                    setDataToChart(data)
+                }
+            }
+        }
     }
 
     override fun onValueSelected(e: Entry?, h: Highlight?) {

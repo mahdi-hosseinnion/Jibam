@@ -1,7 +1,7 @@
 package com.example.jibi.ui.main.transaction.state
 
-import android.icu.text.Collator
 import com.example.jibi.models.Category
+import com.example.jibi.models.PieChartData
 import com.example.jibi.models.Record
 import com.example.jibi.models.SummaryMoney
 
@@ -16,6 +16,8 @@ data class TransactionViewState(
 
     //detail fragment
     var detailTransFields: Record? = null,
+    //chart fragment
+    var pieChartData: List<PieChartData>? = null,
 
     //swipe to delete
     var recentlyDeletedFields: RecentlyDeletedFields = RecentlyDeletedFields()
