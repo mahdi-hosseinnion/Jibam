@@ -169,3 +169,5 @@ fun trySafe(method: () -> Unit) =
     } catch (e: Exception) {
         Log.d(TAG, "trySafe: e: $e")
     }
+
+fun Double.roundToOneDigit(): Double = Math.round(this * 10.0) / 10.0

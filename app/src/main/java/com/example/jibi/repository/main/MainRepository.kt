@@ -19,6 +19,8 @@ import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotO
 import com.example.jibi.ui.main.transaction.state.TransactionViewState
 import com.example.jibi.util.*
 import com.example.jibi.util.Constants.CACHE_TIMEOUT
+import com.example.jibi.util.Constants.EXPENSES_TYPE_MARKER
+import com.example.jibi.util.Constants.INCOME_TYPE_MARKER
 import com.example.jibi.util.SolarCalendar.ShamsiPatterns.RECYCLER_VIEW
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -400,7 +402,7 @@ constructor(
         stateEvent: GetPieChartData
     ): DataState<TransactionViewState> {
         val cacheResult = safeCacheCall {
-            recordsDao.sumOfMoneyGroupByCountry()
+            calculatePercentage(recordsDao.sumOfMoneyGroupByCountry())
         }
         mahdiLog(TAG, cacheResult.toString())
         return object : CacheResponseHandler<TransactionViewState, List<PieChartData>>(
@@ -424,6 +426,41 @@ constructor(
         }.getResult()
     }
 
+    private fun calculatePercentage(values: List<PieChartData>): List<PieChartData> {
+        val sumOfAllExpenses =
+            values.filter {  it.categoryType == EXPENSES_TYPE_MARKER }
+                .sumOf {  it.sumOfMoney }
+
+        val sumOfAllIncome =
+            values.filter { it.categoryType == INCOME_TYPE_MARKER }
+                .sumOf { it.sumOfMoney }
+
+        val newList = ArrayList<PieChartData>()
+
+        for (item in values) {
+            val percentage: Double = when (item.categoryType) {
+                EXPENSES_TYPE_MARKER -> {
+                    (item.sumOfMoney.div(sumOfAllExpenses)).times(100)
+                }
+                INCOME_TYPE_MARKER -> {
+                    (item.sumOfMoney.div(sumOfAllIncome)).times(100)
+                }
+                else -> {
+                    -1.0
+                }
+            }
+            newList.add(
+                PieChartData(
+                    percentage = percentage.roundToOneDigit(),
+                    sumOfMoney = item.sumOfMoney,
+                    categoryName = item.categoryName,
+                    categoryType = item.categoryType,
+                    categoryImage = item.categoryImage
+                )
+            )
+        }
+        return newList
+    }
 
     /*
     categories transactions

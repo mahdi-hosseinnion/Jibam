@@ -121,8 +121,12 @@ interface RecordsDao {
     //TODO test this JOIN
     //TODO https://www.w3schools.com/sql/sql_join.asp
     @Query(
-        """SELECT SUM(money) as sumOfMoney, categories.category_Name as categoryName, categories.type as categoryType
-            FROM records LEFT JOIN categories ON records.cat_id=categories.cId GROUP BY cat_id"""
+        """SELECT SUM(money) as sumOfMoney, 
+            categories.category_Name as categoryName, 
+            categories.type as categoryType, 
+            categories.img_res as categoryImage 
+            FROM records LEFT JOIN categories ON records.cat_id=categories.cId GROUP BY cat_id
+            ORDER BY ABS(SUM(money)) DESC"""
     )
     suspend fun sumOfMoneyGroupByCountry(): List<PieChartData>
 
