@@ -37,14 +37,14 @@
             app:enterAnim="@anim/slide_in"
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/slide_out"/>
+            app:popExitAnim="@anim/slide_out" />
         <action
             android:id="@+id/action_transactionFragment_to_chartFragment"
             app:destination="@id/chartFragment"
             app:enterAnim="@anim/slide_in"
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/slide_out"/>
+            app:popExitAnim="@anim/slide_out" />
     </fragment>
     <fragment
         android:id="@+id/createTransactionFragment"
@@ -112,7 +112,7 @@
         android:id="@+id/aboutUsFragment"
         android:name="com.example.jibi.ui.main.transaction.AboutUsFragment"
         android:label="@string/about"
-        tools:layout="@layout/fragment_about_us" >
+        tools:layout="@layout/fragment_about_us">
         <action
             android:id="@+id/action_aboutUsFragment_to_transactionFragment"
             app:destination="@id/transactionFragment"
@@ -125,13 +125,37 @@
         android:id="@+id/chartFragment"
         android:name="com.example.jibi.ui.main.transaction.chart.ChartFragment"
         android:label="@string/chart"
-        tools:layout="@layout/fragment_chart" >
+        tools:layout="@layout/fragment_chart">
         <action
             android:id="@+id/action_chartFragment_to_transactionFragment"
             app:destination="@id/transactionFragment"
             app:enterAnim="@anim/slide_in"
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/slide_out"/>
+            app:popExitAnim="@anim/slide_out" />
+        <action
+            android:id="@+id/action_chartFragment_to_detailChartFragment"
+            app:destination="@id/detailChartFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailChartFragment"
+        android:name="com.example.jibi.ui.main.transaction.chart.DetailChartFragment"
+        android:label=""
+        tools:layout="@layout/fragment_detail_chart">
+        <action
+            android:id="@+id/action_detailChartFragment_to_chartFragment"
+            app:destination="@id/chartFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
+        <argument
+            android:name="categoryId"
+            android:defaultValue="-1"
+            app:argType="integer" />
     </fragment>
 </navigation>

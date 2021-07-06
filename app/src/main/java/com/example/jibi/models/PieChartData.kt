@@ -3,8 +3,11 @@ package com.example.jibi.models
 import android.content.res.Resources
 import android.util.Log
 import androidx.room.ColumnInfo
+import androidx.room.PrimaryKey
 
 data class PieChartData(
+    @ColumnInfo(name = "categoryId")
+    val categoryId: Int,
     @ColumnInfo(name = "percentage")
     val percentage: Double? = null,
     @ColumnInfo(name = "sumOfMoney")

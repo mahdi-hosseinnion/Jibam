@@ -10,6 +10,7 @@ import com.example.jibi.ui.main.transaction.*
 import com.example.jibi.ui.main.transaction.categories.AddCategoryFragment
 import com.example.jibi.ui.main.transaction.categories.ViewCategoriesFragment
 import com.example.jibi.ui.main.transaction.chart.ChartFragment
+import com.example.jibi.ui.main.transaction.chart.DetailChartFragment
 import com.example.jibi.ui.main.transaction.home.AddTransactionFragment
 import com.example.jibi.ui.main.transaction.home.TransactionFragment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -76,6 +77,9 @@ constructor(
             }
             ChartFragment::class.java.name -> {
                 ChartFragment(viewModelFactory, requestManager, currentLocale, resources)
+            }
+            DetailChartFragment::class.java.name -> {
+                DetailChartFragment(viewModelFactory, resources)
             }
 
             else -> {

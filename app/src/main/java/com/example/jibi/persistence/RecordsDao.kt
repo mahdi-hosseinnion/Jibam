@@ -121,7 +121,8 @@ interface RecordsDao {
     //TODO test this JOIN
     //TODO https://www.w3schools.com/sql/sql_join.asp
     @Query(
-        """SELECT SUM(money) as sumOfMoney, 
+        """SELECT SUM(money) as sumOfMoney,
+            categories.cId as categoryId, 
             categories.category_Name as categoryName, 
             categories.type as categoryType, 
             categories.img_res as categoryImage 

@@ -451,6 +451,7 @@ constructor(
             }
             newList.add(
                 PieChartData(
+                    categoryId = item.categoryId,
                     percentage = percentage?.roundToOneDigit(),
                     sumOfMoney = item.sumOfMoney,
                     categoryName = item.categoryName,

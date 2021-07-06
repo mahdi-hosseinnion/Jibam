@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.layout_transaction_list_item.view.cardView
 import kotlinx.android.synthetic.main.layout_transaction_list_item.view.category_image
 import java.util.*
 import kotlin.math.absoluteValue
+
 //TODO DELETE DIFFUTIL FROM HERE
 class ChartListAdapter(
     private val interaction: Interaction? = null,
@@ -32,7 +33,7 @@ class ChartListAdapter(
     val DIFF_CALLBACK = object : DiffUtil.ItemCallback<PieChartData>() {
 
         override fun areItemsTheSame(oldItem: PieChartData, newItem: PieChartData): Boolean =
-            (oldItem.sumOfMoney == newItem.sumOfMoney && oldItem.categoryName == newItem.categoryName)
+            oldItem.categoryId == newItem.categoryId
 
         override fun areContentsTheSame(oldItem: PieChartData, newItem: PieChartData): Boolean =
             oldItem == newItem

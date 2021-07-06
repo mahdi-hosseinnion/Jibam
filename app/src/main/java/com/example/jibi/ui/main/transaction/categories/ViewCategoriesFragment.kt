@@ -15,7 +15,6 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.jibi.R
 import com.example.jibi.models.Category
 import com.example.jibi.ui.main.transaction.BaseTransactionFragment
-import com.example.jibi.ui.main.transaction.ViewCategoriesFragmentDirections
 import com.example.jibi.ui.main.transaction.categories.AddCategoryFragment.Companion.EXPENSES
 import com.example.jibi.ui.main.transaction.categories.AddCategoryFragment.Companion.INCOME
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent

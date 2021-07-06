@@ -13,7 +13,6 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.jibi.R
 import com.example.jibi.models.Category
 import com.example.jibi.models.CategoryImages
-import com.example.jibi.ui.main.transaction.AddCategoryFragmentArgs
 import com.example.jibi.ui.main.transaction.BaseTransactionFragment
 import com.example.jibi.ui.main.transaction.home.TransactionListAdapter
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent

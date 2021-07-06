@@ -32,7 +32,6 @@ import com.example.jibi.models.Record
 import com.example.jibi.models.SearchModel
 import com.example.jibi.repository.buildResponse
 import com.example.jibi.ui.main.transaction.BaseTransactionFragment
-import com.example.jibi.ui.main.transaction.TransactionFragmentDirections
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.*
 import com.example.jibi.util.PreferenceKeys.PROMOTE_FAB_TRANSACTION_FRAGMENT

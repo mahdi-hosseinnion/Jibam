@@ -53,7 +53,7 @@ constructor(
     viewModelFactory,
     R.id.chartFragment_toolbar,
     _resources
-), OnChartValueSelectedListener {
+), OnChartValueSelectedListener, ChartListAdapter.Interaction {
 
     private val TAG = "ChartFragment"
 
@@ -223,7 +223,7 @@ constructor(
         chart_recycler.apply {
             layoutManager = LinearLayoutManager(this@ChartFragment.context)
             val recyclerAdapter = ChartListAdapter(
-                null,
+                this@ChartFragment,
                 requestManager,
 
                 currentLocale,
@@ -253,6 +253,12 @@ constructor(
     }
 
     override fun onNothingSelected() {
+    }
+
+    override fun onItemSelected(position: Int, item: PieChartData) {
+        val action =
+            ChartFragmentDirections.actionChartFragmentToDetailChartFragment(item.categoryId)
+        findNavController().navigate(action)
     }
 
 }
