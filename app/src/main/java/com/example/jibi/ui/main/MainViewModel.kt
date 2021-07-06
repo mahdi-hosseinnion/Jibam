@@ -164,6 +164,12 @@ constructor(
             is UpdateCategory -> mainRepository.updateCategory(stateEvent)
 
             is GetPieChartData -> mainRepository.getPieChartData(stateEvent)
+
+            is GetAllTransactionByCategoryId -> mainRepository.getAllTransactionByCategoryId(
+                stateEvent
+            )
+
+            is GetCategoryById -> mainRepository.getCategoryById(stateEvent)
         }
     }
 
@@ -185,6 +191,24 @@ constructor(
         viewState.pieChartData?.let {
             val update = getCurrentViewStateOrNew()
                 .copy(pieChartData = it)
+            setViewState(update)
+        }
+        viewState.detailChartFields.let {
+            val update = getCurrentViewStateOrNew()
+                .copy(
+                    detailChartFields = TransactionViewState.DetailChartFields(
+                        category = it.category
+                    )
+                )
+            setViewState(update)
+        }
+        viewState.detailChartFields.let {
+            val update = getCurrentViewStateOrNew()
+                .copy(
+                    detailChartFields = TransactionViewState.DetailChartFields(
+                        allTransaction = it.allTransaction
+                    )
+                )
             setViewState(update)
         }
     }

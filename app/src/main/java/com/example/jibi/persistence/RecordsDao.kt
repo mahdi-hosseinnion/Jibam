@@ -129,7 +129,13 @@ interface RecordsDao {
             FROM records LEFT JOIN categories ON records.cat_id=categories.cId GROUP BY cat_id
             ORDER BY ABS(SUM(money)) DESC"""
     )
-    suspend fun sumOfMoneyGroupByCountry(): List<PieChartData>
+    suspend fun sumOfMoneyGroupByCategory(): List<PieChartData>
+
+    @Query(
+        """SELECT *  FROM records WHERE cat_id = :id 
+            ORDER BY money DESC"""
+    )
+    suspend fun getAllTransactionByCategoryId(id:Int): List<Record>
 
     companion object {
         const val ORDER_BY_DATE = "ORDER BY date DESC"

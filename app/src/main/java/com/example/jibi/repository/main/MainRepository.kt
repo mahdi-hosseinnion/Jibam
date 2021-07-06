@@ -402,7 +402,7 @@ constructor(
         stateEvent: GetPieChartData
     ): DataState<TransactionViewState> {
         val cacheResult = safeCacheCall {
-            calculatePercentage(recordsDao.sumOfMoneyGroupByCountry())
+            calculatePercentage(recordsDao.sumOfMoneyGroupByCategory())
         }
         mahdiLog(TAG, cacheResult.toString())
         return object : CacheResponseHandler<TransactionViewState, List<PieChartData>>(
@@ -461,6 +461,64 @@ constructor(
             )
         }
         return newList
+    }
+
+    suspend fun getCategoryById(
+        stateEvent: GetCategoryById
+    ): DataState<TransactionViewState> {
+        val cacheResult = safeCacheCall {
+            categoriesDao.getCategoryById(stateEvent.categoryId)
+        }
+
+        return object : CacheResponseHandler<TransactionViewState, Category>(
+            response = cacheResult,
+            stateEvent = stateEvent
+        ) {
+            override suspend fun handleSuccess(resultObj: Category): DataState<TransactionViewState> {
+                return DataState.data(
+                    response = buildResponse(
+                        message = "Category Successfully returned",
+                        UIComponentType.None,
+                        MessageType.Success
+                    ), data = TransactionViewState(
+                        detailChartFields = TransactionViewState.DetailChartFields(
+                            category = resultObj
+                        )
+                    )
+                )
+            }
+        }.getResult()
+    }
+
+
+    suspend fun getAllTransactionByCategoryId(
+        stateEvent: GetAllTransactionByCategoryId
+    ): DataState<TransactionViewState> {
+        val cacheResult = safeCacheCall {
+            recordsDao.getAllTransactionByCategoryId(stateEvent.categoryId)
+        }
+        return object : CacheResponseHandler<TransactionViewState, List<Record>>(
+            response = cacheResult,
+            stateEvent = stateEvent
+        ) {
+            override suspend fun handleSuccess(resultObj: List<Record>): DataState<TransactionViewState> {
+                return DataState.data(
+                    response = buildResponse(
+                        message = "All transaction with category id:${stateEvent.categoryId} " +
+                                "successfully returned",
+                        UIComponentType.None,
+                        MessageType.Success
+
+                    ),
+                    data = TransactionViewState(
+                        detailChartFields = TransactionViewState.DetailChartFields(
+                            allTransaction = resultObj
+                        )
+                    )
+                )
+
+            }
+        }.getResult()
     }
 
     /*
