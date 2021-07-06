@@ -25,6 +25,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.utils.MPPointF
 import kotlinx.android.synthetic.main.fragment_chart.*
+import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
@@ -93,7 +94,7 @@ constructor(
         if (filteredValues.isNullOrEmpty()) {
             //TODO SHOW SNACKBAR TO TRY AGAIN
         } else {
-            setDataToChart(filteredValues)
+            setDataToChartAndRecyclerView(filteredValues)
         }
     }
 
@@ -151,7 +152,7 @@ constructor(
 
     }
 
-    private fun setDataToChart(values: List<PieChartData>) {
+    private fun setDataToChartAndRecyclerView(values: List<PieChartData>) {
         val entries = ArrayList<PieEntry>()
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
         // the chart.
@@ -200,6 +201,7 @@ constructor(
                 requestManager, this@ChartFragment.requireActivity().packageName,
                 colors
             )
+            isNestedScrollingEnabled = false
             recyclerAdapter.submitList(values)
             adapter = recyclerAdapter
         }
