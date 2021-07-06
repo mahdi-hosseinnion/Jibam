@@ -58,6 +58,9 @@ class MainActivity : BaseActivity() {
 
     private fun uiSetup() {
         val menu = navigation_view.menu
+        menu.findItem(R.id.chartFragment).title =
+            _resources.getString(R.string.chart)
+
         menu.findItem(R.id.viewCategoriesFragment).title =
             _resources.getString(R.string.category_setting)
         menu.findItem(R.id.aboutUsFragment).title =
@@ -95,7 +98,6 @@ class MainActivity : BaseActivity() {
             }
 
         appBarConfiguration = AppBarConfiguration(setOf(R.id.transactionFragment), drawer_layout)
-
 
 
     }

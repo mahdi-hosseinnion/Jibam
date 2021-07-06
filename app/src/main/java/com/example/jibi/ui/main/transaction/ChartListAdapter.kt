@@ -1,28 +1,31 @@
 package com.example.jibi.ui.main.transaction
 
 import android.content.res.Resources
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.jibi.R
 import com.example.jibi.models.PieChartData
+import com.example.jibi.util.localizeNumber
+import com.example.jibi.util.separate3By3
 import kotlinx.android.synthetic.main.layout_chart_list_item.view.*
 import kotlinx.android.synthetic.main.layout_transaction_list_item.view.*
 import kotlinx.android.synthetic.main.layout_transaction_list_item.view.cardView
 import kotlinx.android.synthetic.main.layout_transaction_list_item.view.category_image
 import java.util.*
 import kotlin.math.absoluteValue
-import kotlin.random.Random
 
 class ChartListAdapter(
     private val interaction: Interaction? = null,
     private val requestManager: RequestManager?,
+    private val currentLocale: Locale,
     private val packageName: String,
+    private val _resources: Resources,
     private val colors: List<Int>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -47,8 +50,7 @@ class ChartListAdapter(
                 parent,
                 false
             ),
-            interaction,
-            requestManager, packageName, colors
+            interaction, requestManager, packageName, currentLocale, _resources, colors
         )
     }
 
@@ -74,6 +76,8 @@ class ChartListAdapter(
         private val interaction: Interaction?,
         val requestManager: RequestManager?,
         val packageName: String,
+        val currentLocale: Locale,
+        val _resources: Resources,
         val colors: List<Int>
     ) : RecyclerView.ViewHolder(itemView) {
 
@@ -82,9 +86,15 @@ class ChartListAdapter(
                 interaction?.onItemSelected(adapterPosition, item)
             }
 
-            category_name.text = item.categoryName
-            sumOfMoney.text = item.sumOfMoney.absoluteValue.toString()
-            txt_percentage.text = "${item.percentage.toString()}%"
+            category_name.text = item.getCategoryNameFromStringFile(
+                _resources,
+                this@ChartViewHolder.packageName
+            ) {
+                it.categoryName
+            }
+            sumOfMoney.text = separate3By3(item.sumOfMoney.absoluteValue, currentLocale)
+
+            txt_percentage.text = ("${item.percentage.toString()}%").localizeNumber(_resources)
             prg_percentage.progress = item.percentage?.toInt() ?: 0
             prg_percentage.max = 100
 

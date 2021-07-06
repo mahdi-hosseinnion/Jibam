@@ -4,7 +4,10 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import androidx.core.text.TextUtilsCompat
+import androidx.core.view.ViewCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.RequestManager
 import com.example.jibi.R
@@ -28,8 +31,9 @@ import kotlinx.android.synthetic.main.fragment_chart.*
 import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import java.util.*
 import javax.inject.Inject
-import kotlin.math.abs
+import kotlin.collections.ArrayList
 
 
 //https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/main/java/com/xxmassdeveloper/mpchartexample/PieChartActivity.java
@@ -41,6 +45,7 @@ class ChartFragment
 constructor(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager,
+    private val currentLocale: Locale,
     private val _resources: Resources
 ) : BaseTransactionFragment(
     R.layout.fragment_chart,
@@ -68,6 +73,10 @@ constructor(
         super.onViewCreated(view, savedInstanceState)
         initPieChart()
         subscribeObservers()
+
+        findNavController()
+            .currentDestination?.label = _getString(R.string.chart)
+
         viewModel.launchNewJob(TransactionStateEvent.OneShotOperationsTransactionStateEvent.GetPieChartData)
 
         fab_swap.setOnClickListener {
@@ -99,7 +108,7 @@ constructor(
     }
 
     private fun initPieChart() {
-        pie_chart.setUsePercentValues(true)
+        pie_chart.setUsePercentValues(false)
         pie_chart.description.isEnabled = false
         pie_chart.setExtraOffsets(5f, 5f, 5f, 5f)
 
@@ -134,9 +143,15 @@ constructor(
         pie_chart.animateY(1400, Easing.EaseInOutQuad)
 //         pie_chart.spin(2000, 0, 360);
         //legend: list next to chart
+        val isLeftToRight =
+            (TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == ViewCompat.LAYOUT_DIRECTION_LTR)
         val l: Legend = pie_chart.legend
         l.verticalAlignment = Legend.LegendVerticalAlignment.CENTER
-        l.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
+        if (isLeftToRight)
+            l.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
+        else
+            l.horizontalAlignment = Legend.LegendHorizontalAlignment.LEFT
+
         l.orientation = Legend.LegendOrientation.VERTICAL
         l.setDrawInside(false)
         l.xEntrySpace = 0f
@@ -152,16 +167,25 @@ constructor(
 
     }
 
+    private fun List<PieChartData>.convertPieChartDataToPieEntry(): List<PieEntry> = this.map {
+        PieEntry(
+            it.percentage?.toFloat() ?: 0f,
+            it.getCategoryNameFromStringFile(
+                _resources,
+                this@ChartFragment.requireActivity().packageName
+            ) { pi ->
+                pi.categoryName
+            }
+        )
+    }
+
     private fun setDataToChartAndRecyclerView(values: List<PieChartData>) {
-        val entries = ArrayList<PieEntry>()
+        val entries = values.convertPieChartDataToPieEntry()
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
         // the chart.
-        for (item in values) {
-            entries.add(PieEntry(abs(item.sumOfMoney.toFloat()), item.categoryName))
-        }
         val chartLabel = if (currentChartState == INCOMES_STATE)
-            _resources.getString(R.string.Income)
-        else _resources.getString(R.string.expenses)
+            _getString(R.string.Income)
+        else _getString(R.string.expenses)
 
         val dataSet = PieDataSet(entries, chartLabel)
         dataSet.setDrawIcons(false)
@@ -198,7 +222,11 @@ constructor(
             layoutManager = LinearLayoutManager(this@ChartFragment.context)
             val recyclerAdapter = ChartListAdapter(
                 null,
-                requestManager, this@ChartFragment.requireActivity().packageName,
+                requestManager,
+
+                currentLocale,
+                this@ChartFragment.requireActivity().packageName,
+                _resources,
                 colors
             )
             isNestedScrollingEnabled = false

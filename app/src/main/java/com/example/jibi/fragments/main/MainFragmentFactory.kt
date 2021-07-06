@@ -67,10 +67,10 @@ constructor(
                 SettingFragment(viewModelFactory, resources, sharedPreferences)
             }
             AboutUsFragment::class.java.name -> {
-                AboutUsFragment(viewModelFactory, requestManager,resources)
+                AboutUsFragment(viewModelFactory, requestManager, resources)
             }
             ChartFragment::class.java.name -> {
-                ChartFragment(viewModelFactory, requestManager,resources)
+                ChartFragment(viewModelFactory, requestManager, currentLocale, resources)
             }
 
             else -> {
