@@ -156,7 +156,7 @@ constructor(
         l.setDrawInside(false)
         l.xEntrySpace = 0f
         l.yEntrySpace = 0f
-        l.form= Legend.LegendForm.CIRCLE
+        l.form = Legend.LegendForm.CIRCLE
         l.yOffset = 0f
         l.textSize = 12f
 

@@ -428,8 +428,8 @@ constructor(
 
     private fun calculatePercentage(values: List<PieChartData>): List<PieChartData> {
         val sumOfAllExpenses =
-            values.filter {  it.categoryType == EXPENSES_TYPE_MARKER }
-                .sumOf {  it.sumOfMoney }
+            values.filter { it.categoryType == EXPENSES_TYPE_MARKER }
+                .sumOf { it.sumOfMoney }
 
         val sumOfAllIncome =
             values.filter { it.categoryType == INCOME_TYPE_MARKER }
@@ -438,7 +438,7 @@ constructor(
         val newList = ArrayList<PieChartData>()
 
         for (item in values) {
-            val percentage: Double = when (item.categoryType) {
+            val percentage: Double? = when (item.categoryType) {
                 EXPENSES_TYPE_MARKER -> {
                     (item.sumOfMoney.div(sumOfAllExpenses)).times(100)
                 }
@@ -446,12 +446,12 @@ constructor(
                     (item.sumOfMoney.div(sumOfAllIncome)).times(100)
                 }
                 else -> {
-                    -1.0
+                    null
                 }
             }
             newList.add(
                 PieChartData(
-                    percentage = percentage.roundToOneDigit(),
+                    percentage = percentage?.roundToOneDigit(),
                     sumOfMoney = item.sumOfMoney,
                     categoryName = item.categoryName,
                     categoryType = item.categoryType,

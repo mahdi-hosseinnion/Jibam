@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.layout_transaction_list_item.view.cardView
 import kotlinx.android.synthetic.main.layout_transaction_list_item.view.category_image
 import java.util.*
 import kotlin.math.absoluteValue
-
+//TODO DELETE DIFFUTIL FROM HERE
 class ChartListAdapter(
     private val interaction: Interaction? = null,
     private val requestManager: RequestManager?,

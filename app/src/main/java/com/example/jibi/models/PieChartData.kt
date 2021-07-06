@@ -6,7 +6,7 @@ import androidx.room.ColumnInfo
 
 data class PieChartData(
     @ColumnInfo(name = "percentage")
-    val percentage: Double? = -1.0,
+    val percentage: Double? = null,
     @ColumnInfo(name = "sumOfMoney")
     val sumOfMoney: Double,
     @ColumnInfo(name = "categoryName")
