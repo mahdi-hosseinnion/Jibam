@@ -110,7 +110,7 @@ constructor(
     private fun initPieChart() {
         pie_chart.setUsePercentValues(false)
         pie_chart.description.isEnabled = false
-        pie_chart.setExtraOffsets(5f, 5f, 5f, 5f)
+        pie_chart.setExtraOffsets(2f, 2f, 2f, 2f)
 
         pie_chart.dragDecelerationFrictionCoef = 0.50f
 
@@ -156,6 +156,7 @@ constructor(
         l.setDrawInside(false)
         l.xEntrySpace = 0f
         l.yEntrySpace = 0f
+        l.form= Legend.LegendForm.CIRCLE
         l.yOffset = 0f
         l.textSize = 12f
 
