@@ -1,4 +1,4 @@
-package com.example.jibi.ui.main.transaction
+package com.example.jibi.ui.main.transaction.chart
 
 import android.content.res.Resources
 import android.graphics.Color
@@ -12,7 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.RequestManager
 import com.example.jibi.R
 import com.example.jibi.models.PieChartData
-import com.example.jibi.ui.main.transaction.ChartFragment.ChartState.*
+import com.example.jibi.ui.main.transaction.BaseTransactionFragment
+import com.example.jibi.ui.main.transaction.chart.ChartFragment.ChartState.*
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.Constants.EXPENSES_TYPE_MARKER
 import com.example.jibi.util.Constants.INCOME_TYPE_MARKER

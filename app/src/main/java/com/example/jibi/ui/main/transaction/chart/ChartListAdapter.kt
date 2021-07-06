@@ -1,4 +1,4 @@
-package com.example.jibi.ui.main.transaction
+package com.example.jibi.ui.main.transaction.chart
 
 import android.content.res.Resources
 import android.view.LayoutInflater

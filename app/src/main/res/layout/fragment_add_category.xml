@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
 
-    tools:context=".ui.main.transaction.AddCategoryFragment">
+    tools:context=".ui.main.transaction.categories.AddCategoryFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/add_category_toolbar"

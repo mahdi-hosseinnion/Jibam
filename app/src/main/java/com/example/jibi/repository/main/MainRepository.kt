@@ -12,9 +12,9 @@ import com.example.jibi.models.SearchModel
 import com.example.jibi.persistence.*
 import com.example.jibi.repository.buildResponse
 import com.example.jibi.repository.safeCacheCall
-import com.example.jibi.ui.main.transaction.TransactionListAdapter
-import com.example.jibi.ui.main.transaction.TransactionListAdapter.Companion.TODAY
-import com.example.jibi.ui.main.transaction.TransactionListAdapter.Companion.YESTERDAY
+import com.example.jibi.ui.main.transaction.home.TransactionListAdapter
+import com.example.jibi.ui.main.transaction.home.TransactionListAdapter.Companion.TODAY
+import com.example.jibi.ui.main.transaction.home.TransactionListAdapter.Companion.YESTERDAY
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent.*
 import com.example.jibi.ui.main.transaction.state.TransactionViewState
 import com.example.jibi.util.*

@@ -1,4 +1,4 @@
-package com.example.jibi.ui.main.transaction
+package com.example.jibi.ui.main.transaction.categories
 
 import android.content.res.Resources
 import android.util.Log
@@ -10,7 +10,7 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.example.jibi.R
 import com.example.jibi.models.CategoryImages
-import com.example.jibi.ui.main.transaction.TransactionListAdapter.Companion.listOfColor
+import com.example.jibi.ui.main.transaction.home.TransactionListAdapter.Companion.listOfColor
 import kotlinx.android.synthetic.main.layout_category_images_header.view.*
 import kotlinx.android.synthetic.main.layout_category_images_list_item.view.*
 

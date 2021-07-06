@@ -1,4 +1,4 @@
-package com.example.jibi.ui.main.transaction
+package com.example.jibi.ui.main.transaction.home
 
 import android.content.res.Resources
 import android.util.Log

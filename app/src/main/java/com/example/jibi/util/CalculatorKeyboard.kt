@@ -1,4 +1,4 @@
-package com.example.jibi.ui
+package com.example.jibi.util
 
 import android.content.Context
 import android.content.res.Resources
@@ -12,7 +12,6 @@ import android.widget.Button
 import android.widget.LinearLayout
 import androidx.annotation.StringRes
 import com.example.jibi.R
-import com.example.jibi.util.convertEnglishDigitsToFarsiDigits
 
 //copy from this
 // https://stackoverflow.com/a/45005691/10362460

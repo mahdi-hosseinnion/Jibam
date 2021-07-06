@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:background="@drawable/bottom_sheet_select_category_bg"
-    tools:context=".ui.main.transaction.bottomSheet.CreateNewTransBottomSheet">
+    tools:context=".ui.main.transaction.home.bottomSheet.CreateNewTransBottomSheet">
 
     <LinearLayout
         android:id="@+id/parent_bottomSHeet"

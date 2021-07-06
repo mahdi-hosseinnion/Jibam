@@ -1,11 +1,11 @@
 package com.example.jibi.ui
 
 import android.util.Log
-import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions
-import com.example.jibi.ui.CalculatorKeyboard.Companion.DIVISION
-import com.example.jibi.ui.CalculatorKeyboard.Companion.MINES
-import com.example.jibi.ui.CalculatorKeyboard.Companion.PLUS
-import com.example.jibi.ui.CalculatorKeyboard.Companion.TIMES
+import com.example.jibi.util.CalculatorKeyboard
+import com.example.jibi.util.CalculatorKeyboard.Companion.DIVISION
+import com.example.jibi.util.CalculatorKeyboard.Companion.MINES
+import com.example.jibi.util.CalculatorKeyboard.Companion.PLUS
+import com.example.jibi.util.CalculatorKeyboard.Companion.TIMES
 import com.example.jibi.util.TextCalculator
 import io.mockk.every
 import io.mockk.mockkStatic
@@ -13,7 +13,6 @@ import io.mockk.unmockkAll
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.params.provider.ValueSource
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*

@@ -1,6 +1,6 @@
 package com.example.jibi.util
 
-import com.example.jibi.ui.main.transaction.TransactionListAdapter
+import com.example.jibi.ui.main.transaction.home.TransactionListAdapter
 import java.util.*
 
 //  this algorithm for years and it is very accurate between 1901 and 2099.

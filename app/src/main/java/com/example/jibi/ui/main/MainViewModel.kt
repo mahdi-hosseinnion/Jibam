@@ -2,23 +2,18 @@ package com.example.jibi.ui.main
 
 import android.util.Log
 import androidx.lifecycle.*
-import androidx.navigation.fragment.DialogFragmentNavigatorDestinationBuilder
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.*
-import com.example.jibi.repository.buildResponse
 import com.example.jibi.repository.main.MainRepository
 import com.example.jibi.ui.BaseViewModel
-import com.example.jibi.ui.main.transaction.TransactionListAdapter.Companion.NO_RESULT_FOUND_FOR_THIS_QUERY_MARKER
-import com.example.jibi.ui.main.transaction.TransactionListAdapter.Companion.NO_RESULT_FOUND_IN_DATABASE
-import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
+import com.example.jibi.ui.main.transaction.home.TransactionListAdapter.Companion.NO_RESULT_FOUND_FOR_THIS_QUERY_MARKER
+import com.example.jibi.ui.main.transaction.home.TransactionListAdapter.Companion.NO_RESULT_FOUND_IN_DATABASE
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent.*
 import com.example.jibi.ui.main.transaction.state.TransactionViewState
 import com.example.jibi.util.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch

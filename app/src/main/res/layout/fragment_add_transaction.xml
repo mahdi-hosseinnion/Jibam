@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.transaction.AddTransactionFragment">
+    tools:context=".ui.main.transaction.home.AddTransactionFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -189,7 +189,7 @@
         </ScrollView>
 
 
-        <com.example.jibi.ui.CalculatorKeyboard
+        <com.example.jibi.util.CalculatorKeyboard
             android:id="@+id/keyboard"
             android:layout_width="match_parent"
             android:layout_height="288dp"

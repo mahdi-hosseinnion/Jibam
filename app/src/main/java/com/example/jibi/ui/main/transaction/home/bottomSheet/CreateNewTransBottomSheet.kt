@@ -1,4 +1,4 @@
-package com.example.jibi.ui.main.transaction.bottomSheet
+package com.example.jibi.ui.main.transaction.home.bottomSheet
 
 import android.annotation.SuppressLint
 import android.app.Dialog

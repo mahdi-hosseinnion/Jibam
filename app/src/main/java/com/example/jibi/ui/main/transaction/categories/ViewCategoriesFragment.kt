@@ -1,4 +1,4 @@
-package com.example.jibi.ui.main.transaction
+package com.example.jibi.ui.main.transaction.categories
 
 import android.content.SharedPreferences
 import android.content.res.Resources
@@ -14,8 +14,10 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.jibi.R
 import com.example.jibi.models.Category
-import com.example.jibi.ui.main.transaction.AddCategoryFragment.Companion.EXPENSES
-import com.example.jibi.ui.main.transaction.AddCategoryFragment.Companion.INCOME
+import com.example.jibi.ui.main.transaction.BaseTransactionFragment
+import com.example.jibi.ui.main.transaction.ViewCategoriesFragmentDirections
+import com.example.jibi.ui.main.transaction.categories.AddCategoryFragment.Companion.EXPENSES
+import com.example.jibi.ui.main.transaction.categories.AddCategoryFragment.Companion.INCOME
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.*
 import com.google.android.material.tabs.TabLayoutMediator

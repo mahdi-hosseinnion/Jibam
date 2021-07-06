@@ -1,10 +1,10 @@
 package com.example.jibi.util
 
 import android.util.Log
-import com.example.jibi.ui.CalculatorKeyboard.Companion.DIVISION
-import com.example.jibi.ui.CalculatorKeyboard.Companion.MINES
-import com.example.jibi.ui.CalculatorKeyboard.Companion.PLUS
-import com.example.jibi.ui.CalculatorKeyboard.Companion.TIMES
+import com.example.jibi.util.CalculatorKeyboard.Companion.DIVISION
+import com.example.jibi.util.CalculatorKeyboard.Companion.MINES
+import com.example.jibi.util.CalculatorKeyboard.Companion.PLUS
+import com.example.jibi.util.CalculatorKeyboard.Companion.TIMES
 
 //TODO divide by 0?
 class TextCalculator {

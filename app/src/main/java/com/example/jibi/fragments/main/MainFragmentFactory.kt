@@ -7,6 +7,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.ui.main.transaction.*
+import com.example.jibi.ui.main.transaction.categories.AddCategoryFragment
+import com.example.jibi.ui.main.transaction.categories.ViewCategoriesFragment
+import com.example.jibi.ui.main.transaction.chart.ChartFragment
+import com.example.jibi.ui.main.transaction.home.AddTransactionFragment
+import com.example.jibi.ui.main.transaction.home.TransactionFragment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.util.*
