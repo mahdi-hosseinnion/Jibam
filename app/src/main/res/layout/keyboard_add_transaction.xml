@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/calcutor_bottom_sheet_bg"
         android:orientation="horizontal"
-        android:paddingTop="6dp"
+        android:paddingLeft="2dp"
         android:paddingRight="2dp"
         android:paddingBottom="4dp"
-        android:paddingLeft="2dp"
         android:weightSum="100">
 
         <!--                android:background="#f9f9f9"-->
@@ -25,7 +24,8 @@
                 android:id="@+id/btn_clearAll"
                 style="@style/calcutorTextViewStyle"
                 android:layout_weight="20"
-                android:text="C" />
+                android:text="C"
+                android:textColor="#C2185B" />
 
 
             <Button
@@ -62,7 +62,7 @@
 
             <Button
                 android:id="@+id/btn_division"
-                style="@style/calcutorTextViewStyle"
+                style="@style/calcutorTextViewStyleForOperations"
 
                 android:layout_weight="20"
                 android:text="÷" />
@@ -102,7 +102,7 @@
 
             <Button
                 android:id="@+id/btn_times"
-                style="@style/calcutorTextViewStyle"
+                style="@style/calcutorTextViewStyleForOperations"
                 android:layout_weight="20"
 
 
@@ -138,7 +138,7 @@
             android:layout_height="match_parent"
             android:layout_weight="25"
             android:orientation="vertical">
-
+            <!--TODO REMOVE NESTED VIEWS b/c ITS BAD FOR PERFORMANCE-->
             <Button
                 android:id="@+id/btn_c"
                 style="@style/calcutorTextViewStyle"
@@ -146,24 +146,22 @@
                 android:gravity="center"
                 android:foregroundGravity="center"
                 app:icon="@drawable/ic_delete_keyboard"
-                app:iconTint="@color/black" />
-
+                app:iconTint="#C2185B" />
 
             <Button
                 android:id="@+id/btn_mines"
-                style="@style/calcutorTextViewStyle"
-
+                style="@style/calcutorTextViewStyleForOperations"
                 android:text="-" />
 
             <Button
                 android:id="@+id/btn_plus"
-                style="@style/calcutorTextViewStyle"
+                style="@style/calcutorTextViewStyleForOperations"
 
                 android:text="+" />
 
             <Button
                 android:id="@+id/btn_equal"
-                style="@style/calcutorTextViewStyle"
+                style="@style/calcutorTextViewStyleForOperations"
                 android:layout_weight="42"
                 android:text="=" />
         </LinearLayout>
