@@ -70,7 +70,9 @@ class ChartListAdapter(
     }
 
     fun submitList(list: List<PieChartData>) {
-        biggestPercentage = list.maxOf { abs(it.percentage) }
+        if (!list.isNullOrEmpty()) {
+            biggestPercentage = list.maxOf { abs(it.percentage) }
+        }
         differ.submitList(list)
     }
 

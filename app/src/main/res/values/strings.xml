@@ -191,5 +191,11 @@
     <string name="jibi_capital">JIBI</string>
     <string name="no_transaction_found_with_this_category">There is no transaction with this category!</string>
 
+    <string name="no_chart_data_available">No chart data available.</string>
+
+    <string name="income_chart_title">Income chart</string>
+    <string name="expenses_chart_title">Expenses chart</string>
+    <string name="swap_chart">SWAP CHART</string>
+
 
 </resources>

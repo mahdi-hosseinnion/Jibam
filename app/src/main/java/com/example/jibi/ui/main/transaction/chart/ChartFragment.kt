@@ -3,6 +3,7 @@ package com.example.jibi.ui.main.transaction.chart
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.text.TextUtilsCompat
 import androidx.core.view.ViewCompat
@@ -29,7 +30,6 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.utils.MPPointF
 import kotlinx.android.synthetic.main.fragment_chart.*
-import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.util.*
@@ -58,7 +58,9 @@ constructor(
     private val TAG = "ChartFragment"
 
 
-    override fun setTextToAllViews() {}
+    override fun setTextToAllViews() {
+        fab_swap.text = _getString(R.string.swap_chart)
+    }
 
     enum class ChartState {
         EXPENSES_STATE,
@@ -75,8 +77,6 @@ constructor(
         initPieChart()
         subscribeObservers()
 
-        findNavController()
-            .currentDestination?.label = _getString(R.string.chart)
 
         viewModel.launchNewJob(TransactionStateEvent.OneShotOperationsTransactionStateEvent.GetPieChartData)
 
@@ -96,16 +96,25 @@ constructor(
     }
 
     private fun refreshChart() {
-        val category_type_marker = if (currentChartState == INCOMES_STATE) INCOME_TYPE_MARKER
-        else EXPENSES_TYPE_MARKER
+        val category_type_marker = if (currentChartState == INCOMES_STATE) {
+
+            chartFragment_toolbar.title = _getString(R.string.income_chart_title)
+            INCOME_TYPE_MARKER
+        } else {
+            chartFragment_toolbar.title = _getString(R.string.expenses_chart_title)
+
+            EXPENSES_TYPE_MARKER
+        }
 
         val filteredValues = chartData.filter { it.categoryType == category_type_marker }
 
-        if (filteredValues.isNullOrEmpty()) {
-            //TODO SHOW SNACKBAR TO TRY AGAIN
-        } else {
-            setDataToChartAndRecyclerView(filteredValues)
-        }
+//        pie_chart.data=null
+//
+//        if (filteredValues.isNullOrEmpty()) {
+//            //TODO SHOW SNACKBAR TO TRY AGAIN
+//        } else {
+        setDataToChartAndRecyclerView(filteredValues)
+//        }
     }
 
     private fun initPieChart() {
@@ -113,6 +122,8 @@ constructor(
         pie_chart.description.isEnabled = false
         pie_chart.setExtraOffsets(2f, 2f, 2f, 2f)
 
+        pie_chart.setNoDataText(_getString(R.string.no_chart_data_available))
+        pie_chart.setNoDataTextColor(Color.RED)
         pie_chart.dragDecelerationFrictionCoef = 0.50f
 
 //        pie_chart.setCenterTextTypeface(tfLight)
@@ -213,6 +224,13 @@ constructor(
         data.setValueTextColor(resources.getColor(R.color.black))
 //        data.setValueTypeface(tfLight)
         pie_chart.data = data
+        try {
+            if (values.isNullOrEmpty()) {
+                pie_chart.clear()
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "setDataToChartAndRecyclerView: ${e.message}", e)
+        }
         // undo all highlights
         pie_chart.highlightValues(null)
         pie_chart.invalidate()

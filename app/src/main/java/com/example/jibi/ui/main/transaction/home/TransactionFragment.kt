@@ -150,7 +150,7 @@ constructor(
         }
         //TODO DELETE THIS LINE FOR FINAL PROJECT JUST OF TESTING
         txt_balance.setOnClickListener {
-            insertRandomTransaction()
+//            insertRandomTransaction()
         }
         //TODO DELETE THIS LINE FOR FINAL PROJECT JUST OF TESTING
         txt_expenses.setOnClickListener {
