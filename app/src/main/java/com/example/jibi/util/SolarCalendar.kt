@@ -205,6 +205,15 @@ object SolarCalendar {
                         java.lang.String.format(loc, "%02d", date) + " (" + strWeekDay + ")"
 
             }
+            ShamsiPatterns.DETAIL_CHART_FRAGMENT -> {
+                "" + java.lang.String.format(loc, "%d", year) + "/" + java.lang.String.format(
+                    loc,
+                    "%d",
+                    month
+                ) + "/" +
+                        java.lang.String.format(loc, "%02d", date)
+
+            }
             ShamsiPatterns.TEST -> {
                 "$year/" + java.lang.String.format(
                     loc, "%02d",
@@ -246,7 +255,7 @@ object SolarCalendar {
 //        const val maxGregorianDay = 19
     //yea integer max value
     enum class ShamsiPatterns {
-        RECYCLER_VIEW, DETAIL_FRAGMENT, TEST
+        RECYCLER_VIEW, DETAIL_FRAGMENT,DETAIL_CHART_FRAGMENT, TEST
     }
 
 }
