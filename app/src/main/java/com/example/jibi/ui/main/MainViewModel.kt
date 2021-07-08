@@ -1,7 +1,8 @@
 package com.example.jibi.ui.main
 
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewModelScope
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.*
 import com.example.jibi.repository.main.MainRepository
@@ -11,7 +12,8 @@ import com.example.jibi.ui.main.transaction.home.TransactionListAdapter.Companio
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent.*
 import com.example.jibi.ui.main.transaction.state.TransactionViewState
-import com.example.jibi.util.*
+import com.example.jibi.util.Constants
+import com.example.jibi.util.DataState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
@@ -193,23 +195,24 @@ constructor(
                 .copy(pieChartData = it)
             setViewState(update)
         }
-        viewState.detailChartFields.let {
-            val update = getCurrentViewStateOrNew()
-                .copy(
-                    detailChartFields = TransactionViewState.DetailChartFields(
-                        category = it.category
-                    )
+        viewState.detailChartFields.category?.let {
+            val current = getCurrentViewStateOrNew()
+            val update = current.copy(
+                detailChartFields = current.detailChartFields.copy(
+                    category = it
                 )
+            )
             setViewState(update)
         }
-        viewState.detailChartFields.let {
-            val update = getCurrentViewStateOrNew()
-                .copy(
-                    detailChartFields = TransactionViewState.DetailChartFields(
-                        allTransaction = it.allTransaction
-                    )
+        viewState.detailChartFields.allTransaction?.let {
+            val current = getCurrentViewStateOrNew()
+            val update = current.copy(
+                detailChartFields = current.detailChartFields.copy(
+                    allTransaction = it
                 )
+            )
             setViewState(update)
+
         }
     }
 

@@ -79,7 +79,7 @@ constructor(
                 ChartFragment(viewModelFactory, requestManager, currentLocale, resources)
             }
             DetailChartFragment::class.java.name -> {
-                DetailChartFragment(viewModelFactory, resources)
+                DetailChartFragment(viewModelFactory, requestManager, currentLocale, resources)
             }
 
             else -> {

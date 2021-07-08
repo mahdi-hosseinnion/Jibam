@@ -438,7 +438,7 @@ constructor(
         val newList = ArrayList<PieChartData>()
 
         for (item in values) {
-            val percentage: Double? = when (item.categoryType) {
+            val percentage: Double = when (item.categoryType) {
                 EXPENSES_TYPE_MARKER -> {
                     (item.sumOfMoney.div(sumOfAllExpenses)).times(100)
                 }
@@ -446,13 +446,13 @@ constructor(
                     (item.sumOfMoney.div(sumOfAllIncome)).times(100)
                 }
                 else -> {
-                    null
+                    0.0
                 }
             }
             newList.add(
                 PieChartData(
                     categoryId = item.categoryId,
-                    percentage = percentage?.roundToOneDigit(),
+                    percentage = percentage.roundToOneDigit(),
                     sumOfMoney = item.sumOfMoney,
                     categoryName = item.categoryName,
                     categoryType = item.categoryType,

@@ -17,12 +17,12 @@ data class PieChartData(
     val categoryType: Int,
     @ColumnInfo(name = "categoryImage")
     val categoryImage: String,
-    @Ignore val percentage: Double?
+    @Ignore val percentage: Double
 
 ) {
 
     constructor(categoryId: Int, sumOfMoney: Double, categoryName: String,categoryType: Int,categoryImage: String)
-            : this(categoryId,sumOfMoney,categoryName,categoryType,categoryImage,null)
+            : this(categoryId,sumOfMoney,categoryName,categoryType,categoryImage,0.0)
 
     fun getCategoryNameFromStringFile(
         resources: Resources,

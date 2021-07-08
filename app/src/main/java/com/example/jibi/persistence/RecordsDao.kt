@@ -133,7 +133,7 @@ interface RecordsDao {
 
     @Query(
         """SELECT *  FROM records WHERE cat_id = :id 
-            ORDER BY money DESC"""
+            ORDER BY ABS(money) DESC"""
     )
     suspend fun getAllTransactionByCategoryId(id:Int): List<Record>
 

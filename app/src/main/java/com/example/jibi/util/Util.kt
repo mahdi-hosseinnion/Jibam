@@ -10,6 +10,7 @@ import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.abs
 
 fun sortCategoriesWithPinned(categoryList: List<Category>?): List<Category>? {
     if (categoryList == null) {
@@ -171,3 +172,10 @@ fun trySafe(method: () -> Unit) =
     }
 
 fun Double.roundToOneDigit(): Double = Math.round(this * 10.0) / 10.0
+
+
+fun calculatePercentage(value: Double, totalAmount: Double): Double =
+    (abs(value.div(totalAmount))).times(100)
+
+fun calculatePercentageAndRoundResult(value: Double, totalAmount: Double): Double =
+    calculatePercentage(value, totalAmount).roundToOneDigit()

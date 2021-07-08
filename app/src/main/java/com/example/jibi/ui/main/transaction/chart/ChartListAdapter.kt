@@ -16,8 +16,8 @@ import com.example.jibi.util.separate3By3
 import kotlinx.android.synthetic.main.layout_chart_list_item.view.*
 import kotlinx.android.synthetic.main.layout_transaction_list_item.view.*
 import kotlinx.android.synthetic.main.layout_transaction_list_item.view.cardView
-import kotlinx.android.synthetic.main.layout_transaction_list_item.view.category_image
 import java.util.*
+import kotlin.math.abs
 import kotlin.math.absoluteValue
 
 //TODO DELETE DIFFUTIL FROM HERE
@@ -29,6 +29,8 @@ class ChartListAdapter(
     private val _resources: Resources,
     private val colors: List<Int>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private var biggestPercentage: Double = 100.0
 
     val DIFF_CALLBACK = object : DiffUtil.ItemCallback<PieChartData>() {
 
@@ -58,7 +60,7 @@ class ChartListAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is ChartViewHolder -> {
-                holder.bind(differ.currentList.get(position))
+                holder.bind(differ.currentList.get(position), biggestPercentage)
             }
         }
     }
@@ -68,6 +70,7 @@ class ChartListAdapter(
     }
 
     fun submitList(list: List<PieChartData>) {
+        biggestPercentage = list.maxOf { abs(it.percentage) }
         differ.submitList(list)
     }
 
@@ -82,7 +85,7 @@ class ChartListAdapter(
         val colors: List<Int>
     ) : RecyclerView.ViewHolder(itemView) {
 
-        fun bind(item: PieChartData) = with(itemView) {
+        fun bind(item: PieChartData, biggestPercentage: Double) = with(itemView) {
             itemView.setOnClickListener {
                 interaction?.onItemSelected(adapterPosition, item)
             }
@@ -97,7 +100,7 @@ class ChartListAdapter(
 
             txt_percentage.text = ("${item.percentage.toString()}%").localizeNumber(_resources)
             prg_percentage.progress = item.percentage?.toInt() ?: 0
-            prg_percentage.max = 100
+            prg_percentage.max = biggestPercentage.toInt()
 
             val categoryImageUrl = this.resources.getIdentifier(
                 "ic_cat_${item.categoryImage}",
@@ -112,7 +115,7 @@ class ChartListAdapter(
                 ?.centerInside()
                 ?.transition(DrawableTransitionOptions.withCrossFade())
                 ?.error(R.drawable.ic_error)
-                ?.into(itemView.category_image)
+                ?.into(itemView.category_img)
 
         }
     }

@@ -62,6 +62,9 @@
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/slide_out" />
+        <action
+            android:id="@+id/action_createTransactionFragment_to_detailChartFragment"
+            app:destination="@id/detailChartFragment" />
 
     </fragment>
 
@@ -157,5 +160,8 @@
             android:name="categoryId"
             android:defaultValue="-1"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_detailChartFragment_to_createTransactionFragment"
+            app:destination="@id/createTransactionFragment" />
     </fragment>
 </navigation>
