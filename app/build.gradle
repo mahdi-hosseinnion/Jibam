@@ -12,10 +12,10 @@ android {
 
     defaultConfig {
         applicationId "com.example.jibi"
-        minSdkVersion 16
+        minSdkVersion 15
         targetSdkVersion 30
-        versionCode 6
-        versionName "1.0.5"
+        versionCode 7
+        versionName "1.0.6"
 
         vectorDrawables.useSupportLibrary = true // for support .svg file api < 21
 
