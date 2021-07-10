@@ -115,6 +115,14 @@ sealed class TransactionStateEvent : StateEvent {
 
             override fun getId(): String = "DeleteTransaction $record ${this.hashCode()}"
         }
+        data class DeleteTransactionById(
+            val transactionId:Int
+        ) : OneShotOperationsTransactionStateEvent() {
+            override fun errorInfo(): String =
+                "ERROR: deleting transaction! id = ${transactionId}"
+
+            override fun getId(): String = "DeleteTransaction id: $transactionId ${this.hashCode()}"
+        }
 
         data class DeleteCategory(
             val category: Category

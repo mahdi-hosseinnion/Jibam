@@ -157,6 +157,8 @@ constructor(
 
             is DeleteTransaction -> mainRepository.deleteTransaction(stateEvent)
 
+            is DeleteTransactionById -> mainRepository.deleteTransactionById(stateEvent)
+
             is DeleteCategory -> mainRepository.deleteCategory(stateEvent)
 
             is InsertCategory -> mainRepository.insertCategory(stateEvent)

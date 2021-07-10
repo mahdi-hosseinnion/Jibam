@@ -26,6 +26,9 @@ interface RecordsDao {
     @Delete
     suspend fun deleteRecord(vararg record: Record): Int
 
+    @Query("DELETE FROM records WHERE rId = :id")
+    suspend fun deleteRecord(id:Int): Int
+
     /*
         get records queries
      */

@@ -196,6 +196,9 @@
     <string name="income_chart_title">Income chart</string>
     <string name="expenses_chart_title">Expenses chart</string>
     <string name="swap_chart">SWAP CHART</string>
+    <string name="delete">Delete</string>
+    <string name="unable_to_recognize_this_transaction">Unable to recognize this transaction to delete it</string>
+    <string name="are_you_sure_delete_transaction">"Are you sure you want to delete this transaction?"</string>
 
 
 </resources>

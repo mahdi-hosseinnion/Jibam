@@ -30,7 +30,6 @@ import com.example.jibi.R
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
 import com.example.jibi.models.Record
-import com.example.jibi.util.CalculatorKeyboard
 import com.example.jibi.ui.main.transaction.BaseTransactionFragment
 import com.example.jibi.ui.main.transaction.home.bottomSheet.CreateNewTransBottomSheet
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
@@ -205,6 +204,8 @@ constructor(
             .currentDestination?.label = _getString(R.string.details)
         //change id
         viewTransactionId = transaction.id
+        //add delete icon
+        setHasOptionsMenu(true)
 
         //submit button state stuff
         submitButtonState = SubmitButtonState(transaction)
@@ -849,6 +850,57 @@ constructor(
         txtField_memo.hint = _getString(R.string.write_note)
         txtField_date.hint = _getString(R.string.date)
         edt_money.hint = _getString(R.string._0)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.delete_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.delete_transaction -> {
+                checkForDelete(viewTransactionId)
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun checkForDelete(id: Int?) {
+        if (id == null) {
+            //show toast error
+            viewModel.addToMessageStack(
+                _getString(R.string.unable_to_recognize_this_transaction),
+                Throwable("$TAG : deleteTransaction: viewTransactionId is null!  viewTransactionId = $viewTransactionId"),
+                UIComponentType.Toast,
+                MessageType.Error
+            )
+        } else {
+            val callback = object : AreYouSureCallback {
+                override fun proceed() {
+                    deleteTransaction(id)
+                }
+
+                override fun cancel() {}
+            }
+            viewModel.addToMessageStack(
+                message = _getString(R.string.are_you_sure_delete_transaction),
+                uiComponentType = UIComponentType.AreYouSureDialog(
+                    callback
+                ),
+                messageType = MessageType.Info
+            )
+        }
+    }
+
+    fun deleteTransaction(id: Int) {
+        viewModel.launchNewJob(
+            TransactionStateEvent.OneShotOperationsTransactionStateEvent.DeleteTransactionById(
+                id
+            ), true
+        )
+        uiCommunicationListener.hideSoftKeyboard()
+        findNavController().navigateUp()
     }
 }
 //TODO TRASH

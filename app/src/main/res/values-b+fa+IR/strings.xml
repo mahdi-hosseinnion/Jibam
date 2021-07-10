@@ -196,5 +196,7 @@
     <string name="income_chart_title">نمودار درآمد ها</string>
     <string name="expenses_chart_title">نمودار مخارج</string>
     <string name="swap_chart">تعویض نمودار</string>
-
+    <string name="delete">حذف</string>
+    <string name="unable_to_recognize_this_transaction">این تراکنش قابل شناسایی نمیباشد!</string>
+    <string name="are_you_sure_delete_transaction">"آیا شما مطمئن هستید که میخواهید این تراکنش را حذف کنید؟"</string>
 </resources><!--source https://developer.android.com/training/basics/supporting-devices/languages-->

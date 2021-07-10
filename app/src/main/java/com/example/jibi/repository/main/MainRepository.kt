@@ -281,6 +281,27 @@ constructor(
             }
         }.getResult()
     }
+    suspend fun deleteTransactionById(
+        stateEvent: DeleteTransactionById
+    ): DataState<TransactionViewState> {
+        val cacheResult = safeCacheCall {
+            recordsDao.deleteRecord(stateEvent.transactionId)
+        }
+        return object : CacheResponseHandler<TransactionViewState, Int>(
+            response = cacheResult,
+            stateEvent = stateEvent
+        ) {
+            override suspend fun handleSuccess(resultObj: Int): DataState<TransactionViewState> {
+                return DataState.data(
+                    response = buildResponse(
+                        message = getString(R.string.transaction_successfully_deleted),
+                        UIComponentType.Toast,
+                        MessageType.Success
+                    )
+                )
+            }
+        }.getResult()
+    }
 
     suspend fun deleteCategory(
         stateEvent: DeleteCategory

@@ -150,7 +150,7 @@ constructor(
         }
         //TODO DELETE THIS LINE FOR FINAL PROJECT JUST OF TESTING
         txt_balance.setOnClickListener {
-//            insertRandomTransaction()
+            insertRandomTransaction()
         }
         //TODO DELETE THIS LINE FOR FINAL PROJECT JUST OF TESTING
         txt_expenses.setOnClickListener {
@@ -284,7 +284,7 @@ constructor(
     }
 
     private fun insertRandomTransaction() {
-        val categoryId = Random.nextInt(42)
+        val categoryId = Random.nextInt(1,42)
         var money = Random.nextInt(0, 1000).toDouble()
         //it just hardcoded TODO CHANGE IT LATER
         //we mark money with "-" base of category id
