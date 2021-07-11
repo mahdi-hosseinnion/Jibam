@@ -1,38 +1,13 @@
 package com.example.jibi.repository.main
 
-import android.util.Log
-import com.example.jibi.models.Record
-import com.example.jibi.persistence.CategoriesDao
-import com.example.jibi.persistence.RecordsDao
-import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
-import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent
-import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent.*
-import com.example.jibi.util.Constants.Companion.CACHE_TIMEOUT
-import com.example.jibi.util.DataState
-import com.example.jibi.util.MessageType
-import io.mockk.*
-import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.ValueSource
-import java.util.*
-import kotlin.collections.ArrayList
 
 
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class MainRepositoryTest {
+/*
     private val ERROR_MESSAGE = "SOMETHING GOES WRUNG"
     private val RECORD_1 = Record(3, 32.0, "32a3g", 1, 32232345)
 
@@ -115,9 +90,11 @@ class MainRepositoryTest {
         assertEquals(56.0, listOfResult[1])
     }
 
-    /*
+    */
+/*
     dataBase main dao
-     */
+     *//*
+
     @Test
     fun testInsertTransaction_AndSafeCacheCall_WrongReturned_Success(): Unit = runBlocking {
         //arrange
@@ -144,7 +121,7 @@ class MainRepositoryTest {
             //Tip: you should use coEvery instead of every for suspending functions
             coEvery { recordsDao.insertOrReplace(any()) } returns returnedValue
             //act
-            val result = mainRepository.insertTransaction( InsertTransaction(RECORD_1))
+            val result = mainRepository.insertTransaction(InsertTransaction(RECORD_1))
             //assert
             print(result)
             assertEquals(MessageType.Error, result.stateMessage!!.response.messageType)
@@ -163,7 +140,7 @@ class MainRepositoryTest {
         //Tip: you should use coEvery instead of every for suspending functions
         coEvery { recordsDao.deleteRecord(any()) } returns 1
         //act
-        val result = mainRepository.deleteTransaction( DeleteTransaction(RECORD_1))
+        val result = mainRepository.deleteTransaction(DeleteTransaction(RECORD_1))
         //assert
         //assert response message
         assertTrue(
@@ -214,5 +191,6 @@ class MainRepositoryTest {
 
     }
 
+*/
 
 }

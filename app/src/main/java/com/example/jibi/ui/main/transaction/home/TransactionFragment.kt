@@ -284,7 +284,7 @@ constructor(
     }
 
     private fun insertRandomTransaction() {
-        val categoryId = Random.nextInt(1,42)
+        val categoryId = Random.nextInt(1, 42)
         var money = Random.nextInt(0, 1000).toDouble()
         //it just hardcoded TODO CHANGE IT LATER
         //we mark money with "-" base of category id
