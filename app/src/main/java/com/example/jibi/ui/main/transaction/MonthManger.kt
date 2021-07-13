@@ -29,6 +29,13 @@ class MonthManger(val currentLocale: Locale) {
         val currentDate = Date(timeStamp)
         val currentMonth = SimpleDateFormat("MM", currentLocale).format(currentDate)
         val currentYear = SimpleDateFormat("yyyy", currentLocale).format(currentDate)
+        return getStartOfCurrentMonthGeorgian(currentMonth, currentYear)
+    }
+
+    fun getStartOfCurrentMonthGeorgian(
+        currentMonth: String, currentYear: String
+    ): Long {
+
         //final date string / i add 01 as day b/c it should be the first day of month aka start of month
         val strDate = "01-$currentMonth-$currentYear"
         //convert string date into date then unix timeStamp
@@ -53,6 +60,13 @@ class MonthManger(val currentLocale: Locale) {
         val currentDate = Date(timeStamp)
         val currentMonth = SimpleDateFormat("MM", currentLocale).format(currentDate)
         val currentYear = SimpleDateFormat("yyyy", currentLocale).format(currentDate)
+        return getStartOfNextMonthGeorgian(currentMonth, currentYear)
+    }
+
+    fun getStartOfNextMonthGeorgian(
+        currentMonth: String, currentYear: String
+    ): Long {
+
         //change month
         var nextMonth = currentMonth.toInt().plus(1)
         var year = currentYear.toInt()

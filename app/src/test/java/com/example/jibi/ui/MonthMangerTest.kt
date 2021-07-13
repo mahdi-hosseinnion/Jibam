@@ -1,6 +1,7 @@
 package com.example.jibi.ui
 
 import com.example.jibi.ui.main.transaction.MonthManger
+import com.example.jibi.util.isUnitTest
 import com.example.jibi.util.mahdiLog
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.params.ParameterizedTest
@@ -65,6 +66,15 @@ class MonthMangerTest {
         val testValue = convertStringDateToUnixTimeStamp(input)
         val expectedValue = convertStringDateToUnixTimeStamp(expected)
 
+        val inputMonth = input.substring(3, 5)
+        val inputYear = input.substring(6, 11)
+        print(" input month: $inputMonth \n input year: $inputYear \n")
+        Assertions.assertEquals(
+            expectedValue,
+            monthManager.getStartOfCurrentMonthGeorgian(
+                inputMonth,inputYear
+            )
+        )
         Assertions.assertEquals(
             expectedValue,
             monthManager.getStartOfCurrentMonthGeorgian(testValue)
@@ -114,7 +124,13 @@ class MonthMangerTest {
         mahdiLog(TAG, "test is: $input and expected result is $expected")
         val testValue = convertStringDateToUnixTimeStamp(input)
         val expectedValue = convertStringDateToUnixTimeStamp(expected)
-
+        val inputMonth = input.substring(3, 5)
+        val inputYear = input.substring(6, 10)
+        print(" input month: $inputMonth \n input year: $inputYear \n")
+        Assertions.assertEquals(
+            expectedValue,
+            monthManager.getStartOfNextMonthGeorgian(inputMonth, inputYear)
+        )
         Assertions.assertEquals(
             expectedValue,
             monthManager.getStartOfNextMonthGeorgian(testValue)
