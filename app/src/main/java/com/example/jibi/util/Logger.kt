@@ -2,7 +2,7 @@ package com.example.jibi.util
 
 import android.util.Log
 
-var isUnitTest = true
+var isUnitTest = false
 
 fun mahdiLog(className: String?, message: String ) {
     if (DEBUG && !isUnitTest) {

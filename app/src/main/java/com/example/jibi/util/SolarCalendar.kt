@@ -1,6 +1,8 @@
 package com.example.jibi.util
 
 import com.example.jibi.ui.main.transaction.home.TransactionListAdapter
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.*
 
 //  this algorithm for years and it is very accurate between 1901 and 2099.
@@ -27,7 +29,7 @@ object SolarCalendar {
         //TODO ADD LOCAL TO DATE FOR TIME ACCURANCY
         calcSolarCalendar(Date(unixTimeStamp), pattern, loc)
 
-//    = Locale("en_US")
+    //    = Locale("en_US")
     fun calcSolarCalendar(
         gregorianDate: Date,
         pattern: ShamsiPatterns,
@@ -255,7 +257,7 @@ object SolarCalendar {
 //        const val maxGregorianDay = 19
     //yea integer max value
     enum class ShamsiPatterns {
-        RECYCLER_VIEW, DETAIL_FRAGMENT,DETAIL_CHART_FRAGMENT, TEST
+        RECYCLER_VIEW, DETAIL_FRAGMENT, DETAIL_CHART_FRAGMENT, TEST
     }
 
 }
