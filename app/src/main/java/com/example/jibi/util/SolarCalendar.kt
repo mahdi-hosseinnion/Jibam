@@ -10,6 +10,8 @@ import java.util.*
 //b/c 1408 is kabise but 1407 is'nt kabise and 1403 is kabise its all about 33 year kabise in shamsi
 //tarikh
 //To solve this proble check this two project
+//TODO USE JDF LIBRARY INSTEAD
+//https://jdf.scr.ir/jdf/kotlin
 //https://github.com/alirezaafkar/SunDatePicker/blob/master/sundatepicker/src/main/java/com/alirezaafkar/sundatepicker/components/JDF.java
 //https://github.com/persian-calendar/DroidPersianCalendar
 object SolarCalendar {
@@ -26,7 +28,6 @@ object SolarCalendar {
         pattern: ShamsiPatterns,
         loc: Locale
     ): String =
-        //TODO ADD LOCAL TO DATE FOR TIME ACCURANCY
         calcSolarCalendar(Date(unixTimeStamp), pattern, loc)
 
     //    = Locale("en_US")
@@ -216,6 +217,9 @@ object SolarCalendar {
                         java.lang.String.format(loc, "%02d", date)
 
             }
+            ShamsiPatterns.YEAR_MONTH -> {
+                "${year}_${month}"
+            }
             ShamsiPatterns.TEST -> {
                 "$year/" + java.lang.String.format(
                     loc, "%02d",
@@ -257,7 +261,7 @@ object SolarCalendar {
 //        const val maxGregorianDay = 19
     //yea integer max value
     enum class ShamsiPatterns {
-        RECYCLER_VIEW, DETAIL_FRAGMENT, DETAIL_CHART_FRAGMENT, TEST
+        RECYCLER_VIEW, DETAIL_FRAGMENT, DETAIL_CHART_FRAGMENT, YEAR_MONTH, TEST
     }
 
 }

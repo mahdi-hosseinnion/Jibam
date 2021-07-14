@@ -46,7 +46,7 @@ private fun separate3By3_(money1: Double, locale: Locale): String {
     val formatter: DecimalFormat = NumberFormat.getInstance(locale) as DecimalFormat
     if (money < 1000.0) {
         return if (isMoneyNegative)
-            if (locale.language == Constants.PERSIAN_LANG_CODE)
+            if (locale.isFarsi())
                 "${formatter.format(money)}-"
             else
                 "-${formatter.format(money)}"
@@ -56,7 +56,7 @@ private fun separate3By3_(money1: Double, locale: Locale): String {
     formatter.applyPattern("#,###,###,###.###")
 
     return if (isMoneyNegative)
-        if (locale.language == Constants.PERSIAN_LANG_CODE)
+        if (locale.isFarsi())
             "${formatter.format(money)}-"
         else
             "-${formatter.format(money)}"
@@ -179,3 +179,13 @@ fun calculatePercentage(value: Double, totalAmount: Double): Double =
 
 fun calculatePercentageAndRoundResult(value: Double, totalAmount: Double): Double =
     calculatePercentage(value, totalAmount).roundToOneDigit()
+
+/**
+ * convert 1 to "01"
+ */
+fun Int.toStringWith2Digit(): String = if (this < 10)
+    "0$this"
+else
+    this.toString()
+
+fun Locale.isFarsi(): Boolean = (language == Constants.PERSIAN_LANG_CODE)

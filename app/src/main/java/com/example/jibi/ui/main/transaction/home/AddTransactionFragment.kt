@@ -296,7 +296,7 @@ constructor(
         }
 
     private fun dateWithPattern(): String {
-        return if (currentLocale.language == Constants.PERSIAN_LANG_CODE) {
+        return if (currentLocale.isFarsi()) {
             SolarCalendar.calcSolarCalendar(
                 combineCalender.timeInMillis, DETAIL_FRAGMENT, currentLocale
             )
@@ -314,7 +314,7 @@ constructor(
     private fun showDatePickerDialog() {
         //hide money keyboard
         hideCustomKeyboard()
-        if (currentLocale.language == Constants.PERSIAN_LANG_CODE) {
+        if (currentLocale.isFarsi()) {
             showShamsiDatePicker()
         } else {
             showGregorianDatePicker()

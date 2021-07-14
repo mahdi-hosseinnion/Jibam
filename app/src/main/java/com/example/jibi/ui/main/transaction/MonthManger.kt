@@ -1,100 +1,127 @@
 package com.example.jibi.ui.main.transaction
 
-import com.example.jibi.util.mahdiLog
+import com.example.jibi.util.DateUtils
+import com.example.jibi.util.SolarCalendar
+import com.example.jibi.util.isFarsi
 import kotlinx.coroutines.flow.MutableStateFlow
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
 class MonthManger(val currentLocale: Locale) {
+
     private val fromDate = MutableStateFlow(getStartOfCurrentMonth())
-    private val toDate = MutableStateFlow(getStartOfNextMonth())
+    private val toDate = MutableStateFlow(getEndOfCurrentMonth())
     private val TAG = "MonthManger"
 
-    fun getStartOfCurrentMonth(): Long {
-        //TODO ADD SHAMSI SUPPORT
-
-        return getStartOfCurrentMonthGeorgian()
+    fun getStartOfCurrentMonth(): Long = if (currentLocale.isFarsi()) {
+        getStartOfCurrentMonthShamsi()
+    } else {
+        getStartOfCurrentMonthGeorgian()
     }
 
-    fun getStartOfNextMonth(): Long {
-        //TODO ADD SHAMSI SUPPORT
-        return getStartOfNextMonthGeorgian()
+
+    fun getEndOfCurrentMonth(): Long = if (currentLocale.isFarsi()) {
+        getEndOfCurrentMonthShamsi()
+    } else {
+        getEndOfCurrentMonthGeorgian()
     }
 
-    fun getStartOfCurrentMonthGeorgian(
-        timeStamp: Long = System.currentTimeMillis()
+    fun getStartOfCurrentMonthShamsi(
+        currentMonth: Int, currentYear: Int
     ): Long {
-        //get month and year for given timeStmap
-        val currentDate = Date(timeStamp)
-        val currentMonth = SimpleDateFormat("MM", currentLocale).format(currentDate)
-        val currentYear = SimpleDateFormat("yyyy", currentLocale).format(currentDate)
-        return getStartOfCurrentMonthGeorgian(currentMonth, currentYear)
-    }
-
-    fun getStartOfCurrentMonthGeorgian(
-        currentMonth: String, currentYear: String
-    ): Long {
-
-        //final date string / i add 01 as day b/c it should be the first day of month aka start of month
-        val strDate = "01-$currentMonth-$currentYear"
-        //convert string date into date then unix timeStamp
-        val formatter: DateFormat = SimpleDateFormat("dd-MM-yyyy", currentLocale)
-        val resultDate = formatter.parse(strDate) as Date
-        //some log for debug later
-        mahdiLog(
-            className = TAG,
-            message = "getStartOfCurrentMonth result is " + SimpleDateFormat(
-                "yyyy-MM-dd  HH:mm:ss", currentLocale
-            ).format(
-                resultDate
-            ) + "\n unix time: ${resultDate.time}"
+        return DateUtils.shamsiToUnixTimeStamp(
+            jy = currentYear,
+            jm = currentMonth,
+            jd = 1
         )
-        return resultDate.time
     }
 
-    fun getStartOfNextMonthGeorgian(
+
+    fun getEndOfCurrentMonthShamsi(
+        currentMonth: Int, currentYear: Int
+    ): Long {
+        var year = currentYear
+        var month = currentMonth.plus(1)
+
+        if (month > 12) {
+            month = 1
+            year = currentYear.plus(1)
+        }
+        return DateUtils.shamsiToUnixTimeStamp(
+            jy = year,
+            jm = month,
+            jd = 1
+        )
+    }
+
+    fun getStartOfCurrentMonthGeorgian(
+        currentMonth: Int, currentYear: Int
+    ): Long = DateUtils.gregorianToUnixTimestamp(year = currentYear, month = currentMonth, 1)
+
+
+    fun getEndOfCurrentMonthGeorgian(
+        currentMonth: Int, currentYear: Int
+    ): Long {
+        var year = currentYear
+        var month = currentMonth.plus(1)
+
+        if (month > 12) {
+            month = 1
+            year = currentYear.plus(1)
+        }
+        return DateUtils.gregorianToUnixTimestamp(
+            year = year,
+            month = month,
+            day = 1
+        )
+    }
+
+    //utils
+    fun getEndOfCurrentMonthGeorgian(
         timeStamp: Long = System.currentTimeMillis()
     ): Long {
         //get the month and year of given timeStamp
         val currentDate = Date(timeStamp)
         val currentMonth = SimpleDateFormat("MM", currentLocale).format(currentDate)
         val currentYear = SimpleDateFormat("yyyy", currentLocale).format(currentDate)
-        return getStartOfNextMonthGeorgian(currentMonth, currentYear)
+        return getEndOfCurrentMonthGeorgian(currentMonth.toInt(), currentYear.toInt())
     }
 
-    fun getStartOfNextMonthGeorgian(
-        currentMonth: String, currentYear: String
+    fun getStartOfCurrentMonthGeorgian(
+        timeStamp: Long = System.currentTimeMillis()
     ): Long {
+        //get month and year for given timeStamp
+        val currentDate = Date(timeStamp)
+        val currentMonth = SimpleDateFormat("MM", currentLocale).format(currentDate)
+        val currentYear = SimpleDateFormat("yyyy", currentLocale).format(currentDate)
+        return getStartOfCurrentMonthGeorgian(currentMonth.toInt(), currentYear.toInt())
+    }
 
-        //change month
-        var nextMonth = currentMonth.toInt().plus(1)
-        var year = currentYear.toInt()
-        //check for make sure nextMonth would'nt be 13
-        if (nextMonth > 12) {
-            nextMonth = 1
-            year = year.plus(1)
-        }
-
-        val nextMonthStr = if (nextMonth > 9) {
-            nextMonth
-        } else {
-            "0$nextMonth"
-        }
-        //final string date
-        val strDate = "01-$nextMonthStr-$year"
-        //convert string date to date then unix timestamp
-        val formatter: DateFormat = SimpleDateFormat("dd-MM-yyyy", currentLocale)
-        val resultDate = formatter.parse(strDate) as Date
-        //debug log
-        mahdiLog(
-            className = TAG,
-            message = "getStartOfNextMonth result is " + SimpleDateFormat(
-                "yyyy-MM-dd  HH:mm:ss", currentLocale
-            ).format(
-                resultDate
-            ) + "\n unix time: ${resultDate.time}"
+    fun getEndOfCurrentMonthShamsi(
+        timeStamp: Long = System.currentTimeMillis()
+    ): Long {
+        //get month and year for given timeStamp
+        val shamsiDate = SolarCalendar.calcSolarCalendar(
+            timeStamp,
+            SolarCalendar.ShamsiPatterns.YEAR_MONTH,
+            currentLocale
         )
-        return resultDate.time
+        val currentYear = shamsiDate.substring(0, shamsiDate.indexOf('_'))
+        val currentMonth = shamsiDate.substring(shamsiDate.indexOf('_').plus(1))
+        return getEndOfCurrentMonthShamsi(currentMonth.toInt(), currentYear.toInt())
+    }
+
+    fun getStartOfCurrentMonthShamsi(
+        timeStamp: Long = System.currentTimeMillis()
+    ): Long {
+        //get month and year for given timeStamp
+        val shamsiDate = SolarCalendar.calcSolarCalendar(
+            timeStamp,
+            SolarCalendar.ShamsiPatterns.YEAR_MONTH,
+            currentLocale
+        )
+        val currentYear = shamsiDate.substring(0, shamsiDate.indexOf('_'))
+        val currentMonth = shamsiDate.substring(shamsiDate.indexOf('_').plus(1))
+        return getStartOfCurrentMonthShamsi(currentMonth.toInt(), currentYear.toInt())
     }
 }

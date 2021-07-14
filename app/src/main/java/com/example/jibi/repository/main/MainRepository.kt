@@ -154,7 +154,7 @@ constructor(
     private fun getFormattedDate(unixTimeStamp: Long): String {
         val df: Date = Date(unixTimeStamp)
 
-        return if (currentLocale.language == Constants.PERSIAN_LANG_CODE) {
+        return if (currentLocale.isFarsi()) {
             SolarCalendar.calcSolarCalendar(df, RECYCLER_VIEW, currentLocale)
         } else {
             SimpleDateFormat(
@@ -281,6 +281,7 @@ constructor(
             }
         }.getResult()
     }
+
     suspend fun deleteTransactionById(
         stateEvent: DeleteTransactionById
     ): DataState<TransactionViewState> {

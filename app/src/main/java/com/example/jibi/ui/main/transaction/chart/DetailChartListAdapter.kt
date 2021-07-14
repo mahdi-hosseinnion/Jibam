@@ -151,7 +151,7 @@ class DetailChartListAdapter(
         }
 
         private fun dateWithPattern(date: Int): String {
-            return if (currentLocale.language == Constants.PERSIAN_LANG_CODE) {
+            return if (currentLocale.isFarsi()) {
                 SolarCalendar.calcSolarCalendar(
                     date.times(1000L),
                     SolarCalendar.ShamsiPatterns.DETAIL_CHART_FRAGMENT, currentLocale

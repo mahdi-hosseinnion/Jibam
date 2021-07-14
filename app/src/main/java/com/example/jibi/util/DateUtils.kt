@@ -16,7 +16,7 @@ object DateUtils {
     990=30*33 & 12053=(365*33)+(32/4) & 36524=(365*100)+(100/4)-(100/100)
     1461=(365*4)+(4/4) & 146097=(365*400)+(400/4)-(400/100)+(400/400)  */
 
-    fun gregorianToShamsi(gy: Int, gm: Int, gd: Int): IntArray {
+    fun gregorianToShamsi(gy: Int, gm: Int, gd: Int): DateHolder {
         var g_d_m: IntArray = intArrayOf(0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334)
         var gy2: Int = if (gm > 2) (gy + 1) else gy
         var days: Int =
@@ -38,10 +38,14 @@ object DateUtils {
             jm = 7 + ((days - 186) / 30).toInt()
             jd = 1 + ((days - 186) % 30)
         }
-        return intArrayOf(jy, jm, jd)
+        return DateHolder(
+            year = jy,
+            month = jm,
+            day = jd
+        )
     }
 
-    fun ShamsiToGregorian(jy: Int, jm: Int, jd: Int): IntArray {
+    fun shamsiToGregorian(jy: Int, jm: Int, jd: Int): DateHolder {
         var jy1: Int = jy + 1595
         var days: Int =
             -355668 + (365 * jy1) + ((jy1 / 33).toInt() * 8) + (((jy1 % 33) + 3) / 4).toInt() + jd + (if (jm < 7) ((jm - 1) * 31) else (((jm - 7) * 30) + 186))
@@ -76,48 +80,44 @@ object DateUtils {
         )
         var gm: Int = 0
         while (gm < 13 && gd > sal_a[gm]) gd -= sal_a[gm++]
-        return intArrayOf(gy, gm, gd)
+
+        return DateHolder(
+            year = gy,
+            month = gm,
+            day = gd
+        )
     }
 
     /**
      * outPut is unix time in milliseconds at 00:00:00
      */
     fun shamsiToUnixTimeStamp(jy: Int, jm: Int, jd: Int): Long {
-        val gregorian = ShamsiToGregorian(jy, jm, jd)
-        return convertStringDateToUnixTimeStamp(
-            year = gregorian[0],
-            month = gregorian[1],
-            day = gregorian[2]
+        val gregorianDate = shamsiToGregorian(jy, jm, jd)
+        return gregorianToUnixTimestamp(
+            year = gregorianDate.year,
+            month = gregorianDate.month,
+            day = gregorianDate.day
         )
     }
 
     /**
     input date should be dd/MM/yyyy
      */
-    private fun convertStringDateToUnixTimeStamp(strDate: String): Long {
+    fun gregorianToUnixTimestamp(strDate: String): Long {
         val formatter: DateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.US)
         val date = formatter.parse(strDate) as Date
         return date.time
     }
 
-    private fun convertStringDateToUnixTimeStamp(year: Int, month: Int, day: Int): Long {
-        val strDay = if (day < 10) {
-            "0$day"
-        } else {
-            day.toString()
-        }
-        val strMonth = if (month < 10) {
-            "0$month"
-        } else {
-            month.toString()
-        }
-        val strYear = if (year < 10) {
-            "0$year"
-        } else {
-            year.toString()
-        }
-        val stringDate = "$strDay/$strMonth/$strYear"
-        return convertStringDateToUnixTimeStamp(stringDate)
-
+    fun gregorianToUnixTimestamp(year: Int, month: Int, day: Int): Long {
+        val stringDate =
+            "${day.toStringWith2Digit()}/${month.toStringWith2Digit()}/${year.toStringWith2Digit()}"
+        return gregorianToUnixTimestamp(stringDate)
     }
 }
+
+data class DateHolder(
+    val year: Int,
+    val month: Int,
+    val day: Int,
+)

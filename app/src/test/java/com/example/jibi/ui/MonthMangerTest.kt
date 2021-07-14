@@ -1,17 +1,13 @@
 package com.example.jibi.ui
 
 import com.example.jibi.ui.main.transaction.MonthManger
-import com.example.jibi.util.isUnitTest
+import com.example.jibi.util.DateUtils.gregorianToUnixTimestamp
+import com.example.jibi.util.DateUtils.shamsiToUnixTimeStamp
 import com.example.jibi.util.mahdiLog
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.CsvFileSource
-import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.ValueSource
-import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.exp
 
 
 class MonthMangerTest {
@@ -63,16 +59,16 @@ class MonthMangerTest {
         val expected = value1.substring(value1.indexOf('|').plus(1))
 
         mahdiLog(TAG, "test is: $input and expected result is $expected")
-        val testValue = convertStringDateToUnixTimeStamp(input)
-        val expectedValue = convertStringDateToUnixTimeStamp(expected)
+        val testValue = gregorianToUnixTimestamp(input)
+        val expectedValue = gregorianToUnixTimestamp(expected)
 
         val inputMonth = input.substring(3, 5)
-        val inputYear = input.substring(6, 11)
+        val inputYear = input.substring(6, 10)
         print(" input month: $inputMonth \n input year: $inputYear \n")
         Assertions.assertEquals(
             expectedValue,
             monthManager.getStartOfCurrentMonthGeorgian(
-                inputMonth,inputYear
+                inputMonth.toInt(), inputYear.toInt()
             )
         )
         Assertions.assertEquals(
@@ -81,6 +77,7 @@ class MonthMangerTest {
         )
 
     }
+
     @ParameterizedTest
     @ValueSource(
         strings = [
@@ -117,30 +114,168 @@ class MonthMangerTest {
             "31/12/2019  | 01/01/2020",
         ]
     )
-    fun testGetStartOfNextMonthGeorgian(value1: String) {
+    fun testGetEndOfCurrentMonthGeorgian(value1: String) {
         val input = value1.substring(0, value1.indexOf('|'))
         val expected = value1.substring(value1.indexOf('|').plus(1))
 
         mahdiLog(TAG, "test is: $input and expected result is $expected")
-        val testValue = convertStringDateToUnixTimeStamp(input)
-        val expectedValue = convertStringDateToUnixTimeStamp(expected)
+        val testValue = gregorianToUnixTimestamp(input)
+        val expectedValue = gregorianToUnixTimestamp(expected)
         val inputMonth = input.substring(3, 5)
         val inputYear = input.substring(6, 10)
         print(" input month: $inputMonth \n input year: $inputYear \n")
         Assertions.assertEquals(
             expectedValue,
-            monthManager.getStartOfNextMonthGeorgian(inputMonth, inputYear)
+            monthManager.getEndOfCurrentMonthGeorgian(inputMonth.toInt(), inputYear.toInt())
         )
         Assertions.assertEquals(
             expectedValue,
-            monthManager.getStartOfNextMonthGeorgian(testValue)
+            monthManager.getEndOfCurrentMonthGeorgian(testValue)
         )
 
     }
 
-    private fun convertStringDateToUnixTimeStamp(strDate: String): Long {
-        val formatter: DateFormat = SimpleDateFormat("dd/MM/yyyy", testLocale)
-        val date = formatter.parse(strDate) as Date
-        return date.time
+    @ParameterizedTest
+    @ValueSource(
+        strings = [
+            //input      | expected
+            //different digits
+            "12/10/1400  | 01/10/1400",
+            "08/05/1399  | 01/05/1399",
+            "12/09/1398  | 01/09/1398",
+            "08/11/1395  | 01/11/1395",
+            "29/12/1382  | 01/12/1382",
+            //different month day count 31/30/29
+            "31/01/1384  | 01/01/1384",//31
+            "31/03/1405  | 01/03/1405", //31
+            "01/05/1405  | 01/05/1405", //31
+
+            "30/07/1401  | 01/07/1401",//30
+            "30/11/1378  | 01/11/1378",//30
+            "01/09/1387  | 01/09/1387",//30=---------------
+
+            "29/12/1402  | 01/12/1402", //29
+            "29/12/1409  | 01/12/1409",//29
+            "01/12/1392  | 01/12/1392",//29
+
+            "30/12/1399  | 01/12/1399", //30 kabise
+            "30/12/1391  | 01/12/1391", //30 kabise
+            "01/12/1403  | 01/12/1403", //30 kabise
+            "12/12/1403  | 01/12/1403", //30 kabise
+            //fist month of year
+            "08/01/1381  | 01/01/1381",
+            "20/01/1382  | 01/01/1382",
+            "31/01/1374  | 01/01/1374",
+            //last month of year
+            "08/12/1397  | 01/12/1397",
+            "20/12/1394  | 01/12/1394",
+            "29/12/1398  | 01/12/1398",
+        ]
+    )
+    fun testGetStartOfCurrentMonthShamsi(value1: String) {
+        val input = value1.substring(0, value1.indexOf('|'))
+        val expected = value1.substring(value1.indexOf('|').plus(1))
+
+        mahdiLog(TAG, "test is: $input and expected result is $expected")
+        val inputDay = input.substring(0, 2).toInt()
+        val inputMonth = input.substring(3, 5).toInt()
+        val inputYear = input.substring(6, 10).toInt()
+
+        val testValue = shamsiToUnixTimeStamp(
+            inputYear, inputMonth, inputDay
+        )
+        val expectedDay = expected.substring(1, 3).toInt()
+        val expectedMonth = expected.substring(4, 6).toInt()
+        val expectedYear = expected.substring(7, 11).toInt()
+
+        val expectedValue = shamsiToUnixTimeStamp(
+            expectedYear, expectedMonth, expectedDay
+        )
+        println(" input year: $inputYear  month: $inputMonth day: $inputDay")
+        println(" expected year: $expectedYear  month: $expectedMonth day: $expectedDay")
+
+        Assertions.assertEquals(
+            expectedValue,
+            monthManager.getStartOfCurrentMonthShamsi(
+                inputMonth.toInt(), inputYear.toInt()
+            )
+        )
+        Assertions.assertEquals(
+            expectedValue,
+            monthManager.getStartOfCurrentMonthShamsi(testValue)
+        )
+
     }
+
+    @ParameterizedTest
+    @ValueSource(
+        strings = [
+            //input      | expected
+            //different digits
+            "12/10/1400  | 01/11/1400",
+            "08/05/1399  | 01/06/1399",
+            "12/09/1398  | 01/10/1398",
+            "08/11/1395  | 01/12/1395",
+            "29/12/1382  | 01/01/1383",
+            //different month day count 31/30/29
+            "31/01/1384  | 01/02/1384",//31
+            "31/03/1405  | 01/04/1405", //31
+            "01/05/1405  | 01/06/1405", //31
+
+            "30/07/1401  | 01/08/1401",//30
+            "30/11/1378  | 01/12/1378",//30
+            "01/09/1387  | 01/10/1387",//30=---------------
+
+            "29/12/1402  | 01/01/1403", //29
+            "29/12/1405  | 01/01/1406",//29
+            "01/12/1392  | 01/01/1393",//29
+
+            "30/12/1399  | 01/01/1400", //30 kabise
+            "30/12/1391  | 01/01/1392", //30 kabise
+            "01/12/1403  | 01/01/1404", //30 kabise
+            "12/12/1403  | 01/01/1404", //30 kabise
+            //fist month of year
+            "08/01/1381  | 01/02/1381",
+            "20/01/1382  | 01/02/1382",
+            "31/01/1374  | 01/02/1374",
+            //last month of year
+            "08/12/1397  | 01/01/1398",
+            "20/12/1394  | 01/01/1395",
+            "29/12/1398  | 01/01/1399",
+        ]
+    )
+    fun testGetEndOfCurrentMonthShamsi(value1: String) {
+        val input = value1.substring(0, value1.indexOf('|'))
+        val expected = value1.substring(value1.indexOf('|').plus(1))
+
+        mahdiLog(TAG, "test is: $input and expected result is $expected")
+
+        val inputDay = input.substring(0, 2).toInt()
+        val inputMonth = input.substring(3, 5).toInt()
+        val inputYear = input.substring(6, 10).toInt()
+
+        val testValue = shamsiToUnixTimeStamp(
+            inputYear, inputMonth, inputDay
+        )
+        val expectedDay = expected.substring(1, 3).toInt()
+        val expectedMonth = expected.substring(4, 6).toInt()
+        val expectedYear = expected.substring(7, 11).toInt()
+
+        val expectedValue = shamsiToUnixTimeStamp(
+            expectedYear, expectedMonth, expectedDay
+        )
+
+        println(" input year: $inputYear  month: $inputMonth day: $inputDay")
+        println(" expected year: $expectedYear  month: $expectedMonth day: $expectedDay")
+        Assertions.assertEquals(
+            expectedValue,
+            monthManager.getEndOfCurrentMonthShamsi(inputMonth, inputYear)
+        )
+        Assertions.assertEquals(
+            expectedValue,
+            monthManager.getEndOfCurrentMonthShamsi(testValue)
+        )
+
+    }
+
 }
