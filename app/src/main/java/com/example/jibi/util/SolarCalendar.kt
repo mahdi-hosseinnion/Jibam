@@ -250,6 +250,8 @@ object SolarCalendar {
     //////Gregorian
     //min
     const val minGregorianDate = 669554735_000
+    const val maxGregorianYear = 2028
+    const val minGregorianYear = 1992
 
     //        const val minGregorianYear = 1991/03/21
 //        const val minGregorianMonth = 3
@@ -261,7 +263,9 @@ object SolarCalendar {
 //        const val maxGregorianMonth = 3
 //        const val maxGregorianDay = 19
     //yea integer max value
-    enum class ShamsiPatterns {
+    enum
+
+    class ShamsiPatterns {
         RECYCLER_VIEW, DETAIL_FRAGMENT, DETAIL_CHART_FRAGMENT, YEAR_MONTH, JUST_MONTH_NAME, TEST
     }
 

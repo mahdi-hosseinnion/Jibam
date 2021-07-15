@@ -33,6 +33,8 @@ import com.example.jibi.models.SearchModel
 import com.example.jibi.repository.buildResponse
 import com.example.jibi.ui.main.transaction.BaseTransactionFragment
 import com.example.jibi.ui.main.transaction.MonthManger
+import com.example.jibi.ui.main.transaction.common.MonthPickerBottomSheet
+import com.example.jibi.ui.main.transaction.home.bottomSheet.CreateNewTransBottomSheet
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.*
 import com.example.jibi.util.PreferenceKeys.PROMOTE_FAB_TRANSACTION_FRAGMENT
@@ -734,8 +736,21 @@ constructor(
         mFabPrompt!!.show()
     }
 
-    fun showMonthPickerBottomSheet() {
-        //TODO IMPLEMENT THIS
+    private fun showMonthPickerBottomSheet() {
+        val defaultMonth = if (currentLocale.isFarsi()) 4 else 7
+        val defaultYear = if (currentLocale.isFarsi()) 1400 else 2021
+        val monthPicker =
+            MonthPickerBottomSheet(
+                intercation = monthPickerInteraction,
+                isShamsi = currentLocale.isFarsi(),
+                defaultMonth = defaultMonth,
+                defaultYear = defaultYear
+            )
+        monthPicker.show(parentFragmentManager, "MonthPicker")
+    }
+
+    private val monthPickerInteraction = object : MonthPickerBottomSheet.Intercation {
+
     }
 
     override fun setTextToAllViews() {

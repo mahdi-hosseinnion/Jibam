@@ -114,6 +114,36 @@ object DateUtils {
             "${day.toStringWith2Digit()}/${month.toStringWith2Digit()}/${year.toStringWith2Digit()}"
         return gregorianToUnixTimestamp(stringDate)
     }
+
+    val shamsiMonths = arrayOf(
+        "فروردين",
+        "ارديبهشت",
+        "خرداد",
+        "تير",
+        "مرداد",
+        "شهريور",
+        "مهر",
+        "آبان",
+        "آذر",
+        "دي",
+        "بهمن",
+        "اسفند"
+    )
+    val gregorianMonths = arrayOf(
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+    )
+
 }
 
 data class DateHolder(
