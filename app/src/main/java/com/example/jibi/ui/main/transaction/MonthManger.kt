@@ -1,26 +1,48 @@
 package com.example.jibi.ui.main.transaction
 
+import com.example.jibi.models.Month
 import com.example.jibi.util.DateUtils
 import com.example.jibi.util.SolarCalendar
 import com.example.jibi.util.isFarsi
+import com.example.jibi.util.mahdiLog
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class MonthManger(val currentLocale: Locale) {
-
-    private val fromDate = MutableStateFlow(getStartOfCurrentMonth())
-    private val toDate = MutableStateFlow(getEndOfCurrentMonth())
+@Singleton
+class MonthManger
+@Inject
+constructor(private val currentLocale: Locale) {
     private val TAG = "MonthManger"
 
-    fun getStartOfCurrentMonth(): Long = if (currentLocale.isFarsi()) {
+    private val _fromDate = MutableStateFlow(getStartOfCurrentMonth())
+    private val _toDate = MutableStateFlow(getEndOfCurrentMonth())
+
+    val currentMonth: Flow<Month> = combine(
+        _fromDate,
+        _toDate
+    ) { from, to ->
+        return@combine Month(
+            from.longDateToIntDate(),
+            to.longDateToIntDate(),
+            getMonthName(from)
+        )
+    }
+
+    private fun Long.longDateToIntDate(): Int = (this.div(1_000)).toInt()
+
+    private fun getStartOfCurrentMonth(): Long = if (currentLocale.isFarsi()) {
         getStartOfCurrentMonthShamsi()
     } else {
         getStartOfCurrentMonthGeorgian()
     }
 
 
-    fun getEndOfCurrentMonth(): Long = if (currentLocale.isFarsi()) {
+    private fun getEndOfCurrentMonth(): Long = if (currentLocale.isFarsi()) {
         getEndOfCurrentMonthShamsi()
     } else {
         getEndOfCurrentMonthGeorgian()
@@ -123,5 +145,29 @@ class MonthManger(val currentLocale: Locale) {
         val currentYear = shamsiDate.substring(0, shamsiDate.indexOf('_'))
         val currentMonth = shamsiDate.substring(shamsiDate.indexOf('_').plus(1))
         return getStartOfCurrentMonthShamsi(currentMonth.toInt(), currentYear.toInt())
+    }
+
+    private fun getMonthName(timeStamp: Long): String {
+        val name = if (currentLocale.isFarsi()) {
+            getShamsiMonthName(timeStamp)
+        } else {
+            getGeorgianMonthName(timeStamp)
+        }
+        mahdiLog(TAG, "NAME IS" + name)
+        return name
+    }
+
+    private fun getShamsiMonthName(timeStamp: Long): String =
+        SolarCalendar.calcSolarCalendar(
+            timeStamp,
+            SolarCalendar.ShamsiPatterns.JUST_MONTH_NAME,
+            currentLocale
+        )
+
+
+    private fun getGeorgianMonthName(timeStamp: Long): String {
+        //get the month and year of given timeStamp
+        val currentDate = Date(timeStamp)
+        return SimpleDateFormat("MMM", currentLocale).format(currentDate)
     }
 }

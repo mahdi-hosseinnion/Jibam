@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
 import com.example.jibi.fragments.main.MainFragmentFactory
+import com.example.jibi.ui.main.transaction.MonthManger
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -26,6 +27,7 @@ object MainFragmentsModule {
         currentLocal: Locale,
         sharedPreferences: SharedPreferences,
         sharedPrefEditor: SharedPreferences.Editor,
+        monthManger: MonthManger,
         resources: Resources
     ): FragmentFactory {
         return MainFragmentFactory(
@@ -34,6 +36,7 @@ object MainFragmentsModule {
             currentLocal,
             sharedPreferences,
             sharedPrefEditor,
+            monthManger,
             resources
         )
     }

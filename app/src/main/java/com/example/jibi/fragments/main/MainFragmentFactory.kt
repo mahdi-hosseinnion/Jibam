@@ -6,7 +6,9 @@ import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
 import com.example.jibi.di.main.MainScope
-import com.example.jibi.ui.main.transaction.*
+import com.example.jibi.ui.main.transaction.AboutUsFragment
+import com.example.jibi.ui.main.transaction.MonthManger
+import com.example.jibi.ui.main.transaction.SettingFragment
 import com.example.jibi.ui.main.transaction.categories.AddCategoryFragment
 import com.example.jibi.ui.main.transaction.categories.ViewCategoriesFragment
 import com.example.jibi.ui.main.transaction.chart.ChartFragment
@@ -29,6 +31,7 @@ constructor(
     private val currentLocale: Locale,
     private val sharedPreferences: SharedPreferences,
     private val sharedPrefsEditor: SharedPreferences.Editor,
+    private val monthManger: MonthManger,
     private val resources: Resources
 ) : FragmentFactory() {
 
@@ -43,6 +46,7 @@ constructor(
                     currentLocale,
                     sharedPreferences,
                     sharedPrefsEditor,
+                    monthManger,
                     resources
                 )
             }
@@ -85,7 +89,7 @@ constructor(
             else -> {
                 TransactionFragment(
                     viewModelFactory, requestManager, currentLocale, sharedPreferences,
-                    sharedPrefsEditor, resources
+                    sharedPrefsEditor, monthManger, resources
                 )
             }
         }

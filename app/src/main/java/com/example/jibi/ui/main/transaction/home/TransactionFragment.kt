@@ -32,6 +32,7 @@ import com.example.jibi.models.Record
 import com.example.jibi.models.SearchModel
 import com.example.jibi.repository.buildResponse
 import com.example.jibi.ui.main.transaction.BaseTransactionFragment
+import com.example.jibi.ui.main.transaction.MonthManger
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.*
 import com.example.jibi.util.PreferenceKeys.PROMOTE_FAB_TRANSACTION_FRAGMENT
@@ -41,8 +42,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
 import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.android.synthetic.main.layout_transaction_list_item.*
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt
 import java.util.*
@@ -60,6 +63,7 @@ constructor(
     private val currentLocale: Locale,
     private val sharedPreferences: SharedPreferences,
     private val sharedPrefsEditor: SharedPreferences.Editor,
+    private val monthManger: MonthManger,
     private val _resources: Resources
 ) : BaseTransactionFragment(
     R.layout.fragment_transaction,
@@ -172,6 +176,9 @@ constructor(
         }
         bottom_sheet_search_clear.setOnClickListener {
             bottom_sheet_search_edt.setText("")
+        }
+        toolbar_title.setOnClickListener {
+            showMonthPickerBottomSheet()
         }
         checkForGuidePromote()
     }
@@ -336,6 +343,11 @@ constructor(
     }
 
     private fun subscribeObservers() {
+        lifecycleScope.launch(Main) {
+            monthManger.currentMonth.collect {
+                toolbar_title.text = it.nameOfMonth + _getString(R.string.month)
+            }
+        }
         txt_balance.text = separate3By3AndRoundIt(0.0, currentLocale)
         txt_expenses.text = separate3By3AndRoundIt(0.0, currentLocale)
         txt_income.text = separate3By3AndRoundIt(0.0, currentLocale)
@@ -722,6 +734,9 @@ constructor(
         mFabPrompt!!.show()
     }
 
+    fun showMonthPickerBottomSheet() {
+        //TODO IMPLEMENT THIS
+    }
 
     override fun setTextToAllViews() {
         txt_balance_viewHolder.text = _getString(R.string.total_balance)

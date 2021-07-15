@@ -1,6 +1,7 @@
 package com.example.jibi.di.main
 
 import com.example.jibi.ui.main.MainActivity
+import com.example.jibi.ui.main.transaction.MonthManger
 import dagger.Subcomponent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -10,16 +11,18 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
         MainModule::class,
         MainViewModelModule::class,
         MainFragmentsModule::class
-    ])
+    ]
+)
 @ExperimentalCoroutinesApi
 interface MainComponent {
 
     @Subcomponent.Factory
-    interface Factory{
+    interface Factory {
 
         fun create(): MainComponent
     }
 
     fun inject(mainActivity: MainActivity)
 
+    val monthManger: MonthManger
 }

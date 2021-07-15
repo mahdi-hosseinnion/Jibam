@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_transacion_root"
     android:layout_width="match_parent"
@@ -22,7 +21,15 @@
             android:background="@color/purple_500"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="24sp" />
+        </androidx.appcompat.widget.Toolbar>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -222,13 +229,13 @@
                     android:layout_weight="1"
                     android:gravity="start|center"
                     android:paddingStart="16dp"
+                    android:paddingLeft="16dp"
                     android:paddingEnd="8dp"
+                    android:paddingRight="8dp"
                     android:text="@string/transactions"
                     android:textColor="@color/black"
                     android:textSize="20sp"
-                    android:textStyle="normal"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="8dp" />
+                    android:textStyle="normal" />
 
                 <EditText
                     android:id="@+id/bottom_sheet_search_edt"

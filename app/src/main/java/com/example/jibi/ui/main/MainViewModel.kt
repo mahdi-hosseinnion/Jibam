@@ -7,6 +7,7 @@ import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.*
 import com.example.jibi.repository.main.MainRepository
 import com.example.jibi.ui.BaseViewModel
+import com.example.jibi.ui.main.transaction.MonthManger
 import com.example.jibi.ui.main.transaction.home.TransactionListAdapter.Companion.NO_RESULT_FOUND_FOR_THIS_QUERY_MARKER
 import com.example.jibi.ui.main.transaction.home.TransactionListAdapter.Companion.NO_RESULT_FOUND_IN_DATABASE
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent
@@ -30,7 +31,8 @@ import javax.inject.Inject
 class MainViewModel
 @Inject
 constructor(
-    private val mainRepository: MainRepository
+    private val mainRepository: MainRepository,
+    private val monthManger: MonthManger
 ) : BaseViewModel<OneShotOperationsTransactionStateEvent, TransactionViewState>() {
     val GET_SUM_OF_ALL_EXPENSES = "getting sum of all expenses"
     val GET_SUM_OF_ALL_INCOME = "getting sum of all income"
@@ -42,97 +44,102 @@ constructor(
     // In our ViewModel
     var queryChannel = MutableStateFlow(SearchModel())
 
-
     init {
         //flow stuff
         viewModelScope.launch {
+            monthManger.currentMonth.collect { month ->
 
-            launch {
-                mainRepository.getCategoryList()
-                    //loading stuff
-                    .onStart { increaseLoading(GET_LIST_OF_CATEGORY) }
-                    .catch { cause -> addToMessageStack(throwable = cause) }
-                    .collect {
-                        //loading stuff
-                        decreaseLoading(GET_LIST_OF_CATEGORY)
-                        it?.let {
-                            setListOfCategories(it)
-                        }
-                    }
-            }
 
-            launch {
-                //TODO HANDLE WHERE TO INCREMENT AND WHEN TO DECREMENT LOADING
-                mainRepository.getSumOfExpenses()
-                    //loading stuff
-                    .onStart { increaseLoading(GET_SUM_OF_ALL_EXPENSES) }
-                    .catch { cause -> addToMessageStack(throwable = cause) }
-                    .collect {
-                        //loading stuff
-                        decreaseLoading(GET_SUM_OF_ALL_EXPENSES)
-                        it?.let {
-                            setAllTransactionExpenses(it)
-                        }
-                    }
-            }
-            //TODO HANDLE WHERE TO INCREMENT AND WHEN TO DECREMENT LOADING
-            launch {
-                mainRepository.getSumOfIncome()
-                    //loading stuff
-                    .onStart { increaseLoading(GET_SUM_OF_ALL_INCOME) }
-                    .catch { cause -> addToMessageStack(throwable = cause) }
-                    .collect {
-                        //loading stuff
-                        decreaseLoading(GET_SUM_OF_ALL_INCOME)
-                        it?.let {
-                            setAllTransactionIncome(it)
-                        }
-                    }
-                //TODO HANDLE WHERE TO INCREMENT AND WHEN TO DECREMENT LOADING
-            }
-            launch {
-
-                queryChannel
-                    .debounce(Constants.SEARCH_DEBOUNCE)
-                    .distinctUntilChanged()
-                    .collectLatest {
-
-                        Log.d(TAG, "searchDEBUG: 2-- ${it.query}")
-                        //send query to repository
-                        mainRepository.getTransactionList(searchModel = it)
-                            //loading stuff
-                            .onStart { increaseLoading(GET_LIST_OF_TRANSACTION) }
-                            .catch { cause ->
-                                addToMessageStack(throwable = cause)
-                                Log.d(TAG, "crashed")
-                            }
-                            .collect { result ->
-                                //loading stuff
-                                decreaseLoading(GET_LIST_OF_TRANSACTION)
-                                if (result != null) {
-                                    setListOfTransactions(result)
-                                } else {
-                                    if (it.isNotEmpty()) {
-                                        //contain query params
-                                        setListOfTransactions(
-                                            listOf(
-                                                NO_RESULT_FOUND_FOR_THIS_QUERY_MARKER
-                                            )
-                                        )
-                                    } else {
-                                        setListOfTransactions(listOf(NO_RESULT_FOUND_IN_DATABASE))
-                                    }
-                                }
-
-                            }
-                    }
-                //special time out for search
                 launch {
-                    delay(Constants.CACHE_TIMEOUT)
-                    decreaseLoading(GET_LIST_OF_TRANSACTION)
+                    mainRepository.getCategoryList()
+                        //loading stuff
+                        .onStart { increaseLoading(GET_LIST_OF_CATEGORY) }
+                        .catch { cause -> addToMessageStack(throwable = cause) }
+                        .collect {
+                            //loading stuff
+                            decreaseLoading(GET_LIST_OF_CATEGORY)
+                            it?.let {
+                                setListOfCategories(it)
+                            }
+                        }
+                }
+
+                launch {
+                    //TODO HANDLE WHERE TO INCREMENT AND WHEN TO DECREMENT LOADING
+                    mainRepository.getSumOfExpenses(month.startOfMonth, month.endOfMonth)
+                        //loading stuff
+                        .onStart { increaseLoading(GET_SUM_OF_ALL_EXPENSES) }
+                        .catch { cause -> addToMessageStack(throwable = cause) }
+                        .collect {
+                            //loading stuff
+                            decreaseLoading(GET_SUM_OF_ALL_EXPENSES)
+                            it?.let {
+                                setAllTransactionExpenses(it)
+                            }
+                        }
+                }
+                //TODO HANDLE WHERE TO INCREMENT AND WHEN TO DECREMENT LOADING
+                launch {
+                    mainRepository.getSumOfIncome(month.startOfMonth, month.endOfMonth)
+                        //loading stuff
+                        .onStart { increaseLoading(GET_SUM_OF_ALL_INCOME) }
+                        .catch { cause -> addToMessageStack(throwable = cause) }
+                        .collect {
+                            //loading stuff
+                            decreaseLoading(GET_SUM_OF_ALL_INCOME)
+                            it?.let {
+                                setAllTransactionIncome(it)
+                            }
+                        }
+                    //TODO HANDLE WHERE TO INCREMENT AND WHEN TO DECREMENT LOADING
+                }
+                launch {
+
+                    queryChannel
+                        .debounce(Constants.SEARCH_DEBOUNCE)
+                        .distinctUntilChanged()
+                        .collectLatest {
+
+                            Log.d(TAG, "searchDEBUG: 2-- ${it.query}")
+                            //send query to repository
+                            mainRepository.getTransactionList(
+                                searchModel = it,
+                                minDate = month.startOfMonth,
+                                maxDate = month.endOfMonth
+                            )
+                                //loading stuff
+                                .onStart { increaseLoading(GET_LIST_OF_TRANSACTION) }
+                                .catch { cause ->
+                                    addToMessageStack(throwable = cause)
+                                    Log.d(TAG, "crashed")
+                                }
+                                .collect { result ->
+                                    //loading stuff
+                                    decreaseLoading(GET_LIST_OF_TRANSACTION)
+                                    if (result != null) {
+                                        setListOfTransactions(result)
+                                    } else {
+                                        if (it.isNotEmpty()) {
+                                            //contain query params
+                                            setListOfTransactions(
+                                                listOf(
+                                                    NO_RESULT_FOUND_FOR_THIS_QUERY_MARKER
+                                                )
+                                            )
+                                        } else {
+                                            setListOfTransactions(listOf(NO_RESULT_FOUND_IN_DATABASE))
+                                        }
+                                    }
+
+                                }
+                        }
+                    //special time out for search
+                    launch {
+                        delay(Constants.CACHE_TIMEOUT)
+                        decreaseLoading(GET_LIST_OF_TRANSACTION)
+                    }
                 }
             }
-
             //timeout loading decrese
             launch {
                 delay(Constants.CACHE_TIMEOUT)
@@ -144,7 +151,6 @@ constructor(
             }
         }
     }
-
 
     override suspend fun getResultByStateEvent(stateEvent: OneShotOperationsTransactionStateEvent): DataState<TransactionViewState> {
         return when (stateEvent) {

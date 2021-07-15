@@ -1,8 +1,6 @@
 package com.example.jibi.util
 
 import com.example.jibi.ui.main.transaction.home.TransactionListAdapter
-import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.util.*
 
 //  this algorithm for years and it is very accurate between 1901 and 2099.
@@ -220,6 +218,9 @@ object SolarCalendar {
             ShamsiPatterns.YEAR_MONTH -> {
                 "${year}_${month}"
             }
+            ShamsiPatterns.JUST_MONTH_NAME -> {
+                strMonth ?: "unknown"
+            }
             ShamsiPatterns.TEST -> {
                 "$year/" + java.lang.String.format(
                     loc, "%02d",
@@ -261,7 +262,7 @@ object SolarCalendar {
 //        const val maxGregorianDay = 19
     //yea integer max value
     enum class ShamsiPatterns {
-        RECYCLER_VIEW, DETAIL_FRAGMENT, DETAIL_CHART_FRAGMENT, YEAR_MONTH, TEST
+        RECYCLER_VIEW, DETAIL_FRAGMENT, DETAIL_CHART_FRAGMENT, YEAR_MONTH, JUST_MONTH_NAME, TEST
     }
 
 }
