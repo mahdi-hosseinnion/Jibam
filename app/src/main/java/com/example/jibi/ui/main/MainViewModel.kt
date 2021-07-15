@@ -15,6 +15,7 @@ import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotO
 import com.example.jibi.ui.main.transaction.state.TransactionViewState
 import com.example.jibi.util.Constants
 import com.example.jibi.util.DataState
+import com.example.jibi.util.mahdiLog
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
@@ -49,7 +50,7 @@ constructor(
         viewModelScope.launch {
             monthManger.currentMonth.collect { month ->
 
-
+                mahdiLog(TAG, "currentMonth: ${month.toString()}")
                 launch {
                     mainRepository.getCategoryList()
                         //loading stuff
@@ -73,9 +74,8 @@ constructor(
                         .collect {
                             //loading stuff
                             decreaseLoading(GET_SUM_OF_ALL_EXPENSES)
-                            it?.let {
-                                setAllTransactionExpenses(it)
-                            }
+                            setAllTransactionExpenses(it)
+
                         }
                 }
                 //TODO HANDLE WHERE TO INCREMENT AND WHEN TO DECREMENT LOADING
@@ -87,9 +87,9 @@ constructor(
                         .collect {
                             //loading stuff
                             decreaseLoading(GET_SUM_OF_ALL_INCOME)
-                            it?.let {
-                                setAllTransactionIncome(it)
-                            }
+
+                            setAllTransactionIncome(it)
+
                         }
                     //TODO HANDLE WHERE TO INCREMENT AND WHEN TO DECREMENT LOADING
                 }
@@ -188,7 +188,7 @@ constructor(
     override fun initNewViewState(): TransactionViewState = TransactionViewState()
 
     override fun handleNewData(viewState: TransactionViewState) {
-        viewState.summeryMoney?.let {
+        viewState.summeryMoney.let {
             val update = getCurrentViewStateOrNew()
                 .copy(summeryMoney = it)
             setViewState(update)
@@ -224,27 +224,28 @@ constructor(
         }
     }
 
-    private fun setAllTransactionIncome(newIncome: Double) {
+    private fun setAllTransactionIncome(newIncome: Double?) {
         val update = getCurrentViewStateOrNew()
         if (update.summeryMoney != null) {
-            update.summeryMoney = update.summeryMoney?.copy(income = newIncome)
+            update.summeryMoney = update.summeryMoney?.copy(income = newIncome ?: 0.0)
         } else {
-            update.summeryMoney = SummaryMoney(income = newIncome)
+            update.summeryMoney = SummaryMoney(income = newIncome ?: 0.0)
         }
         setViewState(update)
     }
 
-    private fun setAllTransactionExpenses(newExpenses: Double) {
+    private fun setAllTransactionExpenses(newExpenses: Double?) {
         val update = getCurrentViewStateOrNew()
         if (update.summeryMoney != null) {
-            update.summeryMoney = update.summeryMoney?.copy(expenses = newExpenses)
+            update.summeryMoney = update.summeryMoney?.copy(expenses = newExpenses ?: 0.0)
         } else {
-            update.summeryMoney = SummaryMoney(expenses = newExpenses)
+            update.summeryMoney = SummaryMoney(expenses = newExpenses ?: 0.0)
         }
         setViewState(update)
     }
 
     private fun setListOfTransactions(transactionList: List<Record>) {
+        mahdiLog(TAG, "new transaciton:" + transactionList.size.toString())
         val update = getCurrentViewStateOrNew()
             .copy(transactionList = transactionList)
         setViewState(update)

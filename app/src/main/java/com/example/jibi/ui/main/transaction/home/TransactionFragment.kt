@@ -34,7 +34,6 @@ import com.example.jibi.repository.buildResponse
 import com.example.jibi.ui.main.transaction.BaseTransactionFragment
 import com.example.jibi.ui.main.transaction.MonthManger
 import com.example.jibi.ui.main.transaction.common.MonthPickerBottomSheet
-import com.example.jibi.ui.main.transaction.home.bottomSheet.CreateNewTransBottomSheet
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.*
 import com.example.jibi.util.PreferenceKeys.PROMOTE_FAB_TRANSACTION_FRAGMENT
@@ -347,25 +346,37 @@ constructor(
     private fun subscribeObservers() {
         lifecycleScope.launch(Main) {
             monthManger.currentMonth.collect {
-                toolbar_title.text = it.nameOfMonth + _getString(R.string.month)
+                toolbar_title.text = it.nameOfMonth + " " + _getString(R.string.month)
             }
         }
-        txt_balance.text = separate3By3AndRoundIt(0.0, currentLocale)
-        txt_expenses.text = separate3By3AndRoundIt(0.0, currentLocale)
-        txt_income.text = separate3By3AndRoundIt(0.0, currentLocale)
+
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
             viewState?.let {
                 Log.d(TAG, "submitList: called transacionLIst: ${it.transactionList}")
-                it.transactionList?.let { transactionList ->
+                it.transactionList.let { transactionList ->
                     recyclerAdapter.submitList(transactionList, true)
                 }
-                it.summeryMoney?.let { summeryMoney ->
-                    summeryMoney.balance = (summeryMoney.income.plus(summeryMoney.expenses))
-                    txt_balance.text = separate3By3AndRoundIt(summeryMoney.balance, currentLocale)
-                    txt_expenses.text =
-                        separate3By3AndRoundIt(summeryMoney.expenses.times(-1), currentLocale)
-                    txt_income.text = separate3By3AndRoundIt(summeryMoney.income, currentLocale)
+                it.summeryMoney.let { sm ->
+                    mahdiLog(TAG, "summeryMoney: $sm")
+                    if (sm != null) {
+                        sm.balance = (sm.income.plus(sm.expenses))
+                        txt_balance.text = separate3By3AndRoundIt(sm.balance, currentLocale)
+
+                        if (sm.expenses != 0.0) {
+                            txt_expenses.text =
+                                separate3By3AndRoundIt(sm.expenses.times(-1), currentLocale)
+                        } else {
+                            txt_expenses.text = separate3By3AndRoundIt(0.0, currentLocale)
+                        }
+                        txt_income.text = separate3By3AndRoundIt(sm.income, currentLocale)
+                    } else {
+                        val stringZero = separate3By3AndRoundIt(0.0, currentLocale)
+                        txt_balance.text = stringZero
+                        txt_expenses.text = stringZero
+                        txt_income.text = stringZero
+                    }
                 }
+
             }
         }
 
@@ -737,20 +748,20 @@ constructor(
     }
 
     private fun showMonthPickerBottomSheet() {
-        val defaultMonth = if (currentLocale.isFarsi()) 4 else 7
-        val defaultYear = if (currentLocale.isFarsi()) 1400 else 2021
         val monthPicker =
             MonthPickerBottomSheet(
-                intercation = monthPickerInteraction,
+                interaction = monthPickerInteraction,
                 isShamsi = currentLocale.isFarsi(),
-                defaultMonth = defaultMonth,
-                defaultYear = defaultYear
+                defaultMonth = monthManger.getMonth(),
+                defaultYear = monthManger.getYear()
             )
         monthPicker.show(parentFragmentManager, "MonthPicker")
     }
 
-    private val monthPickerInteraction = object : MonthPickerBottomSheet.Intercation {
-
+    private val monthPickerInteraction = object : MonthPickerBottomSheet.Interaction {
+        override fun onNewMonthSelected(month: Int, year: Int) {
+            monthManger.setMonthAndYear(month, year)
+        }
     }
 
     override fun setTextToAllViews() {

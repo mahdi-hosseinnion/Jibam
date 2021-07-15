@@ -27,7 +27,7 @@ interface RecordsDao {
     suspend fun deleteRecord(vararg record: Record): Int
 
     @Query("DELETE FROM records WHERE rId = :id")
-    suspend fun deleteRecord(id:Int): Int
+    suspend fun deleteRecord(id: Int): Int
 
     /*
         get records queries
@@ -60,6 +60,7 @@ interface RecordsDao {
         query: String
     ): Flow<List<Record>>
 
+    //TODO CHANGE DATE > MIN DATE TO DATE >=MINDATE
     @Query(
         "SELECT * FROM records WHERE date > :minDate " +
                 "AND " +
@@ -138,7 +139,7 @@ interface RecordsDao {
         """SELECT *  FROM records WHERE cat_id = :id 
             ORDER BY ABS(money) DESC"""
     )
-    suspend fun getAllTransactionByCategoryId(id:Int): List<Record>
+    suspend fun getAllTransactionByCategoryId(id: Int): List<Record>
 
     companion object {
         const val ORDER_BY_DATE = "ORDER BY date DESC"

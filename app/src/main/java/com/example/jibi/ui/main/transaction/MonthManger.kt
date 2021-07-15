@@ -19,8 +19,16 @@ class MonthManger
 constructor(private val currentLocale: Locale) {
     private val TAG = "MonthManger"
 
-    private val _fromDate = MutableStateFlow(getStartOfCurrentMonth())
-    private val _toDate = MutableStateFlow(getEndOfCurrentMonth())
+    private val _fromDate = MutableStateFlow(
+        getStartOfCurrentMonth(
+            System.currentTimeMillis()
+        )
+    )
+    private val _toDate = MutableStateFlow(
+        getEndOfCurrentMonth(
+            System.currentTimeMillis()
+        )
+    )
 
     val currentMonth: Flow<Month> = combine(
         _fromDate,
@@ -35,17 +43,45 @@ constructor(private val currentLocale: Locale) {
 
     private fun Long.longDateToIntDate(): Int = (this.div(1_000)).toInt()
 
-    private fun getStartOfCurrentMonth(): Long = if (currentLocale.isFarsi()) {
-        getStartOfCurrentMonthShamsi()
+    fun setMonthAndYear(month: Int, year: Int) {
+        val from = getStartOfCurrentMonth(month, year)
+        val to = getEndOfCurrentMonth(month, year)
+        _toDate.value = to
+        _fromDate.value = from
+    }
+
+    private fun getStartOfCurrentMonth(
+        timeStamp: Long
+    ): Long = if (currentLocale.isFarsi()) {
+        getStartOfCurrentMonthShamsi(timeStamp)
     } else {
-        getStartOfCurrentMonthGeorgian()
+        getStartOfCurrentMonthGeorgian(timeStamp)
     }
 
 
-    private fun getEndOfCurrentMonth(): Long = if (currentLocale.isFarsi()) {
-        getEndOfCurrentMonthShamsi()
+    private fun getEndOfCurrentMonth(
+        timeStamp: Long
+    ): Long = if (currentLocale.isFarsi()) {
+        getEndOfCurrentMonthShamsi(timeStamp)
     } else {
-        getEndOfCurrentMonthGeorgian()
+        getEndOfCurrentMonthGeorgian(timeStamp)
+    }
+
+    private fun getStartOfCurrentMonth(
+        currentMonth: Int, currentYear: Int
+    ): Long = if (currentLocale.isFarsi()) {
+        getStartOfCurrentMonthShamsi(currentMonth, currentYear)
+    } else {
+        getStartOfCurrentMonthGeorgian(currentMonth, currentYear)
+    }
+
+
+    private fun getEndOfCurrentMonth(
+        currentMonth: Int, currentYear: Int
+    ): Long = if (currentLocale.isFarsi()) {
+        getEndOfCurrentMonthShamsi(currentMonth, currentYear)
+    } else {
+        getEndOfCurrentMonthGeorgian(currentMonth, currentYear)
     }
 
     fun getStartOfCurrentMonthShamsi(
@@ -100,7 +136,7 @@ constructor(private val currentLocale: Locale) {
 
     //utils
     fun getEndOfCurrentMonthGeorgian(
-        timeStamp: Long = System.currentTimeMillis()
+        timeStamp: Long
     ): Long {
         //get the month and year of given timeStamp
         val currentDate = Date(timeStamp)
@@ -110,7 +146,7 @@ constructor(private val currentLocale: Locale) {
     }
 
     fun getStartOfCurrentMonthGeorgian(
-        timeStamp: Long = System.currentTimeMillis()
+        timeStamp: Long
     ): Long {
         //get month and year for given timeStamp
         val currentDate = Date(timeStamp)
@@ -120,7 +156,7 @@ constructor(private val currentLocale: Locale) {
     }
 
     fun getEndOfCurrentMonthShamsi(
-        timeStamp: Long = System.currentTimeMillis()
+        timeStamp: Long
     ): Long {
         //get month and year for given timeStamp
         val shamsiDate = SolarCalendar.calcSolarCalendar(
@@ -134,7 +170,7 @@ constructor(private val currentLocale: Locale) {
     }
 
     fun getStartOfCurrentMonthShamsi(
-        timeStamp: Long = System.currentTimeMillis()
+        timeStamp: Long
     ): Long {
         //get month and year for given timeStamp
         val shamsiDate = SolarCalendar.calcSolarCalendar(
@@ -169,5 +205,31 @@ constructor(private val currentLocale: Locale) {
         //get the month and year of given timeStamp
         val currentDate = Date(timeStamp)
         return SimpleDateFormat("MMM", currentLocale).format(currentDate)
+    }
+
+    fun getMonth(): Int {
+        return if (currentLocale.isFarsi()) {
+            SolarCalendar.calcSolarCalendar(
+                _fromDate.value,
+                SolarCalendar.ShamsiPatterns.JUST_MONTH_NUMBER,
+                currentLocale
+            ).toInt()
+        } else {
+            val currentDate = Date(_fromDate.value)
+            return (SimpleDateFormat("M", currentLocale).format(currentDate)).toInt()
+        }
+    }
+
+    fun getYear(): Int {
+        return if (currentLocale.isFarsi()) {
+            SolarCalendar.calcSolarCalendar(
+                _fromDate.value,
+                SolarCalendar.ShamsiPatterns.JUST_YEAR_NUMBER,
+                currentLocale
+            ).toInt()
+        } else {
+            val currentDate = Date(_fromDate.value)
+            return (SimpleDateFormat("yyyy", currentLocale).format(currentDate)).toInt()
+        }
     }
 }

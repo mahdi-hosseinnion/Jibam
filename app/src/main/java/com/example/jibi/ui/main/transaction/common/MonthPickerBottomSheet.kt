@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.bottom_sheet_month_picker.*
 
 class MonthPickerBottomSheet
 constructor(
-    private val intercation: Intercation,
+    private val interaction: Interaction,
     private val isShamsi: Boolean,
     private val defaultMonth: Int,
     private val defaultYear: Int,
@@ -44,11 +44,19 @@ constructor(
         }
         monthNumberPicker.value = defaultMonth
         yearNumberPicker.value = defaultYear
-
+        confirm_monthPicker.setOnClickListener {
+            if (yearNumberPicker.value != defaultYear
+                ||
+                monthNumberPicker.value != defaultMonth
+            ) {
+                interaction.onNewMonthSelected(monthNumberPicker.value, yearNumberPicker.value)
+            }
+            dismiss()
+        }
 
     }
 
-    interface Intercation {
-
+    interface Interaction {
+        fun onNewMonthSelected(month: Int, year: Int)
     }
 }

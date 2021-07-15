@@ -221,6 +221,12 @@ object SolarCalendar {
             ShamsiPatterns.JUST_MONTH_NAME -> {
                 strMonth ?: "unknown"
             }
+            ShamsiPatterns.JUST_MONTH_NUMBER -> {
+                month.toString()
+            }
+            ShamsiPatterns.JUST_YEAR_NUMBER -> {
+                year.toString()
+            }
             ShamsiPatterns.TEST -> {
                 "$year/" + java.lang.String.format(
                     loc, "%02d",
@@ -266,7 +272,8 @@ object SolarCalendar {
     enum
 
     class ShamsiPatterns {
-        RECYCLER_VIEW, DETAIL_FRAGMENT, DETAIL_CHART_FRAGMENT, YEAR_MONTH, JUST_MONTH_NAME, TEST
+        RECYCLER_VIEW,
+        DETAIL_FRAGMENT, DETAIL_CHART_FRAGMENT, YEAR_MONTH, JUST_MONTH_NAME, JUST_MONTH_NUMBER, JUST_YEAR_NUMBER, TEST
     }
 
 }
