@@ -288,6 +288,7 @@ constructor(
         var money = Random.nextInt(0, 1000).toDouble()
         //it just hardcoded TODO CHANGE IT LATER
         //we mark money with "-" base of category id
+        val dateRange = 2_592_000_000L//30 day to millisecond
         if (categoryId <= 30) {
             money *= -1
         }
@@ -300,8 +301,8 @@ constructor(
                         memo = null,
                         cat_id = categoryId,
                         date = Random.nextInt(
-                            System.currentTimeMillis().minus(604_800L).toInt(),
-                            System.currentTimeMillis().toInt()
+                            ((System.currentTimeMillis()).minus(dateRange)).div(1_000).toInt(),
+                            ((System.currentTimeMillis())).div(1_000).toInt()
                         )
                     )
                 )
@@ -315,8 +316,8 @@ constructor(
                         memo = "memo ${Random.nextInt(451252)}",
                         cat_id = categoryId,
                         date = Random.nextInt(
-                            System.currentTimeMillis().minus(604_800L).toInt(),
-                            System.currentTimeMillis().toInt()
+                            ((System.currentTimeMillis()).minus(dateRange)).div(1_000).toInt(),
+                            ((System.currentTimeMillis())).div(1_000).toInt()
                         )
                     )
                 )
