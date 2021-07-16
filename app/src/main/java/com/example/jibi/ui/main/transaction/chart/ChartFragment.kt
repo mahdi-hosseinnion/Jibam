@@ -89,7 +89,7 @@ constructor(
                         fromDate = it.startOfMonth, toDate = it.endOfMonth
                     )
                 )
-                val monthName = " " + it.nameOfMonth + " " + _getString(R.string.month)
+                val monthName = " " + it.nameOfMonth
                 if (currentChartState == INCOMES_STATE) {
                     chartFragment_toolbar_title.text =
                         (_getString(R.string.income_chart_title) + monthName)
@@ -102,7 +102,7 @@ constructor(
             }
         }
         chartFragment_toolbar_title.setOnClickListener {
-            monthManger.showMonthPickerBottomSheet(parentFragmentManager, _resources)
+            monthManger.showMonthPickerBottomSheet(parentFragmentManager)
         }
         fab_swap.setOnClickListener {
             swapChartCategory()
@@ -120,7 +120,7 @@ constructor(
     }
 
     private fun refreshChart() {
-        val monthName = " " + monthManger.getMonthName() + " " + _getString(R.string.month)
+        val monthName = " " + monthManger.getMonthName()
         val category_type_marker = if (currentChartState == INCOMES_STATE) {
             chartFragment_toolbar_title.text = _getString(R.string.income_chart_title) + monthName
             INCOME_TYPE_MARKER

@@ -111,7 +111,7 @@ constructor(
     }
 
     private fun setCategoryData(category: Category) {
-        val monthName = " " + monthManger.getMonthName() + " " + _getString(R.string.month)
+        val monthName = " " + monthManger.getMonthName()
 
         detailChartFragment_toolbar.title = category.getCategoryNameFromStringFile(
             _resources,

@@ -179,7 +179,7 @@ constructor(
             bottom_sheet_search_edt.setText("")
         }
         toolbar_title.setOnClickListener {
-            monthManger.showMonthPickerBottomSheet(parentFragmentManager, _resources)
+            monthManger.showMonthPickerBottomSheet(parentFragmentManager)
         }
         checkForGuidePromote()
     }
@@ -350,7 +350,7 @@ constructor(
     private fun subscribeObservers() {
         viewLifecycleOwner.lifecycleScope.launch(Main) {
             monthManger.currentMonth.collect {
-                toolbar_title.text = it.nameOfMonth + " " + _getString(R.string.month)
+                toolbar_title.text = it.nameOfMonth
                 startOfMonth = it.startOfMonth
                 endOfMonth = it.endOfMonth
             }

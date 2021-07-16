@@ -2,12 +2,10 @@ package com.example.jibi.ui.main.transaction
 
 import android.content.res.Resources
 import androidx.fragment.app.FragmentManager
+import com.example.jibi.R
 import com.example.jibi.models.Month
 import com.example.jibi.ui.main.transaction.common.MonthPickerBottomSheet
-import com.example.jibi.util.DateUtils
-import com.example.jibi.util.SolarCalendar
-import com.example.jibi.util.isFarsi
-import com.example.jibi.util.mahdiLog
+import com.example.jibi.util.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
@@ -19,7 +17,11 @@ import javax.inject.Singleton
 @Singleton
 class MonthManger
 @Inject
-constructor(private val currentLocale: Locale) {
+constructor(
+    private val currentLocale: Locale,
+    private val _resources: Resources,
+
+    ) {
     private val TAG = "MonthManger"
 
     private val _fromDate = MutableStateFlow(
@@ -188,12 +190,14 @@ constructor(private val currentLocale: Locale) {
 
     fun getMonthName(timeStamp: Long = _fromDate.value): String {
         val name = if (currentLocale.isFarsi()) {
-            getShamsiMonthName(timeStamp)
+            getShamsiMonthName(timeStamp) + " " + _resources.getString(R.string.month)
         } else {
             getGeorgianMonthName(timeStamp)
         }
-        mahdiLog(TAG, "NAME IS" + name)
-        return name
+        return if (getYear() != getYear(System.currentTimeMillis())) {
+            //if month is not in this year
+            name + " " + getYear().toString().localizeNumber(_resources)
+        } else name
     }
 
     private fun getShamsiMonthName(timeStamp: Long): String =
@@ -223,10 +227,10 @@ constructor(private val currentLocale: Locale) {
         }
     }
 
-    fun getYear(): Int {
+    fun getYear(timeStamp: Long = _fromDate.value): Int {
         return if (currentLocale.isFarsi()) {
             SolarCalendar.calcSolarCalendar(
-                _fromDate.value,
+                timeStamp,
                 SolarCalendar.ShamsiPatterns.JUST_YEAR_NUMBER,
                 currentLocale
             ).toInt()
@@ -238,7 +242,6 @@ constructor(private val currentLocale: Locale) {
 
     fun showMonthPickerBottomSheet(
         fragmentManager: FragmentManager,
-        resources: Resources,
         _onNewMonthSelected: ((month: Int, year: Int) -> Unit)? = null
     ) {
         val monthPickerInteraction = object : MonthPickerBottomSheet.Interaction {
@@ -253,7 +256,7 @@ constructor(private val currentLocale: Locale) {
             MonthPickerBottomSheet(
                 interaction = monthPickerInteraction,
                 isShamsi = currentLocale.isFarsi(),
-                _resources = resources,
+                _resources = _resources,
                 defaultMonth = getMonth(),
                 defaultYear = getYear()
             )
