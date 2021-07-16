@@ -8,12 +8,14 @@ import android.view.View
 import androidx.core.text.TextUtilsCompat
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.RequestManager
 import com.example.jibi.R
 import com.example.jibi.models.PieChartData
 import com.example.jibi.ui.main.transaction.BaseTransactionFragment
+import com.example.jibi.ui.main.transaction.MonthManger
 import com.example.jibi.ui.main.transaction.chart.ChartFragment.ChartState.*
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.Constants.EXPENSES_TYPE_MARKER
@@ -30,8 +32,11 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.utils.MPPointF
 import kotlinx.android.synthetic.main.fragment_chart.*
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -47,6 +52,7 @@ constructor(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager,
     private val currentLocale: Locale,
+    private val monthManger: MonthManger,
     private val _resources: Resources
 ) : BaseTransactionFragment(
     R.layout.fragment_chart,
@@ -76,10 +82,28 @@ constructor(
         super.onViewCreated(view, savedInstanceState)
         initPieChart()
         subscribeObservers()
+        viewLifecycleOwner.lifecycleScope.launch(Main) {
+            monthManger.currentMonth.collect {
+                viewModel.launchNewJob(
+                    TransactionStateEvent.OneShotOperationsTransactionStateEvent.GetPieChartData(
+                        fromDate = it.startOfMonth, toDate = it.endOfMonth
+                    )
+                )
+                val monthName = " " + it.nameOfMonth + " " + _getString(R.string.month)
+                if (currentChartState == INCOMES_STATE) {
+                    chartFragment_toolbar_title.text =
+                        (_getString(R.string.income_chart_title) + monthName)
 
+                } else {
+                    chartFragment_toolbar_title.text =
+                        (_getString(R.string.expenses_chart_title) + monthName)
+                }
 
-        viewModel.launchNewJob(TransactionStateEvent.OneShotOperationsTransactionStateEvent.GetPieChartData)
-
+            }
+        }
+        chartFragment_toolbar_title.setOnClickListener {
+            monthManger.showMonthPickerBottomSheet(parentFragmentManager, _resources)
+        }
         fab_swap.setOnClickListener {
             swapChartCategory()
         }
@@ -96,12 +120,12 @@ constructor(
     }
 
     private fun refreshChart() {
+        val monthName = " " + monthManger.getMonthName() + " " + _getString(R.string.month)
         val category_type_marker = if (currentChartState == INCOMES_STATE) {
-
-            chartFragment_toolbar.title = _getString(R.string.income_chart_title)
+            chartFragment_toolbar_title.text = _getString(R.string.income_chart_title) + monthName
             INCOME_TYPE_MARKER
         } else {
-            chartFragment_toolbar.title = _getString(R.string.expenses_chart_title)
+            chartFragment_toolbar_title.text = _getString(R.string.expenses_chart_title) + monthName
 
             EXPENSES_TYPE_MARKER
         }

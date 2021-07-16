@@ -80,10 +80,10 @@ constructor(
                 AboutUsFragment(viewModelFactory, requestManager, resources)
             }
             ChartFragment::class.java.name -> {
-                ChartFragment(viewModelFactory, requestManager, currentLocale, resources)
+                ChartFragment(viewModelFactory, requestManager, currentLocale, monthManger,resources)
             }
             DetailChartFragment::class.java.name -> {
-                DetailChartFragment(viewModelFactory, requestManager, currentLocale, resources)
+                DetailChartFragment(viewModelFactory, requestManager, currentLocale, monthManger,resources)
             }
 
             else -> {

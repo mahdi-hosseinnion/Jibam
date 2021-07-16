@@ -1,10 +1,8 @@
 package com.example.jibi.ui.main.transaction.state
 
-import android.view.SurfaceControl
 import com.example.jibi.models.Category
 import com.example.jibi.models.PieChartData
 import com.example.jibi.models.Record
-import com.example.jibi.models.SummaryMoney
 
 data class TransactionViewState(
 
@@ -13,7 +11,7 @@ data class TransactionViewState(
     //List of all categories
     var categoryList: List<Category>? = null,
     //summery money
-    var summeryMoney: SummaryMoney? = null,
+    var summeryMoney: SummaryMoney = SummaryMoney(),
 
     //detail fragment
     var detailTransFields: Record? = null,
@@ -24,6 +22,13 @@ data class TransactionViewState(
     //swipe to delete
     var recentlyDeletedFields: RecentlyDeletedFields = RecentlyDeletedFields()
 ) {
+
+    data class SummaryMoney(
+        var balance: Double = 0.0,
+        var income: Double = 0.0,
+        var expenses: Double = 0.0
+    )
+
     data class RecentlyDeletedFields(
         var recentlyDeletedTrans: Record? = null,
         var recentlyDeletedTransPosition: Int? = null,

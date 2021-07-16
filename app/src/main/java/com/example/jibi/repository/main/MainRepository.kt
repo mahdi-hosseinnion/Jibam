@@ -424,7 +424,12 @@ constructor(
         stateEvent: GetPieChartData
     ): DataState<TransactionViewState> {
         val cacheResult = safeCacheCall {
-            calculatePercentage(recordsDao.sumOfMoneyGroupByCategory())
+            calculatePercentage(
+                recordsDao.sumOfMoneyGroupByCategory(
+                    fromDate = stateEvent.fromDate,
+                    toDate = stateEvent.toDate
+                )
+            )
         }
         mahdiLog(TAG, cacheResult.toString())
         return object : CacheResponseHandler<TransactionViewState, List<PieChartData>>(
@@ -517,7 +522,11 @@ constructor(
         stateEvent: GetAllTransactionByCategoryId
     ): DataState<TransactionViewState> {
         val cacheResult = safeCacheCall {
-            recordsDao.getAllTransactionByCategoryId(stateEvent.categoryId)
+            recordsDao.getAllTransactionByCategoryId(
+                stateEvent.categoryId,
+                stateEvent.fromDate,
+                stateEvent.toDate
+            )
         }
         return object : CacheResponseHandler<TransactionViewState, List<Record>>(
             response = cacheResult,

@@ -19,7 +19,14 @@
                 android:id="@+id/chartFragment_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/mtrl_toolbar_default_height"
-                android:background="@color/purple_500" />
+                android:background="@color/purple_500">
+                <TextView
+                    android:id="@+id/chartFragment_toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#00141E"
+                    android:textSize="20sp" />
+            </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.core.widget.NestedScrollView

@@ -186,7 +186,7 @@ constructor(private val currentLocale: Locale) {
         return getStartOfCurrentMonthShamsi(currentMonth.toInt(), currentYear.toInt())
     }
 
-    private fun getMonthName(timeStamp: Long): String {
+    fun getMonthName(timeStamp: Long = _fromDate.value): String {
         val name = if (currentLocale.isFarsi()) {
             getShamsiMonthName(timeStamp)
         } else {

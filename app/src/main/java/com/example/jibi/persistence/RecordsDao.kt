@@ -130,16 +130,27 @@ interface RecordsDao {
             categories.category_Name as categoryName, 
             categories.type as categoryType, 
             categories.img_res as categoryImage 
-            FROM records LEFT JOIN categories ON records.cat_id=categories.cId GROUP BY cat_id
+            FROM records LEFT JOIN categories ON records.cat_id=categories.cId 
+            WHERE date BETWEEN :fromDate AND :toDate 
+            GROUP BY cat_id 
             ORDER BY ABS(SUM(money)) DESC"""
     )
-    suspend fun sumOfMoneyGroupByCategory(): List<PieChartData>
+    suspend fun sumOfMoneyGroupByCategory(
+        fromDate: Int,
+        toDate: Int
+    ): List<PieChartData>
 
     @Query(
         """SELECT *  FROM records WHERE cat_id = :id 
+            AND 
+            date BETWEEN :fromDate AND :toDate 
             ORDER BY ABS(money) DESC"""
     )
-    suspend fun getAllTransactionByCategoryId(id: Int): List<Record>
+    suspend fun getAllTransactionByCategoryId(
+        id: Int,
+        fromDate: Int,
+        toDate: Int
+    ): List<Record>
 
     companion object {
         const val ORDER_BY_DATE = "ORDER BY date DESC"

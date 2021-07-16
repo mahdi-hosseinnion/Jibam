@@ -6,6 +6,7 @@ import android.graphics.DashPathEffect
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +16,7 @@ import com.example.jibi.R
 import com.example.jibi.models.Category
 import com.example.jibi.models.Record
 import com.example.jibi.ui.main.transaction.BaseTransactionFragment
+import com.example.jibi.ui.main.transaction.MonthManger
 import com.example.jibi.ui.main.transaction.home.TransactionFragmentDirections
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.mahdiLog
@@ -31,8 +33,11 @@ import com.github.mikephil.charting.formatter.IFillFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.github.mikephil.charting.utils.Utils
 import kotlinx.android.synthetic.main.fragment_detail_chart.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.abs
@@ -46,6 +51,7 @@ constructor(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager,
     private val currentLocale: Locale,
+    private val monthManger: MonthManger,
     private val _resources: Resources
 ) : BaseTransactionFragment(
     R.layout.fragment_detail_chart,
@@ -63,11 +69,21 @@ constructor(
 
         val categoryId = args.categoryId
         if (categoryId > 0) {
-            viewModel.launchNewJob(
-                TransactionStateEvent.OneShotOperationsTransactionStateEvent.GetAllTransactionByCategoryId(
-                    categoryId
-                )
-            )
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+
+                monthManger.currentMonth.collect {
+
+                    viewModel.launchNewJob(
+                        TransactionStateEvent.OneShotOperationsTransactionStateEvent
+                            .GetAllTransactionByCategoryId(
+                            categoryId = categoryId,
+                            fromDate = it.startOfMonth,
+                            toDate = it.endOfMonth
+                        )
+                    )
+                }
+            }
+
             viewModel.launchNewJob(
                 TransactionStateEvent.OneShotOperationsTransactionStateEvent.GetCategoryById(
                     categoryId
@@ -95,11 +111,12 @@ constructor(
     }
 
     private fun setCategoryData(category: Category) {
-        mahdiLog("setCategoryData", category.name + "\n" + findNavController().currentDestination)
+        val monthName = " " + monthManger.getMonthName() + " " + _getString(R.string.month)
+
         detailChartFragment_toolbar.title = category.getCategoryNameFromStringFile(
             _resources,
             this.requireActivity().packageName
-        ) { it.name }
+        ) { it.name } + monthName
     }
 
     private fun initRecyclerView(data: List<Record>, category: Category) {

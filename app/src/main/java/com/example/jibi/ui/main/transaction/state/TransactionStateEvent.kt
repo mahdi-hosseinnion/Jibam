@@ -115,8 +115,9 @@ sealed class TransactionStateEvent : StateEvent {
 
             override fun getId(): String = "DeleteTransaction $record ${this.hashCode()}"
         }
+
         data class DeleteTransactionById(
-            val transactionId:Int
+            val transactionId: Int
         ) : OneShotOperationsTransactionStateEvent() {
             override fun errorInfo(): String =
                 "ERROR: deleting transaction! id = ${transactionId}"
@@ -160,7 +161,10 @@ sealed class TransactionStateEvent : StateEvent {
             override fun getId(): String = "updating Category $category ${this.hashCode()}"
         }
 
-        object GetPieChartData : OneShotOperationsTransactionStateEvent() {
+        data class GetPieChartData(
+            val fromDate: Int,
+            val toDate: Int
+        ) : OneShotOperationsTransactionStateEvent() {
             override fun errorInfo(): String =
                 "ERROR: getting pie chart data!"
 
@@ -177,12 +181,15 @@ sealed class TransactionStateEvent : StateEvent {
         }
 
         data class GetAllTransactionByCategoryId(
-            val categoryId: Int
+            val categoryId: Int,
+            val fromDate: Int,
+            val toDate: Int
         ) : OneShotOperationsTransactionStateEvent() {
             override fun errorInfo(): String =
                 "ERROR: getting all transaction with category  id = ${categoryId}"
 
-            override fun getId(): String = "getting all transaction with category id $categoryId ${this.hashCode()}"
+            override fun getId(): String =
+                "getting all transaction with category id $categoryId ${this.hashCode()}"
         }
     }
 }

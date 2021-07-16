@@ -33,7 +33,6 @@ import com.example.jibi.models.SearchModel
 import com.example.jibi.repository.buildResponse
 import com.example.jibi.ui.main.transaction.BaseTransactionFragment
 import com.example.jibi.ui.main.transaction.MonthManger
-import com.example.jibi.ui.main.transaction.common.MonthPickerBottomSheet
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.*
 import com.example.jibi.util.PreferenceKeys.PROMOTE_FAB_TRANSACTION_FRAGMENT
@@ -42,6 +41,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
 import kotlinx.android.synthetic.main.fragment_transaction.*
+import kotlinx.android.synthetic.main.layout_chart_list_item.*
 import kotlinx.android.synthetic.main.layout_transaction_list_item.*
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -291,6 +291,10 @@ constructor(
         }
     }
 
+    //JUST FOR TEST
+    var startOfMonth = System.currentTimeMillis().div(1_000).toInt()
+    var endOfMonth = System.currentTimeMillis().div(1_000).toInt()
+
     private fun insertRandomTransaction() {
         val categoryId = Random.nextInt(1, 42)
         var money = Random.nextInt(0, 1000).toDouble()
@@ -309,8 +313,8 @@ constructor(
                         memo = null,
                         cat_id = categoryId,
                         date = Random.nextInt(
-                            ((System.currentTimeMillis()).minus(dateRange)).div(1_000).toInt(),
-                            ((System.currentTimeMillis())).div(1_000).toInt()
+                            startOfMonth,
+                            endOfMonth
                         )
                     )
                 )
@@ -344,36 +348,31 @@ constructor(
     }
 
     private fun subscribeObservers() {
-        lifecycleScope.launch(Main) {
+        viewLifecycleOwner.lifecycleScope.launch(Main) {
             monthManger.currentMonth.collect {
                 toolbar_title.text = it.nameOfMonth + " " + _getString(R.string.month)
+                startOfMonth = it.startOfMonth
+                endOfMonth = it.endOfMonth
             }
         }
 
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
             viewState?.let {
-                Log.d(TAG, "submitList: called transacionLIst: ${it.transactionList}")
+
                 it.transactionList.let { transactionList ->
                     recyclerAdapter.submitList(transactionList, true)
                 }
                 it.summeryMoney.let { sm ->
-                    if (sm != null) {
-                        sm.balance = (sm.income.plus(sm.expenses))
-                        txt_balance.text = separate3By3AndRoundIt(sm.balance, currentLocale)
-
-                        if (sm.expenses != 0.0) {
-                            txt_expenses.text =
-                                separate3By3AndRoundIt(sm.expenses.times(-1), currentLocale)
-                        } else {
-                            txt_expenses.text = separate3By3AndRoundIt(0.0, currentLocale)
-                        }
-                        txt_income.text = separate3By3AndRoundIt(sm.income, currentLocale)
+                    sm.balance = (sm.income.plus(sm.expenses))
+                    txt_balance.text = separate3By3AndRoundIt(sm.balance, currentLocale)
+                    if (sm.expenses != 0.0) {
+                        txt_expenses.text =
+                            separate3By3AndRoundIt(sm.expenses.times(-1), currentLocale)
                     } else {
-                        val stringZero = separate3By3AndRoundIt(0.0, currentLocale)
-                        txt_balance.text = stringZero
-                        txt_expenses.text = stringZero
-                        txt_income.text = stringZero
+                        txt_expenses.text = separate3By3AndRoundIt(0.0, currentLocale)
                     }
+                    txt_income.text = separate3By3AndRoundIt(sm.income, currentLocale)
+
                 }
 
             }

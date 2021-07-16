@@ -4,7 +4,10 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.example.jibi.di.main.MainScope
-import com.example.jibi.models.*
+import com.example.jibi.models.Category
+import com.example.jibi.models.CategoryImages
+import com.example.jibi.models.Record
+import com.example.jibi.models.SearchModel
 import com.example.jibi.repository.main.MainRepository
 import com.example.jibi.ui.BaseViewModel
 import com.example.jibi.ui.main.transaction.MonthManger
@@ -13,6 +16,7 @@ import com.example.jibi.ui.main.transaction.home.TransactionListAdapter.Companio
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent.*
 import com.example.jibi.ui.main.transaction.state.TransactionViewState
+import com.example.jibi.ui.main.transaction.state.TransactionViewState.RecentlyDeletedFields
 import com.example.jibi.util.Constants
 import com.example.jibi.util.DataState
 import com.example.jibi.util.mahdiLog
@@ -191,11 +195,7 @@ constructor(
     override fun initNewViewState(): TransactionViewState = TransactionViewState()
 
     override fun handleNewData(viewState: TransactionViewState) {
-        viewState.summeryMoney.let {
-            val update = getCurrentViewStateOrNew()
-                .copy(summeryMoney = it)
-            setViewState(update)
-        }
+
         viewState.transactionList?.let {
             val update = getCurrentViewStateOrNew()
                 .copy(transactionList = it)
@@ -228,22 +228,16 @@ constructor(
     }
 
     private fun setAllTransactionIncome(newIncome: Double?) {
-        val update = getCurrentViewStateOrNew()
-        if (update.summeryMoney != null) {
-            update.summeryMoney = update.summeryMoney?.copy(income = newIncome ?: 0.0)
-        } else {
-            update.summeryMoney = SummaryMoney(income = newIncome ?: 0.0)
-        }
+        val former = getCurrentViewStateOrNew()
+        val update = former
+            .copy(summeryMoney = former.summeryMoney.copy(income = newIncome ?: 0.0))
         setViewState(update)
     }
 
     private fun setAllTransactionExpenses(newExpenses: Double?) {
-        val update = getCurrentViewStateOrNew()
-        if (update.summeryMoney != null) {
-            update.summeryMoney = update.summeryMoney?.copy(expenses = newExpenses ?: 0.0)
-        } else {
-            update.summeryMoney = SummaryMoney(expenses = newExpenses ?: 0.0)
-        }
+        val former = getCurrentViewStateOrNew()
+        val update = former
+            .copy(summeryMoney = former.summeryMoney.copy(expenses = newExpenses ?: 0.0))
         setViewState(update)
     }
 
@@ -267,7 +261,7 @@ constructor(
 
     fun setRecentlyDeletedTrans(transaction: Record, position: Int, header: Record?) {
         val update = getCurrentViewStateOrNew().copy(
-            recentlyDeletedFields = TransactionViewState.RecentlyDeletedFields(
+            recentlyDeletedFields = RecentlyDeletedFields(
                 recentlyDeletedTrans = transaction,
                 recentlyDeletedTransPosition = position,
                 recentlyDeletedHeader = header
@@ -278,7 +272,7 @@ constructor(
 
     fun setRecentlyDeletedTransToNull() {
         val update = getCurrentViewStateOrNew().copy(
-            recentlyDeletedFields = TransactionViewState.RecentlyDeletedFields()
+            recentlyDeletedFields = RecentlyDeletedFields()
         )
         setViewState(update)
     }
