@@ -357,7 +357,6 @@ constructor(
                     recyclerAdapter.submitList(transactionList, true)
                 }
                 it.summeryMoney.let { sm ->
-                    mahdiLog(TAG, "summeryMoney: $sm")
                     if (sm != null) {
                         sm.balance = (sm.income.plus(sm.expenses))
                         txt_balance.text = separate3By3AndRoundIt(sm.balance, currentLocale)

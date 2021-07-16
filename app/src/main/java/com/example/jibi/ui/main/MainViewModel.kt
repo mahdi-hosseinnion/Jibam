@@ -16,11 +16,8 @@ import com.example.jibi.ui.main.transaction.state.TransactionViewState
 import com.example.jibi.util.Constants
 import com.example.jibi.util.DataState
 import com.example.jibi.util.mahdiLog
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 //instance search
@@ -39,7 +36,6 @@ constructor(
     val GET_SUM_OF_ALL_INCOME = "getting sum of all income"
     val GET_LIST_OF_TRANSACTION = "getting the list of transaction"
     val GET_LIST_OF_CATEGORY = "getting the list of category"
-    private val TAG1 = "MainViewModel"
 
     //search stuff
     // In our ViewModel
@@ -47,11 +43,17 @@ constructor(
 
     init {
         //flow stuff
+        //TODO CHANGE THIS CODE TO BETTER ONE ITS TERRIBLE
         viewModelScope.launch {
+            val jobList = ArrayList<Job>()
             monthManger.currentMonth.collect { month ->
 
-                mahdiLog(TAG, "currentMonth: ${month.toString()}")
-                launch {
+                for (job in jobList) {
+                    job.cancel()
+                }
+                jobList.clear()
+
+                jobList.add(launch {
                     mainRepository.getCategoryList()
                         //loading stuff
                         .onStart { increaseLoading(GET_LIST_OF_CATEGORY) }
@@ -63,9 +65,9 @@ constructor(
                                 setListOfCategories(it)
                             }
                         }
-                }
+                })
 
-                launch {
+                jobList.add(launch {
                     //TODO HANDLE WHERE TO INCREMENT AND WHEN TO DECREMENT LOADING
                     mainRepository.getSumOfExpenses(month.startOfMonth, month.endOfMonth)
                         //loading stuff
@@ -77,9 +79,9 @@ constructor(
                             setAllTransactionExpenses(it)
 
                         }
-                }
+                })
                 //TODO HANDLE WHERE TO INCREMENT AND WHEN TO DECREMENT LOADING
-                launch {
+                jobList.add(launch {
                     mainRepository.getSumOfIncome(month.startOfMonth, month.endOfMonth)
                         //loading stuff
                         .onStart { increaseLoading(GET_SUM_OF_ALL_INCOME) }
@@ -92,8 +94,8 @@ constructor(
 
                         }
                     //TODO HANDLE WHERE TO INCREMENT AND WHEN TO DECREMENT LOADING
-                }
-                launch {
+                })
+                jobList.add(launch {
 
                     queryChannel
                         .debounce(Constants.SEARCH_DEBOUNCE)
@@ -116,6 +118,7 @@ constructor(
                                 .collect { result ->
                                     //loading stuff
                                     decreaseLoading(GET_LIST_OF_TRANSACTION)
+                                    mahdiLog(TAG, "collect in :${this.hashCode()}")
                                     if (result != null) {
                                         setListOfTransactions(result)
                                     } else {
@@ -138,7 +141,7 @@ constructor(
                         delay(Constants.CACHE_TIMEOUT)
                         decreaseLoading(GET_LIST_OF_TRANSACTION)
                     }
-                }
+                })
             }
             //timeout loading decrese
             launch {
