@@ -1,6 +1,9 @@
 package com.example.jibi.ui.main.transaction
 
+import android.content.res.Resources
+import androidx.fragment.app.FragmentManager
 import com.example.jibi.models.Month
+import com.example.jibi.ui.main.transaction.common.MonthPickerBottomSheet
 import com.example.jibi.util.DateUtils
 import com.example.jibi.util.SolarCalendar
 import com.example.jibi.util.isFarsi
@@ -232,4 +235,31 @@ constructor(private val currentLocale: Locale) {
             return (SimpleDateFormat("yyyy", currentLocale).format(currentDate)).toInt()
         }
     }
+
+    fun showMonthPickerBottomSheet(
+        fragmentManager: FragmentManager,
+        resources: Resources,
+        _onNewMonthSelected: ((month: Int, year: Int) -> Unit)? = null
+    ) {
+        val monthPickerInteraction = object : MonthPickerBottomSheet.Interaction {
+            override fun onNewMonthSelected(month: Int, year: Int) {
+                setMonthAndYear(month, year)
+                if (_onNewMonthSelected != null) {
+                    _onNewMonthSelected(month, year)
+                }
+            }
+        }
+        val monthPicker =
+            MonthPickerBottomSheet(
+                interaction = monthPickerInteraction,
+                isShamsi = currentLocale.isFarsi(),
+                _resources = resources,
+                defaultMonth = getMonth(),
+                defaultYear = getYear()
+            )
+        monthPicker.show(fragmentManager, "MonthPicker")
+
+    }
+
+
 }

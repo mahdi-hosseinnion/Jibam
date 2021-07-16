@@ -179,7 +179,7 @@ constructor(
             bottom_sheet_search_edt.setText("")
         }
         toolbar_title.setOnClickListener {
-            showMonthPickerBottomSheet()
+            monthManger.showMonthPickerBottomSheet(parentFragmentManager, _resources)
         }
         checkForGuidePromote()
     }
@@ -746,22 +746,6 @@ constructor(
         mFabPrompt!!.show()
     }
 
-    private fun showMonthPickerBottomSheet() {
-        val monthPicker =
-            MonthPickerBottomSheet(
-                interaction = monthPickerInteraction,
-                isShamsi = currentLocale.isFarsi(),
-                defaultMonth = monthManger.getMonth(),
-                defaultYear = monthManger.getYear()
-            )
-        monthPicker.show(parentFragmentManager, "MonthPicker")
-    }
-
-    private val monthPickerInteraction = object : MonthPickerBottomSheet.Interaction {
-        override fun onNewMonthSelected(month: Int, year: Int) {
-            monthManger.setMonthAndYear(month, year)
-        }
-    }
 
     override fun setTextToAllViews() {
         txt_balance_viewHolder.text = _getString(R.string.total_balance)

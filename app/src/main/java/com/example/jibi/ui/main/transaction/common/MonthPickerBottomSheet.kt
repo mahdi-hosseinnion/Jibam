@@ -1,5 +1,6 @@
 package com.example.jibi.ui.main.transaction.common
 
+import android.content.res.Resources
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,7 @@ class MonthPickerBottomSheet
 constructor(
     private val interaction: Interaction,
     private val isShamsi: Boolean,
+    private val _resources: Resources,
     private val defaultMonth: Int,
     private val defaultYear: Int,
 ) : BottomSheetDialogFragment() {
@@ -44,6 +46,7 @@ constructor(
         }
         monthNumberPicker.value = defaultMonth
         yearNumberPicker.value = defaultYear
+        confirm_monthPicker.text = _resources.getString(R.string.confirm)
         confirm_monthPicker.setOnClickListener {
             if (yearNumberPicker.value != defaultYear
                 ||

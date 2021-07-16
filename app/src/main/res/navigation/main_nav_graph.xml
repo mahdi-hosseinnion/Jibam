@@ -49,7 +49,7 @@
     <fragment
         android:id="@+id/createTransactionFragment"
         android:name="com.example.jibi.ui.main.transaction.home.AddTransactionFragment"
-        android:label="@string/add_transaction"
+        android:label=""
         tools:layout="@layout/fragment_add_transaction">
         <argument
             android:name="isNewTransaction"
@@ -71,7 +71,7 @@
     <fragment
         android:id="@+id/viewCategoriesFragment"
         android:name="com.example.jibi.ui.main.transaction.categories.ViewCategoriesFragment"
-        android:label="@string/category_setting"
+        android:label=""
         tools:layout="@layout/fragment_view_categories">
         <action
             android:id="@+id/action_viewCategoriesFragment_to_transactionFragment"
@@ -101,7 +101,7 @@
     <fragment
         android:id="@+id/settingFragment"
         android:name="com.example.jibi.ui.main.transaction.SettingFragment"
-        android:label="@string/setting"
+        android:label=""
         tools:layout="@layout/fragment_setting">
         <action
             android:id="@+id/action_settingFragment_to_transactionFragment"
@@ -114,7 +114,7 @@
     <fragment
         android:id="@+id/aboutUsFragment"
         android:name="com.example.jibi.ui.main.transaction.AboutUsFragment"
-        android:label="@string/about"
+        android:label=""
         tools:layout="@layout/fragment_about_us">
         <action
             android:id="@+id/action_aboutUsFragment_to_transactionFragment"
@@ -127,7 +127,7 @@
     <fragment
         android:id="@+id/chartFragment"
         android:name="com.example.jibi.ui.main.transaction.chart.ChartFragment"
-        android:label="@string/chart"
+        android:label=""
         tools:layout="@layout/fragment_chart">
         <action
             android:id="@+id/action_chartFragment_to_transactionFragment"
