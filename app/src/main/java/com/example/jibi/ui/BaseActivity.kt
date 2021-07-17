@@ -25,6 +25,12 @@ abstract class BaseActivity : AppCompatActivity(),
 
     abstract fun inject()
 
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
+
+    @Inject
+    lateinit var _resources: Resources
+
     @ExperimentalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         (application as BaseApplication).appComponent
@@ -46,11 +52,6 @@ abstract class BaseActivity : AppCompatActivity(),
         }
     }
 
-    @Inject
-    lateinit var sharedPreferences: SharedPreferences
-
-    @Inject
-    lateinit var _resources: Resources
 
     override fun attachBaseContext(newBase: Context?) {
         super.attachBaseContext(LocaleHelper.onAttach(newBase))

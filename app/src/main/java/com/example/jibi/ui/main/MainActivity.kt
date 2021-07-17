@@ -18,6 +18,8 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.jibi.BaseApplication
 import com.example.jibi.R
 import com.example.jibi.ui.BaseActivity
+import com.example.jibi.ui.app_intro.AppIntroActivity
+import com.example.jibi.util.PreferenceKeys
 import com.jakewharton.processphoenix.ProcessPhoenix
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -35,6 +37,7 @@ class MainActivity : BaseActivity() {
     @Inject
     lateinit var providerFactory: ViewModelProvider.Factory
 
+
     val viewModel: MainViewModel by viewModels {
         providerFactory
     }
@@ -49,11 +52,25 @@ class MainActivity : BaseActivity() {
         inject()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        checkForAppIntro()
+
         if (savedInstanceState == null) {
             firstSetup()
-
         }
         uiSetup()
+    }
+
+    private fun checkForAppIntro() {
+        val isFirstRun = sharedPreferences.getBoolean(
+            PreferenceKeys.APP_INTRO_PREFERENCE,
+            true
+        )
+        if (isFirstRun) {
+            val intent = Intent(this, AppIntroActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 
     private fun uiSetup() {

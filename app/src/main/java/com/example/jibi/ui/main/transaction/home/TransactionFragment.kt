@@ -160,7 +160,7 @@ constructor(
         //TODO DELETE THIS LINE FOR FINAL PROJECT JUST OF TESTING
         txt_expenses.setOnClickListener {
             //TODD JUST FOR TESTING
-//            resetPromoteState()
+            resetPromoteState()
         }
         main_bottom_sheet_back_arrow.setOnClickListener {
             //check for search view
@@ -203,6 +203,10 @@ constructor(
         ).apply()
         sharedPrefsEditor.putBoolean(
             PreferenceKeys.PROMOTE_ADD_CATEGORY_NAME,
+            true
+        ).apply()
+        sharedPrefsEditor.putBoolean(
+            PreferenceKeys.APP_INTRO_PREFERENCE,
             true
         ).apply()
         Toast.makeText(requireContext(), "PROMOTE GUIDE STATE RESET", Toast.LENGTH_SHORT).show()

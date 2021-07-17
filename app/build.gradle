@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.jibi"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 30
         versionCode 7
         versionName "1.0.6"
@@ -173,4 +173,8 @@ dependencies {
     //Android chart view / graph view library
     //https://github.com/PhilJay/MPAndroidChart#gradle-setup
     implementation 'com.github.PhilJay:MPAndroidChart:3.1.0'
+
+    //App intro library
+    //https://github.com/AppIntro/AppIntro
+    implementation 'com.github.AppIntro:AppIntro:6.1.0'
 }
