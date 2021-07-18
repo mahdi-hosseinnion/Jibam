@@ -202,5 +202,16 @@
 
     <string name="month">""</string>
     <string name="confirm">Confirm</string>
+    <string name="skip">SKIP</string>
+    <string name="done">DONE</string>
+
+    <string name="app_intro_slide_1_title">Convenient tracking</string>
+    <string name="app_intro_slide_1_description">Track your financial activity in just a few second</string>
+
+<!--    <string name="app_intro_slide_2_title">Track your spending</string>-->
+<!--    <string name="app_intro_slide_2_description">Keep track of your expenses</string>-->
+
+    <string name="app_intro_slide_2_title">Practical graph</string>
+    <string name="app_intro_slide_2_description">Know where your money goes with categories</string>
 
 </resources>

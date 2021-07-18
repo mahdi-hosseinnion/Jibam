@@ -1,9 +1,10 @@
 package com.example.jibi.ui.app_intro
 
 import android.content.SharedPreferences
-import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
+import android.content.res.Resources
 import android.os.Bundle
+import android.util.Log
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import com.example.jibi.BaseApplication
 import com.example.jibi.R
@@ -18,34 +19,37 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 class AppIntroActivity : AppIntro() {
 
+    private val TAG = "AppIntroActivity"
+
     @Inject
     lateinit var sharedPrefsEditor: SharedPreferences.Editor
+
+    @Inject
+    lateinit var _resources: Resources
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         inject()
         super.onCreate(savedInstanceState)
         // Call addSlide passing your Fragments.
         // You can use AppIntroFragment to use a pre-built fragment
+        this.setSkipText(_getString(R.string.skip))
+        this.setDoneText(_getString(R.string.done))
+
         addSlide(
             AppIntroFragment.newInstance(
-                title = "Welcome...",
-                description = "This is the first slide of the example",
-                imageDrawable = R.drawable.ic_cat_dried_fruits,
-                backgroundDrawable = R.drawable.ic_cat_awards,
-                titleColor = Color.YELLOW,
-                descriptionColor = Color.RED,
-                backgroundColor = Color.BLUE
+                title = _getString(R.string.app_intro_slide_1_title),
+                description = _getString(R.string.app_intro_slide_1_description),
+                imageDrawable = R.drawable.ic_app_intro_search,
+                backgroundDrawable = R.drawable.app_intro_back_slide_1,
             )
         )
         addSlide(
             AppIntroFragment.newInstance(
-                title = "...Let's get started!",
-                description = "This is the last slide, I won't annoy you more :)",
-                imageDrawable = R.drawable.ic_cat_clothing,
-                backgroundDrawable = R.drawable.ic_cat_car,
-                titleColor = Color.YELLOW,
-                descriptionColor = Color.RED,
-                backgroundColor = Color.BLUE
+                title = _getString(R.string.app_intro_slide_2_title),
+                description = _getString(R.string.app_intro_slide_2_description),
+                imageDrawable = R.drawable.ic_app_intro_graph,
+                backgroundDrawable = R.drawable.app_intro_back_slide_2,
             )
         )
     }
@@ -74,6 +78,15 @@ class AppIntroActivity : AppIntro() {
             PreferenceKeys.APP_INTRO_PREFERENCE,
             false
         ).apply()
+    }
+
+    private fun _getString(@StringRes resId: Int): String {
+        return try {
+            _resources.getString(resId)
+        } catch (e: Exception) {
+            Log.e(TAG, "_getString: resourceId: $resId & _resources: $_resources ", e)
+            getString(resId)
+        }
     }
 }
 

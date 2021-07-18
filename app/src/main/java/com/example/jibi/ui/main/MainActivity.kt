@@ -50,10 +50,10 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         inject()
+        checkForAppIntro()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        checkForAppIntro()
 
         if (savedInstanceState == null) {
             firstSetup()

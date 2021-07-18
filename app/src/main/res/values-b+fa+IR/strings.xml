@@ -201,4 +201,14 @@
     <string name="are_you_sure_delete_transaction">"آیا شما مطمئن هستید که میخواهید این تراکنش را حذف کنید؟"</string>
     <string name="month">"ماه"</string>
     <string name="confirm">تایید</string>
+    <string name="skip">رد شدن</string>
+    <string name="done">باشه</string>
+
+
+    <string name="app_intro_slide_1_title">پایش راحت</string>
+    <string name="app_intro_slide_1_description">روند مخارج و درآمد را ثبت کنید و آن ها را به راحتی تحت نظر بگیرید</string>
+
+    <string name="app_intro_slide_2_title">نمودار های کابردی</string>
+    <string name="app_intro_slide_2_description">با دسته بندی های ساده بدون پولات کجا میره</string>
+
 </resources><!--source https://developer.android.com/training/basics/supporting-devices/languages-->
