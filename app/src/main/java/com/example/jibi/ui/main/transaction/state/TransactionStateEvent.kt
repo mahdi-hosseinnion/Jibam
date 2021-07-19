@@ -108,12 +108,13 @@ sealed class TransactionStateEvent : StateEvent {
         }
 
         data class DeleteTransaction(
-            val record: Record
+            val transaction: Record,
+            val showSuccessToast: Boolean = true
         ) : OneShotOperationsTransactionStateEvent() {
             override fun errorInfo(): String =
-                "ERROR: deleting record! recordMoney = ${record.money}"
+                "ERROR: deleting record! recordMoney = ${transaction.money}"
 
-            override fun getId(): String = "DeleteTransaction $record ${this.hashCode()}"
+            override fun getId(): String = "DeleteTransaction $transaction ${this.hashCode()}"
         }
 
         data class DeleteTransactionById(

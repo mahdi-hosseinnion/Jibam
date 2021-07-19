@@ -264,19 +264,27 @@ constructor(
         stateEvent: DeleteTransaction
     ): DataState<TransactionViewState> {
         val cacheResult = safeCacheCall {
-            recordsDao.deleteRecord(stateEvent.record)
+            recordsDao.deleteRecord(stateEvent.transaction)
         }
         return object : CacheResponseHandler<TransactionViewState, Int>(
             response = cacheResult,
             stateEvent = stateEvent
         ) {
             override suspend fun handleSuccess(resultObj: Int): DataState<TransactionViewState> {
-                return DataState.data(
-                    response = buildResponse(
-                        message = getString(R.string.transaction_successfully_deleted),
-                        UIComponentType.Toast,
+
+                val response = if (stateEvent.showSuccessToast) buildResponse(
+                    message = getString(R.string.transaction_successfully_deleted),
+                    UIComponentType.Toast,
+                    MessageType.Success
+                ) else {
+                    buildResponse(
+                        message = "",
+                        UIComponentType.None,
                         MessageType.Success
                     )
+                }
+                return DataState.data(
+                    response = response
                 )
             }
         }.getResult()

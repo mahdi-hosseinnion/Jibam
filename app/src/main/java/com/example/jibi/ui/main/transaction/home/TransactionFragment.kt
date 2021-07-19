@@ -461,7 +461,8 @@ constructor(
                         //delete from database
                         viewModel.launchNewJob(
                             TransactionStateEvent.OneShotOperationsTransactionStateEvent.DeleteTransaction(
-                                deletedTrans
+                                transaction=  deletedTrans,
+                                showSuccessToast = false
                             )
                         )
                         //show snackBar
@@ -491,7 +492,7 @@ constructor(
         }
         uiCommunicationListener.onResponseReceived(
             buildResponse(
-                "Transaction successfully deleted",
+                _getString(R.string.transaction_successfully_deleted),
                 UIComponentType.UndoSnackBar(undoCallback, fragment_transacion_root),
                 MessageType.Info
             ), object : StateMessageCallback {
