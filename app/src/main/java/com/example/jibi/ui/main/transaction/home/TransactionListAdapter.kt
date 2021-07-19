@@ -250,7 +250,7 @@ abstract class TransactionListAdapter(
         }
 
         override fun onInserted(position: Int, count: Int) {
-            adapter.notifyItemRangeChanged(position, count)
+            adapter.notifyDataSetChanged()
         }
 
         override fun onMoved(fromPosition: Int, toPosition: Int) {
@@ -370,7 +370,7 @@ abstract class TransactionListAdapter(
             newList?.get(0) != NO_RESULT_FOUND_FOR_THIS_QUERY_MARKER &&
             newList?.get(0) != NO_RESULT_FOUND_IN_DATABASE
         ) {
-            if ((newList?.size ?: 0 )> 10) {
+            if ((newList?.size ?: 0) > 10) {
                 newList?.add(NO_MORE_RESULTS_BLOG_MARKER)
             }
         }

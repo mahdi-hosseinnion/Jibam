@@ -461,7 +461,7 @@ constructor(
                         //delete from database
                         viewModel.launchNewJob(
                             TransactionStateEvent.OneShotOperationsTransactionStateEvent.DeleteTransaction(
-                                transaction=  deletedTrans,
+                                transaction = deletedTrans,
                                 showSuccessToast = false
                             )
                         )
