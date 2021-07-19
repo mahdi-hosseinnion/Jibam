@@ -235,7 +235,7 @@ constructor(
                 currentLocale
             ).toInt()
         } else {
-            val currentDate = Date(_fromDate.value)
+            val currentDate = Date(timeStamp)
             return (SimpleDateFormat("yyyy", currentLocale).format(currentDate)).toInt()
         }
     }

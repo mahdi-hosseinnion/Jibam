@@ -27,8 +27,12 @@
                 android:id="@+id/toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:drawablePadding="8dp"
                 android:textColor="#00141E"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+
+                app:drawableEndCompat="@drawable/ic_arrows_pointing_down"
+                app:drawableRightCompat="@drawable/ic_arrows_pointing_down" />
         </androidx.appcompat.widget.Toolbar>
 
         <androidx.constraintlayout.widget.ConstraintLayout
