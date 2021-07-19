@@ -57,21 +57,21 @@ abstract class TransactionListAdapter(
         private val NO_MORE_RESULTS_BLOG_MARKER = Record(
             NO_MORE_RESULTS,
             0.0,
-            "",
+            "NO_MORE_RESULTS_BLOG_MARKER",
             0,
             0
         )
         val NO_RESULT_FOUND_FOR_THIS_QUERY_MARKER = Record(
             NO_RESULT_FOUND,
             0.0,
-            "",
+            "NO_RESULT_FOUND_FOR_THIS_QUERY_MARKER",
             0,
             0
         )
         val NO_RESULT_FOUND_IN_DATABASE = Record(
             DATABASE_IS_EMPTY,
             0.0,
-            "",
+            "NO_RESULT_FOUND_IN_DATABASE",
             0,
             0
         )
@@ -189,7 +189,7 @@ abstract class TransactionListAdapter(
                     ),
                     _resources,
                     R.id.nullTRANSACTION,
-                    R.string.insert_some_transacion_with_add_button
+                    R.string.insert_some_transaction_with_add_button
                 )
             }
             TRANSACTION_ITEM -> {
@@ -297,7 +297,7 @@ abstract class TransactionListAdapter(
     }
 
     private fun isHeader(position: Int): Boolean {
-        if (position <= itemCount) {
+        if (position < itemCount) {
             return differ.currentList[position].id < 0
         }
         return true
@@ -369,8 +369,11 @@ abstract class TransactionListAdapter(
         if (isQueryExhausted &&
             newList?.get(0) != NO_RESULT_FOUND_FOR_THIS_QUERY_MARKER &&
             newList?.get(0) != NO_RESULT_FOUND_IN_DATABASE
-        )
-            newList?.add(NO_MORE_RESULTS_BLOG_MARKER)
+        ) {
+            if ((newList?.size ?: 0 )> 10) {
+                newList?.add(NO_MORE_RESULTS_BLOG_MARKER)
+            }
+        }
         val commitCallback = Runnable {
             // if process died must restore list position
             // very annoying

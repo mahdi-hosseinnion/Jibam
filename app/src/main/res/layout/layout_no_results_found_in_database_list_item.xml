@@ -1,16 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="88dp"
-    android:background="#F0F0F0">
+    android:layout_height="300dp"
+    android:background="#F5F5F5"
+    android:orientation="vertical"
+    android:padding="32dp">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="65"
+        app:srcCompat="@drawable/ic_no_results_found_in_database" />
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:layout_margin="16dp"
-        android:textColor="@color/black"
         android:id="@+id/nullTRANSACTION"
-        android:text="@string/insert_some_transacion_with_add_button" />
-</FrameLayout>
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_margin="16dp"
+        android:layout_weight="35"
+        android:gravity="center"
+        android:text="@string/insert_some_transaction_with_add_button"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+</LinearLayout>

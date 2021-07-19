@@ -181,8 +181,12 @@
     <string name="category_successfully_deleted">"دسته با موفقیت حذف شد"</string>
     <string name="category_pinned">"دسته به بالا سنجاق شد"</string>
 
-    <string name="no_result_found_for_this_search">هیج تراکنشی برای جست و جو شما یافت نشد :(</string>
-    <string name="insert_some_transacion_with_add_button">هیچ تراکنشی وجود ندارد!</string>
+    <string name="no_result_found_for_this_search">هیج تراکنشی برای جست و جو شما یافت نشد</string>
+    <string name="insert_some_transaction_with_add_button">
+    هیچ تراکنشی وجود ندارد
+    \n
+    برای اضافه کردن روی + کلید کنید
+    </string>
     <string name="farsi">فارسی</string>
     <string name="language">زبان</string>
     <string name="system_default">پیشفرض سیستم (پیشنهادی)</string>

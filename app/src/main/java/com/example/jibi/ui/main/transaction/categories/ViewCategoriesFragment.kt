@@ -17,6 +17,7 @@ import com.example.jibi.models.Category
 import com.example.jibi.ui.main.transaction.BaseTransactionFragment
 import com.example.jibi.ui.main.transaction.categories.AddCategoryFragment.Companion.EXPENSES
 import com.example.jibi.ui.main.transaction.categories.AddCategoryFragment.Companion.INCOME
+import com.example.jibi.ui.main.transaction.home.TransactionListAdapter
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.*
 import com.google.android.material.tabs.TabLayoutMediator
@@ -32,6 +33,7 @@ import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt
 import uk.co.samuelwall.materialtaptargetprompt.extras.backgrounds.RectanglePromptBackground
 import uk.co.samuelwall.materialtaptargetprompt.extras.focals.RectanglePromptFocal
 import javax.inject.Inject
+import kotlin.random.Random
 
 @FlowPreview
 @ExperimentalCoroutinesApi
@@ -240,6 +242,27 @@ constructor(
 
                         changePinState(item.ordering < 0)
 
+                        if (item.id > 0) {
+                            try {
+                                cardView_view_category.setCardBackgroundColor(
+                                    resources.getColor(
+                                        TransactionListAdapter.listOfColor[(item.id.minus(
+                                            1
+                                        ))]
+                                    )
+                                )
+                            } catch (e: Exception) {
+                                //apply random color
+                                cardView_view_category.setCardBackgroundColor(
+                                    resources.getColor(
+                                        TransactionListAdapter.listOfColor[Random.nextInt(
+                                            TransactionListAdapter.listOfColor.size
+                                        )]
+                                    )
+                                )
+                            }
+                        }
+
                         val categoryImageUrl = this.resources.getIdentifier(
                             "ic_cat_${item.img_res}",
                             "drawable",
@@ -272,9 +295,9 @@ constructor(
 
             fun changePinState(isPinned: Boolean) {
                 if (isPinned)
-                    itemView.pin_category.setImageResource(android.R.drawable.btn_star_big_on)
+                    itemView.pin_category.setImageResource(R.drawable.ic_pin)
                 else
-                    itemView.pin_category.setImageResource(android.R.drawable.btn_star_big_off)
+                    itemView.pin_category.setImageResource(R.drawable.ic_unpin)
             }
 
             private fun showPromote() {
