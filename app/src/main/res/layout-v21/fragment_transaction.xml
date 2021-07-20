@@ -20,6 +20,7 @@
             android:layout_height="@dimen/mtrl_toolbar_default_height"
             android:background="@color/purple_500"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -34,9 +35,12 @@
         </androidx.appcompat.widget.Toolbar>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/summery_money_root"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_margin="8dp"
+            android:background="@drawable/ic_endless_constellation"
+            android:elevation="1dp"
             android:padding="8dp"
             android:paddingTop="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -49,7 +53,7 @@
                 android:id="@+id/txt_balance_viewHolder"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:elevation="8dp"
+                android:elevation="1dp"
                 android:foregroundGravity="center"
                 android:gravity="center"
                 android:text="@string/total_balance"
@@ -66,7 +70,7 @@
                 android:layout_height="0dp"
                 android:layout_marginTop="8dp"
                 android:layout_weight="10"
-                android:elevation="8dp"
+                android:elevation="1dp"
                 android:foregroundGravity="center"
                 android:gravity="center"
                 android:textColor="@color/white"
@@ -95,7 +99,7 @@
                     android:layout_margin="8dp"
                     android:layout_weight="1"
                     android:background="@drawable/income_background"
-                    android:elevation="8dp"
+                    android:elevation="1dp"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -132,7 +136,7 @@
                     android:layout_margin="8dp"
                     android:layout_weight="1"
                     android:background="@drawable/expenses_background"
-                    android:elevation="8dp"
+                    android:elevation="1dp"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -175,6 +179,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/bottom_sheet_bg"
+        android:elevation="4dp"
         android:orientation="vertical"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
@@ -304,6 +309,7 @@
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
         android:contentDescription="@string/create_new_transaction"
+        android:elevation="6dp"
         android:src="@android:drawable/ic_input_add" />
 
 

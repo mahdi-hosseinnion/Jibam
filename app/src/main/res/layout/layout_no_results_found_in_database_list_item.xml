@@ -3,14 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="300dp"
-    android:background="#F5F5F5"
-    android:orientation="vertical"
-    android:padding="32dp">
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E6E6E6" />
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_gravity="center"
         android:layout_weight="65"
+        android:gravity="center"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
         app:srcCompat="@drawable/ic_no_results_found_in_database" />
 
     <TextView
@@ -18,9 +26,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="center"
-        android:layout_margin="16dp"
         android:layout_weight="35"
         android:gravity="center"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
         android:text="@string/insert_some_transaction_with_add_button"
         android:textColor="@color/black"
         android:textSize="16sp" />

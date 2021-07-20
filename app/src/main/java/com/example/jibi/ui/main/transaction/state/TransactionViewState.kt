@@ -27,7 +27,13 @@ data class TransactionViewState(
         var balance: Double = 0.0,
         var income: Double = 0.0,
         var expenses: Double = 0.0
-    )
+    ) {
+        fun inNotNull(): Boolean {
+            return (balance != 0.0 ||
+                    income != 0.0 ||
+                    expenses != 0.0)
+        }
+    }
 
     data class RecentlyDeletedFields(
         var recentlyDeletedTrans: Record? = null,

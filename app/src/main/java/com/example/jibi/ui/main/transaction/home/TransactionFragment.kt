@@ -36,6 +36,8 @@ import com.example.jibi.ui.main.transaction.MonthManger
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.*
 import com.example.jibi.util.PreferenceKeys.PROMOTE_FAB_TRANSACTION_FRAGMENT
+import com.example.jibi.util.PreferenceKeys.PROMOTE_MONTH_MANGER
+import com.example.jibi.util.PreferenceKeys.PROMOTE_SUMMERY_MONEY
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -49,6 +51,8 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt
+import uk.co.samuelwall.materialtaptargetprompt.extras.backgrounds.RectanglePromptBackground
+import uk.co.samuelwall.materialtaptargetprompt.extras.focals.RectanglePromptFocal
 import java.util.*
 import javax.inject.Inject
 import kotlin.random.Random
@@ -162,6 +166,10 @@ constructor(
             //TODD JUST FOR TESTING
             resetPromoteState()
         }
+        //TODO DELETE THIS LINE FOR FINAL PROJECT JUST OF TESTING
+        txt_income.setOnClickListener {
+            showSummeryMoneyPromote()
+        }
         main_bottom_sheet_back_arrow.setOnClickListener {
             //check for search view
             if (searchViewState.isVisible()) {
@@ -207,6 +215,14 @@ constructor(
         ).apply()
         sharedPrefsEditor.putBoolean(
             PreferenceKeys.APP_INTRO_PREFERENCE,
+            true
+        ).apply()
+        sharedPrefsEditor.putBoolean(
+            PreferenceKeys.PROMOTE_SUMMERY_MONEY,
+            true
+        ).apply()
+        sharedPrefsEditor.putBoolean(
+            PreferenceKeys.PROMOTE_MONTH_MANGER,
             true
         ).apply()
         Toast.makeText(requireContext(), "PROMOTE GUIDE STATE RESET", Toast.LENGTH_SHORT).show()
@@ -367,6 +383,9 @@ constructor(
                     recyclerAdapter.submitList(transactionList, true)
                 }
                 it.summeryMoney.let { sm ->
+                    if (sm.inNotNull()) {
+                        checkForSummeryMoneyPromote()
+                    }
                     sm.balance = (sm.income.plus(sm.expenses))
                     txt_balance.text = separate3By3AndRoundIt(sm.balance, currentLocale)
                     if (sm.expenses != 0.0) {
@@ -730,10 +749,25 @@ constructor(
         if (sharedPreferences.getBoolean(PROMOTE_FAB_TRANSACTION_FRAGMENT, true)) {
             trySafe { showFabPromote() }
         }
-
     }
 
-    fun showFabPromote() {
+    private fun checkForSummeryMoneyPromote() {
+        if (!(sharedPreferences.getBoolean(PROMOTE_FAB_TRANSACTION_FRAGMENT, true))) {
+
+            if (sharedPreferences.getBoolean(PROMOTE_SUMMERY_MONEY, true)) {
+                trySafe { showSummeryMoneyPromote() }
+
+            } else {
+
+                if (sharedPreferences.getBoolean(PROMOTE_MONTH_MANGER, true)) {
+                    trySafe { showMonthMangerPromote() }
+                }
+            }
+        }
+    }
+
+
+    private fun showFabPromote() {
         val mFabPrompt = MaterialTapTargetPrompt.Builder(this)
             .setTarget(R.id.fab)
             .setPrimaryText(_getString(R.string.fab_tap_target_primary))
@@ -742,6 +776,44 @@ constructor(
                 if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED || state == MaterialTapTargetPrompt.STATE_DISMISSING) {
                     sharedPrefsEditor.putBoolean(
                         PROMOTE_FAB_TRANSACTION_FRAGMENT,
+                        false
+                    ).apply()
+                }
+            }
+            .create()
+        mFabPrompt!!.show()
+    }
+
+    private fun showSummeryMoneyPromote() {
+        val mFabPrompt = MaterialTapTargetPrompt.Builder(this)
+            .setTarget(R.id.summery_money_root)
+            .setPrimaryText(_getString(R.string.summery_money_tap_target_primary))
+            .setPromptBackground(RectanglePromptBackground().setCornerRadius(10f, 10f))
+            .setPromptFocal(RectanglePromptFocal())
+            .setPromptStateChangeListener { _, state ->
+                if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED || state == MaterialTapTargetPrompt.STATE_DISMISSING) {
+                    sharedPrefsEditor.putBoolean(
+                        PROMOTE_SUMMERY_MONEY,
+                        false
+                    ).apply()
+                    //check for month promote
+                    if (sharedPreferences.getBoolean(PROMOTE_MONTH_MANGER, true)) {
+                        trySafe { showMonthMangerPromote() }
+                    }
+                }
+            }
+            .create()
+        mFabPrompt!!.show()
+    }
+
+    private fun showMonthMangerPromote() {
+        val mFabPrompt = MaterialTapTargetPrompt.Builder(this)
+            .setTarget(R.id.toolbar_title)
+            .setPrimaryText(_getString(R.string.month_manager_tap_target_primary))
+            .setPromptStateChangeListener { _, state ->
+                if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED || state == MaterialTapTargetPrompt.STATE_DISMISSING) {
+                    sharedPrefsEditor.putBoolean(
+                        PROMOTE_MONTH_MANGER,
                         false
                     ).apply()
                 }

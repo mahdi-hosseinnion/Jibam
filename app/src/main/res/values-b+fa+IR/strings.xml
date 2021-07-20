@@ -151,6 +151,10 @@
     <string name="fab_tap_target_primary">"اولین تراکنش خود را ایجاد کنید"</string>
     <string name="fab_tap_target_secondary">"برای ایجاد اولین تراکنش خود کلیک کنید"</string>
 
+    <string name="summery_money_tap_target_primary">جمع کل هزینه ها و درآمد ها و جمع کل آنها در این ماه</string>
+
+    <string name="month_manager_tap_target_primary">برای تغییر ماه کلیک کنید</string>
+
     <string name="edt_money_tap_target_primary">"مقدار هزینه تراکنش را وارد کنید"</string>
     <string name="edt_money_tap_target_secondary">"از ماشین حساب داخل اپیکیشن میتوانید استفاده کنید"</string>
 

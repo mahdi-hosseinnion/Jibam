@@ -334,13 +334,21 @@ abstract class TransactionListAdapter(
 
     fun removeAt(position: Int): Record? {
         val newList = differ.currentList.toMutableList()
-        val beforeRecord = differ.currentList[position.minus(1)]
-        val afterRecord = differ.currentList[position.plus(1)]
+        val beforeRecord = try {
+            differ.currentList[position.minus(1)]
+        } catch (e: Exception) {
+            null
+        }
+        val afterRecord = try {
+            differ.currentList[position.plus(1)]
+        } catch (e: Exception) {
+            null
+        }
 
         var removedHeader: Record? = null
 
-        if (beforeRecord.id == HEADER_ITEM &&
-            afterRecord.id == HEADER_ITEM
+        if (beforeRecord?.id == HEADER_ITEM &&
+            afterRecord?.id == HEADER_ITEM
         ) {
             removedHeader = newList.removeAt(position.minus(1))
         }

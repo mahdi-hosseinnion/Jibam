@@ -147,7 +147,11 @@
     <string name="unable_to_get_date">Unable to save the date please try again!</string>
     <!--    tap targets-->
     <string name="fab_tap_target_primary">Create your first transaction</string>
-    <string name="fab_tap_target_secondary">"ap to create your first transaction</string>
+    <string name="fab_tap_target_secondary">"Tap to create your first transaction</string>
+
+    <string name="summery_money_tap_target_primary">Sum of income, expenses and total for this month</string>
+
+    <string name="month_manager_tap_target_primary">Tap to change month</string>
 
     <string name="edt_money_tap_target_primary">Insert amount of money for transaction</string>
     <string name="edt_money_tap_target_secondary">You can use calculator</string>

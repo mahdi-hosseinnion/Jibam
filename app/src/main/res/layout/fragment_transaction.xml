@@ -38,6 +38,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:id="@+id/summery_money_root"
+            android:background="@drawable/ic_endless_constellation"
             android:layout_margin="8dp"
             android:padding="8dp"
             android:paddingTop="0dp"
