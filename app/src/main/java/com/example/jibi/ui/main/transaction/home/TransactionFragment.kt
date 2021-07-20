@@ -225,6 +225,11 @@ constructor(
             PreferenceKeys.PROMOTE_MONTH_MANGER,
             true
         ).apply()
+        sharedPrefsEditor.putBoolean(
+            PreferenceKeys.DID_USER_SELECT_LANGUAGE,
+            false
+        ).apply()
+
         Toast.makeText(requireContext(), "PROMOTE GUIDE STATE RESET", Toast.LENGTH_SHORT).show()
     }
 
