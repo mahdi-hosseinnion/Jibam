@@ -213,6 +213,9 @@
     <string name="done">باشه</string>
 
 
+    <string name="app_intro_slide_0_title">جیبی دستیار مالی جدید تو</string>
+    <string name="app_intro_slide_0_description">به راحتی فعالیت های مالی خود را تحت نظر بگیر و ببین چه چیزهایی دارن یواشکی جیبتو خالی می کنند :)</string>
+
     <string name="app_intro_slide_1_title">پایش راحت</string>
     <string name="app_intro_slide_1_description">روند مخارج و درآمد را ثبت کنید و آن ها را به راحتی تحت نظر بگیرید</string>
 

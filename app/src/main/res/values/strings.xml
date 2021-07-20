@@ -213,6 +213,10 @@
     <string name="skip">SKIP</string>
     <string name="done">DONE</string>
 
+    <string name="app_intro_slide_0_title">Jibi is your new Financial Assistant</string>
+    <string name="app_intro_slide_0_description">Track your financial activity and save more money</string>
+
+
     <string name="app_intro_slide_1_title">Convenient tracking</string>
     <string name="app_intro_slide_1_description">Track your financial activity in just a few second</string>
 
