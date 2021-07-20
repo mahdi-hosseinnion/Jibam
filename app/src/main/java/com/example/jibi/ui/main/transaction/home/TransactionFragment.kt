@@ -159,16 +159,16 @@ constructor(
         }
         //TODO DELETE THIS LINE FOR FINAL PROJECT JUST OF TESTING
         txt_balance.setOnClickListener {
-            insertRandomTransaction()
+//            insertRandomTransaction()
         }
         //TODO DELETE THIS LINE FOR FINAL PROJECT JUST OF TESTING
         txt_expenses.setOnClickListener {
             //TODD JUST FOR TESTING
-            resetPromoteState()
+//            resetPromoteState()
         }
         //TODO DELETE THIS LINE FOR FINAL PROJECT JUST OF TESTING
         txt_income.setOnClickListener {
-            showSummeryMoneyPromote()
+//            showSummeryMoneyPromote()
         }
         main_bottom_sheet_back_arrow.setOnClickListener {
             //check for search view
