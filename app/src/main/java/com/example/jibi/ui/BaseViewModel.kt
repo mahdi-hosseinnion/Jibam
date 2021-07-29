@@ -76,7 +76,7 @@ abstract class BaseViewModel<OneShotOperationsStateEvent, ViewState> : ViewModel
             }
         }
         //add job to active job stack
-        _activeJobStack.put(stateEvent.getId(), job!!)
+        _activeJobStack.put(stateEvent.getId(), job)
 
         job.invokeOnCompletion { throwable ->
             _activeJobStack.remove(stateEvent.getId())

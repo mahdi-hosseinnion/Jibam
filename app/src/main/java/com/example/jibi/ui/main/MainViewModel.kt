@@ -1,27 +1,27 @@
 package com.example.jibi.ui.main
 
 import android.util.Log
-import androidx.lifecycle.*
-import androidx.navigation.fragment.DialogFragmentNavigatorDestinationBuilder
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewModelScope
 import com.example.jibi.di.main.MainScope
-import com.example.jibi.models.*
-import com.example.jibi.repository.buildResponse
+import com.example.jibi.models.Category
+import com.example.jibi.models.CategoryImages
+import com.example.jibi.models.Record
+import com.example.jibi.models.SearchModel
 import com.example.jibi.repository.main.MainRepository
 import com.example.jibi.ui.BaseViewModel
-import com.example.jibi.ui.main.transaction.TransactionListAdapter.Companion.NO_RESULT_FOUND_FOR_THIS_QUERY_MARKER
-import com.example.jibi.ui.main.transaction.TransactionListAdapter.Companion.NO_RESULT_FOUND_IN_DATABASE
-import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
+import com.example.jibi.ui.main.transaction.MonthManger
+import com.example.jibi.ui.main.transaction.home.TransactionListAdapter.Companion.NO_RESULT_FOUND_FOR_THIS_QUERY_MARKER
+import com.example.jibi.ui.main.transaction.home.TransactionListAdapter.Companion.NO_RESULT_FOUND_IN_DATABASE
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent.*
 import com.example.jibi.ui.main.transaction.state.TransactionViewState
-import com.example.jibi.util.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
+import com.example.jibi.ui.main.transaction.state.TransactionViewState.RecentlyDeletedFields
+import com.example.jibi.util.Constants
+import com.example.jibi.util.DataState
+import com.example.jibi.util.mahdiLog
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 //instance search
@@ -33,109 +33,120 @@ import javax.inject.Inject
 class MainViewModel
 @Inject
 constructor(
-    private val mainRepository: MainRepository
+    private val mainRepository: MainRepository,
+    private val monthManger: MonthManger
 ) : BaseViewModel<OneShotOperationsTransactionStateEvent, TransactionViewState>() {
     val GET_SUM_OF_ALL_EXPENSES = "getting sum of all expenses"
     val GET_SUM_OF_ALL_INCOME = "getting sum of all income"
     val GET_LIST_OF_TRANSACTION = "getting the list of transaction"
     val GET_LIST_OF_CATEGORY = "getting the list of category"
-    private val TAG1 = "MainViewModel"
 
     //search stuff
     // In our ViewModel
     var queryChannel = MutableStateFlow(SearchModel())
 
-
     init {
         //flow stuff
+        //TODO CHANGE THIS CODE TO BETTER ONE ITS TERRIBLE
         viewModelScope.launch {
+            val jobList = ArrayList<Job>()
+            monthManger.currentMonth.collect { month ->
 
-            launch {
-                mainRepository.getCategoryList()
-                    //loading stuff
-                    .onStart { increaseLoading(GET_LIST_OF_CATEGORY) }
-                    .catch { cause -> addToMessageStack(throwable = cause) }
-                    .collect {
-                        //loading stuff
-                        decreaseLoading(GET_LIST_OF_CATEGORY)
-                        it?.let {
-                            setListOfCategories(it)
-                        }
-                    }
-            }
-
-            launch {
-                //TODO HANDLE WHERE TO INCREMENT AND WHEN TO DECREMENT LOADING
-                mainRepository.getSumOfExpenses()
-                    //loading stuff
-                    .onStart { increaseLoading(GET_SUM_OF_ALL_EXPENSES) }
-                    .catch { cause -> addToMessageStack(throwable = cause) }
-                    .collect {
-                        //loading stuff
-                        decreaseLoading(GET_SUM_OF_ALL_EXPENSES)
-                        it?.let {
-                            setAllTransactionExpenses(it)
-                        }
-                    }
-            }
-            //TODO HANDLE WHERE TO INCREMENT AND WHEN TO DECREMENT LOADING
-            launch {
-                mainRepository.getSumOfIncome()
-                    //loading stuff
-                    .onStart { increaseLoading(GET_SUM_OF_ALL_INCOME) }
-                    .catch { cause -> addToMessageStack(throwable = cause) }
-                    .collect {
-                        //loading stuff
-                        decreaseLoading(GET_SUM_OF_ALL_INCOME)
-                        it?.let {
-                            setAllTransactionIncome(it)
-                        }
-                    }
-                //TODO HANDLE WHERE TO INCREMENT AND WHEN TO DECREMENT LOADING
-            }
-            launch {
-
-                queryChannel
-                    .debounce(Constants.SEARCH_DEBOUNCE)
-                    .distinctUntilChanged()
-                    .collectLatest {
-
-                        Log.d(TAG, "searchDEBUG: 2-- ${it.query}")
-                        //send query to repository
-                        mainRepository.getTransactionList(searchModel = it)
-                            //loading stuff
-                            .onStart { increaseLoading(GET_LIST_OF_TRANSACTION) }
-                            .catch { cause ->
-                                addToMessageStack(throwable = cause)
-                                Log.d(TAG, "crashed")
-                            }
-                            .collect { result ->
-                                //loading stuff
-                                decreaseLoading(GET_LIST_OF_TRANSACTION)
-                                if (result != null) {
-                                    setListOfTransactions(result)
-                                } else {
-                                    if (it.isNotEmpty()) {
-                                        //contain query params
-                                        setListOfTransactions(
-                                            listOf(
-                                                NO_RESULT_FOUND_FOR_THIS_QUERY_MARKER
-                                            )
-                                        )
-                                    } else {
-                                        setListOfTransactions(listOf(NO_RESULT_FOUND_IN_DATABASE))
-                                    }
-                                }
-
-                            }
-                    }
-                //special time out for search
-                launch {
-                    delay(Constants.CACHE_TIMEOUT)
-                    decreaseLoading(GET_LIST_OF_TRANSACTION)
+                for (job in jobList) {
+                    job.cancel()
                 }
-            }
+                jobList.clear()
 
+                jobList.add(launch {
+                    mainRepository.getCategoryList()
+                        //loading stuff
+                        .onStart { increaseLoading(GET_LIST_OF_CATEGORY) }
+                        .catch { cause -> addToMessageStack(throwable = cause) }
+                        .collect {
+                            //loading stuff
+                            decreaseLoading(GET_LIST_OF_CATEGORY)
+                            it?.let {
+                                setListOfCategories(it)
+                            }
+                        }
+                })
+
+                jobList.add(launch {
+                    //TODO HANDLE WHERE TO INCREMENT AND WHEN TO DECREMENT LOADING
+                    mainRepository.getSumOfExpenses(month.startOfMonth, month.endOfMonth)
+                        //loading stuff
+                        .onStart { increaseLoading(GET_SUM_OF_ALL_EXPENSES) }
+                        .catch { cause -> addToMessageStack(throwable = cause) }
+                        .collect {
+                            //loading stuff
+                            decreaseLoading(GET_SUM_OF_ALL_EXPENSES)
+                            setAllTransactionExpenses(it)
+
+                        }
+                })
+                //TODO HANDLE WHERE TO INCREMENT AND WHEN TO DECREMENT LOADING
+                jobList.add(launch {
+                    mainRepository.getSumOfIncome(month.startOfMonth, month.endOfMonth)
+                        //loading stuff
+                        .onStart { increaseLoading(GET_SUM_OF_ALL_INCOME) }
+                        .catch { cause -> addToMessageStack(throwable = cause) }
+                        .collect {
+                            //loading stuff
+                            decreaseLoading(GET_SUM_OF_ALL_INCOME)
+
+                            setAllTransactionIncome(it)
+
+                        }
+                    //TODO HANDLE WHERE TO INCREMENT AND WHEN TO DECREMENT LOADING
+                })
+                jobList.add(launch {
+
+                    queryChannel
+                        .debounce(Constants.SEARCH_DEBOUNCE)
+                        .distinctUntilChanged()
+                        .collectLatest {
+
+                            Log.d(TAG, "searchDEBUG: 2-- ${it.query}")
+                            //send query to repository
+                            mainRepository.getTransactionList(
+                                searchModel = it,
+                                minDate = month.startOfMonth,
+                                maxDate = month.endOfMonth
+                            )
+                                //loading stuff
+                                .onStart { increaseLoading(GET_LIST_OF_TRANSACTION) }
+                                .catch { cause ->
+                                    addToMessageStack(throwable = cause)
+                                    Log.d(TAG, "crashed")
+                                }
+                                .collect { result ->
+                                    //loading stuff
+                                    decreaseLoading(GET_LIST_OF_TRANSACTION)
+                                    mahdiLog(TAG, "collect in :${this.hashCode()}")
+                                    if (result != null) {
+                                        setListOfTransactions(result)
+                                    } else {
+                                        if (it.isNotEmpty()) {
+                                            //contain query params
+                                            setListOfTransactions(
+                                                listOf(
+                                                    NO_RESULT_FOUND_FOR_THIS_QUERY_MARKER
+                                                )
+                                            )
+                                        } else {
+                                            setListOfTransactions(listOf(NO_RESULT_FOUND_IN_DATABASE))
+                                        }
+                                    }
+
+                                }
+                        }
+                    //special time out for search
+                    launch {
+                        delay(Constants.CACHE_TIMEOUT)
+                        decreaseLoading(GET_LIST_OF_TRANSACTION)
+                    }
+                })
+            }
             //timeout loading decrese
             launch {
                 delay(Constants.CACHE_TIMEOUT)
@@ -148,7 +159,6 @@ constructor(
         }
     }
 
-
     override suspend fun getResultByStateEvent(stateEvent: OneShotOperationsTransactionStateEvent): DataState<TransactionViewState> {
         return when (stateEvent) {
 
@@ -160,6 +170,8 @@ constructor(
 
             is DeleteTransaction -> mainRepository.deleteTransaction(stateEvent)
 
+            is DeleteTransactionById -> mainRepository.deleteTransactionById(stateEvent)
+
             is DeleteCategory -> mainRepository.deleteCategory(stateEvent)
 
             is InsertCategory -> mainRepository.insertCategory(stateEvent)
@@ -168,15 +180,13 @@ constructor(
 
             is UpdateCategory -> mainRepository.updateCategory(stateEvent)
 
-            else -> {
-                DataState.error(
-                    buildResponse(
-                        message = "UNKNOWN STATE EVENT!",
-                        uiComponentType = UIComponentType.Toast
-                    )
-                )
-            }
+            is GetPieChartData -> mainRepository.getPieChartData(stateEvent)
 
+            is GetAllTransactionByCategoryId -> mainRepository.getAllTransactionByCategoryId(
+                stateEvent
+            )
+
+            is GetCategoryById -> mainRepository.getCategoryById(stateEvent)
         }
     }
 
@@ -185,39 +195,54 @@ constructor(
     override fun initNewViewState(): TransactionViewState = TransactionViewState()
 
     override fun handleNewData(viewState: TransactionViewState) {
-        viewState.summeryMoney?.let {
-            val update = getCurrentViewStateOrNew()
-                .copy(summeryMoney = it)
-            setViewState(update)
-        }
+
         viewState.transactionList?.let {
             val update = getCurrentViewStateOrNew()
                 .copy(transactionList = it)
             setViewState(update)
         }
+        viewState.pieChartData?.let {
+            val update = getCurrentViewStateOrNew()
+                .copy(pieChartData = it)
+            setViewState(update)
+        }
+        viewState.detailChartFields.category?.let {
+            val current = getCurrentViewStateOrNew()
+            val update = current.copy(
+                detailChartFields = current.detailChartFields.copy(
+                    category = it
+                )
+            )
+            setViewState(update)
+        }
+        viewState.detailChartFields.allTransaction?.let {
+            val current = getCurrentViewStateOrNew()
+            val update = current.copy(
+                detailChartFields = current.detailChartFields.copy(
+                    allTransaction = it
+                )
+            )
+            setViewState(update)
+
+        }
     }
 
-    private fun setAllTransactionIncome(newIncome: Double) {
-        val update = getCurrentViewStateOrNew()
-        if (update.summeryMoney != null) {
-            update.summeryMoney = update.summeryMoney?.copy(income = newIncome)
-        } else {
-            update.summeryMoney = SummaryMoney(income = newIncome)
-        }
+    private fun setAllTransactionIncome(newIncome: Double?) {
+        val former = getCurrentViewStateOrNew()
+        val update = former
+            .copy(summeryMoney = former.summeryMoney.copy(income = newIncome ?: 0.0))
         setViewState(update)
     }
 
-    private fun setAllTransactionExpenses(newExpenses: Double) {
-        val update = getCurrentViewStateOrNew()
-        if (update.summeryMoney != null) {
-            update.summeryMoney = update.summeryMoney?.copy(expenses = newExpenses)
-        } else {
-            update.summeryMoney = SummaryMoney(expenses = newExpenses)
-        }
+    private fun setAllTransactionExpenses(newExpenses: Double?) {
+        val former = getCurrentViewStateOrNew()
+        val update = former
+            .copy(summeryMoney = former.summeryMoney.copy(expenses = newExpenses ?: 0.0))
         setViewState(update)
     }
 
     private fun setListOfTransactions(transactionList: List<Record>) {
+        mahdiLog(TAG, "new transaciton:" + transactionList.size.toString())
         val update = getCurrentViewStateOrNew()
             .copy(transactionList = transactionList)
         setViewState(update)
@@ -236,7 +261,7 @@ constructor(
 
     fun setRecentlyDeletedTrans(transaction: Record, position: Int, header: Record?) {
         val update = getCurrentViewStateOrNew().copy(
-            recentlyDeletedFields = TransactionViewState.RecentlyDeletedFields(
+            recentlyDeletedFields = RecentlyDeletedFields(
                 recentlyDeletedTrans = transaction,
                 recentlyDeletedTransPosition = position,
                 recentlyDeletedHeader = header
@@ -247,7 +272,7 @@ constructor(
 
     fun setRecentlyDeletedTransToNull() {
         val update = getCurrentViewStateOrNew().copy(
-            recentlyDeletedFields = TransactionViewState.RecentlyDeletedFields()
+            recentlyDeletedFields = RecentlyDeletedFields()
         )
         setViewState(update)
     }

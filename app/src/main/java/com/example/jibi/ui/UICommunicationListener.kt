@@ -3,7 +3,6 @@ package com.example.jibi.ui
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.jibi.util.Response
-import com.example.jibi.util.StateEvent
 import com.example.jibi.util.StateMessageCallback
 
 
@@ -28,5 +27,7 @@ interface UICommunicationListener {
     fun showProgressBar(isLoading: Boolean)
 
     fun changeDrawerState(closeIt: Boolean)
+
+    fun recreateActivity()
 //    fun isStoragePermissionGranted(): Boolean
 }

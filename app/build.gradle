@@ -12,10 +12,10 @@ android {
 
     defaultConfig {
         applicationId "com.example.jibi"
-        minSdkVersion 17
+        minSdkVersion 15
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        versionCode 8
+        versionName "1.0.7"
 
         vectorDrawables.useSupportLibrary = true // for support .svg file api < 21
 
@@ -59,6 +59,12 @@ android {
         exclude 'META-INF/AL2.0'
         exclude 'META-INF/LGPL2.1'
         exclude("META-INF/*.kotlin_module")
+    }
+//    https://gunhansancar.com/change-language-programmatically-in-android/
+    bundle {
+        language {
+            enableSplit = false
+        }
     }
 }
 
@@ -154,7 +160,21 @@ dependencies {
     //card view
     implementation "androidx.cardview:cardview:1.0.0"
 
-    // material dialogs
-    def matieral_dialogs_version = "3.1.0"
-    implementation "com.afollestad.material-dialogs:core:$matieral_dialogs_version"
+    //shamsi date picker
+    implementation 'com.alirezaafkar:sundatepicker:2.1.2'
+    //MaterialTapTargetPrompt
+    //https://github.com/sjwall/MaterialTapTargetPrompt
+    implementation 'uk.co.samuelwall:material-tap-target-prompt:3.1.1'
+
+    //app restarted
+    //https://github.com/JakeWharton/ProcessPhoenix
+    implementation 'com.jakewharton:process-phoenix:2.0.0'
+
+    //Android chart view / graph view library
+    //https://github.com/PhilJay/MPAndroidChart#gradle-setup
+    implementation 'com.github.PhilJay:MPAndroidChart:3.1.0'
+
+    //App intro library
+    //https://github.com/AppIntro/AppIntro
+    implementation 'com.github.AppIntro:AppIntro:6.1.0'
 }

@@ -1,17 +1,20 @@
 package com.example.jibi.di
 
 import android.app.Application
-import android.os.Build
+import android.content.Context
+import android.content.SharedPreferences
+import android.content.res.Resources
 import androidx.core.os.ConfigurationCompat
 import androidx.room.Room
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
-import com.example.jibi.R
 import com.example.jibi.persistence.AppDatabase
 import com.example.jibi.persistence.AppDatabase.Companion.DATABASE_NAME
 import com.example.jibi.persistence.CategoriesDao
 import com.example.jibi.persistence.RecordsDao
+import com.example.jibi.util.LocaleHelper
+import com.example.jibi.util.PreferenceKeys
 import dagger.Module
 import dagger.Provides
 import java.util.*
@@ -19,6 +22,29 @@ import javax.inject.Singleton
 
 @Module
 object AppModule {
+
+    @JvmStatic
+    @Singleton
+    @Provides
+    fun provideSharedPreferences(
+        application: Application
+    ): SharedPreferences {
+        return application
+            .getSharedPreferences(
+                PreferenceKeys.APP_MAIN_PREFERENCES,
+                Context.MODE_PRIVATE
+            )
+    }
+
+    @JvmStatic
+    @Singleton
+    @Provides
+    fun provideSharedPrefsEditor(
+        sharedPreferences: SharedPreferences
+    ): SharedPreferences.Editor {
+        return sharedPreferences.edit()
+    }
+
     @JvmStatic
     @Singleton
     @Provides
@@ -48,9 +74,11 @@ object AppModule {
     @Singleton
     @Provides
     fun provideCurrentLocal(app: Application): Locale {
+        //TODO ADD FA/EN for differnet languages in case it didnet work or even _resource
         return ConfigurationCompat.getLocales(app.resources.configuration)[0]
 
     }
+
     @Singleton
     @Provides
     fun provideRequestOptions(): RequestOptions {
@@ -62,8 +90,25 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideGlideInstance(application: Application, requestOptions: RequestOptions): RequestManager {
+    fun provideGlideInstance(
+        application: Application,
+        requestOptions: RequestOptions
+    ): RequestManager {
         return Glide.with(application)
             .setDefaultRequestOptions(requestOptions)
     }
+
+    @JvmStatic
+    @Singleton
+    @Provides
+    fun provideResources(application: Application): Resources {
+        return LocaleHelper.getLocale(application)?.resources ?: application.resources;
+    }
+
+//    @JvmStatic
+//    @Singleton
+//    @Provides
+//    fun provideAppLanguage(locale: Locale): String {
+//        return locale.language
+//    }
 }

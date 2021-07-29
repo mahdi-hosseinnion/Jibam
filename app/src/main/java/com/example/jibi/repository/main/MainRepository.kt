@@ -1,22 +1,27 @@
 package com.example.jibi.repository.main
 
+import android.content.res.Resources
 import android.util.Log
+import androidx.annotation.StringRes
+import com.example.jibi.R
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
+import com.example.jibi.models.PieChartData
 import com.example.jibi.models.Record
 import com.example.jibi.models.SearchModel
 import com.example.jibi.persistence.*
 import com.example.jibi.repository.buildResponse
 import com.example.jibi.repository.safeCacheCall
-import com.example.jibi.ui.main.transaction.TransactionListAdapter
-import com.example.jibi.ui.main.transaction.TransactionListAdapter.Companion.TODAY
-import com.example.jibi.ui.main.transaction.TransactionListAdapter.Companion.YESTERDAY
-import com.example.jibi.ui.main.transaction.ViewCategoriesFragment
-import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
+import com.example.jibi.ui.main.transaction.home.TransactionListAdapter
+import com.example.jibi.ui.main.transaction.home.TransactionListAdapter.Companion.TODAY
+import com.example.jibi.ui.main.transaction.home.TransactionListAdapter.Companion.YESTERDAY
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent.*
 import com.example.jibi.ui.main.transaction.state.TransactionViewState
 import com.example.jibi.util.*
-import com.example.jibi.util.Constants.Companion.CACHE_TIMEOUT
+import com.example.jibi.util.Constants.CACHE_TIMEOUT
+import com.example.jibi.util.Constants.EXPENSES_TYPE_MARKER
+import com.example.jibi.util.Constants.INCOME_TYPE_MARKER
+import com.example.jibi.util.SolarCalendar.ShamsiPatterns.RECYCLER_VIEW
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
@@ -25,18 +30,17 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
-import kotlin.math.exp
 
 @ExperimentalCoroutinesApi
 @MainScope
 class MainRepository
 @Inject
 constructor(
-    val recordsDao: RecordsDao,
-    val categoriesDao: CategoriesDao,
-    val currentLocale: Locale
+    private val recordsDao: RecordsDao,
+    private val categoriesDao: CategoriesDao,
+    private val currentLocale: Locale,
+    private val resources: Resources
 ) {
-
     var today: String? = null
     var yesterday: String? = null
 
@@ -51,7 +55,7 @@ constructor(
         maxDate: Int? = null
     ): Flow<Double?> = recordsDao.getSumOfExpenses(minDate, maxDate)
 
-
+    fun getString(@StringRes id: Int) = resources.getString(id)
 //    recordsDao.getSumOfExpenses(minDate, maxDate)
 
     //queries
@@ -129,22 +133,14 @@ constructor(
 
     private fun currentDateInString(time: Int): String {
         val dv: Long = ((time.toLong()) * 1000) // its need to be in milisecond
-        val df: Date = Date(dv)
 
-        val transDate =
-            SimpleDateFormat(TransactionListAdapter.HEADER_DATE_PATTERN, currentLocale).format(df)
+        val transDate = getFormattedDate(dv)
 
         if (today == null) {
-            today = SimpleDateFormat(
-                TransactionListAdapter.HEADER_DATE_PATTERN,
-                currentLocale
-            ).format(Date(System.currentTimeMillis()))
+            today = getFormattedDate(System.currentTimeMillis())
         }
         if (yesterday == null) {
-            yesterday = SimpleDateFormat(
-                TransactionListAdapter.HEADER_DATE_PATTERN,
-                currentLocale
-            ).format(Date(System.currentTimeMillis().minus(86_400_000L)))
+            yesterday = getFormattedDate(System.currentTimeMillis().minus(86_400_000L))
         }
         if (transDate == today) {
             return TODAY
@@ -155,11 +151,24 @@ constructor(
         return transDate
     }
 
+    private fun getFormattedDate(unixTimeStamp: Long): String {
+        val df: Date = Date(unixTimeStamp)
+
+        return if (currentLocale.isFarsi()) {
+            SolarCalendar.calcSolarCalendar(df, RECYCLER_VIEW, currentLocale)
+        } else {
+            SimpleDateFormat(
+                TransactionListAdapter.HEADER_DATE_PATTERN,
+                currentLocale
+            ).format(df)
+        }
+
+    }
+
     //dataBase main dao
     suspend fun insertTransaction(
         stateEvent: InsertTransaction
     ): DataState<TransactionViewState> {
-        mahdiLog(TAG, "insertTransaction 001 called${stateEvent.record} ")
         val cacheResult = safeCacheCall {
             recordsDao.insertOrReplace(stateEvent.record)
         }
@@ -169,11 +178,10 @@ constructor(
             stateEvent = stateEvent
         ) {
             override suspend fun handleSuccess(resultObj: Long): DataState<TransactionViewState> {
-                mahdiLog(TAG, "insertTransaction 001 HAVE BEEN DONE called${stateEvent.record} ")
                 tryIncreaseCategoryOrdering(stateEvent.record.cat_id)
                 return DataState.data(
                     response = buildResponse(
-                        message = "Transaction Successfully inserted",
+                        message = getString(R.string.transaction_successfully_inserted),
                         UIComponentType.Toast,
                         MessageType.Success
                     )
@@ -243,7 +251,7 @@ constructor(
             override suspend fun handleSuccess(resultObj: Int): DataState<TransactionViewState> {
                 return DataState.data(
                     response = buildResponse(
-                        message = "Transaction Successfully Updated",
+                        message = getString(R.string.transaction_successfully_updated),
                         UIComponentType.Toast,
                         MessageType.Success
                     )
@@ -256,7 +264,37 @@ constructor(
         stateEvent: DeleteTransaction
     ): DataState<TransactionViewState> {
         val cacheResult = safeCacheCall {
-            recordsDao.deleteRecord(stateEvent.record)
+            recordsDao.deleteRecord(stateEvent.transaction)
+        }
+        return object : CacheResponseHandler<TransactionViewState, Int>(
+            response = cacheResult,
+            stateEvent = stateEvent
+        ) {
+            override suspend fun handleSuccess(resultObj: Int): DataState<TransactionViewState> {
+
+                val response = if (stateEvent.showSuccessToast) buildResponse(
+                    message = getString(R.string.transaction_successfully_deleted),
+                    UIComponentType.Toast,
+                    MessageType.Success
+                ) else {
+                    buildResponse(
+                        message = "",
+                        UIComponentType.None,
+                        MessageType.Success
+                    )
+                }
+                return DataState.data(
+                    response = response
+                )
+            }
+        }.getResult()
+    }
+
+    suspend fun deleteTransactionById(
+        stateEvent: DeleteTransactionById
+    ): DataState<TransactionViewState> {
+        val cacheResult = safeCacheCall {
+            recordsDao.deleteRecord(stateEvent.transactionId)
         }
         return object : CacheResponseHandler<TransactionViewState, Int>(
             response = cacheResult,
@@ -265,7 +303,7 @@ constructor(
             override suspend fun handleSuccess(resultObj: Int): DataState<TransactionViewState> {
                 return DataState.data(
                     response = buildResponse(
-                        message = "Transaction Successfully Deleted",
+                        message = getString(R.string.transaction_successfully_deleted),
                         UIComponentType.Toast,
                         MessageType.Success
                     )
@@ -287,7 +325,7 @@ constructor(
             override suspend fun handleSuccess(resultObj: Int): DataState<TransactionViewState> {
                 return DataState.data(
                     response = buildResponse(
-                        message = "Category Successfully Deleted",
+                        message = getString(R.string.category_successfully_deleted),
                         UIComponentType.Toast,
                         MessageType.Success
                     )
@@ -309,7 +347,7 @@ constructor(
             override suspend fun handleSuccess(resultObj: Long): DataState<TransactionViewState> {
                 return DataState.data(
                     response = buildResponse(
-                        message = "Category Successfully Deleted",
+                        message = getString(R.string.category_successfully_inserted),
                         UIComponentType.Toast,
                         MessageType.Success
                     )
@@ -359,7 +397,7 @@ constructor(
             override suspend fun handleSuccess(resultObj: Int): DataState<TransactionViewState> {
                 return DataState.data(
                     response = buildResponse(
-                        message = "Category Successfully Deleted",
+                        message = getString(R.string.category_pinned),
                         UIComponentType.Toast,
                         MessageType.Success
                     )
@@ -381,7 +419,7 @@ constructor(
             override suspend fun handleSuccess(resultObj: Int): DataState<TransactionViewState> {
                 return DataState.data(
                     response = buildResponse(
-                        message = "Transaction Successfully Updated",
+                        message = "Category Successfully Updated",
                         UIComponentType.None,
                         MessageType.Success
                     )
@@ -390,6 +428,137 @@ constructor(
         }.getResult()
     }
 
+    suspend fun getPieChartData(
+        stateEvent: GetPieChartData
+    ): DataState<TransactionViewState> {
+        val cacheResult = safeCacheCall {
+            calculatePercentage(
+                recordsDao.sumOfMoneyGroupByCategory(
+                    fromDate = stateEvent.fromDate,
+                    toDate = stateEvent.toDate
+                )
+            )
+        }
+        mahdiLog(TAG, cacheResult.toString())
+        return object : CacheResponseHandler<TransactionViewState, List<PieChartData>>(
+            response = cacheResult,
+            stateEvent = stateEvent
+        ) {
+            override suspend fun handleSuccess(resultObj: List<PieChartData>): DataState<TransactionViewState> {
+                return DataState.data(
+                    response = buildResponse(
+                        message = "Pie chart data successfully returned",
+                        UIComponentType.None,
+                        MessageType.Success
+
+                    ),
+                    data = TransactionViewState(
+                        pieChartData = resultObj
+                    )
+                )
+
+            }
+        }.getResult()
+    }
+
+    private fun calculatePercentage(values: List<PieChartData>): List<PieChartData> {
+        val sumOfAllExpenses =
+            values.filter { it.categoryType == EXPENSES_TYPE_MARKER }
+                .sumOf { it.sumOfMoney }
+
+        val sumOfAllIncome =
+            values.filter { it.categoryType == INCOME_TYPE_MARKER }
+                .sumOf { it.sumOfMoney }
+
+        val newList = ArrayList<PieChartData>()
+
+        for (item in values) {
+            val percentage: Double = when (item.categoryType) {
+                EXPENSES_TYPE_MARKER -> {
+                    (item.sumOfMoney.div(sumOfAllExpenses)).times(100)
+                }
+                INCOME_TYPE_MARKER -> {
+                    (item.sumOfMoney.div(sumOfAllIncome)).times(100)
+                }
+                else -> {
+                    0.0
+                }
+            }
+            newList.add(
+                PieChartData(
+                    categoryId = item.categoryId,
+                    percentage = percentage.roundToOneDigit(),
+                    sumOfMoney = item.sumOfMoney,
+                    categoryName = item.categoryName,
+                    categoryType = item.categoryType,
+                    categoryImage = item.categoryImage
+                )
+            )
+        }
+        return newList
+    }
+
+    suspend fun getCategoryById(
+        stateEvent: GetCategoryById
+    ): DataState<TransactionViewState> {
+        val cacheResult = safeCacheCall {
+            categoriesDao.getCategoryById(stateEvent.categoryId)
+        }
+
+        return object : CacheResponseHandler<TransactionViewState, Category>(
+            response = cacheResult,
+            stateEvent = stateEvent
+        ) {
+            override suspend fun handleSuccess(resultObj: Category): DataState<TransactionViewState> {
+                return DataState.data(
+                    response = buildResponse(
+                        message = "Category Successfully returned",
+                        UIComponentType.None,
+                        MessageType.Success
+                    ), data = TransactionViewState(
+                        detailChartFields = TransactionViewState.DetailChartFields(
+                            category = resultObj
+                        )
+                    )
+                )
+            }
+        }.getResult()
+    }
+
+
+    suspend fun getAllTransactionByCategoryId(
+        stateEvent: GetAllTransactionByCategoryId
+    ): DataState<TransactionViewState> {
+        val cacheResult = safeCacheCall {
+            recordsDao.getAllTransactionByCategoryId(
+                stateEvent.categoryId,
+                stateEvent.fromDate,
+                stateEvent.toDate
+            )
+        }
+        return object : CacheResponseHandler<TransactionViewState, List<Record>>(
+            response = cacheResult,
+            stateEvent = stateEvent
+        ) {
+            override suspend fun handleSuccess(resultObj: List<Record>): DataState<TransactionViewState> {
+                return DataState.data(
+                    response = buildResponse(
+                        message = "All transaction with category id:${stateEvent.categoryId} " +
+                                "successfully returned",
+                        UIComponentType.None,
+                        MessageType.Success
+
+                    ),
+                    data = TransactionViewState(
+                        detailChartFields = TransactionViewState.DetailChartFields(
+                            allTransaction = resultObj
+                        )
+                    )
+                )
+
+            }
+        }.getResult()
+    }
 
     /*
     categories transactions

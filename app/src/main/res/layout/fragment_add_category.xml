@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
 
-    tools:context=".ui.main.transaction.AddCategoryFragment">
+    tools:context=".ui.main.transaction.categories.AddCategoryFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/add_category_toolbar"
@@ -32,7 +32,9 @@
             android:layout_marginBottom="8dp"
             android:foregroundGravity="center"
             card_view:cardBackgroundColor="#D297EA"
-            card_view:cardCornerRadius="20dp">
+            card_view:cardCornerRadius="20dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="12dp">
 
             <ImageView
                 android:id="@+id/category_image"
@@ -50,13 +52,13 @@
             android:id="@+id/edt_categoryName"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="Category name" />
+            android:hint="@string/category_name" />
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="8dp"
-        android:background="@android:color/darker_gray" />
+        android:background="@color/white" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/insert_category_recyclerView"

@@ -9,6 +9,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
 @Module
 abstract class MainViewModelModule {
@@ -16,6 +17,7 @@ abstract class MainViewModelModule {
     @Binds
     abstract fun bindViewModelFactory(factory: MainViewModelFactory): ViewModelProvider.Factory
 
+    @FlowPreview
     @ExperimentalCoroutinesApi
     @Binds
     @IntoMap

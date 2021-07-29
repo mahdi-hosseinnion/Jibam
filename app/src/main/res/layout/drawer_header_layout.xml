@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="64dp"
+    android:layout_height="128dp"
     android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="center|start"
-        android:layout_marginStart="16dp"
         android:layout_weight="100"
         android:gravity="center|start"
         android:text="@string/jibi"
+        android:id="@+id/drawer_name"
+        android:background="@color/purple_700"
         android:textColor="@color/black"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:paddingLeft="16dp"
+        android:paddingStart="16dp" />
 
     <View
         android:layout_width="match_parent"

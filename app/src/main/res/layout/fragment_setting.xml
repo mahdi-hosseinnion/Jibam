@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#459825"
     android:orientation="vertical"
+
     tools:context=".ui.main.transaction.SettingFragment">
 
     <androidx.appcompat.widget.Toolbar
@@ -15,10 +15,62 @@
         android:background="@color/purple_500" />
 
     <TextView
+        android:id="@+id/language"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/setting"
+        android:layout_height="56dp"
+        android:layout_gravity="center|start"
+        android:layout_margin="8dp"
+        android:gravity="center|start"
+        android:text="@string/language"
+        android:textColor="@color/black"
+        android:textSize="24sp" />
 
-        android:textSize="180sp" />
+    <RadioGroup
+        android:id="@+id/language_radio_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/default_radio"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_gravity="center|start"
+            android:layout_margin="8dp"
+            android:gravity="center|start"
+
+            android:text="@string/system_default" />
+
+        <RadioButton
+            android:id="@+id/persion_radio"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_gravity="center|start"
+            android:layout_margin="8dp"
+            android:gravity="center|start"
+
+            android:text="@string/farsi" />
+
+        <RadioButton
+            android:id="@+id/english_radio"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_gravity="center|start"
+            android:layout_margin="8dp"
+            android:gravity="center|start"
+            android:text="@string/english" />
+
+    </RadioGroup>
+    <TextView
+        android:id="@+id/warning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_gravity="center|start"
+        android:padding="8dp"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/black"
+        android:gravity="center|start"
+        android:background="@color/backGround_gray"
+        android:text="@string/changelanugaealart"/>
 
 </LinearLayout>

@@ -7,9 +7,10 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:background="@drawable/bottom_sheet_select_category_bg"
-    tools:context=".ui.main.transaction.bottomSheet.CreateNewTransBottomSheet">
+    tools:context=".ui.main.transaction.home.bottomSheet.CreateNewTransBottomSheet">
 
     <LinearLayout
+        android:id="@+id/parent_bottomSHeet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -28,7 +29,7 @@
                 android:focusable="true"
                 android:tint="@color/black"
                 android:visibility="invisible"
-                app:srcCompat="@drawable/abc_vector_test" />
+                app:srcCompat="@drawable/ic_baseline_arrow_back_24" />
 
             <FrameLayout
                 android:id="@+id/bottom_sheet_tab_view_container"
@@ -43,7 +44,7 @@
                     android:id="@+id/indicator"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_gravity="start"
+                    android:layout_gravity="left"
                     android:background="@drawable/gradient_bg" />
 
                 <com.google.android.material.tabs.TabLayout
@@ -56,7 +57,8 @@
                     app:tabIndicatorHeight="0dp"
                     app:tabMode="fixed"
                     app:tabRippleColor="@null"
-                    app:tabSelectedTextColor="#ffffff" />
+                    app:tabSelectedTextColor="#ffffff"
+                    app:tabTextColor="@color/black"/>
 
             </FrameLayout>
 

@@ -1,0 +1,225 @@
+<resources>
+    <string name="app_name">جیبی</string>
+    <string name="expenses">هزینه ها</string>
+    <string name="income">درآمد ها</string>
+    <string name="create_new_transaction">ایجاد تراکنش جدید</string>
+    <string name="write_note">یادداشت بگذارید</string>
+    <string name="today">امروز</string>
+    <string name="yesterday">دیروز</string>
+    <string name="cash">پول نقد</string>
+    <string name="with">به همراه</string>
+    <string name="select_category">یک دسته انتخاب کنید</string>
+
+    <string name="empty" />
+    <string name="money">پول</string>
+    <string name="note">یادداشت</string>
+    <string name="total_balance">جمع کل</string>
+    <string name="zero">۰</string>
+    <string name="price">قیمت</string>
+    <string name="wallet">کیف پول</string>
+    <string name="category">دسته</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="bottom_sheet_behavior" translatable="false">com.google.android.material.bottomsheet.BottomSheetBehavior</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">سلام این یک فرگنت خالیه!</string>
+    <string name="date">تاریخ</string>
+    <string name="memo">یادداشت</string>
+    <string name="details">جزئیات</string>
+    <string name="add_transaction">ایجاد تراکنش جدید</string>
+
+    <string name="are_you_sure">آیا شما مطمئن هستید؟</string>
+    <string name="text_success">موفقیت</string>
+    <string name="text_ok">باشه</string>
+    <string name="text_error">خطا</string>
+    <string name="text_info">اطلاعات</string>
+    <string name="text_cancel">لغو</string>
+    <string name="text_yes">بله</string>
+    <string name="are_you_sure_delete">آیا شما مطمئن هستید که میخواهید این تراکنش را حذف کنید؟</string>
+    <string name="snack_bar_delete_text">آیا شما مطمئن هستید که میخواهید این تراکنش را حذف کنید؟</string>
+    <string name="snack_bar_undo">بازگردانی</string>
+    <string name="add_new_category">اضافه کردن یک دسته جدید</string>
+    <string name="now">الان</string>
+    <string name="search">جست‌وجو</string>
+    <string name="category_setting">تنظیمات دسته ها</string>
+    <string name="about">درباره ما</string>
+    <string name="rate_us">به ما امتیاز دهید</string>
+    <string name="setting">تنظیمات</string>
+    <string name="chart">نمودار</string>
+
+    <string name="add_expenses_category">اضافه کردن دسته جدید برای هزینه ها</string>
+    <string name="add_income_category">اضافه کردن دسته جدید برای درآمد ها</string>
+    <string name="unable_to_recognize_category_type">خطایی در هنگام شناسایی دسته بندی رخ داد</string>
+    <string name="jibi">جیبی</string>
+
+    <!--    ERRORS-->
+    <string name="pls_select_category">لطفا یک دسته انتخاب کنید!</string>
+    <string name="money_shouldnt_be_negative">از اعداد منفی برای مقدار هزینه نمیتوان استفاده کرد!</string>
+    <string name="pls_insert_some_money">لطفا برای تراکنش هزینه اضافه کنید!</string>
+    <string name="transactions">تراکنش ها</string>
+
+    <!--    CATEGORY NAMES-->
+    <string name="food">غذا</string>
+    <string name="hamburger">پیتزا</string>
+    <string name="vegetables">سبزیجات</string>
+    <string name="fruits">میوه ها</string>
+    <string name="transportation">حمل و نقل</string>
+    <string name="shopping">خريد</string>
+    <string name="sport">ورزش</string>
+    <string name="social">اجتماعی</string>
+    <string name="baby">کودک</string>
+    <string name="entertainment">سرگرمی</string>
+    <string name="clothing">پوشاک</string>
+    <string name="beauty">لوازم آرایشی</string>
+    <string name="telephone">تلفن</string>
+    <string name="home">خانه</string>
+    <string name="pet">حیوان خانگی</string>
+    <string name="bills">قبوض</string>
+    <string name="electronics">الکترونیک</string>
+    <string name="dairy_product">لبنیات</string>
+    <string name="dried_fruits">خشکبار</string>
+    <string name="snacks">تنقلات</string>
+    <string name="travel">مسافرت</string>
+    <string name="book">کتاب</string>
+    <string name="education">تحصیلات</string>
+    <string name="health">سلامت</string>
+    <string name="gift">هدیه</string>
+    <string name="office">دفتر کار</string>
+    <string name="insurance">بیمه</string>
+    <string name="car">ماشین</string>
+    <string name="tax">مالیات</string>
+    <string name="salary">حقوق</string>
+    <string name="awards">جایزه</string>
+    <string name="grants">کمک هزینه</string>
+    <string name="sale">فروش</string>
+    <string name="rental">اجاره</string>
+    <string name="refunds">باز پرداخت</string>
+    <string name="coupons">کوپن</string>
+    <string name="lottery">قرعه کشی</string>
+    <string name="dividends">سود سهام</string>
+    <string name="investments">سرمایه گذاری ها</string>
+    <string name="others">غیره</string>
+
+    <!--    CATEGORY GROUP NAMES-->
+    <string name="Education">تحصیلات</string>
+    <string name="Electronics">وسایل الکترونیکی</string>
+    <string name="Entertainment">سرگرمی</string>
+    <string name="Family">خانواده</string>
+    <string name="Finance">مالی</string>
+    <string name="Food">غذا</string>
+    <string name="Income">درآمد</string>
+    <string name="Medical">پزشکی</string>
+    <string name="Personal">شخصی</string>
+    <string name="Shopping">خرید</string>
+    <string name="Transportation">حمل و نقل</string>
+    <string name="Work">کار</string>
+
+
+    <string name="_1">۱</string>
+    <string name="_2">۲</string>
+    <string name="_3">۳</string>
+    <string name="_4">۴</string>
+    <string name="_5">۵</string>
+    <string name="_6">۶</string>
+    <string name="_7">۷</string>
+    <string name="_8">۸</string>
+    <string name="_9">۹</string>
+    <string name="_0">۰</string>
+    <string name="_00">۰۰</string>
+
+    <string name="developement_title">جیبی توسعه داده شده توسط</string>
+    <string name="about_app">
+        جیبی یک اپیکیشن اندروید است که به شما کمک میکند فعالیت های مالی خود را به راحتی رصد کنید.
+        به کمک این اپیکیشن شما پول بیشتری پس انداز خواهید کرد.
+    </string>
+    <string name="version">نسخه</string>
+    <string name="testing_string">این فقط برای تست هسستش</string>
+    <string name="developement_members">
+    برنامه نویس
+    \n سید مهدی حسینیون
+    \n
+    \n طراح لوگو
+    \n امیر حسین طاهریان
+    </string>
+    <string name="are_you_sure_delete_category">آیا شما مطمئن هستید که میخواهید این دسته را حذف کنید؟"</string>
+    <string name="unable_to_get_date">تاریخ انتخاب شده ثبت نشد لطفا مجددا تلاش کنید!"</string>
+
+    <string name="category_name">نام دسته</string>
+
+    <string name="UNKNOWN_CATEGORY">دسته ناشناخته</string>
+
+    <!--    tap targets-->
+    <string name="fab_tap_target_primary">"اولین تراکنش خود را ایجاد کنید"</string>
+    <string name="fab_tap_target_secondary">"برای ایجاد اولین تراکنش خود کلیک کنید"</string>
+
+    <string name="summery_money_tap_target_primary">جمع کل هزینه ها و درآمد ها و جمع کل آنها در این ماه</string>
+
+    <string name="month_manager_tap_target_primary">برای تغییر ماه کلیک کنید</string>
+
+    <string name="edt_money_tap_target_primary">"مقدار هزینه تراکنش را وارد کنید"</string>
+    <string name="edt_money_tap_target_secondary">"از ماشین حساب داخل اپیکیشن میتوانید استفاده کنید"</string>
+
+    <string name="date_tap_target_primary">"زمان و تاریخ تراکنش را مشخص کنید"</string>
+    <string name="date_tap_target_secondary">"با کلیک کردن روی زمان یا تاریخ مشخص شده میتوایند آنها را تغییر دهید"</string>
+
+    <string name="note_tap_target_primary">"برای هر تراکنش یک یادداشت بگزارید"</string>
+
+    <string name="category_fab_tap_target_primary">"دسته بندی که انتخاب کردید"</string>
+    <string name="category_fab_tap_target_secondary">"با کلید کردن میتوانید آن را تغییر دهید"</string>
+
+    <string name="category_list_tap_target_primary">"انتخاب دسته"</string>
+    <string name="category_list_tap_target_secondary">"یکی از دسته های را انتخاب کنید"</string>
+
+    <string name="category_bottom_sheet_tap_target_primary">"انتخاب دسته"</string>
+    <string name="category_bottom_sheet_tap_target_secondary">"یکی از دسته های زیر را برای تراکنش خود انتخاب کنید"</string>
+
+    <string name="view_category_tap_target_primary">ویرایش دسته</string>
+    <string name="view_category_tap_target_secondary">
+        برای حذف کردن یک دسته روی علامت سطل زباله کلید کنید
+        برای سنجاق یک دسته روی علامت سنجاق کلید کنید
+    </string>
+
+    <string name="transaction_successfully_inserted">"تراکنش با موفقیت ثبت شد"</string>
+    <string name="transaction_successfully_updated">"تراکنش با موفقیت بروزرسانی شد"</string>
+    <string name="transaction_successfully_deleted">"تراکنش با موفقیت حذف شد"</string>
+    <string name="category_successfully_inserted">"دسته با موفقیت ثبت شد"</string>
+    <string name="category_successfully_deleted">"دسته با موفقیت حذف شد"</string>
+    <string name="category_pinned">"دسته به بالا سنجاق شد"</string>
+
+    <string name="no_result_found_for_this_search">هیج تراکنشی برای جست و جو شما یافت نشد</string>
+    <string name="insert_some_transaction_with_add_button">
+    هیچ تراکنشی وجود ندارد
+    \n
+    برای اضافه کردن روی + کلید کنید
+    </string>
+    <string name="farsi">فارسی</string>
+    <string name="language">زبان</string>
+    <string name="system_default">پیشفرض سیستم (پیشنهادی)</string>
+    <string name="english">English</string>
+    <string name="changelanugaealart">تغییر دادن زبان اپیکیشن باعث راه اندازی مجدد اپیکیشن خواهد شد</string>
+    <string name="jibi_capital">جیبی</string>
+
+    <string name="no_transaction_found_with_this_category">هیچ تراکنشی با این دسته بندی یافت نشد!</string>
+    <string name="no_chart_data_available">هیچ داده ای برای نمایش وجود ندارد.</string>
+
+    <string name="income_chart_title">نمودار درآمد های</string>
+    <string name="expenses_chart_title">نمودار مخارج</string>
+    <string name="swap_chart">تعویض نمودار</string>
+    <string name="delete">حذف</string>
+    <string name="unable_to_recognize_this_transaction">این تراکنش قابل شناسایی نمیباشد!</string>
+    <string name="are_you_sure_delete_transaction">"آیا شما مطمئن هستید که میخواهید این تراکنش را حذف کنید؟"</string>
+    <string name="month">"ماه"</string>
+    <string name="confirm">تایید</string>
+    <string name="skip">رد شدن</string>
+    <string name="done">باشه</string>
+
+
+    <string name="app_intro_slide_0_title">جیبی دستیار مالی جدید تو</string>
+    <string name="app_intro_slide_0_description">به راحتی فعالیت های مالی خود را تحت نظر بگیر و ببین چه چیزهایی دارن یواشکی جیبتو خالی می کنند :)</string>
+
+    <string name="app_intro_slide_1_title">پایش راحت</string>
+    <string name="app_intro_slide_1_description">روند مخارج و درآمد را ثبت کنید و آن ها را به راحتی تحت نظر بگیرید</string>
+
+    <string name="app_intro_slide_2_title">نمودار های کابردی</string>
+    <string name="app_intro_slide_2_description">با دسته بندی های ساده بدون پولات کجا میره</string>
+
+</resources><!--source https://developer.android.com/training/basics/supporting-devices/languages-->

@@ -1,9 +1,9 @@
 package com.example.jibi.persistence
 
 import androidx.room.*
+import com.example.jibi.models.PieChartData
 import com.example.jibi.models.Record
 import kotlinx.coroutines.flow.Flow
-import java.util.logging.Filter
 
 @Dao
 interface RecordsDao {
@@ -25,6 +25,9 @@ interface RecordsDao {
 
     @Delete
     suspend fun deleteRecord(vararg record: Record): Int
+
+    @Query("DELETE FROM records WHERE rId = :id")
+    suspend fun deleteRecord(id: Int): Int
 
     /*
         get records queries
@@ -57,6 +60,7 @@ interface RecordsDao {
         query: String
     ): Flow<List<Record>>
 
+    //TODO CHANGE DATE > MIN DATE TO DATE >=MINDATE
     @Query(
         "SELECT * FROM records WHERE date > :minDate " +
                 "AND " +
@@ -114,6 +118,39 @@ interface RecordsDao {
 
     @Query("SELECT SUM(money) FROM records WHERE (date < :maxDate) AND (money > 0) ")
     fun returnTheSumOfIncomeBeforeThan(maxDate: Int): Flow<Double>
+
+    //chart fragment query
+//    @Query("SELECT SUM(money) as sumOfMoney ,cat_id as cat_id FROM records GROUP BY cat_id")
+//    suspend fun sumOfMoneyGroupByCountry(): List<PieChartData>
+    //TODO test this JOIN
+    //TODO https://www.w3schools.com/sql/sql_join.asp
+    @Query(
+        """SELECT SUM(money) as sumOfMoney,
+            categories.cId as categoryId, 
+            categories.category_Name as categoryName, 
+            categories.type as categoryType, 
+            categories.img_res as categoryImage 
+            FROM records LEFT JOIN categories ON records.cat_id=categories.cId 
+            WHERE date BETWEEN :fromDate AND :toDate 
+            GROUP BY cat_id 
+            ORDER BY ABS(SUM(money)) DESC"""
+    )
+    suspend fun sumOfMoneyGroupByCategory(
+        fromDate: Int,
+        toDate: Int
+    ): List<PieChartData>
+
+    @Query(
+        """SELECT *  FROM records WHERE cat_id = :id 
+            AND 
+            date BETWEEN :fromDate AND :toDate 
+            ORDER BY ABS(money) DESC"""
+    )
+    suspend fun getAllTransactionByCategoryId(
+        id: Int,
+        fromDate: Int,
+        toDate: Int
+    ): List<Record>
 
     companion object {
         const val ORDER_BY_DATE = "ORDER BY date DESC"

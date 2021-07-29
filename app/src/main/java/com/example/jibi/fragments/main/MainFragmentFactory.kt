@@ -1,10 +1,20 @@
 package com.example.jibi.fragments.main
 
+import android.content.SharedPreferences
+import android.content.res.Resources
 import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
 import com.example.jibi.di.main.MainScope
-import com.example.jibi.ui.main.transaction.*
+import com.example.jibi.ui.main.transaction.AboutUsFragment
+import com.example.jibi.ui.main.transaction.MonthManger
+import com.example.jibi.ui.main.transaction.SettingFragment
+import com.example.jibi.ui.main.transaction.categories.AddCategoryFragment
+import com.example.jibi.ui.main.transaction.categories.ViewCategoriesFragment
+import com.example.jibi.ui.main.transaction.chart.ChartFragment
+import com.example.jibi.ui.main.transaction.chart.DetailChartFragment
+import com.example.jibi.ui.main.transaction.home.AddTransactionFragment
+import com.example.jibi.ui.main.transaction.home.TransactionFragment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.util.*
@@ -18,7 +28,11 @@ class MainFragmentFactory
 constructor(
     private val viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager,
-    private val currentLocale: Locale
+    private val currentLocale: Locale,
+    private val sharedPreferences: SharedPreferences,
+    private val sharedPrefsEditor: SharedPreferences.Editor,
+    private val monthManger: MonthManger,
+    private val resources: Resources
 ) : FragmentFactory() {
 
     override fun instantiate(classLoader: ClassLoader, className: String) =
@@ -26,27 +40,57 @@ constructor(
         when (className) {
 
             TransactionFragment::class.java.name -> {
-                TransactionFragment(viewModelFactory, requestManager)
+                TransactionFragment(
+                    viewModelFactory,
+                    requestManager,
+                    currentLocale,
+                    sharedPreferences,
+                    sharedPrefsEditor,
+                    monthManger,
+                    resources
+                )
             }
 
             AddTransactionFragment::class.java.name -> {
-                AddTransactionFragment(viewModelFactory, requestManager, currentLocale)
-            }
-            DetailTransFragment::class.java.name -> {
-                DetailTransFragment(viewModelFactory, requestManager, currentLocale)
+                AddTransactionFragment(
+                    viewModelFactory,
+                    requestManager,
+                    currentLocale,
+                    sharedPreferences,
+                    sharedPrefsEditor,
+                    resources
+                )
             }
             AddCategoryFragment::class.java.name -> {
-                AddCategoryFragment(viewModelFactory, requestManager)
+                AddCategoryFragment(viewModelFactory, requestManager, resources)
             }
             ViewCategoriesFragment::class.java.name -> {
-                ViewCategoriesFragment(viewModelFactory, requestManager)
+                ViewCategoriesFragment(
+                    viewModelFactory,
+                    requestManager,
+                    sharedPreferences,
+                    sharedPrefsEditor,
+                    resources
+                )
             }
             SettingFragment::class.java.name -> {
-                SettingFragment(viewModelFactory)
+                SettingFragment(viewModelFactory, resources, sharedPreferences)
+            }
+            AboutUsFragment::class.java.name -> {
+                AboutUsFragment(viewModelFactory, requestManager, resources)
+            }
+            ChartFragment::class.java.name -> {
+                ChartFragment(viewModelFactory, requestManager, currentLocale, monthManger,resources)
+            }
+            DetailChartFragment::class.java.name -> {
+                DetailChartFragment(viewModelFactory, requestManager, currentLocale, monthManger,resources)
             }
 
             else -> {
-                TransactionFragment(viewModelFactory, requestManager)
+                TransactionFragment(
+                    viewModelFactory, requestManager, currentLocale, sharedPreferences,
+                    sharedPrefsEditor, monthManger, resources
+                )
             }
         }
 

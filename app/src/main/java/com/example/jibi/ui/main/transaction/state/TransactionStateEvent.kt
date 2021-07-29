@@ -108,12 +108,22 @@ sealed class TransactionStateEvent : StateEvent {
         }
 
         data class DeleteTransaction(
-            val record: Record
+            val transaction: Record,
+            val showSuccessToast: Boolean = true
         ) : OneShotOperationsTransactionStateEvent() {
             override fun errorInfo(): String =
-                "ERROR: deleting record! recordMoney = ${record.money}"
+                "ERROR: deleting record! recordMoney = ${transaction.money}"
 
-            override fun getId(): String = "DeleteTransaction $record ${this.hashCode()}"
+            override fun getId(): String = "DeleteTransaction $transaction ${this.hashCode()}"
+        }
+
+        data class DeleteTransactionById(
+            val transactionId: Int
+        ) : OneShotOperationsTransactionStateEvent() {
+            override fun errorInfo(): String =
+                "ERROR: deleting transaction! id = ${transactionId}"
+
+            override fun getId(): String = "DeleteTransaction id: $transactionId ${this.hashCode()}"
         }
 
         data class DeleteCategory(
@@ -142,6 +152,7 @@ sealed class TransactionStateEvent : StateEvent {
 
             override fun getId(): String = "pin or unpin Category $category ${this.hashCode()}"
         }
+
         data class UpdateCategory(
             val category: Category
         ) : OneShotOperationsTransactionStateEvent() {
@@ -151,5 +162,35 @@ sealed class TransactionStateEvent : StateEvent {
             override fun getId(): String = "updating Category $category ${this.hashCode()}"
         }
 
+        data class GetPieChartData(
+            val fromDate: Int,
+            val toDate: Int
+        ) : OneShotOperationsTransactionStateEvent() {
+            override fun errorInfo(): String =
+                "ERROR: getting pie chart data!"
+
+            override fun getId(): String = "getting pie chart data ${this.hashCode()}"
+        }
+
+        data class GetCategoryById(
+            val categoryId: Int
+        ) : OneShotOperationsTransactionStateEvent() {
+            override fun errorInfo(): String = "ERROR: getting category! categoryID = ${categoryId}"
+
+            override fun getId(): String =
+                "GetCategoryById id: $categoryId ${this.hashCode()}"
+        }
+
+        data class GetAllTransactionByCategoryId(
+            val categoryId: Int,
+            val fromDate: Int,
+            val toDate: Int
+        ) : OneShotOperationsTransactionStateEvent() {
+            override fun errorInfo(): String =
+                "ERROR: getting all transaction with category  id = ${categoryId}"
+
+            override fun getId(): String =
+                "getting all transaction with category id $categoryId ${this.hashCode()}"
+        }
     }
 }
