@@ -1,10 +1,8 @@
 package com.example.jibi.persistence
 
-import com.example.jibi.models.Record
+import com.example.jibi.models.TransactionEntity
 import com.example.jibi.models.SearchModel
 import kotlinx.coroutines.flow.Flow
-import kotlin.math.max
-import kotlin.math.min
 
 class RecordQueryUtil {
     companion object {
@@ -16,7 +14,7 @@ fun RecordsDao.getRecords(
     minDate: Int? = null,
     maxDate: Int? = null,
     searchModel: SearchModel
-): Flow<List<Record>> {
+): Flow<List<TransactionEntity>> {
     if (minDate != null && maxDate != null) {
         return loadAllRecordsBetweenDates(minDate, maxDate,searchModel.query)
     }

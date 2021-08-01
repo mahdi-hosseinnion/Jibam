@@ -29,7 +29,7 @@ import com.bumptech.glide.RequestManager
 import com.example.jibi.R
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
-import com.example.jibi.models.Record
+import com.example.jibi.models.TransactionEntity
 import com.example.jibi.ui.main.transaction.BaseTransactionFragment
 import com.example.jibi.ui.main.transaction.home.bottomSheet.CreateNewTransBottomSheet
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
@@ -199,7 +199,7 @@ constructor(
         showCustomKeyboard(edt_money)
     }
 
-    private fun initUiForViewTransaction(transaction: Record) {
+    private fun initUiForViewTransaction(transaction: TransactionEntity) {
         findNavController()
             .currentDestination?.label = _getString(R.string.details)
         //change id
@@ -550,7 +550,7 @@ constructor(
             }
             val categoryId = transactionCategory?.id
             if (categoryId != null) {
-                val transaction = Record(
+                val transaction = TransactionEntity(
                     id = viewTransactionId ?: 0,//we need detail id for replacing(updating)
                     money = money,
                     memo = memo,
@@ -766,7 +766,7 @@ constructor(
         datePrompt!!.show()
     }
 
-    inner class SubmitButtonState(private val defaultTransaction: Record) {
+    inner class SubmitButtonState(private val defaultTransaction: TransactionEntity) {
 
         private val _doesMoneyChange = MutableStateFlow(false)
         private val _doesMemoChange = MutableStateFlow(false)

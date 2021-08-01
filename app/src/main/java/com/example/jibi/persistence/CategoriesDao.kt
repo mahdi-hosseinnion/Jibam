@@ -4,9 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.jibi.models.Category
 import com.example.jibi.models.CategoryImages
-import com.example.jibi.models.Record
 import kotlinx.coroutines.flow.Flow
-import java.nio.ByteOrder
 
 @Dao
 interface CategoriesDao {

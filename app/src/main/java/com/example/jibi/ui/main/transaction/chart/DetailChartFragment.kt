@@ -1,8 +1,6 @@
 package com.example.jibi.ui.main.transaction.chart
 
 import android.content.res.Resources
-import android.graphics.Color
-import android.graphics.DashPathEffect
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
@@ -10,28 +8,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.room.Transaction
 import com.bumptech.glide.RequestManager
 import com.example.jibi.R
 import com.example.jibi.models.Category
-import com.example.jibi.models.Record
+import com.example.jibi.models.TransactionEntity
 import com.example.jibi.ui.main.transaction.BaseTransactionFragment
 import com.example.jibi.ui.main.transaction.MonthManger
-import com.example.jibi.ui.main.transaction.home.TransactionFragmentDirections
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
-import com.example.jibi.util.mahdiLog
-import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.components.Legend.LegendForm
-import com.github.mikephil.charting.components.LimitLine
-import com.github.mikephil.charting.components.LimitLine.LimitLabelPosition
-import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.components.YAxis
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.formatter.IFillFormatter
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
-import com.github.mikephil.charting.utils.Utils
 import kotlinx.android.synthetic.main.fragment_detail_chart.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -40,8 +23,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
-import kotlin.math.abs
-import kotlin.random.Random
 
 @ExperimentalCoroutinesApi
 @FlowPreview
@@ -119,7 +100,7 @@ constructor(
         ) { it.name } + monthName
     }
 
-    private fun initRecyclerView(data: List<Record>, category: Category) {
+    private fun initRecyclerView(data: List<TransactionEntity>, category: Category) {
         if (data.isNullOrEmpty()) {
             return
         }
@@ -142,7 +123,7 @@ constructor(
     }
 
 
-    override fun onItemSelected(position: Int, item: Record) {
+    override fun onItemSelected(position: Int, item: TransactionEntity) {
         viewModel.setDetailTransFields(item)
         navigateToAddTransactionFragment()
     }

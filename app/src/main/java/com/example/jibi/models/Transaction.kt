@@ -1,7 +1,9 @@
 package com.example.jibi.models
 
 import androidx.room.ColumnInfo
-import androidx.room.PrimaryKey
+import android.content.res.Resources
+import android.util.Log
+import androidx.room.Ignore
 
 data class Transaction(
     @ColumnInfo(name = "rId")
@@ -12,10 +14,66 @@ data class Transaction(
     val memo: String?,
     @ColumnInfo(name = "cat_id")
     //category id exactly id
-    val cat_id: Int,
-    @ColumnInfo(name = "date")
-    //int can handle the time till 1/19/2038, 6:44:07 AM in millisecond
-    val date: Int,
+    val categoryId: Int,
+    @ColumnInfo(name = "category_name")
+    val categoryName: String,
+    @ColumnInfo(name = "category_image")
     val categoryImage: String,
-    val percentage: Double
-)
+
+    //int can handle the time till 1/19/2038, 6:44:07 AM in millisecond
+    @ColumnInfo(name = "date")
+    val date: Int,
+    //handle the income for repository
+    @Ignore val incomeSum: Double?
+) {
+    constructor(
+//for transaction show in transaction list
+        id: Int,
+        money: Double,
+        memo: String?,
+        categoryId: Int,
+        categoryName: String,
+        categoryImage: String,
+        date: Int,
+    ) : this(id, money, memo, categoryId, categoryName, categoryImage, date, null)
+
+    constructor(//for header
+        id: Int,
+        money: Double,
+        memo: String,
+        incomeSum: Double
+    ) : this(id, money, memo, 0, "", "", 0, incomeSum)
+
+    fun getCategoryNameFromStringFile(
+        resources: Resources,
+        packageName: String,
+        onUnableToFindName: (Transaction) -> String
+    ): String {
+        val nameId: Int = resources.getIdentifier(
+            this.categoryName,
+            "string",
+            packageName
+        )
+        return try {
+            resources.getString(nameId)
+        } catch (e: Exception) {
+            Log.e(
+                "Category",
+                "getCategoryNameFromStringFile: UNABLE TO FIND $this name in strings ",
+            )
+            Log.e(
+                "Category",
+                "getCategoryNameFromStringFile: add >${this.categoryName}< to strings file"
+            )
+            onUnableToFindName(this)
+        }
+    }
+
+    fun toTransactionEntity(): TransactionEntity = TransactionEntity(
+        id = this.id,
+        money = this.money,
+        memo = this.memo,
+        cat_id = this.categoryId,
+        date = this.date
+    )
+}

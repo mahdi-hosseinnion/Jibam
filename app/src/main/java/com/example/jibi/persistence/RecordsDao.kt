@@ -2,7 +2,7 @@ package com.example.jibi.persistence
 
 import androidx.room.*
 import com.example.jibi.models.PieChartData
-import com.example.jibi.models.Record
+import com.example.jibi.models.TransactionEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -10,10 +10,10 @@ interface RecordsDao {
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrReplace(record: Record): Long
+    suspend fun insertOrReplace(transactionEntity: TransactionEntity): Long
 
     @Query("SELECT * FROM records WHERE rId = :id")
-    suspend fun getRecordById(id: Int): Record
+    suspend fun getRecordById(id: Int): TransactionEntity
 
 
     /**
@@ -21,10 +21,10 @@ interface RecordsDao {
      * Returns number of rows deleted. 0 if no row deleted.
      */
     @Update
-    suspend fun updateRecord(vararg record: Record): Int
+    suspend fun updateRecord(vararg transactionEntity: TransactionEntity): Int
 
     @Delete
-    suspend fun deleteRecord(vararg record: Record): Int
+    suspend fun deleteRecord(vararg transactionEntity: TransactionEntity): Int
 
     @Query("DELETE FROM records WHERE rId = :id")
     suspend fun deleteRecord(id: Int): Int
@@ -40,7 +40,7 @@ interface RecordsDao {
                 "OR memo LIKE '%' || :query || '%' " +
                 ") " + ORDER_BY_DATE
     )
-    fun getAllRecords(query: String): Flow<List<Record>>
+    fun getAllRecords(query: String): Flow<List<TransactionEntity>>
 
     //fromDate and toDate count in the result >=
     @Query(
@@ -58,7 +58,7 @@ interface RecordsDao {
         minDate: Int,
         maxDate: Int,
         query: String
-    ): Flow<List<Record>>
+    ): Flow<List<TransactionEntity>>
 
     //TODO CHANGE DATE > MIN DATE TO DATE >=MINDATE
     @Query(
@@ -72,7 +72,7 @@ interface RecordsDao {
     )
     fun loadAllRecordsAfterThan(
         minDate: Int, query: String
-    ): Flow<List<Record>>
+    ): Flow<List<TransactionEntity>>
 
     @Query(
         "SELECT * FROM records WHERE date < :maxDate " +
@@ -85,7 +85,7 @@ interface RecordsDao {
     )
     fun loadAllRecordsBeforeThan(
         maxDate: Int, query: String
-    ): Flow<List<Record>>
+    ): Flow<List<TransactionEntity>>
 
     /*
         sum queries
@@ -150,7 +150,7 @@ interface RecordsDao {
         id: Int,
         fromDate: Int,
         toDate: Int
-    ): List<Record>
+    ): List<TransactionEntity>
 
     companion object {
         const val ORDER_BY_DATE = "ORDER BY date DESC"

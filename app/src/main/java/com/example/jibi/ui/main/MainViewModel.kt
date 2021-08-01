@@ -6,13 +6,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
 import com.example.jibi.models.CategoryImages
-import com.example.jibi.models.Record
+import com.example.jibi.models.TransactionEntity
 import com.example.jibi.models.SearchModel
 import com.example.jibi.repository.main.MainRepository
 import com.example.jibi.ui.BaseViewModel
 import com.example.jibi.ui.main.transaction.MonthManger
-import com.example.jibi.ui.main.transaction.home.TransactionListAdapter.Companion.NO_RESULT_FOUND_FOR_THIS_QUERY_MARKER
-import com.example.jibi.ui.main.transaction.home.TransactionListAdapter.Companion.NO_RESULT_FOUND_IN_DATABASE
+import com.example.jibi.ui.main.transaction.transactions.TransactionsListAdapter.Companion.NO_RESULT_FOUND_FOR_THIS_QUERY_MARKER
+import com.example.jibi.ui.main.transaction.transactions.TransactionsListAdapter.Companion.NO_RESULT_FOUND_IN_DATABASE
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent.*
 import com.example.jibi.ui.main.transaction.state.TransactionViewState
@@ -241,7 +241,7 @@ constructor(
         setViewState(update)
     }
 
-    private fun setListOfTransactions(transactionList: List<Record>) {
+    private fun setListOfTransactions(transactionList: List<TransactionEntity>) {
         mahdiLog(TAG, "new transaciton:" + transactionList.size.toString())
         val update = getCurrentViewStateOrNew()
             .copy(transactionList = transactionList)
@@ -254,12 +254,12 @@ constructor(
         setViewState(update)
     }
 
-    fun setDetailTransFields(transaction: Record) {
+    fun setDetailTransFields(transaction: TransactionEntity) {
         val update = getCurrentViewStateOrNew().copy(detailTransFields = transaction)
         setViewState(update)
     }
 
-    fun setRecentlyDeletedTrans(transaction: Record, position: Int, header: Record?) {
+    fun setRecentlyDeletedTrans(transaction: TransactionEntity, position: Int, header: TransactionEntity?) {
         val update = getCurrentViewStateOrNew().copy(
             recentlyDeletedFields = RecentlyDeletedFields(
                 recentlyDeletedTrans = transaction,

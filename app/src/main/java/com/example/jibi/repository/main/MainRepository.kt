@@ -7,16 +7,14 @@ import com.example.jibi.R
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
 import com.example.jibi.models.PieChartData
-import com.example.jibi.models.Record
 import com.example.jibi.models.SearchModel
+import com.example.jibi.models.TransactionEntity
 import com.example.jibi.persistence.*
 import com.example.jibi.repository.buildResponse
 import com.example.jibi.repository.safeCacheCall
-import com.example.jibi.ui.main.transaction.home.TransactionListAdapter
-import com.example.jibi.ui.main.transaction.home.TransactionListAdapter.Companion.TODAY
-import com.example.jibi.ui.main.transaction.home.TransactionListAdapter.Companion.YESTERDAY
-import com.example.jibi.ui.main.transaction.state.TransactionStateEvent.OneShotOperationsTransactionStateEvent.*
-import com.example.jibi.ui.main.transaction.state.TransactionViewState
+import com.example.jibi.ui.main.transaction.transactions.TransactionsListAdapter
+import com.example.jibi.ui.main.transaction.transactions.TransactionsListAdapter.Companion.TODAY
+import com.example.jibi.ui.main.transaction.transactions.TransactionsListAdapter.Companion.YESTERDAY
 import com.example.jibi.util.*
 import com.example.jibi.util.Constants.CACHE_TIMEOUT
 import com.example.jibi.util.Constants.EXPENSES_TYPE_MARKER
@@ -64,16 +62,16 @@ constructor(
         minDate: Int? = null,
         maxDate: Int? = null,
         searchModel: SearchModel
-    ): Flow<List<Record>?> =
+    ): Flow<List<TransactionEntity>?> =
         recordsDao.getRecords(minDate, maxDate, searchModel).map { currentList ->
             if (currentList.isEmpty()) {
                 return@map null
             }
-            val resultList = ArrayList<Record>()
+            val resultList = ArrayList<TransactionEntity>()
             var headerDate = currentDateInString(currentList[0].date)
             var incomeSum = 0.0
             var expensesSum = 0.0
-            var tempList = ArrayList<Record>()
+            var tempList = ArrayList<TransactionEntity>()
             for (item in currentList) {
                 if (currentDateInString(item.date) == headerDate) {
                     //make new header and items
@@ -110,10 +108,15 @@ constructor(
             return@map resultList
         }
 
-    private fun createHeader(date: String, income: Double, expenses: Double, lenght: Int): Record {
+    private fun createHeader(
+        date: String,
+        income: Double,
+        expenses: Double,
+        lenght: Int
+    ): TransactionEntity {
         return if (lenght > 1) {
-            Record(
-                id = TransactionListAdapter.HEADER_ITEM,
+            TransactionEntity(
+                id = TransactionsListAdapter.HEADER_ITEM,
                 money = expenses,
                 incomeSum = income,
                 memo = date,
@@ -121,8 +124,8 @@ constructor(
                 date = 0
             )
         } else {
-            Record(
-                id = TransactionListAdapter.HEADER_ITEM,
+            TransactionEntity(
+                id = TransactionsListAdapter.HEADER_ITEM,
                 money = 0.0,
                 memo = date,
                 cat_id = 0,
@@ -158,7 +161,7 @@ constructor(
             SolarCalendar.calcSolarCalendar(df, RECYCLER_VIEW, currentLocale)
         } else {
             SimpleDateFormat(
-                TransactionListAdapter.HEADER_DATE_PATTERN,
+                TransactionsListAdapter.HEADER_DATE_PATTERN,
                 currentLocale
             ).format(df)
         }
@@ -166,29 +169,29 @@ constructor(
     }
 
     //dataBase main dao
-    suspend fun insertTransaction(
-        stateEvent: InsertTransaction
-    ): DataState<TransactionViewState> {
-        val cacheResult = safeCacheCall {
-            recordsDao.insertOrReplace(stateEvent.record)
-        }
-
-        return object : CacheResponseHandler<TransactionViewState, Long>(
-            response = cacheResult,
-            stateEvent = stateEvent
-        ) {
-            override suspend fun handleSuccess(resultObj: Long): DataState<TransactionViewState> {
-                tryIncreaseCategoryOrdering(stateEvent.record.cat_id)
-                return DataState.data(
-                    response = buildResponse(
-                        message = getString(R.string.transaction_successfully_inserted),
-                        UIComponentType.Toast,
-                        MessageType.Success
-                    )
-                )
-            }
-        }.getResult()
-    }
+//    suspend fun insertTransaction(
+//        stateEvent: InsertTransaction
+//    ): DataState<TransactionViewState> {
+//        val cacheResult = safeCacheCall {
+//            recordsDao.insertOrReplace(stateEvent.record)
+//        }
+//
+//        return object : CacheResponseHandler<TransactionViewState, Long>(
+//            response = cacheResult,
+//            stateEvent = stateEvent
+//        ) {
+//            override suspend fun handleSuccess(resultObj: Long): DataState<TransactionViewState> {
+//                tryIncreaseCategoryOrdering(stateEvent.record.cat_id)
+//                return DataState.data(
+//                    response = buildResponse(
+//                        message = getString(R.string.transaction_successfully_inserted),
+//                        UIComponentType.Toast,
+//                        MessageType.Success
+//                    )
+//                )
+//            }
+//        }.getResult()
+//    }
 
     private suspend fun tryIncreaseCategoryOrdering(categoryId: Int) {
         try {
@@ -222,11 +225,11 @@ constructor(
             recordsDao.getRecordById(stateEvent.transactionId)
         }
 
-        return object : CacheResponseHandler<TransactionViewState, Record>(
+        return object : CacheResponseHandler<TransactionViewState, TransactionEntity>(
             response = cacheResult,
             stateEvent = stateEvent
         ) {
-            override suspend fun handleSuccess(resultObj: Record): DataState<TransactionViewState> {
+            override suspend fun handleSuccess(resultObj: TransactionEntity): DataState<TransactionViewState> {
                 return DataState.data(
                     response = buildResponse(
                         message = "Transaction Successfully returned",
@@ -536,11 +539,11 @@ constructor(
                 stateEvent.toDate
             )
         }
-        return object : CacheResponseHandler<TransactionViewState, List<Record>>(
+        return object : CacheResponseHandler<TransactionViewState, List<TransactionEntity>>(
             response = cacheResult,
             stateEvent = stateEvent
         ) {
-            override suspend fun handleSuccess(resultObj: List<Record>): DataState<TransactionViewState> {
+            override suspend fun handleSuccess(resultObj: List<TransactionEntity>): DataState<TransactionViewState> {
                 return DataState.data(
                     response = buildResponse(
                         message = "All transaction with category id:${stateEvent.categoryId} " +

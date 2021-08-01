@@ -1,4 +1,4 @@
-package com.example.jibi.ui.main.transaction.home
+package com.example.jibi.ui.main.transaction.transactions
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -16,10 +16,9 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.lifecycle.Observer
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,13 +26,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.example.jibi.R
 import com.example.jibi.di.main.MainScope
-import com.example.jibi.models.Category
-import com.example.jibi.models.Record
-import com.example.jibi.models.SearchModel
+import com.example.jibi.models.Transaction
+import com.example.jibi.models.TransactionEntity
 import com.example.jibi.repository.buildResponse
-import com.example.jibi.ui.main.transaction.BaseTransactionFragment
 import com.example.jibi.ui.main.transaction.MonthManger
-import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
+import com.example.jibi.ui.main.transaction.common.BaseFragment
+import com.example.jibi.ui.main.transaction.transactions.state.TransactionsStateEvent
+import com.example.jibi.ui.main.transaction.transactions.state.TransactionsViewState
 import com.example.jibi.util.*
 import com.example.jibi.util.PreferenceKeys.PROMOTE_FAB_TRANSACTION_FRAGMENT
 import com.example.jibi.util.PreferenceKeys.PROMOTE_MONTH_MANGER
@@ -60,7 +59,7 @@ import kotlin.random.Random
 @FlowPreview
 @ExperimentalCoroutinesApi
 @MainScope
-class TransactionFragment
+class TransactionsFragment
 @Inject
 constructor(
     viewModelFactory: ViewModelProvider.Factory,
@@ -70,16 +69,19 @@ constructor(
     private val sharedPrefsEditor: SharedPreferences.Editor,
     private val monthManger: MonthManger,
     private val _resources: Resources
-) : BaseTransactionFragment(
+) : BaseFragment(
     R.layout.fragment_transaction,
     viewModelFactory,
     R.id.transaction_toolbar,
     _resources
-), TransactionListAdapter.Interaction {
+), TransactionsListAdapter.Interaction {
 
     private val TAG = "TransactionFragment"
 
-    private lateinit var recyclerAdapter: TransactionListAdapter
+    private val viewModel by viewModels<TransactionsViewModel> { viewModelFactory }
+
+
+    private lateinit var recyclerAdapter: TransactionsListAdapter
 
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
 
@@ -88,9 +90,6 @@ constructor(
     private val closeBottomWidth by lazy { convertDpToPx(56) }
     private val bottomSheetRadios by lazy { convertDpToPx(16) }
     private val normalAppBarHeight by lazy { convertDpToPx(40) }
-
-
-    private var searchModel = SearchModel()
 
     private sealed class SearchViewState {
         object VISIBLE : SearchViewState()
@@ -272,21 +271,13 @@ constructor(
 
         //this should come after all
         searchViewState = SearchViewState.INVISIBLE
-        //clear search
-        searchModel = searchModel.copy(query = "")
-
         //make bottom sheet draggable again after disabling searchView
         bottomSheetBehavior.isDraggable = true
         //connect recyclerView to bottomSheet
         transaction_recyclerView.isNestedScrollingEnabled = true
 
         //submit that
-        lifecycleScope.launch {
-//                viewModel.queryChannel.value = SearchModel(query = p0.toString())
-            viewModel.queryChannel.emit(searchModel)
-            //add new search query
-            Log.d(TAG, "searchDEBUG: clear")
-        }
+        viewModel.setSearchQuery("")
     }
 
     private val onSearchViewTextChangeListener = object : TextWatcher {
@@ -304,15 +295,7 @@ constructor(
         }
 
         override fun afterTextChanged(p0: Editable?) {
-            searchModel = searchModel.copy(query = p0.toString())
-
-            //submit that
-            lifecycleScope.launch {
-//                viewModel.queryChannel.value = SearchModel(query = p0.toString())
-                viewModel.queryChannel.emit(searchModel)
-                //add new search query
-                Log.d(TAG, "searchDEBUG: 1-- $p0")
-            }
+            viewModel.setSearchQuery(p0.toString())
         }
     }
 
@@ -331,8 +314,8 @@ constructor(
         }
         if (Random.nextBoolean()) {
             viewModel.launchNewJob(
-                TransactionStateEvent.OneShotOperationsTransactionStateEvent.InsertTransaction(
-                    Record(
+                TransactionsStateEvent.InsertTransaction(
+                    TransactionEntity(
                         id = 0,
                         money = money,
                         memo = null,
@@ -346,8 +329,8 @@ constructor(
             )
         } else {
             viewModel.launchNewJob(
-                TransactionStateEvent.OneShotOperationsTransactionStateEvent.InsertTransaction(
-                    Record(
+                TransactionsStateEvent.InsertTransaction(
+                    TransactionEntity(
                         id = 0,
                         money = money,
                         memo = "memo ${Random.nextInt(451252)}",
@@ -366,7 +349,7 @@ constructor(
     private fun navigateToAddTransactionFragment(isNewTransaction: Boolean) {
         //on category selected and bottomSheet hided
         val action =
-            TransactionFragmentDirections.actionTransactionFragmentToCreateTransactionFragment(
+            TransactionsFragmentDirections.actionTransactionFragmentToCreateTransactionFragment(
                 isNewTransaction = isNewTransaction
             )
         findNavController().navigate(action)
@@ -380,30 +363,22 @@ constructor(
                 endOfMonth = it.endOfMonth
             }
         }
-
-        viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
-            viewState?.let {
-
-                it.transactionList.let { transactionList ->
-                    recyclerAdapter.submitList(transactionList, true)
-                }
-                it.summeryMoney.let { sm ->
-                    if (sm.inNotNull()) {
-                        checkForSummeryMoneyPromote()
-                    }
-                    sm.balance = (sm.income.plus(sm.expenses))
-                    txt_balance.text = separate3By3AndRoundIt(sm.balance, currentLocale)
-                    if (sm.expenses != 0.0) {
-                        txt_expenses.text =
-                            separate3By3AndRoundIt(sm.expenses.times(-1), currentLocale)
-                    } else {
-                        txt_expenses.text = separate3By3AndRoundIt(0.0, currentLocale)
-                    }
-                    txt_income.text = separate3By3AndRoundIt(sm.income, currentLocale)
-
-                }
-
+        viewModel.transactions.observe(viewLifecycleOwner) { transactionList ->
+            recyclerAdapter.submitList(transactionList, true)
+        }
+        viewModel.summeryMoney.observe(viewLifecycleOwner) { sm ->
+            if (sm.inNotNull()) {
+                checkForSummeryMoneyPromote()
             }
+            sm.balance = (sm.income.plus(sm.expenses))
+            txt_balance.text = separate3By3AndRoundIt(sm.balance, currentLocale)
+            if (sm.expenses != 0.0) {
+                txt_expenses.text =
+                    separate3By3AndRoundIt(sm.expenses.times(-1), currentLocale)
+            } else {
+                txt_expenses.text = separate3By3AndRoundIt(0.0, currentLocale)
+            }
+            txt_income.text = separate3By3AndRoundIt(sm.income, currentLocale)
         }
 
     }
@@ -412,31 +387,13 @@ constructor(
     private fun initRecyclerView() {
 
         transaction_recyclerView.apply {
-            layoutManager = LinearLayoutManager(this@TransactionFragment.context)
-            recyclerAdapter = object : TransactionListAdapter(
+            layoutManager = LinearLayoutManager(this@TransactionsFragment.context)
+            recyclerAdapter = TransactionsListAdapter(
                 requestManager,
-                this@TransactionFragment,
-                this@TransactionFragment.requireActivity().packageName,
+                this@TransactionsFragment,
+                this@TransactionsFragment.requireActivity().packageName,
                 currentLocale, _resources
-            ) {
-
-                override fun getCategoryByIdFromRoot(id: Int): Category {
-                    viewModel.viewState.value?.categoryList?.let {
-                        for (item in it) {
-                            if (item.id == id) {
-                                return item
-                            }
-                        }
-                    }
-                    return Category(
-                        -1,
-                        -1,
-                        "UNKWON CATEGORY id: $id and size: ${viewModel.viewState.value?.categoryList?.size}",
-                        "NULL",
-                        -1
-                    )
-                }
-            }
+            )
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
@@ -469,23 +426,27 @@ constructor(
 
 //            //swipe to delete
             val swipeHandler =
-                object : SwipeToDeleteCallback(this@TransactionFragment.requireContext()) {
+                object : SwipeToDeleteCallback(this@TransactionsFragment.requireContext()) {
                     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
 
-                        val adapter = transaction_recyclerView.adapter as TransactionListAdapter
-                        val deletedTrans = adapter.getRecord(viewHolder.adapterPosition)
+                        val adapter = transaction_recyclerView.adapter as TransactionsListAdapter
+                        val deletedTrans = adapter.getTransaction(viewHolder.adapterPosition)
 //                        delete from list
                         val removedHeader = adapter.removeAt(viewHolder.adapterPosition)
                         //add to recently deleted
+                        val recentlyDeletedHeader =
+                            TransactionsViewState.RecentlyDeletedTransaction(
+                                deletedTrans,
+                                viewHolder.adapterPosition,
+                                removedHeader
+                            )
                         viewModel.setRecentlyDeletedTrans(
-                            deletedTrans,
-                            viewHolder.adapterPosition,
-                            removedHeader
+                            recentlyDeletedHeader
                         )
                         //delete from database
                         viewModel.launchNewJob(
-                            TransactionStateEvent.OneShotOperationsTransactionStateEvent.DeleteTransaction(
-                                transaction = deletedTrans,
+                            TransactionsStateEvent.DeleteTransaction(
+                                transactionEntity = deletedTrans.toTransactionEntity(),
                                 showSuccessToast = false
                             )
                         )
@@ -511,7 +472,7 @@ constructor(
             }
 
             override fun onDismiss() {
-                viewModel.setRecentlyDeletedTransToNull()
+                viewModel.setRecentlyDeletedTrans(null)
             }
         }
         uiCommunicationListener.onResponseReceived(
@@ -527,29 +488,27 @@ constructor(
     }
 
     private fun insertRecentlyDeletedTrans() {
-        viewModel.viewState.value?.recentlyDeletedFields?.let { recentlyDeleted ->
-            if (recentlyDeleted.recentlyDeletedTrans != null) {
-                //insert to list
-                recyclerAdapter.insertRecordAt(
-                    recentlyDeleted.recentlyDeletedTrans!!,
-                    recentlyDeleted.recentlyDeletedTransPosition,
-                    recentlyDeleted.recentlyDeletedHeader
+        val recentlyDeletedFields = viewModel.getCurrentViewStateOrNew().recentlyDeletedFields
+        recentlyDeletedFields?.recentlyDeletedTrans?.let {
+            //insert to list
+            recyclerAdapter.insertTransactionAt(
+                it,
+                recentlyDeletedFields.recentlyDeletedTransPosition,
+                recentlyDeletedFields.recentlyDeletedHeader
+            )
+            //insert into database
+            viewModel.launchNewJob(
+                TransactionsStateEvent.InsertTransaction(
+                    it.toTransactionEntity()
                 )
-                //insert into database
-                viewModel.launchNewJob(
-                    TransactionStateEvent.OneShotOperationsTransactionStateEvent.InsertTransaction(
-                        recentlyDeleted.recentlyDeletedTrans!!
-                    )
-                )
-            } else {
-                viewModel.addToMessageStack(
-                    message = "Something went wrong \n cannot return deleted transaction back",
-                    uiComponentType = UIComponentType.Dialog,
-                    messageType = MessageType.Error
-                )
-            }
-        }
-        viewModel.setRecentlyDeletedTransToNull()
+            )
+        } ?: viewModel.addToMessageStack(
+            message = "Something went wrong \n cannot return deleted transaction back",
+            uiComponentType = UIComponentType.Dialog,
+            messageType = MessageType.Error
+        )
+        viewModel.setRecentlyDeletedTrans(null)
+
     }
 
 
@@ -589,15 +548,6 @@ constructor(
 
 //        bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
 
-        viewModel.countOfNonCancellableJobs.observe(viewLifecycleOwner, Observer {
-            it?.let {
-                if (it > 0) {
-                    viewModel.runPendingJobs()
-                }
-            }
-
-        })
-
     }
 
     override fun onStop() {
@@ -605,9 +555,9 @@ constructor(
         uiCommunicationListener.changeDrawerState(true)
     }
 
-    override fun onItemSelected(position: Int, item: Record) {
-        viewModel.setDetailTransFields(item)
+    override fun onItemSelected(position: Int, item: Transaction) {
         navigateToAddTransactionFragment(false)
+
     }
 
     override fun restoreListPosition() {

@@ -1,4 +1,4 @@
-package com.example.jibi.ui.main.transaction.home
+package com.example.jibi.ui.main.transaction.transactions
 
 import android.content.res.Resources
 import android.util.Log
@@ -11,7 +11,7 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.example.jibi.R
 import com.example.jibi.models.Category
-import com.example.jibi.models.Record
+import com.example.jibi.models.Transaction
 import com.example.jibi.util.GenericViewHolder
 import com.example.jibi.util.separate3By3
 import kotlinx.android.synthetic.main.fragment_add_transaction.view.*
@@ -28,7 +28,7 @@ import kotlin.collections.ArrayList
 import kotlin.random.Random
 
 
-abstract class TransactionListAdapter(
+ class TransactionsListAdapter(
     private val requestManager: RequestManager?,
     private val interaction: Interaction? = null,
     private val packageName: String,
@@ -54,26 +54,30 @@ abstract class TransactionListAdapter(
 
         const val HEADER_ITEM = -3
         private const val TRANSACTION_ITEM = 0
-        private val NO_MORE_RESULTS_BLOG_MARKER = Record(
+        private val NO_MORE_RESULTS_BLOG_MARKER = Transaction(
             NO_MORE_RESULTS,
             0.0,
             "NO_MORE_RESULTS_BLOG_MARKER",
-            0,
-            0
+            0.0
         )
-        val NO_RESULT_FOUND_FOR_THIS_QUERY_MARKER = Record(
+        val NO_RESULT_FOUND_FOR_THIS_QUERY_MARKER = Transaction(
             NO_RESULT_FOUND,
             0.0,
             "NO_RESULT_FOUND_FOR_THIS_QUERY_MARKER",
-            0,
-            0
+            0.0,
         )
-        val NO_RESULT_FOUND_IN_DATABASE = Record(
+        val NO_RESULT_FOUND_IN_DATABASE_OLD = Transaction(
             DATABASE_IS_EMPTY,
             0.0,
             "NO_RESULT_FOUND_IN_DATABASE",
-            0,
-            0
+            0.0
+
+        )
+        val NO_RESULT_FOUND_IN_DATABASE = Transaction(
+            DATABASE_IS_EMPTY,
+            0.0,
+            "NO_RESULT_FOUND_IN_DATABASE",
+            0.0
         )
 
         //list of supported patter
@@ -130,13 +134,13 @@ abstract class TransactionListAdapter(
         )
     }
 
-    val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Record>() {
+    val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Transaction>() {
 
-        override fun areItemsTheSame(oldItem: Record, newItem: Record): Boolean {
+        override fun areItemsTheSame(oldItem: Transaction, newItem: Transaction): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: Record, newItem: Record): Boolean {
+        override fun areContentsTheSame(oldItem: Transaction, newItem: Transaction): Boolean {
             return oldItem == newItem
         }
 
@@ -242,7 +246,7 @@ abstract class TransactionListAdapter(
     }
 
     internal inner class BlogRecyclerChangeCallback(
-        private val adapter: TransactionListAdapter
+        private val adapter: TransactionsListAdapter
     ) : ListUpdateCallback {
 
         override fun onChanged(position: Int, count: Int, payload: Any?) {
@@ -314,9 +318,9 @@ abstract class TransactionListAdapter(
         return differ.currentList.size
     }
 
-    fun getRecord(position: Int): Record = differ.currentList[position]
+    fun getTransaction(position: Int): Transaction = differ.currentList[position]
 
-    fun insertRecordAt(transaction: Record, position: Int?, header: Record?) {
+    fun insertTransactionAt(transaction: Transaction, position: Int?, header: Transaction?) {
         val newList = differ.currentList.toMutableList()
         if (position != null) {
             if (header != null) {
@@ -332,23 +336,23 @@ abstract class TransactionListAdapter(
         differ.submitList(newList)
     }
 
-    fun removeAt(position: Int): Record? {
+    fun removeAt(position: Int): Transaction? {
         val newList = differ.currentList.toMutableList()
-        val beforeRecord = try {
+        val beforeTransaction = try {
             differ.currentList[position.minus(1)]
         } catch (e: Exception) {
             null
         }
-        val afterRecord = try {
+        val afterTransaction = try {
             differ.currentList[position.plus(1)]
         } catch (e: Exception) {
             null
         }
 
-        var removedHeader: Record? = null
+        var removedHeader: Transaction? = null
 
-        if (beforeRecord?.id == HEADER_ITEM &&
-            afterRecord?.id == HEADER_ITEM
+        if (beforeTransaction?.id == HEADER_ITEM &&
+            afterTransaction?.id == HEADER_ITEM
         ) {
             removedHeader = newList.removeAt(position.minus(1))
         }
@@ -360,17 +364,17 @@ abstract class TransactionListAdapter(
 //    // This also ensures if the network connection is lost, they will be in the cache
 //    fun preloadGlideImages(
 //        requestManager: RequestManager,
-//        list: List<Record>
+//        list: List<Transaction>
 //    ){
-//        for(Record in list){
+//        for(Transaction in list){
 //            requestManager
-//                .load(Record.image)
+//                .load(Transaction.image)
 //                .preload()
 //        }
 //    }
 
     fun submitList(
-        transList: List<Record>?,
+        transList: List<Transaction>?,
         isQueryExhausted: Boolean
     ) {
         val newList = transList?.toMutableList()
@@ -398,8 +402,7 @@ abstract class TransactionListAdapter(
         val packageName: String
     ) : RecyclerView.ViewHolder(itemView) {
 
-        fun bind(item: Record, isNextItemHeader: Boolean = false) = with(itemView) {
-            var category = getCategoryById(item.cat_id)
+        fun bind(item: Transaction, isNextItemHeader: Boolean = false) = with(itemView) {
 
             itemView.setOnClickListener {
                 interaction?.onItemSelected(adapterPosition, item)
@@ -414,11 +417,11 @@ abstract class TransactionListAdapter(
             }
 
             if (item.memo.isNullOrBlank()) {
-                itemView.main_text.text = category.getCategoryNameFromStringFile(
+                itemView.main_text.text = item.getCategoryNameFromStringFile(
                     _resources,
                     this@TransViewHolder.packageName
                 ) {
-                    it.name
+                    it.categoryName
                 }
             } else {
                 itemView.main_text.text = item.memo
@@ -433,17 +436,17 @@ abstract class TransactionListAdapter(
                 itemView.priceCard.setCardBackgroundColor(resources.getColor(R.color.expensesColor))
             }
             val categoryImageUrl = this.resources.getIdentifier(
-                "ic_cat_${category.img_res}",
+                "ic_cat_${item.categoryImage}",
                 "drawable",
                 packageName
             )
             //TODO
 //            itemView.card
-            if (category.id > 0) {
+            if (item.categoryId > 0) {
                 try {
                     itemView.cardView.setCardBackgroundColor(
                         resources.getColor(
-                            listOfColor[(category.id.minus(
+                            listOfColor[(item.categoryId.minus(
                                 1
                             ))]
                         )
@@ -476,7 +479,7 @@ abstract class TransactionListAdapter(
         private val _resources: Resources
     ) : RecyclerView.ViewHolder(itemView) {
 
-        fun bind(item: Record) = with(itemView) {
+        fun bind(item: Transaction) = with(itemView) {
 
             //hide margin for first object
 //            if (adapterPosition<2){
@@ -540,25 +543,11 @@ abstract class TransactionListAdapter(
         }
     }
 
-    fun getCategoryById(id: Int): Category {
-        categoryList.let {
-            for (item in it) {
-                if (item.id == id) {
-                    return@let item
-                }
-            }
-        }
-        val category: Category = getCategoryByIdFromRoot(id)
-        categoryList.add(category)
-        return category
-    }
-
-    abstract fun getCategoryByIdFromRoot(id: Int): Category
 
 
     interface Interaction {
 
-        fun onItemSelected(position: Int, item: Record)
+        fun onItemSelected(position: Int, item: Transaction)
 
         fun restoreListPosition()
     }

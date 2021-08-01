@@ -1,12 +1,12 @@
 package com.example.jibi.ui.main.transaction.state
 
 import com.example.jibi.models.Category
-import com.example.jibi.models.Record
+import com.example.jibi.models.TransactionEntity
 import com.example.jibi.util.StateEvent
 
-sealed class TransactionStateEvent : StateEvent {
+sealed class TransactionStateEvent13 : StateEvent {
     //get the sum of all transaction, income and expenses
-    class getSummaryMoney() : TransactionStateEvent() {
+    class getSummaryMoney() : TransactionStateEvent13() {
         //this will show to user
         override fun errorInfo(): String {
             return "Error get sum of all money ->balance, income and expenses"
@@ -22,7 +22,7 @@ sealed class TransactionStateEvent : StateEvent {
     class getTrasaction(
         val minDate: Int? = null,
         val maxDate: Int? = null
-    ) : TransactionStateEvent() {
+    ) : TransactionStateEvent13() {
 
         override fun errorInfo(): String {
             return "Error get all Transaction from $minDate to $maxDate"
@@ -39,7 +39,7 @@ sealed class TransactionStateEvent : StateEvent {
     class getSumOfMoney(
         val minDate: Int? = null,
         val maxDate: Int? = null
-    ) : TransactionStateEvent() {
+    ) : TransactionStateEvent13() {
         override fun errorInfo(): String {
             return "Error get sum of money from $minDate to $maxDate"
         }
@@ -53,7 +53,7 @@ sealed class TransactionStateEvent : StateEvent {
 
     }
 
-    object GetCategoryImages : TransactionStateEvent() {
+    object GetCategoryImages : TransactionStateEvent13() {
         override fun errorInfo(): String {
             return "Error get category images"
         }
@@ -66,7 +66,7 @@ sealed class TransactionStateEvent : StateEvent {
             "getSumOfMoney  hashCode: ${this.hashCode()}"
     }
 
-    object None : TransactionStateEvent() {
+    object None : TransactionStateEvent13() {
         override fun errorInfo(): String {
             return "ERROR NONE"
         }
@@ -79,19 +79,19 @@ sealed class TransactionStateEvent : StateEvent {
 
     }
 
-    sealed class OneShotOperationsTransactionStateEvent : TransactionStateEvent() {
-        data class InsertTransaction(
-            val record: Record
-        ) : OneShotOperationsTransactionStateEvent() {
-            override fun errorInfo(): String =
-                "ERROR: inserting record! recordMoney = ${record.money}"
-
-            override fun getId(): String = "InsertTransaction $record ${this.hashCode()}"
-        }
+    sealed class OneShotOperationsTransactionStateEvent13 : TransactionStateEvent13() {
+//        data class InsertTransaction(
+//            val record: Record
+//        ) : OneShotOperationsTransactionStateEvent13() {
+//            override fun errorInfo(): String =
+//                "ERROR: inserting record! recordMoney = ${record.money}"
+//
+//            override fun getId(): String = "InsertTransaction $record ${this.hashCode()}"
+//        }
 
         data class GetSpecificTransaction(
             val transactionId: Int
-        ) : OneShotOperationsTransactionStateEvent() {
+        ) : OneShotOperationsTransactionStateEvent13() {
             override fun errorInfo(): String = "ERROR: getting record! recordId = ${transactionId}"
 
             override fun getId(): String =
@@ -99,27 +99,27 @@ sealed class TransactionStateEvent : StateEvent {
         }
 
         data class UpdateTransaction(
-            val record: Record
-        ) : OneShotOperationsTransactionStateEvent() {
+            val transactionEntity: TransactionEntity
+        ) : OneShotOperationsTransactionStateEvent13() {
             override fun errorInfo(): String =
-                "ERROR: updating record! recordMoney = ${record.money}"
+                "ERROR: updating record! recordMoney = ${transactionEntity.money}"
 
-            override fun getId(): String = "UpdateTransaction $record ${this.hashCode()}"
+            override fun getId(): String = "UpdateTransaction $transactionEntity ${this.hashCode()}"
         }
 
-        data class DeleteTransaction(
-            val transaction: Record,
-            val showSuccessToast: Boolean = true
-        ) : OneShotOperationsTransactionStateEvent() {
-            override fun errorInfo(): String =
-                "ERROR: deleting record! recordMoney = ${transaction.money}"
-
-            override fun getId(): String = "DeleteTransaction $transaction ${this.hashCode()}"
-        }
+//        data class DeleteTransaction(
+//            val transaction: Record,
+//            val showSuccessToast: Boolean = true
+//        ) : OneShotOperationsTransactionStateEvent13() {
+//            override fun errorInfo(): String =
+//                "ERROR: deleting record! recordMoney = ${transaction.money}"
+//
+//            override fun getId(): String = "DeleteTransaction $transaction ${this.hashCode()}"
+//        }
 
         data class DeleteTransactionById(
             val transactionId: Int
-        ) : OneShotOperationsTransactionStateEvent() {
+        ) : OneShotOperationsTransactionStateEvent13() {
             override fun errorInfo(): String =
                 "ERROR: deleting transaction! id = ${transactionId}"
 
@@ -128,7 +128,7 @@ sealed class TransactionStateEvent : StateEvent {
 
         data class DeleteCategory(
             val category: Category
-        ) : OneShotOperationsTransactionStateEvent() {
+        ) : OneShotOperationsTransactionStateEvent13() {
             override fun errorInfo(): String =
                 "ERROR: deleting category! categoryName = ${category.name}"
 
@@ -137,7 +137,7 @@ sealed class TransactionStateEvent : StateEvent {
 
         data class InsertCategory(
             val category: Category
-        ) : OneShotOperationsTransactionStateEvent() {
+        ) : OneShotOperationsTransactionStateEvent13() {
             override fun errorInfo(): String =
                 "ERROR: inserting category! categoryName = ${category.name}"
 
@@ -146,7 +146,7 @@ sealed class TransactionStateEvent : StateEvent {
 
         data class PinOrUnpinCategory(
             val category: Category
-        ) : OneShotOperationsTransactionStateEvent() {
+        ) : OneShotOperationsTransactionStateEvent13() {
             override fun errorInfo(): String =
                 "ERROR: pin or unpin category! categoryName = ${category.name}"
 
@@ -155,7 +155,7 @@ sealed class TransactionStateEvent : StateEvent {
 
         data class UpdateCategory(
             val category: Category
-        ) : OneShotOperationsTransactionStateEvent() {
+        ) : OneShotOperationsTransactionStateEvent13() {
             override fun errorInfo(): String =
                 "ERROR: updating category! categoryName = ${category.name}"
 
@@ -165,7 +165,7 @@ sealed class TransactionStateEvent : StateEvent {
         data class GetPieChartData(
             val fromDate: Int,
             val toDate: Int
-        ) : OneShotOperationsTransactionStateEvent() {
+        ) : OneShotOperationsTransactionStateEvent13() {
             override fun errorInfo(): String =
                 "ERROR: getting pie chart data!"
 
@@ -174,7 +174,7 @@ sealed class TransactionStateEvent : StateEvent {
 
         data class GetCategoryById(
             val categoryId: Int
-        ) : OneShotOperationsTransactionStateEvent() {
+        ) : OneShotOperationsTransactionStateEvent13() {
             override fun errorInfo(): String = "ERROR: getting category! categoryID = ${categoryId}"
 
             override fun getId(): String =
@@ -185,7 +185,7 @@ sealed class TransactionStateEvent : StateEvent {
             val categoryId: Int,
             val fromDate: Int,
             val toDate: Int
-        ) : OneShotOperationsTransactionStateEvent() {
+        ) : OneShotOperationsTransactionStateEvent13() {
             override fun errorInfo(): String =
                 "ERROR: getting all transaction with category  id = ${categoryId}"
 

@@ -17,7 +17,7 @@ import com.example.jibi.models.Category
 import com.example.jibi.ui.main.transaction.BaseTransactionFragment
 import com.example.jibi.ui.main.transaction.categories.AddCategoryFragment.Companion.EXPENSES
 import com.example.jibi.ui.main.transaction.categories.AddCategoryFragment.Companion.INCOME
-import com.example.jibi.ui.main.transaction.home.TransactionListAdapter
+import com.example.jibi.ui.main.transaction.transactions.TransactionsListAdapter
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.*
 import com.google.android.material.tabs.TabLayoutMediator
@@ -246,7 +246,7 @@ constructor(
                             try {
                                 cardView_view_category.setCardBackgroundColor(
                                     resources.getColor(
-                                        TransactionListAdapter.listOfColor[(item.id.minus(
+                                        TransactionsListAdapter.listOfColor[(item.id.minus(
                                             1
                                         ))]
                                     )
@@ -255,8 +255,8 @@ constructor(
                                 //apply random color
                                 cardView_view_category.setCardBackgroundColor(
                                     resources.getColor(
-                                        TransactionListAdapter.listOfColor[Random.nextInt(
-                                            TransactionListAdapter.listOfColor.size
+                                        TransactionsListAdapter.listOfColor[Random.nextInt(
+                                            TransactionsListAdapter.listOfColor.size
                                         )]
                                     )
                                 )

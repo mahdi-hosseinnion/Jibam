@@ -1,6 +1,6 @@
 package com.example.jibi.util
 
-import com.example.jibi.ui.main.transaction.home.TransactionListAdapter
+import com.example.jibi.ui.main.transaction.transactions.TransactionsListAdapter
 import java.util.*
 
 //  this algorithm for years and it is very accurate between 1901 and 2099.
@@ -190,7 +190,7 @@ object SolarCalendar {
         //TODO REFACTOR THIS
         return when (pattern) {
             ShamsiPatterns.RECYCLER_VIEW -> {
-                "$strWeekDay، ${TransactionListAdapter.DAY_OF_WEEK_MARKER}" +
+                "$strWeekDay، ${TransactionsListAdapter.DAY_OF_WEEK_MARKER}" +
                         java.lang.String.format(loc, "%d", date) +
                         " " +
                         strMonth +

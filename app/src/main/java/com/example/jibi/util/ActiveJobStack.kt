@@ -5,14 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.coroutineScope
 
-class ActiveJobStack<OneShotOperationsStateEvent> : HashMap<String, Job>() {
+class ActiveJobStack : ArrayList<String>() {
     private val TAG = "ActiveJobStack: mahdi"
-
-    //for testing
-    @IgnoredOnParcel
-    //for track how much take to complete one task
-    private val jobTiming = HashMap<String, Long>()
 
     @IgnoredOnParcel
     private val _CountOfActiveJobs: MutableLiveData<Int> = MutableLiveData()
@@ -21,41 +17,20 @@ class ActiveJobStack<OneShotOperationsStateEvent> : HashMap<String, Job>() {
     val countOfActiveJobs: LiveData<Int>
         get() = _CountOfActiveJobs
 
-
-    @IgnoredOnParcel
-    private val _CountOfUnCancellableJobs: MutableLiveData<Int> = MutableLiveData()
-
-    @IgnoredOnParcel
-    //handle nonCancelable jobs
-    val unCancellableJobs = ArrayList<OneShotOperationsStateEvent>()
-    val countOfUnCancellableJobs: LiveData<Int>
-        get() = _CountOfUnCancellableJobs
-
-    override fun put(key: String, value: Job): Job? {
-        Log.d(TAG, "put: adding'+++' loading $key")
-        jobTiming.put(key, now())
-        if (this.containsKey(key)) {
-            // prevent duplicate
-            return null
-        }
-        //this method should always called before -> super.put(key, value)
+    override fun add(element: String): Boolean {
+        if (this.contains(element))
+            return false
         increaseActiveCount()
-        return super.put(key, value)
+        return super.add(element)
     }
 
-    override fun remove(key: String): Job? {
-        if (this.containsKey(key)) {
-            if (jobTiming.containsKey(key)) {
-                Log.d(
-                    TAG,
-                    "put: removing'---' loading $key it took about ${now() - jobTiming.get(key)!!} ms"
-                )
-            }
-            //this method should always called before -> super.remove(key)
+    override fun remove(element: String): Boolean {
+        return if (this.contains(element)) {
             decreaseActiveCount()
-            return super.remove(key)
+            super.remove(element)
+        } else {
+            false
         }
-        return null
     }
 
     override fun clear() {
@@ -82,41 +57,5 @@ class ActiveJobStack<OneShotOperationsStateEvent> : HashMap<String, Job>() {
 
     private fun clearActiveCount() {
         _CountOfActiveJobs.postValue(0)
-    }
-
-    private fun now() = System.currentTimeMillis()
-
-//    fun checkForUnCancellableJob(stateEvent: OneShotOperationsStateEvent) {
-//        if (unCancellableJobs.contains(stateEvent)) {
-//            decreaseUnCancellableCount()
-//            unCancellableJobs.remove(stateEvent)
-//
-//        }
-//    }
-//    fun checkForIsAddedToUnCancellable(stateEvent: OneShotOperationsStateEvent):Boolean {
-//        return unCancellableJobs.contains(stateEvent)
-//
-//    }
-
-    fun addToUnCancellableJob(stateEvent: OneShotOperationsStateEvent) {
-        increaseCancellableCount()
-        unCancellableJobs.add(stateEvent)
-    }
-
-    fun removeFromUnCancellableJob(stateEvent: OneShotOperationsStateEvent) {
-        if (unCancellableJobs.contains(stateEvent)) {
-            decreaseUnCancellableCount()
-            unCancellableJobs.remove(stateEvent)
-        }
-    }
-
-    private fun increaseCancellableCount() {
-        val newValue = (unCancellableJobs.size).plus(1)
-        _CountOfUnCancellableJobs.postValue(newValue)
-    }
-
-    private fun decreaseUnCancellableCount() {
-        val newValue = (unCancellableJobs.size).minus(1)
-        _CountOfUnCancellableJobs.postValue(newValue)
     }
 }

@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "records")
 
-data class Record(
+data class TransactionEntity(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "rId")

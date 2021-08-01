@@ -11,7 +11,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
-import com.example.jibi.ui.main.transaction.home.TransactionListAdapter
+import com.example.jibi.ui.main.transaction.transactions.TransactionsListAdapter
 
 abstract class SwipeToDeleteCallback(context: Context) :
     ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -33,8 +33,8 @@ abstract class SwipeToDeleteCallback(context: Context) :
          * if (viewHolder?.itemViewType == YourAdapter.SOME_TYPE) return 0
          * if (viewHolder?.adapterPosition == 0) return 0
          */
-        if (viewHolder?.itemViewType == TransactionListAdapter.HEADER_ITEM) return 0
-        if (viewHolder?.itemViewType == TransactionListAdapter.NO_MORE_RESULTS) return 0
+        if (viewHolder?.itemViewType == TransactionsListAdapter.HEADER_ITEM) return 0
+        if (viewHolder?.itemViewType == TransactionsListAdapter.NO_MORE_RESULTS) return 0
         return super.getMovementFlags(recyclerView, viewHolder)
     }
 

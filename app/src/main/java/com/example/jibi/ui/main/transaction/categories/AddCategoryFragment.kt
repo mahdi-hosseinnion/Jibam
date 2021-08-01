@@ -14,7 +14,7 @@ import com.example.jibi.R
 import com.example.jibi.models.Category
 import com.example.jibi.models.CategoryImages
 import com.example.jibi.ui.main.transaction.BaseTransactionFragment
-import com.example.jibi.ui.main.transaction.home.TransactionListAdapter
+import com.example.jibi.ui.main.transaction.transactions.TransactionsListAdapter
 import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.*
 import kotlinx.android.synthetic.main.fragment_add_category.*
@@ -168,7 +168,7 @@ constructor(
         if (categoryImages.id > 0) {
             cardView.setCardBackgroundColor(
                 resources.getColor(
-                    TransactionListAdapter.listOfColor[(categoryImages.id.minus(
+                    TransactionsListAdapter.listOfColor[(categoryImages.id.minus(
                         1
                     ))]
                 )

@@ -9,7 +9,7 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.example.jibi.R
 import com.example.jibi.models.Category
-import com.example.jibi.ui.main.transaction.home.TransactionListAdapter
+import com.example.jibi.ui.main.transaction.transactions.TransactionsListAdapter
 import com.example.jibi.util.sortCategoriesWithPinned
 import kotlinx.android.synthetic.main.layout_category_images_list_item.view.*
 import kotlinx.android.synthetic.main.layout_category_list_item.view.*
@@ -192,7 +192,7 @@ class BottomSheetListAdapter(
                 itemView.category_image.setBackgroundColor(
 
                     itemView.resources.getColor(
-                        TransactionListAdapter.listOfColor[(categoryId.minus(
+                        TransactionsListAdapter.listOfColor[(categoryId.minus(
                             1
                         ))]
                     )
@@ -201,8 +201,8 @@ class BottomSheetListAdapter(
                 //apply random color
                 itemView.category_image.setBackgroundColor(
                     itemView.resources.getColor(
-                        TransactionListAdapter.listOfColor[Random.nextInt(
-                            TransactionListAdapter.listOfColor.size
+                        TransactionsListAdapter.listOfColor[Random.nextInt(
+                            TransactionsListAdapter.listOfColor.size
                         )]
                     )
                 )

@@ -14,7 +14,7 @@ import com.example.jibi.ui.main.transaction.categories.ViewCategoriesFragment
 import com.example.jibi.ui.main.transaction.chart.ChartFragment
 import com.example.jibi.ui.main.transaction.chart.DetailChartFragment
 import com.example.jibi.ui.main.transaction.home.AddTransactionFragment
-import com.example.jibi.ui.main.transaction.home.TransactionFragment
+import com.example.jibi.ui.main.transaction.transactions.TransactionsFragment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.util.*
@@ -39,8 +39,8 @@ constructor(
 
         when (className) {
 
-            TransactionFragment::class.java.name -> {
-                TransactionFragment(
+            TransactionsFragment::class.java.name -> {
+                TransactionsFragment(
                     viewModelFactory,
                     requestManager,
                     currentLocale,
@@ -87,7 +87,7 @@ constructor(
             }
 
             else -> {
-                TransactionFragment(
+                TransactionsFragment(
                     viewModelFactory, requestManager, currentLocale, sharedPreferences,
                     sharedPrefsEditor, monthManger, resources
                 )

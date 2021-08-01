@@ -9,9 +9,8 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.jibi.R
 import com.example.jibi.models.Category
-import com.example.jibi.models.Record
-import com.example.jibi.ui.main.transaction.home.AddTransactionFragment
-import com.example.jibi.ui.main.transaction.home.TransactionListAdapter
+import com.example.jibi.models.TransactionEntity
+import com.example.jibi.ui.main.transaction.transactions.TransactionsListAdapter
 import com.example.jibi.util.*
 import kotlinx.android.synthetic.main.layout_chart_list_item.view.*
 import kotlinx.android.synthetic.main.layout_transaction_list_item.view.cardView
@@ -27,7 +26,7 @@ class DetailChartListAdapter(
     private var resources: Resources,
     private var currentLocale: Locale,
     private var category: Category,
-    private var data: List<Record> = ArrayList(),
+    private var data: List<TransactionEntity> = ArrayList(),
 
     ) : RecyclerView.Adapter<DetailChartListAdapter.DetailChartViewHolder>() {
 
@@ -55,7 +54,7 @@ class DetailChartListAdapter(
     override fun onBindViewHolder(holder: DetailChartViewHolder, position: Int) =
         holder.bind(data[position], totalAmount, biggestAmount)
 
-    fun swapData(data: List<Record>) {
+    fun swapData(data: List<TransactionEntity>) {
         this.data = data
         totalAmount = data.sumOf { abs(it.money) }
         biggestAmount = data.maxOf { abs(it.money) }
@@ -72,7 +71,7 @@ class DetailChartListAdapter(
         private var category: Category
     ) : RecyclerView.ViewHolder(itemView) {
         fun bind(
-            item: Record,
+            item: TransactionEntity,
             totalAmount: Double,
             biggestAmount: Double
         ) = with(itemView) {
@@ -104,7 +103,7 @@ class DetailChartListAdapter(
                 try {
                     itemView.cardView.setCardBackgroundColor(
                         _resources.getColor(
-                            TransactionListAdapter.listOfColor[(category.id.minus(
+                            TransactionsListAdapter.listOfColor[(category.id.minus(
                                 1
                             ))]
                         )
@@ -113,8 +112,8 @@ class DetailChartListAdapter(
                     //apply random color
                     itemView.cardView.setCardBackgroundColor(
                         _resources.getColor(
-                            TransactionListAdapter.listOfColor
-                                    [Random.nextInt(TransactionListAdapter.listOfColor.size)]
+                            TransactionsListAdapter.listOfColor
+                                    [Random.nextInt(TransactionsListAdapter.listOfColor.size)]
                         )
                     )
                 }
@@ -164,6 +163,6 @@ class DetailChartListAdapter(
     }
 
     interface Interaction {
-        fun onItemSelected(position: Int, item: Record)
+        fun onItemSelected(position: Int, item: TransactionEntity)
     }
 }
