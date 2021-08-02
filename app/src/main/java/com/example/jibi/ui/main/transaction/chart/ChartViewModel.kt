@@ -9,7 +9,7 @@ import com.example.jibi.repository.tranasction.TransactionRepository
 import com.example.jibi.ui.main.transaction.MonthManger
 import com.example.jibi.ui.main.transaction.chart.state.ChartStateEvent
 import com.example.jibi.ui.main.transaction.chart.state.ChartViewState
-import com.example.jibi.ui.main.transaction.common.NewBaseViewModel
+import com.example.jibi.ui.main.transaction.common.BaseViewModel
 import com.example.jibi.util.DataState
 import com.example.jibi.util.MessageType
 import com.example.jibi.util.Response
@@ -27,7 +27,7 @@ class ChartViewModel
 constructor(
     private val transactionRepository: TransactionRepository,
     private val monthManger: MonthManger
-) : NewBaseViewModel<ChartViewState, ChartStateEvent>() {
+) : BaseViewModel<ChartViewState, ChartStateEvent>() {
 
 
     private val _pieChartData: LiveData<List<PieChartData>> =

@@ -36,8 +36,8 @@ constructor(
     private val _resources: Resources
 ) : BaseFragment(
     R.layout.fragment_add_category,
-    viewModelFactory,
-    R.id.add_category_toolbar, _resources
+    R.id.add_category_toolbar,
+    _resources
 ), AddCategoryListAdapter.Interaction {
 
     private val viewModel by viewModels<CategoriesViewModel> { viewModelFactory }
@@ -82,6 +82,22 @@ constructor(
 
         initRecyclerView()
         subscribeObservers()
+    }
+
+    override fun handleLoading() {
+        viewModel.countOfActiveJobs.observe(
+            viewLifecycleOwner
+        ) {
+            showProgressBar(viewModel.areAnyJobsActive())
+        }
+    }
+
+    override fun handleStateMessages() {
+        viewModel.stateMessage.observe(viewLifecycleOwner) {
+            it?.let {
+                handleNewStateMessage(it) { viewModel.clearStateMessage() }
+            }
+        }
     }
 
     private fun subscribeObservers() {

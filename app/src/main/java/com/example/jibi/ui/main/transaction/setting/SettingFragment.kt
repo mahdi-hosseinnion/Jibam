@@ -35,7 +35,6 @@ constructor(
     private val sharedPreferences: SharedPreferences
 ) : BaseFragment(
         R.layout.fragment_setting,
-        viewModelFactory,
         R.id.setting_toolbar,
         _resources
     ) {
@@ -91,6 +90,10 @@ constructor(
         }
 
     }
+
+    override fun handleStateMessages() {}
+
+    override fun handleLoading() {}
 
     fun recreateApp() {
         uiCommunicationListener.showProgressBar(true)

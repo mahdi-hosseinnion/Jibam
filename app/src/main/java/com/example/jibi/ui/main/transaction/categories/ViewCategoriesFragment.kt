@@ -47,7 +47,9 @@ constructor(
     private val sharedPrefsEditor: SharedPreferences.Editor,
     private val _resources: Resources
 ) : BaseFragment(
-    R.layout.fragment_view_categories, viewModelFactory, R.id.viewCategoriesToolbar, _resources
+    R.layout.fragment_view_categories
+    , R.id.viewCategoriesToolbar,
+    _resources
 ) {
 
     private val viewModel by viewModels<CategoriesViewModel> { viewModelFactory }
@@ -82,6 +84,21 @@ constructor(
         }
 
         subscribeObservers()
+    }
+    override fun handleLoading() {
+        viewModel.countOfActiveJobs.observe(
+            viewLifecycleOwner
+        ) {
+            showProgressBar(viewModel.areAnyJobsActive())
+        }
+    }
+
+    override fun handleStateMessages() {
+        viewModel.stateMessage.observe(viewLifecycleOwner) {
+            it?.let {
+                handleNewStateMessage(it) { viewModel.clearStateMessage() }
+            }
+        }
     }
 
     private fun subscribeObservers() {

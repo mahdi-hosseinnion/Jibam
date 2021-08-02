@@ -9,8 +9,9 @@ import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.example.jibi.ui.UICommunicationListener
+import com.example.jibi.util.StateMessage
+import com.example.jibi.util.StateMessageCallback
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
@@ -20,17 +21,11 @@ abstract class BaseFragment
 constructor(
     @LayoutRes
     private val layoutRes: Int,
-    private val viewModelFactory: ViewModelProvider.Factory,
     @IdRes
     private val toolbar: Int? = null,
     private val _resources: Resources
 ) : Fragment(layoutRes) {
     private val TAG = "BaseTransactionFragment"
-
-    //    protected val viewModel: MainViewModel by viewModels(ownerProducer = { requireParentFragment() }) {
-//        viewModelFactory
-//    }
-//    protected val viewModel by viewModels<ViewModel> { getViewModelFactory() }
 
     lateinit var uiCommunicationListener: UICommunicationListener
     lateinit var _View: View
@@ -38,31 +33,30 @@ constructor(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _View = view
-//        subscribeToObservers()
+        handleLoading()
+        handleStateMessages()
     }
 
-//TODO FIX THIS 6724
-//    private fun subscribeToObservers() {
-//
-//        viewModel.countOfActiveJobs.observe(viewLifecycleOwner) {
-//            uiCommunicationListener.showProgressBar(viewModel.areAnyJobsActive())
-//
-//        }
-//
-//        viewModel.stateMessage.observe(viewLifecycleOwner) { stateMessage ->
-//            stateMessage?.let {
-//                uiCommunicationListener.onResponseReceived(
-//                    response = it.response,
-//                    stateMessageCallback = object : StateMessageCallback {
-//                        override fun removeMessageFromStack() {
-//                            viewModel.clearStateMessage()
-//                        }
-//                    }
-//                )
-//            }
-//        }
-//    }
+    abstract fun handleStateMessages()
 
+    abstract fun handleLoading()
+
+    fun showProgressBar(isLoading: Boolean) {
+        uiCommunicationListener.showProgressBar(isLoading)
+    }
+
+    fun handleNewStateMessage(
+        stateMessage: StateMessage, removeMessageFromStack: () -> Unit
+    ) {
+        uiCommunicationListener.onResponseReceived(
+            response = stateMessage.response,
+            stateMessageCallback = object : StateMessageCallback {
+                override fun removeMessageFromStack() {
+                    removeMessageFromStack()
+                }
+            }
+        )
+    }
 
     override fun onResume() {
         super.onResume()

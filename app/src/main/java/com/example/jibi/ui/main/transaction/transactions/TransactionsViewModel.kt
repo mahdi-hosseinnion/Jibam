@@ -7,7 +7,7 @@ import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Transaction
 import com.example.jibi.repository.tranasction.TransactionRepository
 import com.example.jibi.ui.main.transaction.MonthManger
-import com.example.jibi.ui.main.transaction.common.NewBaseViewModel
+import com.example.jibi.ui.main.transaction.common.BaseViewModel
 import com.example.jibi.ui.main.transaction.transactions.state.TransactionsStateEvent
 import com.example.jibi.ui.main.transaction.transactions.state.TransactionsViewState
 import com.example.jibi.ui.main.transaction.transactions.state.TransactionsViewState.*
@@ -29,7 +29,7 @@ constructor(
     private val transactionRepository: TransactionRepository,
     private val monthManger: MonthManger,
     private val currentLocale: Locale
-) : NewBaseViewModel<TransactionsViewState, TransactionsStateEvent>() {
+) : BaseViewModel<TransactionsViewState, TransactionsStateEvent>() {
 
     //search stuff
     // In our ViewModel

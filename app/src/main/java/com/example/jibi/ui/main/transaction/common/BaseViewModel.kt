@@ -10,10 +10,10 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.flow.*
 
-abstract class NewBaseViewModel<ViewState, _StateEvent : StateEvent>() : ViewModel() {
+abstract class BaseViewModel<_ViewState, _StateEvent : StateEvent>() : ViewModel() {
 
-    private val _viewState: MutableLiveData<ViewState> = MutableLiveData()
-    val viewState: LiveData<ViewState> = _viewState
+    private val _viewState: MutableLiveData<_ViewState> = MutableLiveData()
+    val viewState: LiveData<_ViewState> = _viewState
 
     private val _messageStack = MessageStack()
 
@@ -67,7 +67,7 @@ abstract class NewBaseViewModel<ViewState, _StateEvent : StateEvent>() : ViewMod
         }
     }
 
-    private suspend fun handleNewDataState(dataState: DataState<ViewState>) {
+    private suspend fun handleNewDataState(dataState: DataState<_ViewState>) {
         withContext(Dispatchers.Main) {
             ensureActive()
             //        handleStateEvent(stateEvent).onEach{ dataState -> TODO("OR")
@@ -127,6 +127,12 @@ abstract class NewBaseViewModel<ViewState, _StateEvent : StateEvent>() : ViewMod
 
     }
 
+    fun areAnyJobsActive(): Boolean = _activeJobStack.size > 0
+
+    fun clearStateMessage(index: Int = 0) {
+        _messageStack.clearStateMessage(index)
+    }
+
     fun addToMessageStack(
         stateMessage: StateMessage
     ) {
@@ -137,21 +143,21 @@ abstract class NewBaseViewModel<ViewState, _StateEvent : StateEvent>() : ViewMod
 
     }
 
-    fun getCurrentViewStateOrNew(): ViewState {
+    fun getCurrentViewStateOrNew(): _ViewState {
         return _viewState.value ?: initNewViewState()
     }
 
-    protected fun setViewState(viewState: ViewState) =
+    protected fun setViewState(viewState: _ViewState) =
         viewModelScope.launch(Main) {
             //other viewState data should maintain
             _viewState.value = updateViewState(viewState)
         }
 
 
-    abstract fun initNewViewState(): ViewState
+    abstract fun initNewViewState(): _ViewState
 
-    abstract suspend fun getResultByStateEvent(stateEvent: _StateEvent): DataState<ViewState>
+    abstract suspend fun getResultByStateEvent(stateEvent: _StateEvent): DataState<_ViewState>
 
-    abstract fun updateViewState(newViewState: ViewState): ViewState
+    abstract fun updateViewState(newViewState: _ViewState): _ViewState
 
 }

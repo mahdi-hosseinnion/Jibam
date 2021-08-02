@@ -71,7 +71,6 @@ constructor(
     private val _resources: Resources
 ) : BaseFragment(
     R.layout.fragment_transaction,
-    viewModelFactory,
     R.id.transaction_toolbar,
     _resources
 ), TransactionsListAdapter.Interaction {
@@ -346,13 +345,28 @@ constructor(
     }
 
 
-    private fun navigateToAddTransactionFragment(transactionId:Int = -1) {
+    private fun navigateToAddTransactionFragment(transactionId: Int = -1) {
         //on category selected and bottomSheet hided
         val action =
             TransactionsFragmentDirections.actionTransactionFragmentToCreateTransactionFragment(
                 transactionId = transactionId
             )
         findNavController().navigate(action)
+    }
+    override fun handleLoading() {
+        viewModel.countOfActiveJobs.observe(
+            viewLifecycleOwner
+        ) {
+            showProgressBar(viewModel.areAnyJobsActive())
+        }
+    }
+
+    override fun handleStateMessages() {
+        viewModel.stateMessage.observe(viewLifecycleOwner) {
+            it?.let {
+                handleNewStateMessage(it) { viewModel.clearStateMessage() }
+            }
+        }
     }
 
     private fun subscribeObservers() {

@@ -67,7 +67,6 @@ constructor(
     private val _resources: Resources
 ) : BaseFragment(
     R.layout.fragment_add_transaction,
-    viewModelFactory,
     R.id.fragment_add_toolbar_main, _resources
 ), CalculatorKeyboard.CalculatorInteraction {
 
@@ -121,6 +120,22 @@ constructor(
         }
 
 
+    }
+
+    override fun handleLoading() {
+        viewModel.countOfActiveJobs.observe(
+            viewLifecycleOwner
+        ) {
+            showProgressBar(viewModel.areAnyJobsActive())
+        }
+    }
+
+    override fun handleStateMessages() {
+        viewModel.stateMessage.observe(viewLifecycleOwner) {
+            it?.let {
+                handleNewStateMessage(it){viewModel.clearStateMessage()}
+            }
+        }
     }
 
     private fun subscribeObservers() {

@@ -56,7 +56,6 @@ constructor(
     private val _resources: Resources
 ) : BaseFragment(
     R.layout.fragment_chart,
-    viewModelFactory,
     R.id.chartFragment_toolbar,
     _resources
 ), OnChartValueSelectedListener, ChartListAdapter.Interaction {
@@ -272,6 +271,21 @@ constructor(
             isNestedScrollingEnabled = false
             recyclerAdapter.submitList(values)
             adapter = recyclerAdapter
+        }
+    }
+    override fun handleLoading() {
+        viewModel.countOfActiveJobs.observe(
+            viewLifecycleOwner
+        ) {
+            showProgressBar(viewModel.areAnyJobsActive())
+        }
+    }
+
+    override fun handleStateMessages() {
+        viewModel.stateMessage.observe(viewLifecycleOwner) {
+            it?.let {
+                handleNewStateMessage(it) { viewModel.clearStateMessage() }
+            }
         }
     }
 

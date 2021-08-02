@@ -38,7 +38,6 @@ constructor(
     private val _resources: Resources
 ) : BaseFragment(
     R.layout.fragment_detail_chart,
-    viewModelFactory,
     R.id.detailChartFragment_toolbar,
     _resources
 ), DetailChartListAdapter.Interaction {
@@ -53,6 +52,21 @@ constructor(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         subscribeObservers()
+    }
+    override fun handleLoading() {
+        viewModel.countOfActiveJobs.observe(
+            viewLifecycleOwner
+        ) {
+            showProgressBar(viewModel.areAnyJobsActive())
+        }
+    }
+
+    override fun handleStateMessages() {
+        viewModel.stateMessage.observe(viewLifecycleOwner) {
+            it?.let {
+                handleNewStateMessage(it){viewModel.clearStateMessage()}
+            }
+        }
     }
 
     private fun subscribeObservers() {

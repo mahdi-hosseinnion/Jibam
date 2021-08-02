@@ -15,6 +15,7 @@ import com.example.jibi.ui.main.transaction.chart.ChartFragment
 import com.example.jibi.ui.main.transaction.chart.DetailChartFragment
 import com.example.jibi.ui.main.transaction.addedittransaction.AddEditTransactionFragment
 import com.example.jibi.ui.main.transaction.transactions.TransactionsFragment
+import com.example.jibi.ui.main.transaction.transactions.TransactionsViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.util.*
@@ -80,10 +81,22 @@ constructor(
                 AboutUsFragment(viewModelFactory, requestManager, resources)
             }
             ChartFragment::class.java.name -> {
-                ChartFragment(viewModelFactory, requestManager, currentLocale, monthManger,resources)
+                ChartFragment(
+                    viewModelFactory,
+                    requestManager,
+                    currentLocale,
+                    monthManger,
+                    resources
+                )
             }
             DetailChartFragment::class.java.name -> {
-                DetailChartFragment(viewModelFactory, requestManager, currentLocale, monthManger,resources)
+                DetailChartFragment(
+                    viewModelFactory,
+                    requestManager,
+                    currentLocale,
+                    monthManger,
+                    resources
+                )
             }
 
             else -> {

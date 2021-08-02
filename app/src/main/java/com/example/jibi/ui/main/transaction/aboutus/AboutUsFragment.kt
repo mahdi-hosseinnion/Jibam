@@ -29,7 +29,6 @@ constructor(
     private val _resources: Resources
 ) : BaseFragment(
     R.layout.fragment_about_us,
-    viewModelFactory,
     R.id.about_us_toolbar,
     _resources
 ) {
@@ -39,6 +38,10 @@ constructor(
         super.onViewCreated(view, savedInstanceState)
         setBackground()
     }
+
+    override fun handleStateMessages() {}
+
+    override fun handleLoading() {}
 
     private fun setBackground() {
         try {
