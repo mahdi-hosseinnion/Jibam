@@ -27,7 +27,6 @@ class TransactionRepositoryImpl
 constructor(
     private val recordsDao: RecordsDao,
     private val categoriesDao: CategoriesDao,
-    private val currentLocale: Locale,
     private val _resources: Resources
 ) : TransactionRepository {
 

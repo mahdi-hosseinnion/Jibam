@@ -11,6 +11,9 @@ interface CategoriesDao {
     @Query("SELECT * FROM categories")
     fun getCategories(): Flow<List<Category>>
 
+    @Query("SELECT * FROM categories")
+    fun getAllOfCategories(): List<Category>
+
     @Query("SELECT * FROM category_images")
     fun getCategoriesImages(): Flow<List<CategoryImages>>
 

@@ -1,6 +1,7 @@
 package com.example.jibi.ui.main.transaction.addedittransaction
 
 import com.example.jibi.di.main.MainScope
+import com.example.jibi.repository.cateogry.CategoryRepository
 import com.example.jibi.repository.tranasction.TransactionRepository
 import com.example.jibi.ui.main.transaction.addedittransaction.state.AddEditTransactionStateEvent
 import com.example.jibi.ui.main.transaction.addedittransaction.state.AddEditTransactionViewState
@@ -16,9 +17,13 @@ import javax.inject.Inject
 class AddEditTransactionViewModel
 @Inject
 constructor(
-    private val transactionRepository: TransactionRepository
+    private val transactionRepository: TransactionRepository,
+    private val categoryRepository: CategoryRepository
 ) : BaseViewModel<AddEditTransactionViewState, AddEditTransactionStateEvent>() {
 
+    init {
+        launchNewJob(AddEditTransactionStateEvent.GetAllOfCategories)
+    }
 
     override fun initNewViewState(): AddEditTransactionViewState = AddEditTransactionViewState()
 
@@ -33,12 +38,20 @@ constructor(
             is AddEditTransactionStateEvent.GetTransactionById -> transactionRepository.getTransactionById(
                 stateEvent
             )
+            is AddEditTransactionStateEvent.GetAllOfCategories -> categoryRepository.getAllOfCategories(
+                stateEvent
+            )
         }
 
     override fun updateViewState(newViewState: AddEditTransactionViewState): AddEditTransactionViewState {
         val outDate = getCurrentViewStateOrNew()
         return AddEditTransactionViewState(
-            transaction = newViewState.transaction ?: outDate.transaction
+            transaction = newViewState.transaction ?: outDate.transaction,
+            categoriesList = newViewState.categoriesList ?: outDate.categoriesList,
+            insertedTransactionRawId = newViewState.insertedTransactionRawId
+                ?: outDate.insertedTransactionRawId,
+            successfullyDeletedTransactionIndicator = newViewState.successfullyDeletedTransactionIndicator
+                ?: outDate.successfullyDeletedTransactionIndicator
         )
     }
 }
