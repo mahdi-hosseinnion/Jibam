@@ -178,9 +178,13 @@
     </string>
 
     <string name="transaction_successfully_inserted">Transaction successfully inserted</string>
+    <string name="transaction_error_inserted">Unable to insert transaction</string>
 
     <string name="transaction_successfully_updated">"Transaction successfully updated"</string>
+
     <string name="transaction_successfully_deleted">"Transaction successfully deleted"</string>
+    <string name="transaction_error_deleted">"Unable to delete transaction"</string>
+
     <string name="category_successfully_deleted">Category successfully deleted</string>
     <string name="category_successfully_inserted">Category successfully inserted</string>
     <string name="category_pinned">Category pinned</string>

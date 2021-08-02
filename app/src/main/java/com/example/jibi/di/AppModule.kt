@@ -13,14 +13,19 @@ import com.example.jibi.persistence.AppDatabase
 import com.example.jibi.persistence.AppDatabase.Companion.DATABASE_NAME
 import com.example.jibi.persistence.CategoriesDao
 import com.example.jibi.persistence.RecordsDao
+import com.example.jibi.repository.cateogry.CategoryRepository
+import com.example.jibi.repository.cateogry.CategoryRepositoryImpl
+import com.example.jibi.repository.tranasction.TransactionRepository
+import com.example.jibi.repository.tranasction.TransactionRepositoryImpl
 import com.example.jibi.util.LocaleHelper
 import com.example.jibi.util.PreferenceKeys
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import java.util.*
 import javax.inject.Singleton
 
-@Module
+@Module(includes = [AppModuleBinds::class])
 object AppModule {
 
     @JvmStatic
@@ -105,10 +110,18 @@ object AppModule {
         return LocaleHelper.getLocale(application)?.resources ?: application.resources;
     }
 
-//    @JvmStatic
-//    @Singleton
-//    @Provides
-//    fun provideAppLanguage(locale: Locale): String {
-//        return locale.language
-//    }
+}
+@Module
+abstract class AppModuleBinds {
+
+    @Singleton
+    @Binds
+    abstract fun bindTransactionRepository(transactionRepositoryImpl: TransactionRepositoryImpl)
+            : TransactionRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindCategoryRepository(categoryRepositoryImpl: CategoryRepositoryImpl)
+            : CategoryRepository
+
 }

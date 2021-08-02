@@ -8,6 +8,6 @@ data class AddEditTransactionViewState(
 
     val transaction: Transaction? = null,
     val categoriesList: List<Category>? = null,
-    val insertedTransactionId: Int? = null,
-    val deletedTransactionId: Int? = null,
+    val insertedTransactionRawId: Long? = null,
+    val successfullyDeletedTransactionIndicator: Int? = null,
 )

@@ -2,6 +2,7 @@ package com.example.jibi.persistence
 
 import androidx.room.*
 import com.example.jibi.models.PieChartData
+import com.example.jibi.models.Transaction
 import com.example.jibi.models.TransactionEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -33,18 +34,23 @@ interface RecordsDao {
         get records queries
      */
     @Query(
-        "SELECT * FROM records " +
+        "SELECT records.*, " +
+                "categories.img_res as category_image " +
+                "FROM records LEFT JOIN categories ON records.cat_id = categories.cId " +
                 "WHERE " +
                 "( " +
                 "money LIKE '%' || :query || '%' " +
                 "OR memo LIKE '%' || :query || '%' " +
                 ") " + ORDER_BY_DATE
     )
-    fun getAllRecords(query: String): Flow<List<TransactionEntity>>
+    fun getAllRecords(query: String): Flow<List<Transaction>>
 
     //fromDate and toDate count in the result >=
     @Query(
-        "SELECT * FROM records WHERE date BETWEEN :minDate AND :maxDate " +
+        "SELECT records.*, " +
+                "categories.img_res as category_image " +
+                "FROM records LEFT JOIN categories ON records.cat_id = categories.cId " +
+                "WHERE date BETWEEN :minDate AND :maxDate " +
                 "AND " +
                 "( " +
                 "money LIKE '%' || :query || '%' " +
@@ -58,11 +64,14 @@ interface RecordsDao {
         minDate: Int,
         maxDate: Int,
         query: String
-    ): Flow<List<TransactionEntity>>
+    ): Flow<List<Transaction>>
 
     //TODO CHANGE DATE > MIN DATE TO DATE >=MINDATE
     @Query(
-        "SELECT * FROM records WHERE date > :minDate " +
+        "SELECT records.*, " +
+                "categories.img_res as category_image " +
+                "FROM records LEFT JOIN categories ON records.cat_id = categories.cId " +
+                "WHERE date > :minDate " +
                 "AND " +
                 "( " +
                 "money LIKE '%' || :query || '%' " +
@@ -72,10 +81,13 @@ interface RecordsDao {
     )
     fun loadAllRecordsAfterThan(
         minDate: Int, query: String
-    ): Flow<List<TransactionEntity>>
+    ): Flow<List<Transaction>>
 
     @Query(
-        "SELECT * FROM records WHERE date < :maxDate " +
+        "SELECT records.*, " +
+                "categories.img_res as category_image " +
+                "FROM records LEFT JOIN categories ON records.cat_id = categories.cId " +
+                "WHERE date < :maxDate " +
                 "AND " +
                 "( " +
                 "money LIKE '%' || :query || '%' " +
@@ -85,7 +97,7 @@ interface RecordsDao {
     )
     fun loadAllRecordsBeforeThan(
         maxDate: Int, query: String
-    ): Flow<List<TransactionEntity>>
+    ): Flow<List<Transaction>>
 
     /*
         sum queries
@@ -141,16 +153,16 @@ interface RecordsDao {
     ): List<PieChartData>
 
     @Query(
-        """SELECT *  FROM records WHERE cat_id = :id 
+        """SELECT *  FROM records WHERE cat_id = :categoryId 
             AND 
             date BETWEEN :fromDate AND :toDate 
             ORDER BY ABS(money) DESC"""
     )
-    suspend fun getAllTransactionByCategoryId(
-        id: Int,
+    fun getAllTransactionByCategoryId(
+        categoryId: Int,
         fromDate: Int,
         toDate: Int
-    ): List<TransactionEntity>
+    ): Flow<List<Transaction>>
 
     companion object {
         const val ORDER_BY_DATE = "ORDER BY date DESC"

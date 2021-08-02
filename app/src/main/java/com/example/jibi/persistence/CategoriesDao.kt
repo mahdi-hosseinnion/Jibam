@@ -12,7 +12,7 @@ interface CategoriesDao {
     fun getCategories(): Flow<List<Category>>
 
     @Query("SELECT * FROM category_images")
-    fun getCategoriesImages(): LiveData<List<CategoryImages>>
+    fun getCategoriesImages(): Flow<List<CategoryImages>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrReplace(category: Category): Long

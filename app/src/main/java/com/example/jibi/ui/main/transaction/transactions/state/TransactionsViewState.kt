@@ -5,7 +5,9 @@ import com.example.jibi.models.Transaction
 import com.example.jibi.ui.main.transaction.transactions.TransactionsViewModel
 
 data class TransactionsViewState(
-    var recentlyDeletedFields: RecentlyDeletedTransaction? = null
+    var recentlyDeletedFields: RecentlyDeletedTransaction? = null,
+    var insertedTransactionRawId: Long? = null,
+    var successfullyDeletedTransactionIndicator: Int? = null
 
 ) {
 

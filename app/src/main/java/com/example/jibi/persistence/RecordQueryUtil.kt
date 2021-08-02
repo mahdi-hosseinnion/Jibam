@@ -2,6 +2,7 @@ package com.example.jibi.persistence
 
 import com.example.jibi.models.TransactionEntity
 import com.example.jibi.models.SearchModel
+import com.example.jibi.models.Transaction
 import kotlinx.coroutines.flow.Flow
 
 class RecordQueryUtil {
@@ -13,18 +14,18 @@ class RecordQueryUtil {
 fun RecordsDao.getRecords(
     minDate: Int? = null,
     maxDate: Int? = null,
-    searchModel: SearchModel
-): Flow<List<TransactionEntity>> {
+    query: String = ""
+): Flow<List<Transaction>> {
     if (minDate != null && maxDate != null) {
-        return loadAllRecordsBetweenDates(minDate, maxDate,searchModel.query)
+        return loadAllRecordsBetweenDates(minDate, maxDate, query)
     }
     if (minDate == null && maxDate != null) {
-        return loadAllRecordsBeforeThan(maxDate,searchModel.query)
+        return loadAllRecordsBeforeThan(maxDate, query)
     }
     if (maxDate == null && minDate != null) {
-        return loadAllRecordsAfterThan(minDate,searchModel.query)
+        return loadAllRecordsAfterThan(minDate, query)
     }
-    return getAllRecords(searchModel.query)
+    return getAllRecords(query)
 }
 
 fun RecordsDao.getSumOfIncome(
