@@ -4,6 +4,7 @@ import android.content.res.Resources
 import android.os.Bundle
 import android.view.*
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -14,8 +15,9 @@ import com.example.jibi.R
 import com.example.jibi.models.Category
 import com.example.jibi.models.CategoryImages
 import com.example.jibi.ui.main.transaction.BaseTransactionFragment
+import com.example.jibi.ui.main.transaction.categories.state.CategoriesStateEvent
+import com.example.jibi.ui.main.transaction.common.BaseFragment
 import com.example.jibi.ui.main.transaction.transactions.TransactionsListAdapter
-import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.*
 import kotlinx.android.synthetic.main.fragment_add_category.*
 import kotlinx.android.synthetic.main.fragment_transaction.*
@@ -33,11 +35,14 @@ constructor(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager,
     private val _resources: Resources
-) : BaseTransactionFragment(
+) : BaseFragment(
     R.layout.fragment_add_category,
     viewModelFactory,
     R.id.add_category_toolbar, _resources
 ), AddCategoryListAdapter.Interaction {
+
+    private val viewModel by viewModels<CategoriesViewModel> { viewModelFactory }
+
     override fun setTextToAllViews() {
         edt_categoryName.hint = _getString(R.string.category_name)
     }
@@ -81,9 +86,10 @@ constructor(
     }
 
     private fun subscribeObservers() {
-        viewModel.getCategoryImages().observe(viewLifecycleOwner) {
+        viewModel.categoriesImages.observe(viewLifecycleOwner){
             recyclerAdapter.submitList(it)
         }
+
     }
 
     private fun showUnableToRecognizeCategoryTypeError() {
@@ -187,10 +193,11 @@ constructor(
         val newCategory = newCategory
         if (isValidForInsertion(newCategory)) {
             viewModel.launchNewJob(
-                TransactionStateEvent.OneShotOperationsTransactionStateEvent.InsertCategory(
+                CategoriesStateEvent.InsertCategory(
                     newCategory
-                ), true
+                )
             )
+            //TODO FIX THIS
             uiCommunicationListener.hideSoftKeyboard()
             findNavController().navigateUp()
         }

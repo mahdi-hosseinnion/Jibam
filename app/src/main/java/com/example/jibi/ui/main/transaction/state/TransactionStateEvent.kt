@@ -126,32 +126,32 @@ sealed class TransactionStateEvent13 : StateEvent {
             override fun getId(): String = "DeleteTransaction id: $transactionId ${this.hashCode()}"
         }
 
-        data class DeleteCategory(
-            val category: Category
-        ) : OneShotOperationsTransactionStateEvent13() {
-            override fun errorInfo(): String =
-                "ERROR: deleting category! categoryName = ${category.name}"
+//        data class DeleteCategory(
+//            val category: Category
+//        ) : OneShotOperationsTransactionStateEvent13() {
+//            override fun errorInfo(): String =
+//                "ERROR: deleting category! categoryName = ${category.name}"
+//
+//            override fun getId(): String = "DeleteCategory $category ${this.hashCode()}"
+//        }
 
-            override fun getId(): String = "DeleteCategory $category ${this.hashCode()}"
-        }
+//        data class InsertCategory(
+//            val category: Category
+//        ) : OneShotOperationsTransactionStateEvent13() {
+//            override fun errorInfo(): String =
+//                "ERROR: inserting category! categoryName = ${category.name}"
+//
+//            override fun getId(): String = "InsertCategory $category ${this.hashCode()}"
+//        }
 
-        data class InsertCategory(
-            val category: Category
-        ) : OneShotOperationsTransactionStateEvent13() {
-            override fun errorInfo(): String =
-                "ERROR: inserting category! categoryName = ${category.name}"
-
-            override fun getId(): String = "InsertCategory $category ${this.hashCode()}"
-        }
-
-        data class PinOrUnpinCategory(
-            val category: Category
-        ) : OneShotOperationsTransactionStateEvent13() {
-            override fun errorInfo(): String =
-                "ERROR: pin or unpin category! categoryName = ${category.name}"
-
-            override fun getId(): String = "pin or unpin Category $category ${this.hashCode()}"
-        }
+//        data class PinOrUnpinCategory(
+//            val category: Category
+//        ) : OneShotOperationsTransactionStateEvent13() {
+//            override fun errorInfo(): String =
+//                "ERROR: pin or unpin category! categoryName = ${category.name}"
+//
+//            override fun getId(): String = "pin or unpin Category $category ${this.hashCode()}"
+//        }
 
         data class UpdateCategory(
             val category: Category

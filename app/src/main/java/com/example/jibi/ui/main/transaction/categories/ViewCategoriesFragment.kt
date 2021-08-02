@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,11 +15,11 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.jibi.R
 import com.example.jibi.models.Category
-import com.example.jibi.ui.main.transaction.BaseTransactionFragment
 import com.example.jibi.ui.main.transaction.categories.AddCategoryFragment.Companion.EXPENSES
 import com.example.jibi.ui.main.transaction.categories.AddCategoryFragment.Companion.INCOME
+import com.example.jibi.ui.main.transaction.categories.state.CategoriesStateEvent
+import com.example.jibi.ui.main.transaction.common.BaseFragment
 import com.example.jibi.ui.main.transaction.transactions.TransactionsListAdapter
-import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
 import com.example.jibi.util.*
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.fragment_view_categories.*
@@ -45,9 +46,12 @@ constructor(
     private val sharedPreferences: SharedPreferences,
     private val sharedPrefsEditor: SharedPreferences.Editor,
     private val _resources: Resources
-) : BaseTransactionFragment(
+) : BaseFragment(
     R.layout.fragment_view_categories, viewModelFactory, R.id.viewCategoriesToolbar, _resources
 ) {
+
+    private val viewModel by viewModels<CategoriesViewModel> { viewModelFactory }
+
     override fun setTextToAllViews() {
         txt_addNewCategory.text = _getString(R.string.add_new_category)
     }
@@ -81,12 +85,14 @@ constructor(
     }
 
     private fun subscribeObservers() {
+        viewModel.categories.observe(viewLifecycleOwner) {
+            it?.let {
+                viewPagerAdapter.submitList(it)
 
+            }
+        }
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
 
-            viewState.categoryList?.let {
-                viewPagerAdapter.submitList(it)
-            }
         }
     }
 
@@ -350,15 +356,15 @@ constructor(
 
     fun deleteCategory(category: Category) {
         viewModel.launchNewJob(
-            TransactionStateEvent.OneShotOperationsTransactionStateEvent.DeleteCategory(
-                category
+            CategoriesStateEvent.DeleteCategory(
+                category.id
             )
         )
     }
 
     fun pinOrUnpinCategory(category: Category) {
         viewModel.launchNewJob(
-            TransactionStateEvent.OneShotOperationsTransactionStateEvent.PinOrUnpinCategory(
+            CategoriesStateEvent.PinOrUnpinCategory(
                 category
             )
         )
