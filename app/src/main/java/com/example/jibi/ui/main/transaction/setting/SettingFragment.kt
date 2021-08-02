@@ -1,4 +1,4 @@
-package com.example.jibi.ui.main.transaction
+package com.example.jibi.ui.main.transaction.setting
 
 import android.content.SharedPreferences
 import android.content.res.Resources
@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.jibi.R
+import com.example.jibi.ui.main.transaction.common.BaseFragment
 import com.example.jibi.util.Constants
 import com.example.jibi.util.LocaleHelper
 import com.example.jibi.util.PreferenceKeys
@@ -32,8 +33,7 @@ constructor(
     viewModelFactory: ViewModelProvider.Factory,
     private val _resources: Resources,
     private val sharedPreferences: SharedPreferences
-) :
-    BaseTransactionFragment(
+) : BaseFragment(
         R.layout.fragment_setting,
         viewModelFactory,
         R.id.setting_toolbar,

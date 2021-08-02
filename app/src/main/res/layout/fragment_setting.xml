@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
 
-    tools:context=".ui.main.transaction.SettingFragment">
+    tools:context=".ui.main.transaction.setting.SettingFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/setting_toolbar"

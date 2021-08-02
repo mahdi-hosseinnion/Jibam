@@ -100,7 +100,7 @@
     </fragment>
     <fragment
         android:id="@+id/settingFragment"
-        android:name="com.example.jibi.ui.main.transaction.SettingFragment"
+        android:name="com.example.jibi.ui.main.transaction.setting.SettingFragment"
         android:label=""
         tools:layout="@layout/fragment_setting">
         <action
@@ -113,7 +113,7 @@
     </fragment>
     <fragment
         android:id="@+id/aboutUsFragment"
-        android:name="com.example.jibi.ui.main.transaction.AboutUsFragment"
+        android:name="com.example.jibi.ui.main.transaction.aboutus.AboutUsFragment"
         android:label=""
         tools:layout="@layout/fragment_about_us">
         <action

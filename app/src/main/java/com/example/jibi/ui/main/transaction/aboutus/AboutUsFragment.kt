@@ -1,19 +1,17 @@
-package com.example.jibi.ui.main.transaction
+package com.example.jibi.ui.main.transaction.aboutus
 
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.jibi.R
+import com.example.jibi.ui.main.transaction.common.BaseFragment
 import com.example.jibi.util.localizeNumber
 import kotlinx.android.synthetic.main.fragment_about_us.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -29,7 +27,7 @@ constructor(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager,
     private val _resources: Resources
-) : BaseTransactionFragment(
+) : BaseFragment(
     R.layout.fragment_about_us,
     viewModelFactory,
     R.id.about_us_toolbar,

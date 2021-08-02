@@ -6,9 +6,9 @@ import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
 import com.example.jibi.di.main.MainScope
-import com.example.jibi.ui.main.transaction.AboutUsFragment
+import com.example.jibi.ui.main.transaction.aboutus.AboutUsFragment
 import com.example.jibi.ui.main.transaction.MonthManger
-import com.example.jibi.ui.main.transaction.SettingFragment
+import com.example.jibi.ui.main.transaction.setting.SettingFragment
 import com.example.jibi.ui.main.transaction.categories.AddCategoryFragment
 import com.example.jibi.ui.main.transaction.categories.ViewCategoriesFragment
 import com.example.jibi.ui.main.transaction.chart.ChartFragment
