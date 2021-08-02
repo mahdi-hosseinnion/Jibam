@@ -14,7 +14,6 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.jibi.R
 import com.example.jibi.models.Category
 import com.example.jibi.models.CategoryImages
-import com.example.jibi.ui.main.transaction.BaseTransactionFragment
 import com.example.jibi.ui.main.transaction.categories.state.CategoriesStateEvent
 import com.example.jibi.ui.main.transaction.common.BaseFragment
 import com.example.jibi.ui.main.transaction.transactions.TransactionsListAdapter
@@ -86,7 +85,7 @@ constructor(
     }
 
     private fun subscribeObservers() {
-        viewModel.categoriesImages.observe(viewLifecycleOwner){
+        viewModel.categoriesImages.observe(viewLifecycleOwner) {
             recyclerAdapter.submitList(it)
         }
 

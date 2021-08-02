@@ -31,13 +31,9 @@ import com.example.jibi.R
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
 import com.example.jibi.models.TransactionEntity
-import com.example.jibi.ui.main.transaction.BaseTransactionFragment
 import com.example.jibi.ui.main.transaction.addedittransaction.bottomSheet.CreateNewTransBottomSheet
 import com.example.jibi.ui.main.transaction.addedittransaction.state.AddEditTransactionStateEvent
 import com.example.jibi.ui.main.transaction.common.BaseFragment
-import com.example.jibi.ui.main.transaction.transactions.TransactionsViewModel
-import com.example.jibi.ui.main.transaction.transactions.state.TransactionsStateEvent
-
 import com.example.jibi.util.*
 import com.example.jibi.util.SolarCalendar.ShamsiPatterns.DETAIL_FRAGMENT
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
@@ -134,11 +130,11 @@ constructor(
                     initUiForViewTransaction(it.toTransactionEntity())
                 }
 
-                viewState.insertedTransactionId?.let {
+                viewState.insertedTransactionRawId?.let {
                     uiCommunicationListener.hideSoftKeyboard()
                     findNavController().navigateUp()
                 }
-                viewState.deletedTransactionId?.let {
+                viewState.successfullyDeletedTransactionIndicator?.let {
                     uiCommunicationListener.hideSoftKeyboard()
                     findNavController().navigateUp()
                 }

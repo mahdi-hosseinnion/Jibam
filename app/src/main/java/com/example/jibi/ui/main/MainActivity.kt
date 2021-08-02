@@ -43,14 +43,7 @@ class MainActivity : BaseActivity() {
     lateinit var fragmentFactory: FragmentFactory
 
     @Inject
-    lateinit var providerFactory: ViewModelProvider.Factory
-
-    @Inject
     lateinit var currentLocale: Locale
-
-    val viewModel: MainViewModel by viewModels {
-        providerFactory
-    }
 
     lateinit var navController: NavController
 

@@ -35,6 +35,7 @@ interface RecordsDao {
      */
     @Query(
         "SELECT records.*, " +
+                "categories.category_Name as category_name, " +
                 "categories.img_res as category_image " +
                 "FROM records LEFT JOIN categories ON records.cat_id = categories.cId " +
                 "WHERE " +
@@ -48,6 +49,7 @@ interface RecordsDao {
     //fromDate and toDate count in the result >=
     @Query(
         "SELECT records.*, " +
+                "categories.category_Name as category_name, " +
                 "categories.img_res as category_image " +
                 "FROM records LEFT JOIN categories ON records.cat_id = categories.cId " +
                 "WHERE date BETWEEN :minDate AND :maxDate " +
@@ -69,6 +71,7 @@ interface RecordsDao {
     //TODO CHANGE DATE > MIN DATE TO DATE >=MINDATE
     @Query(
         "SELECT records.*, " +
+                "categories.category_Name as category_name, " +
                 "categories.img_res as category_image " +
                 "FROM records LEFT JOIN categories ON records.cat_id = categories.cId " +
                 "WHERE date > :minDate " +
@@ -85,6 +88,7 @@ interface RecordsDao {
 
     @Query(
         "SELECT records.*, " +
+                "categories.category_Name as category_name, " +
                 "categories.img_res as category_image " +
                 "FROM records LEFT JOIN categories ON records.cat_id = categories.cId " +
                 "WHERE date < :maxDate " +
@@ -139,9 +143,9 @@ interface RecordsDao {
     @Query(
         """SELECT SUM(money) as sumOfMoney,
             categories.cId as categoryId, 
-            categories.category_Name as categoryName, 
+            categories.category_Name as category_name, 
             categories.type as categoryType, 
-            categories.img_res as categoryImage 
+            categories.img_res as category_image 
             FROM records LEFT JOIN categories ON records.cat_id=categories.cId 
             WHERE date BETWEEN :fromDate AND :toDate 
             GROUP BY cat_id 
@@ -153,7 +157,12 @@ interface RecordsDao {
     ): List<PieChartData>
 
     @Query(
-        """SELECT *  FROM records WHERE cat_id = :categoryId 
+        """SELECT records.*,  
+            categories.category_Name as category_name, 
+            categories.type as categoryType, 
+            categories.img_res as category_image 
+            FROM records LEFT JOIN categories ON records.cat_id=categories.cId 
+            WHERE cat_id = :categoryId 
             AND 
             date BETWEEN :fromDate AND :toDate 
             ORDER BY ABS(money) DESC"""

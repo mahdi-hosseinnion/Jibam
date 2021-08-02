@@ -2,6 +2,7 @@ package com.example.jibi.ui.main.transaction.chart
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
+import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.PieChartData
 import com.example.jibi.models.Transaction
 import com.example.jibi.repository.tranasction.TransactionRepository
@@ -9,16 +10,20 @@ import com.example.jibi.ui.main.transaction.MonthManger
 import com.example.jibi.ui.main.transaction.chart.state.ChartStateEvent
 import com.example.jibi.ui.main.transaction.chart.state.ChartViewState
 import com.example.jibi.ui.main.transaction.common.NewBaseViewModel
-import com.example.jibi.ui.main.transaction.transactions.state.TransactionsViewState
 import com.example.jibi.util.DataState
 import com.example.jibi.util.MessageType
 import com.example.jibi.util.Response
 import com.example.jibi.util.UIComponentType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.flatMapLatest
+import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
+@FlowPreview
+@MainScope
 class ChartViewModel
+@Inject
 constructor(
     private val transactionRepository: TransactionRepository,
     private val monthManger: MonthManger

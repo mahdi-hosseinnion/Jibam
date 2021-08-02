@@ -11,11 +11,11 @@ data class PieChartData(
     val categoryId: Int,
     @ColumnInfo(name = "sumOfMoney")
     val sumOfMoney: Double,
-    @ColumnInfo(name = "categoryName")
+    @ColumnInfo(name = "category_name")
     val categoryName: String,
     @ColumnInfo(name = "categoryType")
     val categoryType: Int,
-    @ColumnInfo(name = "categoryImage")
+    @ColumnInfo(name = "category_image")
     val categoryImage: String,
     @Ignore val percentage: Double
 

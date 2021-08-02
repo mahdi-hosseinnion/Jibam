@@ -7,7 +7,6 @@ import com.example.jibi.persistence.CategoriesDao
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-@MainScope
 class CategoryRepositoryImpl
 @Inject
 constructor(

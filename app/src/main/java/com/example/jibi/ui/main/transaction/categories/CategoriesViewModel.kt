@@ -2,6 +2,7 @@ package com.example.jibi.ui.main.transaction.categories
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
+import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
 import com.example.jibi.models.CategoryImages
 import com.example.jibi.models.Transaction
@@ -11,10 +12,17 @@ import com.example.jibi.ui.main.transaction.categories.state.CategoriesViewState
 import com.example.jibi.ui.main.transaction.common.NewBaseViewModel
 import com.example.jibi.ui.main.transaction.transactions.state.TransactionsViewState
 import com.example.jibi.util.DataState
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import javax.inject.Inject
 
+@FlowPreview
+@ExperimentalCoroutinesApi
+@MainScope
 class CategoriesViewModel
+@Inject
 constructor(
     private val categoryRepository: CategoryRepository
 ) : NewBaseViewModel<CategoriesViewState, CategoriesStateEvent>() {
