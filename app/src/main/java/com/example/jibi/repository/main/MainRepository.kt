@@ -29,6 +29,7 @@ import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
+/*
 @ExperimentalCoroutinesApi
 @MainScope
 class MainRepository
@@ -563,14 +564,17 @@ constructor(
         }.getResult()
     }
 
-    /*
+    */
+/*
     categories transactions
-     */
+     *//*
+
 //queries
     fun getCategoryList(
     ): Flow<List<Category>?> = categoriesDao.getCategories()
 
     fun getCategoryImages() = categoriesDao.getCategoriesImages()
+*/
 /*    fun getSummaryMoney(): Flow<TransactionViewState> = flow {
         val result = MutableLiveData<TransactionViewState>()
         result.value = TransactionViewState(summeryMoney = SummaryMoney())
@@ -593,8 +597,10 @@ constructor(
         transactionViewState.summeryMoney?.apply {
             this.balance = (this.income + this.expenses)
         }
-    }*/
+    }*//*
 
+
+*/
 /*    try {
         coroutineScope {
             val mayFailAsync1 = async {
@@ -611,6 +617,7 @@ constructor(
     } catch (e: AnotherException) {
         // handle this too
         throw MyOtherException("Error doing something", e)
-    }*/
+    }*//*
 
-}
+
+}*/
