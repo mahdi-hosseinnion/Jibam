@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.*
 abstract class NewBaseViewModel<ViewState, _StateEvent : StateEvent>() : ViewModel() {
 
     private val _viewState: MutableLiveData<ViewState> = MutableLiveData()
-//    val viewState: LiveData<ViewState> = _viewState
+    val viewState: LiveData<ViewState> = _viewState
 
     private val _messageStack = MessageStack()
 

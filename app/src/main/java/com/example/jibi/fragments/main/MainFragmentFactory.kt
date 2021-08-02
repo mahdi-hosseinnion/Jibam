@@ -13,7 +13,7 @@ import com.example.jibi.ui.main.transaction.categories.AddCategoryFragment
 import com.example.jibi.ui.main.transaction.categories.ViewCategoriesFragment
 import com.example.jibi.ui.main.transaction.chart.ChartFragment
 import com.example.jibi.ui.main.transaction.chart.DetailChartFragment
-import com.example.jibi.ui.main.transaction.home.AddTransactionFragment
+import com.example.jibi.ui.main.transaction.addedittransaction.AddEditTransactionFragment
 import com.example.jibi.ui.main.transaction.transactions.TransactionsFragment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -51,8 +51,8 @@ constructor(
                 )
             }
 
-            AddTransactionFragment::class.java.name -> {
-                AddTransactionFragment(
+            AddEditTransactionFragment::class.java.name -> {
+                AddEditTransactionFragment(
                     viewModelFactory,
                     requestManager,
                     currentLocale,

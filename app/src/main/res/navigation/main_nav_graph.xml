@@ -48,13 +48,13 @@
     </fragment>
     <fragment
         android:id="@+id/createTransactionFragment"
-        android:name="com.example.jibi.ui.main.transaction.home.AddTransactionFragment"
+        android:name="com.example.jibi.ui.main.transaction.addedittransaction.AddEditTransactionFragment"
         android:label=""
         tools:layout="@layout/fragment_add_transaction">
         <argument
-            android:name="isNewTransaction"
-            android:defaultValue="true"
-            app:argType="boolean" />
+            android:name="transactionId"
+            android:defaultValue="-1"
+            app:argType="integer" />
         <action
             android:id="@+id/action_createTransactionFragment_to_transactionFragment"
             app:destination="@id/transactionFragment"

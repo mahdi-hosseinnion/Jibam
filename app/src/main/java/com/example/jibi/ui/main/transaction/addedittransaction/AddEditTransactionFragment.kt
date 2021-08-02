@@ -1,4 +1,4 @@
-package com.example.jibi.ui.main.transaction.home
+package com.example.jibi.ui.main.transaction.addedittransaction
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -19,6 +19,7 @@ import android.view.inputmethod.InputConnection
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -31,8 +32,12 @@ import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
 import com.example.jibi.models.TransactionEntity
 import com.example.jibi.ui.main.transaction.BaseTransactionFragment
-import com.example.jibi.ui.main.transaction.home.bottomSheet.CreateNewTransBottomSheet
-import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
+import com.example.jibi.ui.main.transaction.addedittransaction.bottomSheet.CreateNewTransBottomSheet
+import com.example.jibi.ui.main.transaction.addedittransaction.state.AddEditTransactionStateEvent
+import com.example.jibi.ui.main.transaction.common.BaseFragment
+import com.example.jibi.ui.main.transaction.transactions.TransactionsViewModel
+import com.example.jibi.ui.main.transaction.transactions.state.TransactionsStateEvent
+
 import com.example.jibi.util.*
 import com.example.jibi.util.SolarCalendar.ShamsiPatterns.DETAIL_FRAGMENT
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
@@ -49,12 +54,13 @@ import uk.co.samuelwall.materialtaptargetprompt.extras.focals.RectanglePromptFoc
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 
 @FlowPreview
 @ExperimentalCoroutinesApi
 @MainScope
-class AddTransactionFragment
+class AddEditTransactionFragment
 @Inject
 constructor(
     viewModelFactory: ViewModelProvider.Factory,
@@ -63,13 +69,15 @@ constructor(
     private val sharedPreferences: SharedPreferences,
     private val sharedPrefsEditor: SharedPreferences.Editor,
     private val _resources: Resources
-) : BaseTransactionFragment(
+) : BaseFragment(
     R.layout.fragment_add_transaction,
     viewModelFactory,
     R.id.fragment_add_toolbar_main, _resources
 ), CalculatorKeyboard.CalculatorInteraction {
 
-    private val args: AddTransactionFragmentArgs by navArgs()
+    private val viewModel by viewModels<AddEditTransactionViewModel> { viewModelFactory }
+
+    private val args: AddEditTransactionFragmentArgs by navArgs()
 
     private var transactionCategory: Category? = null
 
@@ -89,12 +97,16 @@ constructor(
 
         initUi()
         //check if current state is ViewingTransaction or CreateTransaction
-        val detailTransFields = viewModel.viewState.value?.detailTransFields
 
-        if (!args.isNewTransaction && //default value is -1
-            detailTransFields != null//there is transaction in viewState
+        if (args.transactionId > -1  //default value is -1
         ) {
-            initUiForViewTransaction(detailTransFields)
+            //getting transaction via id
+            viewModel.launchNewJob(
+                AddEditTransactionStateEvent.GetTransactionById(
+                    transactionId = args.transactionId
+                )
+            )
+            subscribeObservers()
         } else {
             initUiForNewTransaction()
         }
@@ -115,10 +127,30 @@ constructor(
 
     }
 
+    private fun subscribeObservers() {
+        viewModel.viewState.observe(viewLifecycleOwner) {
+            it?.let { viewState ->
+                viewState.transaction?.let {
+                    initUiForViewTransaction(it.toTransactionEntity())
+                }
+
+                viewState.insertedTransactionId?.let {
+                    uiCommunicationListener.hideSoftKeyboard()
+                    findNavController().navigateUp()
+                }
+                viewState.deletedTransactionId?.let {
+                    uiCommunicationListener.hideSoftKeyboard()
+                    findNavController().navigateUp()
+                }
+            }
+        }
+    }
+
     private fun showBottomSheet() {
+        val categoryList = viewModel.getCurrentViewStateOrNew().categoriesList
         val modalBottomSheet =
             CreateNewTransBottomSheet(
-                viewModel.viewState.value!!.categoryList!!,
+                categoryList ?: ArrayList<Category>(),
                 requestManager,
                 onDismissCalled,
                 transactionCategory?.id ?: 0,
@@ -191,7 +223,7 @@ constructor(
         //submit button should always be displayed
         fab_submit.show()
 
-        val defaultCategory = viewModel.viewState.value?.categoryList?.let { categoryList ->
+        val defaultCategory = viewModel.viewState.value?.categoriesList?.let { categoryList ->
             sortCategoriesWithPinned(categoryList)?.get(0)
         }
         setTransProperties(category = defaultCategory)
@@ -524,7 +556,7 @@ constructor(
 
     private fun findCategoryByIdFromViewState(cat_id: Int): Category? {
         //getting list of all category from
-        viewModel.viewState.value?.categoryList?.let { categoryList ->
+        viewModel.getCurrentViewStateOrNew().categoriesList?.let { categoryList ->
             for (category in categoryList) {
                 if (category.id == cat_id) {
                     return category
@@ -559,12 +591,10 @@ constructor(
                 )
 
                 viewModel.launchNewJob(
-                    TransactionStateEvent.OneShotOperationsTransactionStateEvent.InsertTransaction(
+                    AddEditTransactionStateEvent.InsertTransaction(
                         transaction
-                    ), true
+                    )
                 )
-                uiCommunicationListener.hideSoftKeyboard()
-                findNavController().navigateUp()
             } else {
                 //no category selected
                 unknownCategoryError()
@@ -895,12 +925,11 @@ constructor(
 
     fun deleteTransaction(id: Int) {
         viewModel.launchNewJob(
-            TransactionStateEvent.OneShotOperationsTransactionStateEvent.DeleteTransactionById(
+            AddEditTransactionStateEvent.DeleteTransaction(
                 id
-            ), true
+            )
         )
-        uiCommunicationListener.hideSoftKeyboard()
-        findNavController().navigateUp()
+
     }
 }
 //TODO TRASH

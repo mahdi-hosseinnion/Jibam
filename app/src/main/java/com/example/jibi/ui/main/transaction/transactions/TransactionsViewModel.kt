@@ -126,13 +126,13 @@ constructor(
     fun setRecentlyDeletedTrans(recentlyDeletedHeader: RecentlyDeletedTransaction?) {
         setViewState(
             TransactionsViewState(
-                recentlyDeletedTrans = recentlyDeletedHeader
+                recentlyDeletedFields  = recentlyDeletedHeader
             )
         )
     }
 
     fun getRecentlyDeletedTrans(): RecentlyDeletedTransaction? =
-        getCurrentViewStateOrNew().recentlyDeletedTrans
+        getCurrentViewStateOrNew().recentlyDeletedFields
 
     override fun initNewViewState(): TransactionsViewState = TransactionsViewState()
 
@@ -147,7 +147,7 @@ constructor(
     override fun updateViewState(newViewState: TransactionsViewState): TransactionsViewState {
         val outDate = getCurrentViewStateOrNew()
         return TransactionsViewState(
-            recentlyDeletedTrans = newViewState.recentlyDeletedTrans ?: outDate.recentlyDeletedTrans
+            recentlyDeletedFields  = newViewState.recentlyDeletedFields ?: outDate.recentlyDeletedFields
         )
     }
 

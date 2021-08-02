@@ -89,14 +89,14 @@ sealed class TransactionStateEvent13 : StateEvent {
 //            override fun getId(): String = "InsertTransaction $record ${this.hashCode()}"
 //        }
 
-        data class GetSpecificTransaction(
-            val transactionId: Int
-        ) : OneShotOperationsTransactionStateEvent13() {
-            override fun errorInfo(): String = "ERROR: getting record! recordId = ${transactionId}"
-
-            override fun getId(): String =
-                "GetSpecificTransaction id: $transactionId ${this.hashCode()}"
-        }
+//        data class GetSpecificTransaction(
+//            val transactionId: Int
+//        ) : OneShotOperationsTransactionStateEvent13() {
+//            override fun errorInfo(): String = "ERROR: getting record! recordId = ${transactionId}"
+//
+//            override fun getId(): String =
+//                "GetSpecificTransaction id: $transactionId ${this.hashCode()}"
+//        }
 
         data class UpdateTransaction(
             val transactionEntity: TransactionEntity

@@ -154,7 +154,7 @@ constructor(
         }
 
         fab.setOnClickListener {
-            navigateToAddTransactionFragment(true)
+            navigateToAddTransactionFragment()
         }
         //TODO DELETE THIS LINE FOR FINAL PROJECT JUST OF TESTING
         txt_balance.setOnClickListener {
@@ -346,11 +346,11 @@ constructor(
     }
 
 
-    private fun navigateToAddTransactionFragment(isNewTransaction: Boolean) {
+    private fun navigateToAddTransactionFragment(transactionId:Int = -1) {
         //on category selected and bottomSheet hided
         val action =
             TransactionsFragmentDirections.actionTransactionFragmentToCreateTransactionFragment(
-                isNewTransaction = isNewTransaction
+                transactionId = transactionId
             )
         findNavController().navigate(action)
     }
@@ -556,8 +556,7 @@ constructor(
     }
 
     override fun onItemSelected(position: Int, item: Transaction) {
-        navigateToAddTransactionFragment(false)
-
+        navigateToAddTransactionFragment(item.id)
     }
 
     override fun restoreListPosition() {
