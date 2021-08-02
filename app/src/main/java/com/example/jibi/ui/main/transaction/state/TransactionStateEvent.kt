@@ -172,14 +172,14 @@ sealed class TransactionStateEvent13 : StateEvent {
             override fun getId(): String = "getting pie chart data ${this.hashCode()}"
         }
 
-        data class GetCategoryById(
-            val categoryId: Int
-        ) : OneShotOperationsTransactionStateEvent13() {
-            override fun errorInfo(): String = "ERROR: getting category! categoryID = ${categoryId}"
-
-            override fun getId(): String =
-                "GetCategoryById id: $categoryId ${this.hashCode()}"
-        }
+//        data class GetCategoryById(
+//            val categoryId: Int
+//        ) : OneShotOperationsTransactionStateEvent13() {
+//            override fun errorInfo(): String = "ERROR: getting category! categoryID = ${categoryId}"
+//
+//            override fun getId(): String =
+//                "GetCategoryById id: $categoryId ${this.hashCode()}"
+//        }
 
         data class GetAllTransactionByCategoryId(
             val categoryId: Int,

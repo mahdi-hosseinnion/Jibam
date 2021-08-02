@@ -1,5 +1,6 @@
 package com.example.jibi.repository.tranasction
 
+import com.example.jibi.models.PieChartData
 import com.example.jibi.models.Transaction
 import com.example.jibi.ui.main.transaction.addedittransaction.state.AddEditTransactionStateEvent
 import com.example.jibi.ui.main.transaction.addedittransaction.state.AddEditTransactionViewState
@@ -27,6 +28,17 @@ interface TransactionRepository {
         maxDate: Int? = null
     ): Flow<Double?>
 
+    fun getPieChartData(
+        minDate: Int,
+        maxDate: Int
+    ): Flow<List<PieChartData>>
+
+    fun getAllTransactionByCategoryId(
+        categoryId: Int,
+        minDate: Int,
+        maxDate: Int
+    ): Flow<List<Transaction>>
+
     suspend fun insertTransaction(
         stateEvent: TransactionsStateEvent.InsertTransaction
     ): DataState<TransactionsViewState>
@@ -46,4 +58,6 @@ interface TransactionRepository {
     suspend fun getTransactionById(
         stateEvent: AddEditTransactionStateEvent.GetTransactionById
     ): DataState<AddEditTransactionViewState>
+
+
 }

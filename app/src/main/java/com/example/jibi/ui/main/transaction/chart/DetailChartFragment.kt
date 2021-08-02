@@ -3,6 +3,7 @@ package com.example.jibi.ui.main.transaction.chart
 import android.content.res.Resources
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -11,10 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.RequestManager
 import com.example.jibi.R
 import com.example.jibi.models.Category
+import com.example.jibi.models.Transaction
 import com.example.jibi.models.TransactionEntity
-import com.example.jibi.ui.main.transaction.BaseTransactionFragment
 import com.example.jibi.ui.main.transaction.MonthManger
-import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
+import com.example.jibi.ui.main.transaction.chart.state.ChartStateEvent
+import com.example.jibi.ui.main.transaction.common.BaseFragment
 import kotlinx.android.synthetic.main.fragment_detail_chart.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -34,7 +36,7 @@ constructor(
     private val currentLocale: Locale,
     private val monthManger: MonthManger,
     private val _resources: Resources
-) : BaseTransactionFragment(
+) : BaseFragment(
     R.layout.fragment_detail_chart,
     viewModelFactory,
     R.id.detailChartFragment_toolbar,
@@ -43,64 +45,39 @@ constructor(
 
     val args: DetailChartFragmentArgs by navArgs()
 
+    private val viewModel by viewModels<ChartViewModel> { viewModelFactory }
+
+
     override fun setTextToAllViews() {}
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val categoryId = args.categoryId
-        if (categoryId > 0) {
-            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-
-                monthManger.currentMonth.collect {
-
-                    viewModel.launchNewJob(
-                        TransactionStateEvent.OneShotOperationsTransactionStateEvent
-                            .GetAllTransactionByCategoryId(
-                            categoryId = categoryId,
-                            fromDate = it.startOfMonth,
-                            toDate = it.endOfMonth
-                        )
-                    )
-                }
-            }
-
-            viewModel.launchNewJob(
-                TransactionStateEvent.OneShotOperationsTransactionStateEvent.GetCategoryById(
-                    categoryId
-                )
-            )
-        } else {
-            //TODO show unable snackBar and try again
-        }
         subscribeObservers()
     }
 
     private fun subscribeObservers() {
-        viewModel.viewState.observe(viewLifecycleOwner) { vs ->
-            vs?.let { viewState ->
-                viewState.detailChartFields.let {
-                    it.category?.let { category ->
-                        setCategoryData(category)
-                        it.allTransaction?.let { allTransactions ->
-                            initRecyclerView(allTransactions, category)
-                        }
-                    }
-                }
+        viewModel.getAllTransactionByCategoryId(
+            args.categoryId
+        ).observe(viewLifecycleOwner) {
+            if (!it.isNullOrEmpty()) {
+                setCategoryData(
+                    it[0].getCategoryNameFromStringFile(
+                        _resources,
+                        this.requireActivity().packageName
+                    ) { it.categoryName }
+                )
+                initRecyclerView(it)
             }
         }
     }
 
-    private fun setCategoryData(category: Category) {
+    private fun setCategoryData(categoryName: String) {
         val monthName = " " + monthManger.getMonthName()
 
-        detailChartFragment_toolbar.title = category.getCategoryNameFromStringFile(
-            _resources,
-            this.requireActivity().packageName
-        ) { it.name } + monthName
+        detailChartFragment_toolbar.title = categoryName + monthName
     }
 
-    private fun initRecyclerView(data: List<TransactionEntity>, category: Category) {
+    private fun initRecyclerView(data: List<Transaction>) {
         if (data.isNullOrEmpty()) {
             return
         }
@@ -115,7 +92,6 @@ constructor(
                 requestManager,
                 _resources,
                 currentLocale,
-                category,
                 data
             )
             adapter = recyclerAdapter
@@ -123,16 +99,15 @@ constructor(
     }
 
 
-    override fun onItemSelected(position: Int, item: TransactionEntity) {
-        viewModel.setDetailTransFields(item)
-        navigateToAddTransactionFragment()
+    override fun onItemSelected(position: Int, item: Transaction) {
+        navigateToAddTransactionFragment(item.id)
     }
 
-    private fun navigateToAddTransactionFragment() {
+    private fun navigateToAddTransactionFragment(transactionId: Int) {
         //on category selected and bottomSheet hided
         val action =
             DetailChartFragmentDirections.actionDetailChartFragmentToCreateTransactionFragment(
-                isNewTransaction = false
+                transactionId = transactionId
             )
         findNavController().navigate(action)
     }

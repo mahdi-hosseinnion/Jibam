@@ -41,8 +41,8 @@ data class TransactionViewState12(
         var recentlyDeletedHeader: Record? = null
     )*/
 
-    data class DetailChartFields(
+/*    data class DetailChartFields(
         var category: Category? = null,
         var allTransaction: List<TransactionEntity>? = null
-    )
+    )*/
 }

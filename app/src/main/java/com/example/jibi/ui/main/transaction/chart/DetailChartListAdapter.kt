@@ -9,7 +9,7 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.jibi.R
 import com.example.jibi.models.Category
-import com.example.jibi.models.TransactionEntity
+import com.example.jibi.models.Transaction
 import com.example.jibi.ui.main.transaction.transactions.TransactionsListAdapter
 import com.example.jibi.util.*
 import kotlinx.android.synthetic.main.layout_chart_list_item.view.*
@@ -25,10 +25,9 @@ class DetailChartListAdapter(
     private var requestManager: RequestManager,
     private var resources: Resources,
     private var currentLocale: Locale,
-    private var category: Category,
-    private var data: List<TransactionEntity> = ArrayList(),
+    private var data: List<Transaction> = ArrayList()
 
-    ) : RecyclerView.Adapter<DetailChartListAdapter.DetailChartViewHolder>() {
+) : RecyclerView.Adapter<DetailChartListAdapter.DetailChartViewHolder>() {
 
     private var totalAmount: Double = data.sumOf { abs(it.money) }
     private var biggestAmount: Double = data.maxOf { abs(it.money) }
@@ -44,8 +43,8 @@ class DetailChartListAdapter(
             interaction,
             packageName,
             requestManager,
-            resources, currentLocale,
-            category
+            resources,
+            currentLocale
         )
     }
 
@@ -54,7 +53,7 @@ class DetailChartListAdapter(
     override fun onBindViewHolder(holder: DetailChartViewHolder, position: Int) =
         holder.bind(data[position], totalAmount, biggestAmount)
 
-    fun swapData(data: List<TransactionEntity>) {
+    fun swapData(data: List<Transaction>) {
         this.data = data
         totalAmount = data.sumOf { abs(it.money) }
         biggestAmount = data.maxOf { abs(it.money) }
@@ -67,23 +66,22 @@ class DetailChartListAdapter(
         private var packageName: String,
         private var requestManager: RequestManager,
         private var _resources: Resources,
-        private var currentLocale: Locale,
-        private var category: Category
+        private var currentLocale: Locale
     ) : RecyclerView.ViewHolder(itemView) {
         fun bind(
-            item: TransactionEntity,
+            item: Transaction,
             totalAmount: Double,
             biggestAmount: Double
         ) = with(itemView) {
-            loadImage()
+            loadImage(item.categoryId, item.categoryImage)
             showPercentage(item.money, totalAmount, biggestAmount)
             //set text
             if (item.memo.isNullOrBlank()) {
-                itemView.category_name.text = category.getCategoryNameFromStringFile(
+                itemView.category_name.text = item.getCategoryNameFromStringFile(
                     _resources,
                     packageName
                 ) {
-                    it.name
+                    it.categoryName
                 }
             } else {
                 itemView.category_name.text = item.memo
@@ -98,12 +96,12 @@ class DetailChartListAdapter(
         }
 
 
-        private fun loadImage() {
-            if (category.id > 0) {
+        private fun loadImage(categoryId: Int, categoryImage: String) {
+            if (categoryId > 0) {
                 try {
                     itemView.cardView.setCardBackgroundColor(
                         _resources.getColor(
-                            TransactionsListAdapter.listOfColor[(category.id.minus(
+                            TransactionsListAdapter.listOfColor[(categoryId.minus(
                                 1
                             ))]
                         )
@@ -119,7 +117,7 @@ class DetailChartListAdapter(
                 }
             }
             val categoryImageUrl = this._resources.getIdentifier(
-                "ic_cat_${category.img_res}",
+                "ic_cat_${categoryImage}",
                 "drawable",
                 packageName
             )
@@ -163,6 +161,6 @@ class DetailChartListAdapter(
     }
 
     interface Interaction {
-        fun onItemSelected(position: Int, item: TransactionEntity)
+        fun onItemSelected(position: Int, item: Transaction)
     }
 }

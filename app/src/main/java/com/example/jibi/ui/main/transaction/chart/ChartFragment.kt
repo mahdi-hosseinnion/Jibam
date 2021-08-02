@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import androidx.core.text.TextUtilsCompat
 import androidx.core.view.ViewCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -14,10 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.RequestManager
 import com.example.jibi.R
 import com.example.jibi.models.PieChartData
-import com.example.jibi.ui.main.transaction.BaseTransactionFragment
 import com.example.jibi.ui.main.transaction.MonthManger
 import com.example.jibi.ui.main.transaction.chart.ChartFragment.ChartState.*
-import com.example.jibi.ui.main.transaction.state.TransactionStateEvent
+import com.example.jibi.ui.main.transaction.common.BaseFragment
 import com.example.jibi.util.Constants.EXPENSES_TYPE_MARKER
 import com.example.jibi.util.Constants.INCOME_TYPE_MARKER
 import com.github.mikephil.charting.animation.Easing
@@ -54,7 +54,7 @@ constructor(
     private val currentLocale: Locale,
     private val monthManger: MonthManger,
     private val _resources: Resources
-) : BaseTransactionFragment(
+) : BaseFragment(
     R.layout.fragment_chart,
     viewModelFactory,
     R.id.chartFragment_toolbar,
@@ -63,6 +63,7 @@ constructor(
 
     private val TAG = "ChartFragment"
 
+    private val viewModel by viewModels<ChartViewModel> { viewModelFactory }
 
     override fun setTextToAllViews() {
         fab_swap.text = _getString(R.string.swap_chart)
@@ -84,11 +85,6 @@ constructor(
         subscribeObservers()
         viewLifecycleOwner.lifecycleScope.launch(Main) {
             monthManger.currentMonth.collect {
-                viewModel.launchNewJob(
-                    TransactionStateEvent.OneShotOperationsTransactionStateEvent.GetPieChartData(
-                        fromDate = it.startOfMonth, toDate = it.endOfMonth
-                    )
-                )
                 val monthName = " " + it.nameOfMonth
                 if (currentChartState == INCOMES_STATE) {
                     chartFragment_toolbar_title.text =
@@ -280,12 +276,10 @@ constructor(
     }
 
     private fun subscribeObservers() {
-        viewModel.viewState.observe(viewLifecycleOwner) {
-            it?.let { viewState ->
-                viewState.pieChartData?.let { data ->
-                    chartData = data
-                    refreshChart()
-                }
+        viewModel.pieChartData.observe(viewLifecycleOwner){
+            it?.let { data ->
+                chartData = data
+                refreshChart()
             }
         }
     }
