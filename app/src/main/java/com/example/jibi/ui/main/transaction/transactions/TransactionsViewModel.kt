@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-@MainScope
+//@MainScope
 class TransactionsViewModel
 @Inject
 constructor(

@@ -42,7 +42,7 @@ sealed class AddEditTransactionStateEvent : StateEvent {
         override fun errorInfo(): String = "Unable to get all of categories"
 
         override fun getId(): String =
-            "GetSpecificTransaction time: ${System.currentTimeMillis()} ${this.hashCode()}"
+            "GetAllOfCategories time: ${System.currentTimeMillis()} hash: ${this.hashCode()}"
     }
 
 }

@@ -101,10 +101,11 @@ constructor(
                     transactionId = args.transactionId
                 )
             )
-            subscribeObservers()
         } else {
             initUiForNewTransaction()
         }
+
+        subscribeObservers()
 
         edt_money.addTextChangedListener(onTextChangedListener)
 

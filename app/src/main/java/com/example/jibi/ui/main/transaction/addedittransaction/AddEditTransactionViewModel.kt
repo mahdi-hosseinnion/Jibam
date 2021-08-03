@@ -1,25 +1,26 @@
 package com.example.jibi.ui.main.transaction.addedittransaction
 
-import com.example.jibi.di.main.MainScope
 import com.example.jibi.repository.cateogry.CategoryRepository
 import com.example.jibi.repository.tranasction.TransactionRepository
 import com.example.jibi.ui.main.transaction.addedittransaction.state.AddEditTransactionStateEvent
 import com.example.jibi.ui.main.transaction.addedittransaction.state.AddEditTransactionViewState
 import com.example.jibi.ui.main.transaction.common.BaseViewModel
 import com.example.jibi.util.DataState
+import com.example.jibi.util.mahdiLog
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-@MainScope
+//@MainScope
 class AddEditTransactionViewModel
 @Inject
 constructor(
     private val transactionRepository: TransactionRepository,
     private val categoryRepository: CategoryRepository
 ) : BaseViewModel<AddEditTransactionViewState, AddEditTransactionStateEvent>() {
+    private val TAG = "AddEditTransactionViewM"
 
     init {
         launchNewJob(AddEditTransactionStateEvent.GetAllOfCategories)

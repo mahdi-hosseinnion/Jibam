@@ -4,7 +4,6 @@ import android.content.res.Resources
 import android.util.Log
 import androidx.annotation.StringRes
 import com.example.jibi.R
-import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.PieChartData
 import com.example.jibi.models.Transaction
 import com.example.jibi.models.TransactionEntity

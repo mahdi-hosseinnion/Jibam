@@ -2,9 +2,7 @@ package com.example.jibi.repository.cateogry
 
 import android.content.res.Resources
 import androidx.annotation.StringRes
-import androidx.core.os.persistableBundleOf
 import com.example.jibi.R
-import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
 import com.example.jibi.models.CategoryImages
 import com.example.jibi.persistence.CategoriesDao

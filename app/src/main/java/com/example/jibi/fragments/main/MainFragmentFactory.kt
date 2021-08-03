@@ -15,7 +15,6 @@ import com.example.jibi.ui.main.transaction.chart.ChartFragment
 import com.example.jibi.ui.main.transaction.chart.DetailChartFragment
 import com.example.jibi.ui.main.transaction.addedittransaction.AddEditTransactionFragment
 import com.example.jibi.ui.main.transaction.transactions.TransactionsFragment
-import com.example.jibi.ui.main.transaction.transactions.TransactionsViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.util.*

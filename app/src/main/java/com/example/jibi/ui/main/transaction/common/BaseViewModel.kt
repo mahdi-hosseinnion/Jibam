@@ -147,7 +147,7 @@ abstract class BaseViewModel<_ViewState, _StateEvent : StateEvent>() : ViewModel
         return _viewState.value ?: initNewViewState()
     }
 
-    protected fun setViewState(viewState: _ViewState) =
+    fun setViewState(viewState: _ViewState) =
         viewModelScope.launch(Main) {
             //other viewState data should maintain
             _viewState.value = updateViewState(viewState)
