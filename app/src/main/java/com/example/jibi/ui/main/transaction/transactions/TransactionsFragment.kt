@@ -28,6 +28,7 @@ import com.example.jibi.R
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Transaction
 import com.example.jibi.models.TransactionEntity
+import com.example.jibi.models.mappers.toTransactionEntity
 import com.example.jibi.repository.buildResponse
 import com.example.jibi.ui.main.transaction.MonthManger
 import com.example.jibi.ui.main.transaction.common.BaseFragment

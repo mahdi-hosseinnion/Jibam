@@ -297,19 +297,22 @@ constructor(
         stateEvent: AddEditTransactionStateEvent.GetTransactionById
     ): DataState<AddEditTransactionViewState> {
         val cacheResult = safeCacheCall {
-            recordsDao.getRecordById(stateEvent.transactionId)
+            recordsDao.getTransactionById(stateEvent.transactionId)
         }
 
-        return object : CacheResponseHandler<AddEditTransactionViewState, TransactionEntity>(
+        return object : CacheResponseHandler<AddEditTransactionViewState, Transaction>(
             response = cacheResult,
             stateEvent = stateEvent
         ) {
-            override suspend fun handleSuccess(resultObj: TransactionEntity): DataState<AddEditTransactionViewState> {
+            override suspend fun handleSuccess(resultObj: Transaction): DataState<AddEditTransactionViewState> {
                 return DataState.data(
                     response = buildResponse(
                         message = "Transaction Successfully returned",
                         UIComponentType.None,
                         MessageType.Success
+                    ),
+                    data = AddEditTransactionViewState(
+                        transaction = resultObj
                     )
                 )
             }

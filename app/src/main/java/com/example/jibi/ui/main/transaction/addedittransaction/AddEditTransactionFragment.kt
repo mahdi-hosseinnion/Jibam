@@ -31,6 +31,7 @@ import com.example.jibi.R
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
 import com.example.jibi.models.TransactionEntity
+import com.example.jibi.models.mappers.toTransactionEntity
 import com.example.jibi.ui.main.transaction.addedittransaction.bottomSheet.CreateNewTransBottomSheet
 import com.example.jibi.ui.main.transaction.addedittransaction.state.AddEditTransactionStateEvent
 import com.example.jibi.ui.main.transaction.common.BaseFragment
@@ -92,13 +93,14 @@ constructor(
 
         initUi()
         //check if current state is ViewingTransaction or CreateTransaction
+        val transactionId = args.transactionId
 
-        if (args.transactionId > -1  //default value is -1
+        if (transactionId > -1  //default value is -1
         ) {
             //getting transaction via id
             viewModel.launchNewJob(
                 AddEditTransactionStateEvent.GetTransactionById(
-                    transactionId = args.transactionId
+                    transactionId = transactionId
                 )
             )
         } else {
@@ -134,14 +136,14 @@ constructor(
     override fun handleStateMessages() {
         viewModel.stateMessage.observe(viewLifecycleOwner) {
             it?.let {
-                handleNewStateMessage(it){viewModel.clearStateMessage()}
+                handleNewStateMessage(it) { viewModel.clearStateMessage() }
             }
         }
     }
 
     private fun subscribeObservers() {
-        viewModel.viewState.observe(viewLifecycleOwner) {
-            it?.let { viewState ->
+        viewModel.viewState.observe(viewLifecycleOwner) { vs ->
+            vs?.let { viewState ->
                 viewState.transaction?.let {
                     initUiForViewTransaction(it.toTransactionEntity())
                 }
