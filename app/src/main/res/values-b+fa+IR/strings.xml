@@ -185,6 +185,16 @@
     <string name="category_successfully_deleted">"دسته با موفقیت حذف شد"</string>
     <string name="category_pinned">"دسته به بالا سنجاق شد"</string>
 
+    <string name="transaction_error_inserted">متاسفانه تراکنش ثبت نشد</string>
+
+    <string name="transaction_error_deleted">"متاسفانه تراکنش حذف نشد"</string>
+
+    <string name="getting_all_categories_error">"متاسفانه لیست دسته بندی ها دریافت نشد."</string>
+
+    <string name="category_error_deleted">متاسفانه دسته بندی حذف نشد</string>
+
+    <string name="category_error_inserted">متاسفانه دسته بندی ثبت نشد</string>
+
     <string name="no_result_found_for_this_search">هیج تراکنشی برای جست و جو شما یافت نشد</string>
     <string name="insert_some_transaction_with_add_button">
     هیچ تراکنشی وجود ندارد
