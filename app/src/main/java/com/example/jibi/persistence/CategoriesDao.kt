@@ -26,6 +26,9 @@ interface CategoriesDao {
     @Delete
     suspend fun deleteCategory(category: Category): Int
 
+    @Query("DELETE FROM categories WHERE cId = :categoryId")
+    suspend fun deleteCategory(categoryId: Int): Int
+
     @Query("SELECT MIN(ordering) FROM categories")
     suspend fun getMinOfOrdering(): Int
 

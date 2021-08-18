@@ -32,6 +32,7 @@ constructor(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        showProgressBar(false)
         _View = view
         handleLoading()
         handleStateMessages()

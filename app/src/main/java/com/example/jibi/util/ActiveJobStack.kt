@@ -43,7 +43,8 @@ class ActiveJobStack : ArrayList<String>() {
         //we cannot increase the value of mutable liveData by using post value
         //so we use size
         //if you want to increase it immediately by using last value you should use SETVALUE instead of POSTVALUE
-        _CountOfActiveJobs.postValue((this.size).plus(1))
+        val newValue = (this.size).plus(1)
+        _CountOfActiveJobs.postValue(newValue)
         //you should use plus 1 b/c this method called before -> super.put(key, value)
     }
 
@@ -51,7 +52,8 @@ class ActiveJobStack : ArrayList<String>() {
         //we cannot increase the value of mutable liveData by using post value
         //so we use size
         //if you want to increase it immediately by using last value you should use SETVALUE instead of POSTVALUE
-        _CountOfActiveJobs.postValue((this.size).minus(1))
+        val newValue= (this.size).minus(1)
+        _CountOfActiveJobs.postValue(newValue)
         //you should use minus 1 b/c this method called before -> super.remove(key)
     }
 

@@ -104,23 +104,27 @@ constructor(
         viewModel.categoriesImages.observe(viewLifecycleOwner) {
             recyclerAdapter.submitList(it)
         }
+        viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
+            viewState.insertedCategoryRow?.let {
+                navigateBack()
+            }
+        }
 
     }
 
     private fun showUnableToRecognizeCategoryTypeError() {
         val callback = object : AreYouSureCallback {
             override fun proceed() {
-                findNavController().navigateUp()
+                navigateBack()
             }
 
             override fun cancel() {
-                findNavController().navigateUp()
+                navigateBack()
             }
         }
         val stateCallback = object : StateMessageCallback {
             override fun removeMessageFromStack() {
-                findNavController().navigateUp()
-
+                navigateBack()
             }
         }
 
@@ -133,7 +137,10 @@ constructor(
             ), stateCallback
         )
     }
+    fun navigateBack(){
+        findNavController().navigateUp()
 
+    }
     companion object {
         const val EXPENSES = 1
         const val INCOME = 2

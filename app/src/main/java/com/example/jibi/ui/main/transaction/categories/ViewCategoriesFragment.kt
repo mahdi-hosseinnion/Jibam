@@ -47,8 +47,7 @@ constructor(
     private val sharedPrefsEditor: SharedPreferences.Editor,
     private val _resources: Resources
 ) : BaseFragment(
-    R.layout.fragment_view_categories
-    , R.id.viewCategoriesToolbar,
+    R.layout.fragment_view_categories, R.id.viewCategoriesToolbar,
     _resources
 ) {
 
@@ -380,11 +379,11 @@ constructor(
     }
 
     fun pinOrUnpinCategory(category: Category) {
-        viewModel.launchNewJob(
-            CategoriesStateEvent.PinOrUnpinCategory(
-                category
-            )
-        )
+//        viewModel.launchNewJob(
+//            CategoriesStateEvent.PinOrUnpinCategory(
+//                category
+//            )
+//        )
     }
 
     interface CategoryInteraction {

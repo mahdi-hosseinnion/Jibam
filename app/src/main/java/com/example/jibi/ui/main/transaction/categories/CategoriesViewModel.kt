@@ -28,21 +28,29 @@ constructor(
 
     val categories: LiveData<List<Category>> = _categories
 
-    private val _categoriesImages: LiveData<List<CategoryImages>> = categoryRepository.getCategoryImages()
-        .asLiveData()
+    private val _categoriesImages: LiveData<List<CategoryImages>> =
+        categoryRepository.getCategoryImages()
+            .asLiveData()
 
     val categoriesImages: LiveData<List<CategoryImages>> = _categoriesImages
 
 
     override fun initNewViewState(): CategoriesViewState = CategoriesViewState()
 
-    override suspend fun getResultByStateEvent(stateEvent: CategoriesStateEvent): DataState<CategoriesViewState> {
-        TODO("Not yet implemented")
-    }
+    override suspend fun getResultByStateEvent(stateEvent: CategoriesStateEvent): DataState<CategoriesViewState> =
+        when (stateEvent) {
+            is CategoriesStateEvent.InsertCategory -> categoryRepository.insertCategory(
+                stateEvent
+            )
+            is CategoriesStateEvent.DeleteCategory -> categoryRepository.deleteCategory(
+                stateEvent
+            )
+        }
 
     override fun updateViewState(newViewState: CategoriesViewState): CategoriesViewState {
         val outDate = getCurrentViewStateOrNew()
         return CategoriesViewState(
+            newViewState.insertedCategoryRow ?: outDate.insertedCategoryRow
         )
     }
 }

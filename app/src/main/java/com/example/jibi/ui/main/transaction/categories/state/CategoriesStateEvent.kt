@@ -14,14 +14,14 @@ sealed class CategoriesStateEvent : StateEvent {
         override fun getId(): String = "DeleteCategory $categoryId ${this.hashCode()}"
     }
 
-    data class PinOrUnpinCategory(
-        val category: Category
-    ) : CategoriesStateEvent() {
-        override fun errorInfo(): String =
-            "unable to pin this category"
-
-        override fun getId(): String = "pin or unpin Category $category ${this.hashCode()}"
-    }
+//    data class PinOrUnpinCategory(
+//        val category: Category
+//    ) : CategoriesStateEvent() {
+//        override fun errorInfo(): String =
+//            "unable to pin this category"
+//
+//        override fun getId(): String = "pin or unpin Category $category ${this.hashCode()}"
+//    }
 
     data class InsertCategory(
         val category: Category
