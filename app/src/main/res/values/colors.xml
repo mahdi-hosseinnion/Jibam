@@ -69,5 +69,9 @@
     <color name="category_background_color_41">#536dfe</color>
     <color name="imageDefaultBackground">#e0e0e0</color>
 
-<!--    <color name="category_background_color_">#FF000000</color> defualt color-->
+    <color name="blue_500">#2196F3</color>
+    <color name="red_500">#E91E63</color>
+    <color name="green_500">#4CAF50</color>
+
+    <!--    <color name="category_background_color_">#FF000000</color> defualt color-->
 </resources>

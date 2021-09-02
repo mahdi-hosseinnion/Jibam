@@ -230,12 +230,9 @@ constructor(
         //disconnect recyclerView to bottomSheet
         transaction_recyclerView.isNestedScrollingEnabled = false
 
-        //visible search stuff
-        bottom_sheet_search_edt.visibility = View.VISIBLE
         bottom_sheet_search_clear.visibility = View.INVISIBLE
 
         bottom_sheet_search_edt.addTextChangedListener(onSearchViewTextChangeListener)
-        forceKeyBoardToOpenForMoneyEditText(bottom_sheet_search_edt)
         //invisible search stuff
         main_bottom_sheet_search_btn.visibility = View.GONE
         bottom_sheet_title.visibility = View.GONE
@@ -244,6 +241,10 @@ constructor(
 
         query?.let {
             bottom_sheet_search_edt.setText(it)
+        }
+        if (bottomSheetBehavior.state == STATE_EXPANDED) {
+            bottom_sheet_search_edt.visibility = View.VISIBLE
+            forceKeyBoardToOpenForMoneyEditText(bottom_sheet_search_edt)
         }
     }
 
@@ -574,6 +575,13 @@ constructor(
         Log.d(TAG, "onBottomSheetStateChanged: state changed to $newState ")
 
         if (STATE_EXPANDED == newState) {
+            if (viewModel.isSearchVisible()) {
+                // If theres bug with search bar this line is dangerous and bugkhiz
+                //we should use this here b/c when user click on search and bottom sheet is in collapse state
+                // edit text will crash the appbar
+                bottom_sheet_search_edt.visibility = View.VISIBLE
+                forceKeyBoardToOpenForMoneyEditText(bottom_sheet_search_edt)
+            }
             last_transacion_app_bar.isLiftOnScroll = false
 //            last_transacion_app_bar.liftOnScrollTargetViewId = R.id.transaction_recyclerView
             last_transacion_app_bar.setLiftable(false)
