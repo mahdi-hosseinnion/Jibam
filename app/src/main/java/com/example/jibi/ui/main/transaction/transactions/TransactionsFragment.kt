@@ -91,15 +91,6 @@ constructor(
     private val bottomSheetRadios by lazy { convertDpToPx(16) }
     private val normalAppBarHeight by lazy { convertDpToPx(40) }
 
-    private sealed class SearchViewState {
-        object VISIBLE : SearchViewState()
-        object INVISIBLE : SearchViewState()
-
-        fun isVisible(): Boolean = this == VISIBLE
-        fun isInvisible(): Boolean = this == INVISIBLE
-    }
-
-    private var searchViewState: SearchViewState = SearchViewState.INVISIBLE
 
     private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
 
@@ -114,7 +105,7 @@ constructor(
     private val backStackForBottomSheet = object : OnBackPressedCallback(false) {
         override fun handleOnBackPressed() {
             //check for search view
-            if (searchViewState.isVisible()) {
+            if (viewModel.isSearchVisible()) {
                 disableSearchMode()
             } else {
                 transaction_recyclerView.scrollToPosition(0)
@@ -149,7 +140,7 @@ constructor(
             }
         }
 
-        if (searchViewState.isVisible()) {
+        if (viewModel.isSearchVisible()) {
             enableSearchMode()
         }
 
@@ -158,7 +149,7 @@ constructor(
         }
         //TODO DELETE THIS LINE FOR FINAL PROJECT JUST OF TESTING
         txt_balance.setOnClickListener {
-//            insertRandomTransaction()
+            insertRandomTransaction()
         }
         //TODO DELETE THIS LINE FOR FINAL PROJECT JUST OF TESTING
         txt_expenses.setOnClickListener {
@@ -171,7 +162,7 @@ constructor(
         }
         main_bottom_sheet_back_arrow.setOnClickListener {
             //check for search view
-            if (searchViewState.isVisible()) {
+            if (viewModel.isSearchVisible()) {
                 disableSearchMode()
             } else {
                 transaction_recyclerView.scrollToPosition(0)
@@ -249,7 +240,7 @@ constructor(
         main_bottom_sheet_search_btn.visibility = View.GONE
         bottom_sheet_title.visibility = View.GONE
         //this should come after all
-        searchViewState = SearchViewState.VISIBLE
+        viewModel.setSearchViewState(TransactionsViewState.SearchViewState.VISIBLE)
 
         query?.let {
             bottom_sheet_search_edt.setText(it)
@@ -270,7 +261,8 @@ constructor(
         bottom_sheet_title.visibility = View.VISIBLE
 
         //this should come after all
-        searchViewState = SearchViewState.INVISIBLE
+        viewModel.setSearchViewState(TransactionsViewState.SearchViewState.INVISIBLE)
+
         //make bottom sheet draggable again after disabling searchView
         bottomSheetBehavior.isDraggable = true
         //connect recyclerView to bottomSheet
@@ -354,6 +346,7 @@ constructor(
             )
         findNavController().navigate(action)
     }
+
     override fun handleLoading() {
         viewModel.countOfActiveJobs.observe(
             viewLifecycleOwner
@@ -429,7 +422,7 @@ constructor(
                     if (lastPosition == 0) {
                         //user should be able to only drag the bottom sheet down when it's in first
                         //position
-                        if (searchViewState.isInvisible()) {
+                        if (viewModel.isSearchInVisible()) {
                             //while searching you should not be able to drag down
                             bottomSheetBehavior.isDraggable = true
                         }
@@ -531,7 +524,7 @@ constructor(
         super.onResume()
         uiCommunicationListener.changeDrawerState(false)
         //enable backStack listener when user  navigate to next fragment or rotate screen
-        if (bottomSheetBehavior.state == STATE_EXPANDED || searchViewState.isVisible()) {
+        if (bottomSheetBehavior.state == STATE_EXPANDED || viewModel.isSearchVisible()) {
             backStackForBottomSheet.isEnabled = true
         }
         //set bottom sheet peek height
@@ -701,8 +694,8 @@ constructor(
             activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
     }
-
-    override fun onSaveInstanceState(outState: Bundle) {
+    //TODO SAVE SEARCH VIEW
+/*    override fun onSaveInstanceState(outState: Bundle) {
 
         //save searchResult and search state for screen rotation
         val searchQuery =
@@ -712,7 +705,7 @@ constructor(
         outState.putString(SEARCH_QUERY, searchQuery)
 
         super.onSaveInstanceState(outState)
-    }
+    }*/
 
     private fun checkForGuidePromote() {
         if (sharedPreferences.getBoolean(PROMOTE_FAB_TRANSACTION_FRAGMENT, true)) {

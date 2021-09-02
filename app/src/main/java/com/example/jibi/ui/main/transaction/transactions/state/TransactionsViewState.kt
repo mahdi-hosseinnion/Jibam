@@ -7,8 +7,8 @@ import com.example.jibi.ui.main.transaction.transactions.TransactionsViewModel
 data class TransactionsViewState(
     var recentlyDeletedFields: RecentlyDeletedTransaction? = null,
     var insertedTransactionRawId: Long? = null,
-    var successfullyDeletedTransactionIndicator: Int? = null
-
+    var successfullyDeletedTransactionIndicator: Int? = null,
+    var searchViewState: SearchViewState? = null
 ) {
 
     data class SummaryMoney(
@@ -33,5 +33,9 @@ data class TransactionsViewState(
         val query: String,
         val month: Month
     )
+
+    enum class SearchViewState {
+        VISIBLE,INVISIBLE
+    }
 
 }

@@ -3,7 +3,6 @@ package com.example.jibi.ui.main.transaction.transactions
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Transaction
 import com.example.jibi.repository.tranasction.TransactionRepository
 import com.example.jibi.ui.main.transaction.MonthManger
@@ -30,6 +29,9 @@ constructor(
     private val monthManger: MonthManger,
     private val currentLocale: Locale
 ) : BaseViewModel<TransactionsViewState, TransactionsStateEvent>() {
+    init {
+        setSearchViewState(SearchViewState.INVISIBLE)
+    }
 
     //search stuff
     // In our ViewModel
@@ -148,9 +150,27 @@ constructor(
         val outDate = getCurrentViewStateOrNew()
         return TransactionsViewState(
             recentlyDeletedFields = newViewState.recentlyDeletedFields
-                ?: outDate.recentlyDeletedFields
+                ?: outDate.recentlyDeletedFields,
+            insertedTransactionRawId = newViewState.insertedTransactionRawId
+                ?: outDate.insertedTransactionRawId,
+            successfullyDeletedTransactionIndicator = newViewState.successfullyDeletedTransactionIndicator
+                ?: outDate.successfullyDeletedTransactionIndicator,
+            searchViewState = newViewState.searchViewState ?: outDate.searchViewState
         )
     }
+
+    fun setSearchViewState(searchViewState: SearchViewState) {
+        setViewState(
+            TransactionsViewState(searchViewState = searchViewState)
+        )
+    }
+
+    fun isSearchVisible(): Boolean =
+        getCurrentViewStateOrNew().searchViewState == SearchViewState.VISIBLE
+
+    fun isSearchInVisible(): Boolean =
+        getCurrentViewStateOrNew().searchViewState == SearchViewState.INVISIBLE
+
 
     companion object {
         private const val GET_TRANSACTION_LIST = "GET_TRANSACTION_LIST"
