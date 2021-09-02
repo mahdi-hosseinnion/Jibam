@@ -145,6 +145,7 @@ constructor(
         viewModel.viewState.observe(viewLifecycleOwner) { vs ->
             vs?.let { viewState ->
                 viewState.transaction?.let {
+                    //TODO BUG this should not call init ui for viwe
                     initUiForViewTransaction(it.toTransactionEntity())
                 }
 
@@ -161,15 +162,16 @@ constructor(
     }
 
     private fun showBottomSheet() {
-        val categoryList = viewModel.getCurrentViewStateOrNew().categoriesList
+        val categoryList = viewModel.getCategoriesList()
         val modalBottomSheet =
             CreateNewTransBottomSheet(
-                categoryList ?: ArrayList<Category>(),
+                categoryList,
                 requestManager,
                 onDismissCalled,
-                transactionCategory?.id ?: 0,
+                viewModel.getSelectedCategoryId(),
                 sharedPreferences,
-                sharedPrefsEditor, _resources
+                sharedPrefsEditor,
+                _resources
             )
         modalBottomSheet.show(parentFragmentManager, "CreateNewTransBottomSheet")
     }
@@ -237,10 +239,6 @@ constructor(
         //submit button should always be displayed
         fab_submit.show()
 
-        val defaultCategory = viewModel.viewState.value?.categoriesList?.let { categoryList ->
-            sortCategoriesWithPinned(categoryList)?.get(0)
-        }
-        setTransProperties(category = defaultCategory)
         edt_money.requestFocus()
         showCustomKeyboard(edt_money)
     }

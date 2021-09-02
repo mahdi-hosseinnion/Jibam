@@ -1,5 +1,6 @@
 package com.example.jibi.ui.main.transaction.addedittransaction
 
+import com.example.jibi.models.Category
 import com.example.jibi.repository.cateogry.CategoryRepository
 import com.example.jibi.repository.tranasction.TransactionRepository
 import com.example.jibi.ui.main.transaction.addedittransaction.state.AddEditTransactionStateEvent
@@ -55,4 +56,14 @@ constructor(
                 ?: outDate.successfullyDeletedTransactionIndicator
         )
     }
+
+    fun getCategoriesList(): List<Category> {
+        val result = getCurrentViewStateOrNew().categoriesList
+        if (result == null) {
+            launchNewJob(AddEditTransactionStateEvent.GetAllOfCategories)
+            return emptyList()
+        }
+        return result
+    }
+    fun getSelectedCategoryId():Int  = getCurrentViewStateOrNew().transaction?.categoryId ?: 0
 }
