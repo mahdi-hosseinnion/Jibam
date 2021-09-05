@@ -3,12 +3,17 @@ package com.example.jibi.ui.main.transaction.categories
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.view.MotionEventCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
@@ -53,6 +58,12 @@ constructor(
 
     private val viewModel by viewModels<CategoriesViewModel> { viewModelFactory }
 
+    private val itemTouchHelper by lazy {
+        ItemTouchHelper(ViewCategoryItemTouchHelperCallback { from, to ->
+            Log.d("DEBUG REORDER", "from: $from \nto: $to")
+        })
+    }
+
     override fun setTextToAllViews() {
         txt_addNewCategory.text = _getString(R.string.add_new_category)
     }
@@ -84,6 +95,7 @@ constructor(
 
         subscribeObservers()
     }
+
     override fun handleLoading() {
         viewModel.countOfActiveJobs.observe(
             viewLifecycleOwner
@@ -135,6 +147,10 @@ constructor(
 
     }
 
+    fun startDragging(viewHolder: RecyclerView.ViewHolder) {
+        itemTouchHelper.startDrag(viewHolder)
+    }
+
     //adapter
     private inner class ViewPagerAdapter(
 
@@ -178,7 +194,7 @@ constructor(
         ) : RecyclerView.ViewHolder(itemView) {
             fun bind(categoryList: List<Category>?) {
                 itemView.recycler_viewCategories.apply {
-
+                    itemTouchHelper.attachToRecyclerView(this)
                     layoutManager =
                         LinearLayoutManager(this@ViewCategoriesFragment.requireContext())
                     var maxUnpinOrder = 0
@@ -208,7 +224,7 @@ constructor(
         }
     }
 
-    private inner class ViewPagerRecyclerViewAdapter
+    inner class ViewPagerRecyclerViewAdapter
         (
         private val listOfCategories: List<Category>?,
         private val interaction: CategoryInteraction
@@ -231,18 +247,18 @@ constructor(
         )
 
         override fun onBindViewHolder(holder: ViewPagerRecyclerViewHolder, position: Int) {
-            holder.bind(listOfCategories?.get(position))
+            holder.bind(holder, listOfCategories?.get(position))
         }
 
         override fun getItemCount(): Int = listOfCategories?.size ?: 0
 
+
         inner class ViewPagerRecyclerViewHolder(
             itemView: View,
             private val intercation: CategoryInteraction
-        ) :
-            RecyclerView.ViewHolder(itemView) {
+        ) : RecyclerView.ViewHolder(itemView) {
 
-            fun bind(item: Category?) {
+            fun bind(holder: RecyclerView.ViewHolder, item: Category?) {
                 if (item != null) {
                     // Check that the view exists for the item
                     if (adapterPosition == 0 &&
@@ -254,6 +270,14 @@ constructor(
                         showPromote()
                     }
                     itemView.apply {
+
+                        itemView.change_category_order_handle.setOnTouchListener { view, motionEvent ->
+                            if (motionEvent.actionMasked == MotionEvent.ACTION_DOWN) {
+                                categoryInteraction.onStartDrag(holder)
+                            }
+                            performClick()
+                            return@setOnTouchListener false
+                        }
                         val categoryName = item.getCategoryNameFromStringFile(
                             _resources,
                             requireActivity().packageName
@@ -261,8 +285,6 @@ constructor(
                             it.name
                         }
                         itemView.nameOfCategory.text = "$categoryName"
-
-                        changePinState(item.ordering < 0)
 
                         if (item.id > 0) {
                             try {
@@ -300,27 +322,12 @@ constructor(
                         delete_category.setOnClickListener {
                             intercation.onDeleteClicked(adapterPosition, item)
                         }
-                        pin_category.setOnClickListener {
-                            intercation.onPinThisCategoryClicked(item)
-                            showLoadingForPiningCategory()
-                        }
                     }
                 } else {
                     itemView.nameOfCategory.text = _getString(R.string.UNKNOWN_CATEGORY)
                 }
             }
 
-            fun showLoadingForPiningCategory() {
-                itemView.pin_category.visibility = View.GONE
-                itemView.pin_category_progressBar.visibility = View.VISIBLE
-            }
-
-            fun changePinState(isPinned: Boolean) {
-                if (isPinned)
-                    itemView.pin_category.setImageResource(R.drawable.ic_pin)
-                else
-                    itemView.pin_category.setImageResource(R.drawable.ic_unpin)
-            }
 
             private fun showPromote() {
                 MaterialTapTargetPrompt.Builder(this@ViewCategoriesFragment)
@@ -365,8 +372,8 @@ constructor(
             )
         }
 
-        override fun onPinThisCategoryClicked(category: Category) {
-            pinOrUnpinCategory(category)
+        override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
+            startDragging(viewHolder)
         }
     }
 
@@ -388,7 +395,9 @@ constructor(
 
     interface CategoryInteraction {
         fun onDeleteClicked(position: Int, category: Category)
-        fun onPinThisCategoryClicked(category: Category)
+
+        //called when ad view request a start of drag
+        fun onStartDrag(viewHolder: RecyclerView.ViewHolder);
     }
 
     private fun showUnableToRecognizeCategoryTypeError() {

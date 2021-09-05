@@ -174,7 +174,7 @@
     <string name="view_category_tap_target_primary">"Edit category"</string>
     <string name="view_category_tap_target_secondary">
         Tap on trash icon to delete category
-        Tap on pin icon to pin category
+        Tap on reorder icon or hold on item to reorder
     </string>
 
     <string name="transaction_successfully_inserted">Transaction successfully inserted</string>

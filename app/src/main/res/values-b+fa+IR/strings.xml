@@ -175,7 +175,7 @@
     <string name="view_category_tap_target_primary">ویرایش دسته</string>
     <string name="view_category_tap_target_secondary">
         برای حذف کردن یک دسته روی علامت سطل زباله کلید کنید
-        برای سنجاق یک دسته روی علامت سنجاق کلید کنید
+        برای تغییر ترتیب نمایش روی علامت ترتیب کلید کنید یا روی هر دسته بندی نگه دارید
     </string>
 
     <string name="transaction_successfully_inserted">"تراکنش با موفقیت ثبت شد"</string>

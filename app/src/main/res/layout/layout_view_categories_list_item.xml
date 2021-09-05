@@ -55,30 +55,6 @@
         android:textStyle="bold"
         tools:text="Food" />
 
-    <FrameLayout
-        android:layout_width="56dp"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:id="@+id/pin_category"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:focusable="true"
-            android:padding="16dp"
-            app:srcCompat="@drawable/ic_unpin" />
-
-        <ProgressBar
-            android:id="@+id/pin_category_progressBar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="true"
-            android:focusable="true"
-            android:padding="16dp"
-            android:visibility="gone"
-            app:srcCompat="@android:drawable/btn_star_big_off" />
-    </FrameLayout>
-
     <ImageView
         android:id="@+id/delete_category"
         android:layout_width="56dp"
@@ -88,6 +64,15 @@
         android:padding="16dp"
         app:srcCompat="@drawable/ic_delete_"
         app:tint="@android:color/holo_red_light" />
+    <ImageView
+        android:id="@+id/change_category_order_handle"
+        android:layout_width="56dp"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="16dp"
+        app:srcCompat="@drawable/ic_round_reorder_24"
+        app:tint="@color/black" />
 
 
 </LinearLayout>
