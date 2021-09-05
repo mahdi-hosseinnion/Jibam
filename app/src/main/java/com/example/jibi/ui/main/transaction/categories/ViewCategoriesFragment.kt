@@ -4,42 +4,25 @@ import android.content.SharedPreferences
 import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.view.MotionEventCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.jibi.R
 import com.example.jibi.models.Category
 import com.example.jibi.ui.main.transaction.categories.AddCategoryFragment.Companion.EXPENSES
 import com.example.jibi.ui.main.transaction.categories.AddCategoryFragment.Companion.INCOME
 import com.example.jibi.ui.main.transaction.categories.state.CategoriesStateEvent
 import com.example.jibi.ui.main.transaction.common.BaseFragment
-import com.example.jibi.ui.main.transaction.transactions.TransactionsListAdapter
 import com.example.jibi.util.*
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.fragment_view_categories.*
-import kotlinx.android.synthetic.main.layout_transaction_list_item.view.*
-import kotlinx.android.synthetic.main.layout_view_categories_list_item.*
-import kotlinx.android.synthetic.main.layout_view_categories_list_item.view.*
-import kotlinx.android.synthetic.main.layout_view_categories_list_item.view.category_image
-import kotlinx.android.synthetic.main.layout_viewpager_list_item.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt
-import uk.co.samuelwall.materialtaptargetprompt.extras.backgrounds.RectanglePromptBackground
-import uk.co.samuelwall.materialtaptargetprompt.extras.focals.RectanglePromptFocal
 import javax.inject.Inject
-import kotlin.random.Random
 
 @FlowPreview
 @ExperimentalCoroutinesApi
@@ -54,13 +37,18 @@ constructor(
 ) : BaseFragment(
     R.layout.fragment_view_categories, R.id.viewCategoriesToolbar,
     _resources
-) {
+), ViewCategoriesRecyclerAdapter.CategoryInteraction {
 
     private val viewModel by viewModels<CategoriesViewModel> { viewModelFactory }
 
-    private val itemTouchHelper by lazy {
+    private val expensesItemTouchHelper by lazy {
         ItemTouchHelper(ViewCategoryItemTouchHelperCallback { from, to ->
-            Log.d("DEBUG REORDER", "from: $from \nto: $to")
+            Log.d("DEBUG REORDER", "EXPENSES: from: $from to: $to")
+        })
+    }
+    private val incomeItemTouchHelper by lazy {
+        ItemTouchHelper(ViewCategoryItemTouchHelperCallback { from, to ->
+            Log.d("DEBUG REORDER", "INCOME: from: $from to: $to")
         })
     }
 
@@ -69,12 +57,24 @@ constructor(
     }
 
     //vars
-    private val viewPagerAdapter = ViewPagerAdapter()
+    private lateinit var viewPagerAdapter: ViewCategoriesViewPagerAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupViewPager()
+        setupUi()
 
-        viewPager_viewCategories.adapter = viewPagerAdapter
+        add_new_appbar.setOnClickListener {
+            navigateToAddCategoryFragment()
+        }
+        txt_addNewCategory.setOnClickListener {
+            navigateToAddCategoryFragment()
+        }
+
+        subscribeObservers()
+    }
+
+    private fun setupUi() {
         findNavController()
             .currentDestination?.label = _getString(R.string.category_setting)
         //set titles
@@ -85,15 +85,20 @@ constructor(
                 tab.text = _getString(R.string.income)
             }
         }.attach()
-//        val int:Int=viewPager_viewCategories.currentItem
-        add_new_appbar.setOnClickListener {
-            navigateToAddCategoryFragment()
-        }
-        txt_addNewCategory.setOnClickListener {
-            navigateToAddCategoryFragment()
-        }
+    }
 
-        subscribeObservers()
+    private fun setupViewPager() {
+        viewPagerAdapter = ViewCategoriesViewPagerAdapter(
+            listOfCategories = null,
+            expensesItemTouchHelper = expensesItemTouchHelper,
+            incomeItemTouchHelper = incomeItemTouchHelper,
+            categoryInteraction = this,
+            _resources = _resources,
+            requestManager = requestManager,
+            packageName = this.requireActivity().packageName
+        )
+
+        viewPager_viewCategories.adapter = viewPagerAdapter
     }
 
     override fun handleLoading() {
@@ -141,241 +146,45 @@ constructor(
         findNavController().navigate(action)
     }
 
-    companion object {
-        const val VIEWPAGER_SIZE = 2
-        const val CATEGORY_PIN_MARKER = -1
 
-    }
-
-    fun startDragging(viewHolder: RecyclerView.ViewHolder) {
-        itemTouchHelper.startDrag(viewHolder)
+    fun startDragging(viewHolder: RecyclerView.ViewHolder, itemType: Int) {
     }
 
     //adapter
-    private inner class ViewPagerAdapter(
 
-    ) : RecyclerView.Adapter<ViewPagerAdapter.ViewPagerViewHolder>() {
 
-        private var listOfCategories: List<Category>? = null
-
-        private var currentPage = 0
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewPagerViewHolder =
-            ViewPagerViewHolder(
-                LayoutInflater.from(parent.context).inflate(
-                    R.layout.layout_viewpager_list_item,
-                    parent,
-                    false
-                )
-            )
-
-        override fun onBindViewHolder(holder: ViewPagerViewHolder, position: Int) {
-            if (position == 0) {
-                //expenses
-                holder.bind(listOfCategories?.filter { category -> category.type == 1 })
-
-            } else {
-                //income
-                holder.bind(listOfCategories?.filter { category -> category.type > 1 })
+    override fun onDeleteClicked(position: Int, category: Category) {
+        val callback = object : AreYouSureCallback {
+            override fun proceed() {
+                deleteCategory(category)
             }
 
+            override fun cancel() {}
         }
-
-        fun submitList(listOfCategories: List<Category>) {
-            this.listOfCategories = listOfCategories
-            notifyDataSetChanged()
-        }
-
-        override fun getItemCount(): Int = VIEWPAGER_SIZE
-
-
-        inner class ViewPagerViewHolder(
-            itemView: View
-        ) : RecyclerView.ViewHolder(itemView) {
-            fun bind(categoryList: List<Category>?) {
-                itemView.recycler_viewCategories.apply {
-                    itemTouchHelper.attachToRecyclerView(this)
-                    layoutManager =
-                        LinearLayoutManager(this@ViewCategoriesFragment.requireContext())
-                    var maxUnpinOrder = 0
-                    if (categoryList != null) {
-                        for (item in categoryList) {
-                            if (maxUnpinOrder < item.ordering) {
-                                maxUnpinOrder = item.ordering
-                            }
-                        }
-                    }
-                    adapter = ViewPagerRecyclerViewAdapter(
-                        sortCategoriesWithPinned(categoryList),
-                        categoryInteraction
-                    )
-                }
-
+        uiCommunicationListener.onResponseReceived(
+            Response(
+                _getString(R.string.are_you_sure_delete_category),
+                UIComponentType.AreYouSureDialog(
+                    callback
+                ), MessageType.Info
+            ),
+            object : StateMessageCallback {
+                override fun removeMessageFromStack() {}
             }
-        }
-
-
-//        override fun onPageSelected(position: Int) {
-//            currentPage = position
-//        }
-
-        fun getCurrentPage(): Int {
-            return this.currentPage
-        }
-    }
-
-    inner class ViewPagerRecyclerViewAdapter
-        (
-        private val listOfCategories: List<Category>?,
-        private val interaction: CategoryInteraction
-    ) : RecyclerView.Adapter<ViewPagerRecyclerViewAdapter.ViewPagerRecyclerViewHolder>() {
-
-        private val packageName = this@ViewCategoriesFragment.requireActivity().packageName
-
-        override fun onCreateViewHolder(
-            parent: ViewGroup,
-            viewType: Int
-        ): ViewPagerRecyclerViewHolder = ViewPagerRecyclerViewHolder(
-            LayoutInflater.from(
-                parent.context
-
-            ).inflate(
-                R.layout.layout_view_categories_list_item,
-                parent,
-                false
-            ), interaction
         )
-
-        override fun onBindViewHolder(holder: ViewPagerRecyclerViewHolder, position: Int) {
-            holder.bind(holder, listOfCategories?.get(position))
-        }
-
-        override fun getItemCount(): Int = listOfCategories?.size ?: 0
-
-
-        inner class ViewPagerRecyclerViewHolder(
-            itemView: View,
-            private val intercation: CategoryInteraction
-        ) : RecyclerView.ViewHolder(itemView) {
-
-            fun bind(holder: RecyclerView.ViewHolder, item: Category?) {
-                if (item != null) {
-                    // Check that the view exists for the item
-                    if (adapterPosition == 0 &&
-                        sharedPreferences.getBoolean(
-                            PreferenceKeys.PROMOTE_VIEW_CATEGORY_LIST,
-                            true
-                        )
-                    ) {
-                        showPromote()
-                    }
-                    itemView.apply {
-
-                        itemView.change_category_order_handle.setOnTouchListener { view, motionEvent ->
-                            if (motionEvent.actionMasked == MotionEvent.ACTION_DOWN) {
-                                categoryInteraction.onStartDrag(holder)
-                            }
-                            performClick()
-                            return@setOnTouchListener false
-                        }
-                        val categoryName = item.getCategoryNameFromStringFile(
-                            _resources,
-                            requireActivity().packageName
-                        ) {
-                            it.name
-                        }
-                        itemView.nameOfCategory.text = "$categoryName"
-
-                        if (item.id > 0) {
-                            try {
-                                cardView_view_category.setCardBackgroundColor(
-                                    resources.getColor(
-                                        TransactionsListAdapter.listOfColor[(item.id.minus(
-                                            1
-                                        ))]
-                                    )
-                                )
-                            } catch (e: Exception) {
-                                //apply random color
-                                cardView_view_category.setCardBackgroundColor(
-                                    resources.getColor(
-                                        TransactionsListAdapter.listOfColor[Random.nextInt(
-                                            TransactionsListAdapter.listOfColor.size
-                                        )]
-                                    )
-                                )
-                            }
-                        }
-
-                        val categoryImageUrl = this.resources.getIdentifier(
-                            "ic_cat_${item.img_res}",
-                            "drawable",
-                            packageName
-                        )
-                        requestManager
-                            .load(categoryImageUrl)
-                            .centerInside()
-                            .transition(DrawableTransitionOptions.withCrossFade())
-                            .error(R.drawable.ic_error)
-                            .into(itemView.category_image)
-
-                        delete_category.setOnClickListener {
-                            intercation.onDeleteClicked(adapterPosition, item)
-                        }
-                    }
-                } else {
-                    itemView.nameOfCategory.text = _getString(R.string.UNKNOWN_CATEGORY)
-                }
-            }
-
-
-            private fun showPromote() {
-                MaterialTapTargetPrompt.Builder(this@ViewCategoriesFragment)
-                    .setTarget(itemView.findViewById(R.id.root_transaction_item))
-                    .setPrimaryText(_getString(R.string.view_category_tap_target_primary))
-                    .setSecondaryText(_getString(R.string.view_category_tap_target_secondary))
-                    .setPromptBackground(RectanglePromptBackground())
-                    .setPromptFocal(RectanglePromptFocal())
-                    .setPromptStateChangeListener { _, state ->
-                        if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED || state == MaterialTapTargetPrompt.STATE_DISMISSING) {
-                            sharedPrefsEditor.putBoolean(
-                                PreferenceKeys.PROMOTE_VIEW_CATEGORY_LIST,
-                                false
-                            ).apply()
-                        }
-                    }
-                    .show()
-            }
-        }
-
     }
 
-    val categoryInteraction = object : CategoryInteraction {
-        override fun onDeleteClicked(position: Int, category: Category) {
-            val callback = object : AreYouSureCallback {
-                override fun proceed() {
-                    deleteCategory(category)
-                }
-
-                override fun cancel() {}
-            }
-            uiCommunicationListener.onResponseReceived(
-                Response(
-                    _getString(R.string.are_you_sure_delete_category),
-                    UIComponentType.AreYouSureDialog(
-                        callback
-                    ), MessageType.Info
-                ),
-                object : StateMessageCallback {
-                    override fun removeMessageFromStack() {}
-                }
-            )
+    override fun onStartDrag(viewHolder: RecyclerView.ViewHolder, itemType: Int) {
+        if (itemType == 1) {
+            //expenses
+            expensesItemTouchHelper.startDrag(viewHolder)
         }
-
-        override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
-            startDragging(viewHolder)
+        if (itemType == 2) {
+            //income
+            incomeItemTouchHelper.startDrag(viewHolder)
         }
     }
+
 
     fun deleteCategory(category: Category) {
         viewModel.launchNewJob(
@@ -385,20 +194,6 @@ constructor(
         )
     }
 
-    fun pinOrUnpinCategory(category: Category) {
-//        viewModel.launchNewJob(
-//            CategoriesStateEvent.PinOrUnpinCategory(
-//                category
-//            )
-//        )
-    }
-
-    interface CategoryInteraction {
-        fun onDeleteClicked(position: Int, category: Category)
-
-        //called when ad view request a start of drag
-        fun onStartDrag(viewHolder: RecyclerView.ViewHolder);
-    }
 
     private fun showUnableToRecognizeCategoryTypeError() {
         val stateCallback = object : StateMessageCallback {

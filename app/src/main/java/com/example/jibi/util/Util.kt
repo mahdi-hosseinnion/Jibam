@@ -12,7 +12,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.abs
 
-fun sortCategoriesWithPinned(categoryList: List<Category>?): List<Category>? {
+/*fun sortCategoriesWithPinned(categoryList: List<Category>?): List<Category>? {
     if (categoryList == null) {
         return null
     }
@@ -21,7 +21,7 @@ fun sortCategoriesWithPinned(categoryList: List<Category>?): List<Category>? {
     tempList.removeAll(pinedList)
     tempList.addAll(0, pinedList)
     return tempList
-}
+}*/
 
 public fun Fragment.convertDpToPx(dp: Int): Int {
     val r = resources

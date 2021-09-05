@@ -20,7 +20,7 @@ class ViewCategoryItemTouchHelperCallback(
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
-        val adapter = recyclerView.adapter as ViewCategoriesFragment.ViewPagerRecyclerViewAdapter
+        val adapter = recyclerView.adapter as ViewCategoriesRecyclerAdapter
         val from = viewHolder.adapterPosition
         val to = target.adapterPosition
 
