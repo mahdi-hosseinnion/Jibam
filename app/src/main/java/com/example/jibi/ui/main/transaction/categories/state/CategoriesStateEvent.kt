@@ -31,4 +31,16 @@ sealed class CategoriesStateEvent : StateEvent {
 
         override fun getId(): String = "InsertCategory $category ${this.hashCode()}"
     }
+    data class ChangeCategoryOrder(
+        val changeOrderFields: ChangeOrderFields
+    ) : CategoriesStateEvent() {
+        override fun errorInfo(): String =ERROR
+
+
+        override fun getId(): String = "$NAME req: $changeOrderFields ${this.hashCode()}"
+        companion object{
+            const val NAME = "ChangeCategoryOrder"
+            const val ERROR = "Unable to change order of category"
+        }
+    }
 }

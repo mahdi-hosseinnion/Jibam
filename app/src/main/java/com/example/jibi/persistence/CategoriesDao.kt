@@ -40,4 +40,23 @@ interface CategoriesDao {
 
     @Query("SELECT * FROM categories WHERE cId = :id")
     suspend fun getCategoryById(id: Int): Category?
+
+    @Query(
+        """
+        UPDATE categories SET 
+        ordering = :newOrder 
+        WHERE cId = :categoryId
+        """
+    )
+    suspend fun updateOrder(categoryId: Int, newOrder: Int): Int
+
+    @Query(
+        """
+        SELECT * FROM categories 
+        WHERE type = :type 
+        AND 
+        ordering BETWEEN :fromOrder AND :toOrder
+        """
+    )
+    fun getAllCategoriesBetweenSpecificOrder(type: Int, fromOrder: Int, toOrder: Int):List<Category>
 }

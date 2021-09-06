@@ -137,6 +137,100 @@ constructor(
         }.getResult()
     }
 
+    override suspend fun changeCategoryOrder(
+        stateEvent: CategoriesStateEvent.ChangeCategoryOrder
+    ): DataState<CategoriesViewState> {
+        val changeSelectedCategoryOrderResponse = changeOrder(
+            stateEvent.changeOrderFields.categoryId,
+            stateEvent.changeOrderFields.newPosition
+        )
+        if (changeSelectedCategoryOrderResponse !is CacheResult.Success) {
+            return changeCategoryOrderFail(
+                "Unable to change order of selected category",
+                stateEvent
+            )
+        }
+        val betweenCategoriesResponse = getAllCategoriesBetweenSpecificOrder(
+            categoryType = stateEvent.changeOrderFields.categoryType,
+            from = stateEvent.changeOrderFields.lastPosition,
+            to = stateEvent.changeOrderFields.newPosition
+        )
+        if (betweenCategoriesResponse !is CacheResult.Success) {
+            return changeCategoryOrderFail("Unable to get categories to change order", stateEvent)
+        }
+        val betweenCategories = betweenCategoriesResponse.value
+        if (betweenCategories != null) {
+            for (item in betweenCategories) {
+                val response = changeOrder(
+                    stateEvent.changeOrderFields.categoryId,
+                    stateEvent.changeOrderFields.newPosition
+                )
+                if (response !is CacheResult.Success) {
+                    return changeCategoryOrderFail(
+                        "Unable to change order of ${item.name}",
+                        stateEvent
+                    )
+                }
+            }
+        }
+        return DataState.data(
+            response = Response(
+                message = CHANGE_CATEGORY_ORDER_SUCCESS,
+                uiComponentType = UIComponentType.Toast,
+                messageType = MessageType.Error
+            ),
+            data = null,
+            stateEvent = stateEvent
+        )
+    }
+
+    private fun changeCategoryOrderFail(
+        message: String,
+        stateEvent: CategoriesStateEvent.ChangeCategoryOrder
+    ): DataState<CategoriesViewState> = DataState.error(
+        response = Response(
+            message = message,
+            uiComponentType = UIComponentType.Dialog,
+            messageType = MessageType.Error
+        ),
+        stateEvent = stateEvent
+    )
+
+    private suspend fun getAllCategoriesBetweenSpecificOrder(
+        categoryType: Int,
+        from: Int,
+        to: Int
+    ): CacheResult<List<Category>?> {
+        var fromOrder: Int
+        var toOrder: Int
+        // from should no be greater then to
+        if (to > from) {
+            fromOrder = from
+            toOrder = to
+        } else if (to < from) {
+            fromOrder = to
+            toOrder = from
+        } else {
+            return CacheResult.GenericError("from and to should no be equal")
+        }
+        return safeCacheCall {
+            categoriesDao.getAllCategoriesBetweenSpecificOrder(
+                categoryType,
+                fromOrder.plus(1),
+                toOrder.plus(1)
+            )
+        }
+    }
+
+    private suspend fun changeOrder(categoryId: Int, newOrder: Int): CacheResult<Int?> =
+        safeCacheCall {
+            categoriesDao.updateOrder(categoryId, newOrder)
+        }
+
+
     fun getString(@StringRes id: Int) = _resources.getString(id)
 
+    companion object {
+        const val CHANGE_CATEGORY_ORDER_SUCCESS = "Category order successfully changed"
+    }
 }

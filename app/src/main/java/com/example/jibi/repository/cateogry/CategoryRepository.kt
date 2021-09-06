@@ -29,4 +29,8 @@ interface CategoryRepository {
         stateEvent: CategoriesStateEvent.DeleteCategory
     ): DataState<CategoriesViewState>
 
+    suspend fun changeCategoryOrder(
+        stateEvent: CategoriesStateEvent.ChangeCategoryOrder
+    ): DataState<CategoriesViewState>
+
 }

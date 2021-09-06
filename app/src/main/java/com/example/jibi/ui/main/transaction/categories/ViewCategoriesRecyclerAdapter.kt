@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.layout_view_categories_list_item.view.*
 import kotlin.random.Random
 
 class ViewCategoriesRecyclerAdapter(
-    private val listOfCategories: List<Category>?,
+    private var listOfCategories: List<Category>?,
     private val interaction: CategoryInteraction,
     private val _resources: Resources,
     private val requestManager: RequestManager,
@@ -43,6 +43,22 @@ class ViewCategoriesRecyclerAdapter(
     }
 
     override fun getItemCount(): Int = listOfCategories?.size ?: 0
+
+    fun getItemAtPosition(position: Int): Category? = listOfCategories?.get(position)
+
+    fun onItemMoved(from: Int, to: Int) {
+        listOfCategories?.let { list ->
+            if (from == to) {
+                return
+            }
+            val fromObj = getItemAtPosition(from)
+            val categories = ArrayList(list)
+            //change position of main object(moved object)
+            categories.removeAt(from)
+            categories.add(to, fromObj)
+            listOfCategories = categories
+        }
+    }
 
 
     class ViewPagerRecyclerViewHolder(

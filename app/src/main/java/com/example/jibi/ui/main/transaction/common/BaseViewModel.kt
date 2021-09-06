@@ -19,6 +19,8 @@ abstract class BaseViewModel<_ViewState, _StateEvent : StateEvent>() : ViewModel
 
     private val _activeJobStack = ActiveJobStack()
 
+    fun getAllActiveJobs(): List<String> = _activeJobStack
+
     val stateMessage: LiveData<StateMessage?>
         get() = _messageStack.stateMessage
 

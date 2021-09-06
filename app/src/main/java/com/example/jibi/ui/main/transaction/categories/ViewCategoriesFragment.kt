@@ -3,7 +3,6 @@ package com.example.jibi.ui.main.transaction.categories
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -13,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.example.jibi.R
 import com.example.jibi.models.Category
+import com.example.jibi.repository.cateogry.CategoryRepositoryImpl.Companion.CHANGE_CATEGORY_ORDER_SUCCESS
 import com.example.jibi.ui.main.transaction.categories.AddCategoryFragment.Companion.EXPENSES
 import com.example.jibi.ui.main.transaction.categories.AddCategoryFragment.Companion.INCOME
 import com.example.jibi.ui.main.transaction.categories.state.CategoriesStateEvent
@@ -42,13 +42,16 @@ constructor(
     private val viewModel by viewModels<CategoriesViewModel> { viewModelFactory }
 
     private val expensesItemTouchHelper by lazy {
-        ItemTouchHelper(ViewCategoryItemTouchHelperCallback { from, to ->
-            Log.d("DEBUG REORDER", "EXPENSES: from: $from to: $to")
+        ItemTouchHelper(ViewCategoryItemTouchHelperCallback {
+            viewModel.addToChangeOrderStack(it)
+            viewModel.insertPendingChangeOrder()
         })
     }
     private val incomeItemTouchHelper by lazy {
-        ItemTouchHelper(ViewCategoryItemTouchHelperCallback { from, to ->
-            Log.d("DEBUG REORDER", "INCOME: from: $from to: $to")
+        ItemTouchHelper(ViewCategoryItemTouchHelperCallback {
+            viewModel.addToChangeOrderStack(it)
+            viewModel.insertPendingChangeOrder()
+
         })
     }
 
@@ -126,6 +129,21 @@ constructor(
         }
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
 
+        }
+        viewModel.stateMessage.observe(viewLifecycleOwner) { st ->
+            st?.let { stateMessage ->
+                if (stateMessage.response.message == CHANGE_CATEGORY_ORDER_SUCCESS) {
+                    viewModel.removeFromChangeOrderStack()
+                } else if (stateMessage.response.message?.contains(
+                        CategoriesStateEvent.ChangeCategoryOrder.ERROR
+                    )
+                    == true
+                ) {
+                    //if for any reason even one change order fails
+                    //we should remove other ones
+                    viewModel.clearChangeOrderStack()
+                }
+            }
         }
     }
 
