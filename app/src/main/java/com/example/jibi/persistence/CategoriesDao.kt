@@ -8,10 +8,10 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CategoriesDao {
-    @Query("SELECT * FROM categories")
+    @Query("SELECT * FROM categories $CATEGORY_ORDER")
     fun getCategories(): Flow<List<Category>>
 
-    @Query("SELECT * FROM categories")
+    @Query("SELECT * FROM categories $CATEGORY_ORDER")
     fun getAllOfCategories(): List<Category>
 
     @Query("SELECT * FROM category_images")
@@ -35,9 +35,6 @@ interface CategoriesDao {
     @Query("SELECT MAX(ordering) FROM categories")
     suspend fun getMaxOfOrdering(): Int
 
-    @Query("SELECT * FROM categories")
-    suspend fun getAllCategory(): List<Category>
-
     @Query("SELECT * FROM categories WHERE cId = :id")
     suspend fun getCategoryById(id: Int): Category?
 
@@ -55,8 +52,17 @@ interface CategoriesDao {
         SELECT * FROM categories 
         WHERE type = :type 
         AND 
-        ordering BETWEEN :fromOrder AND :toOrder
+        ordering BETWEEN :fromOrder AND :toOrder 
+        $CATEGORY_ORDER
         """
     )
-    fun getAllCategoriesBetweenSpecificOrder(type: Int, fromOrder: Int, toOrder: Int):List<Category>
+    fun getAllCategoriesBetweenSpecificOrder(
+        type: Int,
+        fromOrder: Int,
+        toOrder: Int
+    ): List<Category>
+
+    companion object {
+        private const val CATEGORY_ORDER = "ORDER BY ordering ASC"
+    }
 }

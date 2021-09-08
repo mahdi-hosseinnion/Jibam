@@ -1,6 +1,7 @@
 package com.example.jibi.repository.cateogry
 
 import android.content.res.Resources
+import android.util.Log
 import androidx.annotation.StringRes
 import com.example.jibi.R
 import com.example.jibi.models.Category
@@ -155,22 +156,21 @@ constructor(
             from = stateEvent.changeOrderFields.lastPosition,
             to = stateEvent.changeOrderFields.newPosition
         )
-        if (betweenCategoriesResponse !is CacheResult.Success) {
+        if (betweenCategoriesResponse !is CacheResult.Success || betweenCategoriesResponse.value == null) {
             return changeCategoryOrderFail("Unable to get categories to change order", stateEvent)
         }
         val betweenCategories = betweenCategoriesResponse.value
-        if (betweenCategories != null) {
-            for (item in betweenCategories) {
-                val response = changeOrder(
-                    stateEvent.changeOrderFields.categoryId,
-                    stateEvent.changeOrderFields.newPosition
+        Log.d(TAG, "changeCategoryOrder: betweenCategories: ${betweenCategories.map { it.name }}")
+        for (item in betweenCategories) {
+            val response = changeOrder(
+                stateEvent.changeOrderFields.categoryId,
+                stateEvent.changeOrderFields.newPosition
+            )
+            if (response !is CacheResult.Success) {
+                return changeCategoryOrderFail(
+                    "Unable to change order of ${item.name}",
+                    stateEvent
                 )
-                if (response !is CacheResult.Success) {
-                    return changeCategoryOrderFail(
-                        "Unable to change order of ${item.name}",
-                        stateEvent
-                    )
-                }
             }
         }
         return DataState.data(
@@ -205,19 +205,19 @@ constructor(
         var toOrder: Int
         // from should no be greater then to
         if (to > from) {
-            fromOrder = from
-            toOrder = to
+            fromOrder = from.plus(1)
+            toOrder = to.minus(1)
         } else if (to < from) {
-            fromOrder = to
-            toOrder = from
+            fromOrder = to.minus(1)
+            toOrder = from.plus(1)
         } else {
             return CacheResult.GenericError("from and to should no be equal")
         }
         return safeCacheCall {
             categoriesDao.getAllCategoriesBetweenSpecificOrder(
                 categoryType,
-                fromOrder.plus(1),
-                toOrder.plus(1)
+                fromOrder,
+                toOrder
             )
         }
     }

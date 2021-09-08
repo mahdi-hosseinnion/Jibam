@@ -1,6 +1,7 @@
 package com.example.jibi.ui.main.transaction.categories
 
 import android.content.res.Resources
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -98,6 +99,10 @@ class ViewCategoriesRecyclerAdapter(
                         it.name
                     }
                     itemView.nameOfCategory.text = categoryName
+
+                    itemView.ordering.text = item.ordering.toString()
+                    val color = if (item.ordering == adapterPosition) Color.BLACK else Color.RED
+                    itemView.ordering.setTextColor(color)
 
                     if (item.id > 0) {
                         try {

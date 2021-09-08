@@ -55,6 +55,19 @@
         android:textStyle="bold"
         tools:text="Food" />
 
+    <TextView
+        android:id="@+id/ordering"
+        android:layout_width="56dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:padding="16dp"
+        android:textSize="20sp"
+        tools:text="8" />
+
     <ImageView
         android:id="@+id/delete_category"
         android:layout_width="56dp"
@@ -64,6 +77,7 @@
         android:padding="16dp"
         app:srcCompat="@drawable/ic_delete_"
         app:tint="@android:color/holo_red_light" />
+
     <ImageView
         android:id="@+id/change_category_order_handle"
         android:layout_width="56dp"
