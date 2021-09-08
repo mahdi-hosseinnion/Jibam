@@ -24,10 +24,9 @@ constructor(
     private val categoryRepository: CategoryRepository
 ) : BaseViewModel<CategoriesViewState, CategoriesStateEvent>() {
 
-    private val _categories: LiveData<List<Category>> = categoryRepository.getCategoryList()
-        .asLiveData()
-
-    val categories: LiveData<List<Category>> = _categories
+    init {
+        refreshCategoryList()
+    }
 
     private val _categoriesImages: LiveData<List<CategoryImages>> =
         categoryRepository.getCategoryImages()
@@ -52,11 +51,15 @@ constructor(
             is CategoriesStateEvent.ChangeCategoryOrderNew -> categoryRepository.changeCategoryOrderNew(
                 stateEvent
             )
+            is CategoriesStateEvent.GetAllOfCategories -> categoryRepository.getAllOfCategories(
+                stateEvent
+            )
         }
 
     override fun updateViewState(newViewState: CategoriesViewState): CategoriesViewState {
         val outDate = getCurrentViewStateOrNew()
         return CategoriesViewState(
+            newViewState.categoryList ?: outDate.categoryList,
             newViewState.insertedCategoryRow ?: outDate.insertedCategoryRow
         )
     }
@@ -113,7 +116,13 @@ constructor(
 
     }
 
-    fun newReorder(newOrder: HashMap<Int, Int>,type:Int) {
+    fun refreshCategoryList() {
+        launchNewJob(
+            CategoriesStateEvent.GetAllOfCategories
+        )
+    }
+
+    fun newReorder(newOrder: HashMap<Int, Int>, type: Int) {
         launchNewJob(
             CategoriesStateEvent.ChangeCategoryOrderNew(
                 newOrder,
@@ -121,5 +130,6 @@ constructor(
             )
         )
     }
+
 
 }

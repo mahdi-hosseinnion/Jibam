@@ -21,6 +21,10 @@ interface CategoryRepository {
         stateEvent: AddEditTransactionStateEvent.GetAllOfCategories
     ): DataState<AddEditTransactionViewState>
 
+    suspend fun getAllOfCategories(
+        stateEvent: CategoriesStateEvent.GetAllOfCategories
+    ): DataState<CategoriesViewState>
+
     suspend fun insertCategory(
         stateEvent: CategoriesStateEvent.InsertCategory
     ): DataState<CategoriesViewState>

@@ -69,6 +69,46 @@ constructor(
 
     }
 
+    override suspend fun getAllOfCategories(
+        stateEvent: CategoriesStateEvent.GetAllOfCategories
+    ): DataState<CategoriesViewState> {
+
+        val cacheResult = safeCacheCall {
+            categoriesDao.getAllOfCategories()
+        }
+        return object :
+            CacheResponseHandler<CategoriesViewState, List<Category>>(
+                response = cacheResult,
+                stateEvent = stateEvent
+            ) {
+            override suspend fun handleSuccess(resultObj: List<Category>): DataState<CategoriesViewState> {
+                return if (resultObj.isNotEmpty()) {
+                    DataState.data(
+                        Response(
+                            message = "Successfully return all of categories",
+                            uiComponentType = UIComponentType.None,
+                            messageType = MessageType.Success
+                        ),
+                        data = CategoriesViewState(
+                            categoryList = resultObj
+                        ),
+                        stateEvent = stateEvent
+                    )
+                } else {
+                    DataState.error(
+                        Response(
+                            message = getString(R.string.getting_all_categories_error),
+                            uiComponentType = UIComponentType.Dialog,
+                            messageType = MessageType.Error
+                        ),
+                        stateEvent = stateEvent
+                    )
+                }
+            }
+        }.getResult()
+
+    }
+
     override suspend fun insertCategory(
         stateEvent: CategoriesStateEvent.InsertCategory
     ): DataState<CategoriesViewState> {

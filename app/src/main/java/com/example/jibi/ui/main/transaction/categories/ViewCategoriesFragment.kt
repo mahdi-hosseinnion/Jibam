@@ -45,14 +45,14 @@ constructor(
 
     private val expensesItemTouchHelper by lazy {
         ItemTouchHelper(ViewCategoryItemTouchHelperCallback {
-            viewModel.newReorder(it,EXPENSES_TYPE_MARKER)
+            viewModel.newReorder(it, EXPENSES_TYPE_MARKER)
 //            viewModel.addToChangeOrderStack(it)
 //            viewModel.insertPendingChangeOrder()
         })
     }
     private val incomeItemTouchHelper by lazy {
         ItemTouchHelper(ViewCategoryItemTouchHelperCallback {
-            viewModel.newReorder(it,INCOME_TYPE_MARKER)
+            viewModel.newReorder(it, INCOME_TYPE_MARKER)
 //            viewModel.addToChangeOrderStack(it)
 //            viewModel.insertPendingChangeOrder()
 
@@ -118,34 +118,20 @@ constructor(
 
     override fun handleStateMessages() {
         viewModel.stateMessage.observe(viewLifecycleOwner) {
-            it?.let {
+            it?.let { stateMessage ->
+                //refresh category list b/c if there is stateMessage so it means
+                // something have been inserted or removed or order changed
+                viewModel.refreshCategoryList()
                 handleNewStateMessage(it) { viewModel.clearStateMessage() }
             }
         }
     }
 
     private fun subscribeObservers() {
-        viewModel.categories.observe(viewLifecycleOwner) {
-            it?.let {
-                viewPagerAdapter.submitList(it)
-
-            }
-        }
-        viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
-
-        }
-        viewModel.stateMessage.observe(viewLifecycleOwner) { st ->
-            st?.let { stateMessage ->
-                if (stateMessage.response.message == CHANGE_CATEGORY_ORDER_SUCCESS) {
-                    viewModel.removeFromChangeOrderStack()
-                } else if (stateMessage.response.message?.contains(
-                        CategoriesStateEvent.ChangeCategoryOrder.ERROR
-                    )
-                    == true
-                ) {
-                    //if for any reason even one change order fails
-                    //we should remove other ones
-                    viewModel.clearChangeOrderStack()
+        viewModel.viewState.observe(viewLifecycleOwner) { vs ->
+            vs?.let { viewState ->
+                viewState.categoryList?.let {
+                    viewPagerAdapter.submitList(it)
                 }
             }
         }

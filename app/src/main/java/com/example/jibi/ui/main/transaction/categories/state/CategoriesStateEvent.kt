@@ -49,7 +49,7 @@ sealed class CategoriesStateEvent : StateEvent {
 
     data class ChangeCategoryOrderNew(
         val newOrder: HashMap<Int, Int>,
-        val type:Int
+        val type: Int
     ) : CategoriesStateEvent() {
         override fun errorInfo(): String = ERROR
 
@@ -60,5 +60,12 @@ sealed class CategoriesStateEvent : StateEvent {
             const val NAME = "ChangeCategoryOrderNEW"
             const val ERROR = "Unable to change order of category"
         }
+    }
+
+    object GetAllOfCategories : CategoriesStateEvent() {
+        override fun errorInfo(): String = "Unable to get categories from database"
+
+        override fun getId(): String = "Getting all of categories ${this.hashCode()}"
+
     }
 }
