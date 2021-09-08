@@ -96,6 +96,7 @@ constructor(
 
     private fun setupViewPager() {
         viewPagerAdapter = ViewCategoriesViewPagerAdapter(
+            this.requireContext(),
             listOfCategories = null,
             expensesItemTouchHelper = expensesItemTouchHelper,
             incomeItemTouchHelper = incomeItemTouchHelper,

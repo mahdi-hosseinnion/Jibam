@@ -74,6 +74,10 @@ class ViewCategoriesRecyclerAdapter(
         return result
     }
 
+    fun submitData(data: List<Category>?) {
+        listOfCategories = data
+        notifyDataSetChanged()
+    }
 
     class ViewPagerRecyclerViewHolder(
         itemView: View,
