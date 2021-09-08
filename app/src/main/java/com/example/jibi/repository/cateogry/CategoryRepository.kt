@@ -33,4 +33,9 @@ interface CategoryRepository {
         stateEvent: CategoriesStateEvent.ChangeCategoryOrder
     ): DataState<CategoriesViewState>
 
+    suspend fun changeCategoryOrderNew(
+        stateEvent: CategoriesStateEvent.ChangeCategoryOrderNew
+    ): DataState<CategoriesViewState>
+
+
 }

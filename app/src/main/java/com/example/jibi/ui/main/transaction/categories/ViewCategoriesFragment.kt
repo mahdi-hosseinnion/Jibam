@@ -18,6 +18,8 @@ import com.example.jibi.ui.main.transaction.categories.AddCategoryFragment.Compa
 import com.example.jibi.ui.main.transaction.categories.state.CategoriesStateEvent
 import com.example.jibi.ui.main.transaction.common.BaseFragment
 import com.example.jibi.util.*
+import com.example.jibi.util.Constants.EXPENSES_TYPE_MARKER
+import com.example.jibi.util.Constants.INCOME_TYPE_MARKER
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.fragment_view_categories.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -43,14 +45,16 @@ constructor(
 
     private val expensesItemTouchHelper by lazy {
         ItemTouchHelper(ViewCategoryItemTouchHelperCallback {
-            viewModel.addToChangeOrderStack(it)
-            viewModel.insertPendingChangeOrder()
+            viewModel.newReorder(it,EXPENSES_TYPE_MARKER)
+//            viewModel.addToChangeOrderStack(it)
+//            viewModel.insertPendingChangeOrder()
         })
     }
     private val incomeItemTouchHelper by lazy {
         ItemTouchHelper(ViewCategoryItemTouchHelperCallback {
-            viewModel.addToChangeOrderStack(it)
-            viewModel.insertPendingChangeOrder()
+            viewModel.newReorder(it,INCOME_TYPE_MARKER)
+//            viewModel.addToChangeOrderStack(it)
+//            viewModel.insertPendingChangeOrder()
 
         })
     }

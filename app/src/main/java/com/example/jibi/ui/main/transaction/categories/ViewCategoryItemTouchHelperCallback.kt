@@ -11,7 +11,8 @@ import kotlinx.coroutines.FlowPreview
 @ExperimentalCoroutinesApi
 @FlowPreview
 class ViewCategoryItemTouchHelperCallback(
-    private val moveItem: (changeOrderFields: ChangeOrderFields) -> Unit
+//    private val moveItem: (changeOrderFields: ChangeOrderFields) -> Unit
+    private val onItemDropped: (newOrdering:HashMap<Int,Int>) -> Unit
 ) : ItemTouchHelper.SimpleCallback(UP or DOWN, 0) {
     /**
      * this callback called when user drag an item
@@ -34,10 +35,10 @@ class ViewCategoryItemTouchHelperCallback(
             val changeOrderRequirement = ChangeOrderFields(
                 categoryId = fromObj.id,
                 categoryType = fromObj.type,
-                lastPosition= from,
+                lastPosition = from,
                 newPosition = to
             )
-            moveItem(changeOrderRequirement)
+//            moveItem(changeOrderRequirement)
             adapter.onItemMoved(from, to)
             adapter.notifyItemMoved(from, to)
         }
@@ -63,6 +64,9 @@ class ViewCategoryItemTouchHelperCallback(
      */
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
         super.clearView(recyclerView, viewHolder)
+        Log.d("DEBUG REORDER", "clearView: ")
+        val adapter = recyclerView.adapter as ViewCategoriesRecyclerAdapter
+        onItemDropped(adapter.getOrder())
         viewHolder.itemView.alpha = 1f
     }
 

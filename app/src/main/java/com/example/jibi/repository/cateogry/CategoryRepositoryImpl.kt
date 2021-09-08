@@ -196,6 +196,18 @@ constructor(
         stateEvent = stateEvent
     )
 
+    private fun changeCategoryOrderFail(
+        message: String,
+        stateEvent: CategoriesStateEvent.ChangeCategoryOrderNew
+    ): DataState<CategoriesViewState> = DataState.error(
+        response = Response(
+            message = message,
+            uiComponentType = UIComponentType.Dialog,
+            messageType = MessageType.Error
+        ),
+        stateEvent = stateEvent
+    )
+
     private suspend fun getAllCategoriesBetweenSpecificOrder(
         categoryType: Int,
         from: Int,
@@ -232,5 +244,62 @@ constructor(
 
     companion object {
         const val CHANGE_CATEGORY_ORDER_SUCCESS = "Category order successfully changed"
+    }
+
+    override suspend fun changeCategoryOrderNew(
+        stateEvent: CategoriesStateEvent.ChangeCategoryOrderNew
+    ): DataState<CategoriesViewState> {
+        val allCategoriesResponse = safeCacheCall {
+            categoriesDao.getAllOfCategoriesWithType(stateEvent.type)
+        }
+        if (allCategoriesResponse !is CacheResult.Success) {
+            return changeCategoryOrderFail(
+                "Unable to get categories to update them",
+                stateEvent
+            )
+        }
+
+        val allCategories = allCategoriesResponse.value
+            ?: return changeCategoryOrderFail(
+                "There is no category in database",
+                stateEvent
+            )
+
+        val dataBaseOrder = allCategories.map { "id: ${it.id} order: ${it.ordering} |" }
+        Log.d(TAG, "changeCategoryOrderNew: dataBaseOrder: $dataBaseOrder")
+        val newOrder = stateEvent.newOrder
+        Log.d(
+            TAG,
+            "changeCategoryOrderNew: newOrder     : ${newOrder.map { "id: ${it.key} order: ${it.value} |" }}"
+        )
+        var didAllCategoriesUpdatedSuccessfully = true
+
+        for (item in allCategories) {
+            newOrder[item.id]?.let {itemNewOrder->
+                if (item.ordering != itemNewOrder) {
+                    val result = changeOrder(item.id, itemNewOrder)
+                    if (result !is CacheResult.Success) {
+                        didAllCategoriesUpdatedSuccessfully = false
+                    }
+                }
+
+            }
+        }
+        return if (didAllCategoriesUpdatedSuccessfully) {
+            DataState.data(
+                response = Response(
+                    message = "Successfully update ordering",
+                    uiComponentType = UIComponentType.Toast,
+                    messageType = MessageType.Success
+                ),
+                data = null,
+                stateEvent = stateEvent
+            )
+        } else {
+            changeCategoryOrderFail(
+                "At least on of the categories order did not updated",
+                stateEvent
+            )
+        }
     }
 }

@@ -13,6 +13,7 @@ import com.example.jibi.R
 import com.example.jibi.models.Category
 import com.example.jibi.ui.main.transaction.transactions.TransactionsListAdapter
 import kotlinx.android.synthetic.main.layout_view_categories_list_item.view.*
+import java.util.HashMap
 import kotlin.random.Random
 
 class ViewCategoriesRecyclerAdapter(
@@ -52,6 +53,7 @@ class ViewCategoriesRecyclerAdapter(
             if (from == to) {
                 return
             }
+            //TODO BUG KHIZE IF THIIS CALLED AFTER GETORDER
             val fromObj = getItemAtPosition(from)
             val categories = ArrayList(list)
             //change position of main object(moved object)
@@ -59,6 +61,17 @@ class ViewCategoriesRecyclerAdapter(
             categories.add(to, fromObj)
             listOfCategories = categories
         }
+    }
+
+    fun getOrder(): HashMap<Int, Int> {
+        val result = HashMap<Int, Int>()
+        listOfCategories?.let { categories ->
+            for (i in categories.indices) {
+                result[categories[i].id] = i
+            }
+        }
+
+        return result
     }
 
 
@@ -101,6 +114,7 @@ class ViewCategoriesRecyclerAdapter(
                     itemView.nameOfCategory.text = categoryName
 
                     itemView.ordering.text = item.ordering.toString()
+                    itemView.category_id.text = item.id.toString()
                     val color = if (item.ordering == adapterPosition) Color.BLACK else Color.RED
                     itemView.ordering.setTextColor(color)
 

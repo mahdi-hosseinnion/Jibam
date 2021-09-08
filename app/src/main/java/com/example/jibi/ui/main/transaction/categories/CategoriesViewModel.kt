@@ -12,6 +12,7 @@ import com.example.jibi.ui.main.transaction.common.BaseViewModel
 import com.example.jibi.util.DataState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import java.util.HashMap
 import javax.inject.Inject
 
 @FlowPreview
@@ -46,6 +47,9 @@ constructor(
                 stateEvent
             )
             is CategoriesStateEvent.ChangeCategoryOrder -> categoryRepository.changeCategoryOrder(
+                stateEvent
+            )
+            is CategoriesStateEvent.ChangeCategoryOrderNew -> categoryRepository.changeCategoryOrderNew(
                 stateEvent
             )
         }
@@ -107,6 +111,15 @@ constructor(
             )
         }
 
+    }
+
+    fun newReorder(newOrder: HashMap<Int, Int>,type:Int) {
+        launchNewJob(
+            CategoriesStateEvent.ChangeCategoryOrderNew(
+                newOrder,
+                type
+            )
+        )
     }
 
 }
