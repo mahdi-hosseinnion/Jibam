@@ -176,8 +176,14 @@ constructor(
         bottom_sheet_search_clear.setOnClickListener {
             bottom_sheet_search_edt.setText("")
         }
-        toolbar_title.setOnClickListener {
+        toolbar_month.setOnClickListener {
             monthManger.showMonthPickerBottomSheet(parentFragmentManager)
+        }
+        month_manager_previous.setOnClickListener {
+            monthManger.navigateToPreviousMonth()
+        }
+        month_manager_next.setOnClickListener {
+            monthManger.navigateToNextMonth()
         }
         checkForGuidePromote()
     }
@@ -367,7 +373,7 @@ constructor(
     private fun subscribeObservers() {
         viewLifecycleOwner.lifecycleScope.launch(Main) {
             monthManger.currentMonth.collect {
-                toolbar_title.text = it.nameOfMonth
+                toolbar_month.text = it.nameOfMonth
                 startOfMonth = it.startOfMonth
                 endOfMonth = it.endOfMonth
             }
@@ -778,7 +784,7 @@ constructor(
 
     private fun showMonthMangerPromote() {
         val mFabPrompt = MaterialTapTargetPrompt.Builder(this)
-            .setTarget(R.id.toolbar_title)
+            .setTarget(R.id.toolbar_month)
             .setPrimaryText(_getString(R.string.month_manager_tap_target_primary))
             .setPromptStateChangeListener { _, state ->
                 if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED || state == MaterialTapTargetPrompt.STATE_DISMISSING) {
