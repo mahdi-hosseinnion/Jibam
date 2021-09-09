@@ -18,7 +18,6 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,11 +25,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.example.jibi.R
 import com.example.jibi.di.main.MainScope
+import com.example.jibi.models.Month
 import com.example.jibi.models.Transaction
 import com.example.jibi.models.TransactionEntity
 import com.example.jibi.models.mappers.toTransactionEntity
 import com.example.jibi.repository.buildResponse
-import com.example.jibi.ui.main.transaction.MonthManger
 import com.example.jibi.ui.main.transaction.common.BaseFragment
 import com.example.jibi.ui.main.transaction.transactions.state.TransactionsStateEvent
 import com.example.jibi.ui.main.transaction.transactions.state.TransactionsViewState
@@ -45,11 +44,8 @@ import kotlinx.android.synthetic.main.fragment_add_transaction.*
 import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.android.synthetic.main.layout_chart_list_item.*
 import kotlinx.android.synthetic.main.layout_transaction_list_item.*
-import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt
 import uk.co.samuelwall.materialtaptargetprompt.extras.backgrounds.RectanglePromptBackground
 import uk.co.samuelwall.materialtaptargetprompt.extras.focals.RectanglePromptFocal
@@ -68,7 +64,6 @@ constructor(
     private val currentLocale: Locale,
     private val sharedPreferences: SharedPreferences,
     private val sharedPrefsEditor: SharedPreferences.Editor,
-    private val monthManger: MonthManger,
     private val _resources: Resources
 ) : BaseFragment(
     R.layout.fragment_transaction,
@@ -177,13 +172,13 @@ constructor(
             bottom_sheet_search_edt.setText("")
         }
         toolbar_month.setOnClickListener {
-            monthManger.showMonthPickerBottomSheet(parentFragmentManager)
+            viewModel.showMonthPickerBottomSheet(parentFragmentManager)
         }
         month_manager_previous.setOnClickListener {
-            monthManger.navigateToPreviousMonth()
+            viewModel.navigateToPreviousMonth()
         }
         month_manager_next.setOnClickListener {
-            monthManger.navigateToNextMonth()
+            viewModel.navigateToNextMonth()
         }
         checkForGuidePromote()
     }
@@ -371,11 +366,10 @@ constructor(
     }
 
     private fun subscribeObservers() {
-        viewLifecycleOwner.lifecycleScope.launch(Main) {
-            monthManger.currentMonth.collect {
-                toolbar_month.text = it.nameOfMonth
-                startOfMonth = it.startOfMonth
-                endOfMonth = it.endOfMonth
+
+        viewModel.viewState.observe(viewLifecycleOwner) { vs ->
+            vs?.let { viewState ->
+                viewState.currentMonth?.let { setMonthFieldsValues(it) }
             }
         }
         viewModel.transactions.observe(viewLifecycleOwner) { transactionList ->
@@ -396,6 +390,12 @@ constructor(
             txt_income.text = separate3By3AndRoundIt(sm.income, currentLocale)
         }
 
+    }
+
+    private fun setMonthFieldsValues(month: Month) {
+        toolbar_month.text = month.nameOfMonth
+        startOfMonth = month.startOfMonth
+        endOfMonth = month.endOfMonth
     }
 
 

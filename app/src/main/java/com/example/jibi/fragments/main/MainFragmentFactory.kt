@@ -46,7 +46,6 @@ constructor(
                     currentLocale,
                     sharedPreferences,
                     sharedPrefsEditor,
-                    monthManger,
                     resources
                 )
             }
@@ -101,7 +100,7 @@ constructor(
             else -> {
                 TransactionsFragment(
                     viewModelFactory, requestManager, currentLocale, sharedPreferences,
-                    sharedPrefsEditor, monthManger, resources
+                    sharedPrefsEditor, resources
                 )
             }
         }

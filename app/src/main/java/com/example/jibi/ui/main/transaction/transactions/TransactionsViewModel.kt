@@ -1,8 +1,10 @@
 package com.example.jibi.ui.main.transaction.transactions
 
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.jibi.models.Month
 import com.example.jibi.models.Transaction
 import com.example.jibi.repository.tranasction.TransactionRepository
 import com.example.jibi.ui.main.transaction.MonthManger
@@ -68,8 +70,11 @@ constructor(
 
     private val _summeryMoney: LiveData<SummaryMoney> =
         monthManger.currentMonth.flatMapLatest {
+            setCurrentMonth(it)
             getSummeryMoney(it.startOfMonth, it.endOfMonth)
         }.asLiveData()
+
+
 
     val summeryMoney: LiveData<SummaryMoney> = _summeryMoney
 
@@ -155,7 +160,8 @@ constructor(
                 ?: outDate.insertedTransactionRawId,
             successfullyDeletedTransactionIndicator = newViewState.successfullyDeletedTransactionIndicator
                 ?: outDate.successfullyDeletedTransactionIndicator,
-            searchViewState = newViewState.searchViewState ?: outDate.searchViewState
+            searchViewState = newViewState.searchViewState ?: outDate.searchViewState,
+            currentMonth = newViewState.currentMonth ?: outDate.currentMonth
         )
     }
 
@@ -170,6 +176,23 @@ constructor(
 
     fun isSearchInVisible(): Boolean =
         getCurrentViewStateOrNew().searchViewState == SearchViewState.INVISIBLE
+
+    private fun setCurrentMonth(month:Month) {
+        setViewState(
+            TransactionsViewState(currentMonth = month)
+        )
+    }
+    fun showMonthPickerBottomSheet(parentFragmentManager: FragmentManager) {
+        monthManger.showMonthPickerBottomSheet(parentFragmentManager)
+    }
+
+    fun navigateToPreviousMonth() {
+        monthManger.navigateToPreviousMonth()
+    }
+
+    fun navigateToNextMonth() {
+        monthManger.navigateToNextMonth()
+    }
 
 
     companion object {

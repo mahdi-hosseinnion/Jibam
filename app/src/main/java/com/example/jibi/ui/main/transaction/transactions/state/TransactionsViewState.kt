@@ -8,7 +8,8 @@ data class TransactionsViewState(
     var recentlyDeletedFields: RecentlyDeletedTransaction? = null,
     var insertedTransactionRawId: Long? = null,
     var successfullyDeletedTransactionIndicator: Int? = null,
-    var searchViewState: SearchViewState? = null
+    var searchViewState: SearchViewState? = null,
+    var currentMonth: Month? = null
 ) {
 
     data class SummaryMoney(
@@ -35,7 +36,7 @@ data class TransactionsViewState(
     )
 
     enum class SearchViewState {
-        VISIBLE,INVISIBLE
+        VISIBLE, INVISIBLE
     }
 
 }
