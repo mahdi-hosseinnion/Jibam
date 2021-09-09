@@ -13,7 +13,11 @@ import com.example.jibi.R
 import com.example.jibi.models.Category
 import com.example.jibi.ui.main.transaction.transactions.TransactionsListAdapter
 import kotlinx.android.synthetic.main.layout_view_categories_list_item.view.*
-import java.util.HashMap
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.List
+import kotlin.collections.indices
+import kotlin.collections.set
 import kotlin.random.Random
 
 class ViewCategoriesRecyclerAdapter(
@@ -116,11 +120,11 @@ class ViewCategoriesRecyclerAdapter(
                         it.name
                     }
                     itemView.nameOfCategory.text = categoryName
-
-                    itemView.ordering.text = item.ordering.toString()
-                    itemView.category_id.text = item.id.toString()
-                    val color = if (item.ordering == adapterPosition) Color.BLACK else Color.RED
-                    itemView.ordering.setTextColor(color)
+                    //FOR DEBUG
+//                    itemView.ordering.text = item.ordering.toString()
+//                    itemView.category_id.text = item.id.toString()
+//                    val color = if (item.ordering == adapterPosition) Color.BLACK else Color.RED
+//                    itemView.ordering.setTextColor(color)
 
                     if (item.id > 0) {
                         try {

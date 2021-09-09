@@ -1,18 +1,15 @@
 package com.example.jibi.ui.main.transaction.categories
 
-import android.util.Log
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.*
 import androidx.recyclerview.widget.RecyclerView
-import com.example.jibi.ui.main.transaction.categories.state.ChangeOrderFields
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
 @ExperimentalCoroutinesApi
 @FlowPreview
 class ViewCategoryItemTouchHelperCallback(
-//    private val moveItem: (changeOrderFields: ChangeOrderFields) -> Unit
-    private val onItemDropped: (newOrdering:HashMap<Int,Int>) -> Unit
+    private val onItemDropped: (newOrdering: HashMap<Int, Int>) -> Unit
 ) : ItemTouchHelper.SimpleCallback(UP or DOWN, 0) {
     /**
      * this callback called when user drag an item
@@ -29,19 +26,8 @@ class ViewCategoryItemTouchHelperCallback(
         if (from == to) {
             return true
         }
-        adapter.getItemAtPosition(from)?.let { fromObj ->
-            Log.d("DEBUG REORDER", "onMove: from: ${fromObj.name} to position: $to ")
-
-            val changeOrderRequirement = ChangeOrderFields(
-                categoryId = fromObj.id,
-                categoryType = fromObj.type,
-                lastPosition = from,
-                newPosition = to
-            )
-//            moveItem(changeOrderRequirement)
-            adapter.onItemMoved(from, to)
-            adapter.notifyItemMoved(from, to)
-        }
+        adapter.onItemMoved(from, to)
+        adapter.notifyItemMoved(from, to)
         return true
     }
 
@@ -64,7 +50,7 @@ class ViewCategoryItemTouchHelperCallback(
      */
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
         super.clearView(recyclerView, viewHolder)
-        Log.d("DEBUG REORDER", "clearView: ")
+
         val adapter = recyclerView.adapter as ViewCategoriesRecyclerAdapter
         onItemDropped(adapter.getOrder())
         viewHolder.itemView.alpha = 1f

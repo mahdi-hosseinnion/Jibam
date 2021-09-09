@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.example.jibi.R
 import com.example.jibi.models.Category
-import com.example.jibi.repository.cateogry.CategoryRepositoryImpl.Companion.CHANGE_CATEGORY_ORDER_SUCCESS
 import com.example.jibi.ui.main.transaction.categories.AddCategoryFragment.Companion.EXPENSES
 import com.example.jibi.ui.main.transaction.categories.AddCategoryFragment.Companion.INCOME
 import com.example.jibi.ui.main.transaction.categories.state.CategoriesStateEvent
@@ -46,16 +45,11 @@ constructor(
     private val expensesItemTouchHelper by lazy {
         ItemTouchHelper(ViewCategoryItemTouchHelperCallback {
             viewModel.newReorder(it, EXPENSES_TYPE_MARKER)
-//            viewModel.addToChangeOrderStack(it)
-//            viewModel.insertPendingChangeOrder()
         })
     }
     private val incomeItemTouchHelper by lazy {
         ItemTouchHelper(ViewCategoryItemTouchHelperCallback {
             viewModel.newReorder(it, INCOME_TYPE_MARKER)
-//            viewModel.addToChangeOrderStack(it)
-//            viewModel.insertPendingChangeOrder()
-
         })
     }
 
@@ -120,8 +114,9 @@ constructor(
     override fun handleStateMessages() {
         viewModel.stateMessage.observe(viewLifecycleOwner) {
             it?.let { stateMessage ->
-                //refresh category list b/c if there is stateMessage so it means
-                // something have been inserted or removed or order changed
+                //refresh category list b/c if there is stateMessage it means
+                //something have been inserted or removed or order changed so we need to refresh to
+                //reflect changes
                 viewModel.refreshCategoryList()
                 handleNewStateMessage(it) { viewModel.clearStateMessage() }
             }
@@ -154,12 +149,6 @@ constructor(
             )
         findNavController().navigate(action)
     }
-
-
-    fun startDragging(viewHolder: RecyclerView.ViewHolder, itemType: Int) {
-    }
-
-    //adapter
 
 
     override fun onDeleteClicked(position: Int, category: Category) {

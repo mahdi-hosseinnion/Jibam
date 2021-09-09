@@ -8,9 +8,3 @@ data class CategoriesViewState(
 
 )
 
-data class ChangeOrderFields(
-    val categoryId: Int,
-    val categoryType: Int,
-    val lastPosition: Int,
-    val newPosition: Int
-)

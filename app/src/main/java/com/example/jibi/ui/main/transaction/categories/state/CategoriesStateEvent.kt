@@ -15,14 +15,6 @@ sealed class CategoriesStateEvent : StateEvent {
         override fun getId(): String = "DeleteCategory $categoryId ${this.hashCode()}"
     }
 
-//    data class PinOrUnpinCategory(
-//        val category: Category
-//    ) : CategoriesStateEvent() {
-//        override fun errorInfo(): String =
-//            "unable to pin this category"
-//
-//        override fun getId(): String = "pin or unpin Category $category ${this.hashCode()}"
-//    }
 
     data class InsertCategory(
         val category: Category
@@ -32,34 +24,15 @@ sealed class CategoriesStateEvent : StateEvent {
 
         override fun getId(): String = "InsertCategory $category ${this.hashCode()}"
     }
-
     data class ChangeCategoryOrder(
-        val changeOrderFields: ChangeOrderFields
-    ) : CategoriesStateEvent() {
-        override fun errorInfo(): String = ERROR
-
-
-        override fun getId(): String = "$NAME req: $changeOrderFields ${this.hashCode()}"
-
-        companion object {
-            const val NAME = "ChangeCategoryOrder"
-            const val ERROR = "Unable to change order of category"
-        }
-    }
-
-    data class ChangeCategoryOrderNew(
         val newOrder: HashMap<Int, Int>,
         val type: Int
     ) : CategoriesStateEvent() {
-        override fun errorInfo(): String = ERROR
+        override fun errorInfo(): String = "Unable to change order of selected category"
 
 
-        override fun getId(): String = "$NAME newOrder: $newOrder ${this.hashCode()}"
+        override fun getId(): String = "ChangeCategoryOrder newOrder: $newOrder ${this.hashCode()}"
 
-        companion object {
-            const val NAME = "ChangeCategoryOrderNEW"
-            const val ERROR = "Unable to change order of category"
-        }
     }
 
     object GetAllOfCategories : CategoriesStateEvent() {
