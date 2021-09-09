@@ -264,5 +264,44 @@ constructor(
 
     }
 
+    fun navigateToPreviousMonth() {
+        val currentMonth = getMonth()
+        val currentYear = getYear()
+
+        var previousMonth = currentMonth.minus(1)
+        var finalYear = currentYear
+        //check for if user navigate previous year
+        if (previousMonth < 1) {
+            previousMonth = 12
+            finalYear = currentYear.minus(1)
+        }
+        //set new month & year
+        setMonthAndYear(
+            month = previousMonth,
+            year = finalYear
+        )
+    }
+
+    fun navigateToNextMonth() {
+        val currentMonth = getMonth()
+        val currentYear = getYear()
+
+        //check for if user navigate next year
+        var nextMonth = currentMonth.plus(1)
+        var finalYear = currentYear
+
+        if (nextMonth > 12) {
+            nextMonth = 1
+            finalYear = currentYear.plus(1)
+        }
+        //set new month & year
+
+        setMonthAndYear(
+            month = nextMonth,
+            year = finalYear
+        )
+
+
+    }
 
 }
