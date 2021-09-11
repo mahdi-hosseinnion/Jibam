@@ -10,4 +10,18 @@ data class AddEditTransactionViewState(
     val categoriesList: List<Category>? = null,
     val insertedTransactionRawId: Long? = null,
     val successfullyDeletedTransactionIndicator: Int? = null,
+    val presenterState: PresenterState? = null
 )
+
+sealed class PresenterState() {
+
+    data class SelectingCategory(
+        val default_category_id: Int
+    ) : PresenterState()
+
+    object EnteringAmountOfMoney : PresenterState()
+
+    object NormalState : PresenterState()
+
+}
+

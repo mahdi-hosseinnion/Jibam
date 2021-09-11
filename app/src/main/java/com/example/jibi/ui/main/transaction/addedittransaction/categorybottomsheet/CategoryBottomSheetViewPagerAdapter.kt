@@ -99,6 +99,7 @@ class CategoryBottomSheetViewPagerAdapter(
     }
 
     fun submitData(categoryList: List<Category>?) {
+
         expensesRecyclerViewAdapter.submitList(categoryList?.filter { it.type == EXPENSES_TYPE_MARKER })
         incomeRecyclerViewAdapter.submitList(categoryList?.filter { it.type == INCOME_TYPE_MARKER })
     }

@@ -37,10 +37,11 @@ import com.example.jibi.models.mappers.toTransactionEntity
 import com.example.jibi.ui.main.transaction.addedittransaction.categorybottomsheet.CategoryBottomSheetListAdapter
 import com.example.jibi.ui.main.transaction.addedittransaction.categorybottomsheet.CategoryBottomSheetViewPagerAdapter
 import com.example.jibi.ui.main.transaction.addedittransaction.state.AddEditTransactionStateEvent
-import com.example.jibi.ui.main.transaction.categories.ViewCategoriesViewPagerAdapter
+import com.example.jibi.ui.main.transaction.addedittransaction.state.PresenterState
 import com.example.jibi.ui.main.transaction.common.BaseFragment
 import com.example.jibi.util.*
 import com.example.jibi.util.SolarCalendar.ShamsiPatterns.DETAIL_FRAGMENT
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
 import kotlinx.android.synthetic.main.fragment_add_transaction.view.*
 import kotlinx.android.synthetic.main.fragment_transaction.*
@@ -56,7 +57,6 @@ import uk.co.samuelwall.materialtaptargetprompt.extras.focals.RectanglePromptFoc
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 
 @FlowPreview
@@ -93,6 +93,24 @@ constructor(
     private var viewTransactionId: Int? = null
 
     private lateinit var btmsheetViewPagerAdapter: CategoryBottomSheetViewPagerAdapter
+
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+
+    private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                if (edt_money.text.toString().isBlank()) {
+                    viewModel.setPresenterState(PresenterState.EnteringAmountOfMoney)
+                } else {
+                    viewModel.setPresenterState(PresenterState.NormalState)
+                }
+            }
+        }
+
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -135,6 +153,7 @@ constructor(
         viewModel.countOfActiveJobs.observe(
             viewLifecycleOwner
         ) {
+            Log.d(TAG, "handleLoading: activeJob: ${viewModel.getAllActiveJobs()}")
             showProgressBar(viewModel.areAnyJobsActive())
         }
     }
@@ -154,6 +173,8 @@ constructor(
                     //TODO BUG this should not call init ui for viwe
                     initUiForViewTransaction(it.toTransactionEntity())
                 }
+                viewState.presenterState?.let { onPresenterChanged(it) }
+
                 viewState.categoriesList?.let { btmsheetViewPagerAdapter.submitData(it) }
 
                 viewState.insertedTransactionRawId?.let {
@@ -167,6 +188,42 @@ constructor(
             }
         }
     }
+
+    private fun onPresenterChanged(state: PresenterState) =
+        when (state) {
+            is PresenterState.SelectingCategory -> {
+                setViewsToSelectingCategory(state.default_category_id)
+            }
+            is PresenterState.EnteringAmountOfMoney -> {
+                setViewsToEnteringAmountOfMoney()
+            }
+            is PresenterState.NormalState -> {
+                setViewsToSelectingNormalState()
+            }
+        }
+
+    private fun setViewsToSelectingCategory(defaultCategoryId: Int) {
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        setupCategoryBottomSheet(defaultCategoryId)
+        fab_submit.hide()
+        category_fab.hide()
+    }
+
+    private fun setViewsToEnteringAmountOfMoney() {
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        fab_submit.show()
+        category_fab.show()
+        edt_money.requestFocus()
+        showCustomKeyboard(edt_money)
+    }
+
+    private fun setViewsToSelectingNormalState() {
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        fab_submit.show()
+        category_fab.show()
+
+    }
+
 
 /*    private fun showBottomSheet() {
         val categoryList = viewModel.getCategoriesList()
@@ -199,7 +256,7 @@ constructor(
 
 
     private fun initUi() {
-
+        setupBottomSheet()
         // prevent system keyboard from appearing when EditText is tapped
         edt_money.setRawInputType(InputType.TYPE_CLASS_TEXT)
         edt_money.setTextIsSelectable(true)
@@ -232,20 +289,28 @@ constructor(
             showCustomKeyboard(it)
         }
         uiCommunicationListener.hideSoftKeyboard()
-        setupCategoryBottomSheet()
+//        setupCategoryBottomSheet(viewModel.getSelectedCategoryId())
     }
 
-    private fun setupCategoryBottomSheet() {
+    private fun setupBottomSheet() {
+
+        bottomSheetBehavior = BottomSheetBehavior.from(select_category_bottom_sheet)
+        bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
+        bottomSheetBehavior.isHideable = true
+        bottomSheetBehavior.skipCollapsed = true
+    }
+
+    private fun setupCategoryBottomSheet(selectedCategoryId: Int) {
         //viewpager
         btmsheetViewPagerAdapter = CategoryBottomSheetViewPagerAdapter(
             context = this.requireContext(),
-            categoryList = null,
+            categoryList = viewModel.getCategoriesList(),
             interaction = this,
             requestManager = requestManager,
             isLeftToRight = (TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == ViewCompat.LAYOUT_DIRECTION_LTR),
             packageName = this.requireActivity().packageName,
             _resources = _resources,
-            selectedCategoryId = 0
+            selectedCategoryId = viewModel.getSelectedCategoryId()
         )
         bottom_sheet_viewpager.adapter = btmsheetViewPagerAdapter
         category_tab_layout.setupWithViewPager(bottom_sheet_viewpager)
@@ -263,8 +328,7 @@ constructor(
         //add date to dat
         setDateToEditText()
         //submit button should always be displayed
-        fab_submit.show()
-
+        viewModel.setPresenterState(PresenterState.SelectingCategory(viewModel.getSelectedCategoryId()))
 //        edt_money.requestFocus()
 //        showCustomKeyboard(edt_money)
     }
@@ -971,7 +1035,11 @@ constructor(
     }
 
     override fun onItemSelected(position: Int, item: Category) {
-        TODO("Not yet implemented")
+        //on category changed
+        transactionCategory = item
+        submitButtonState?.onCategoryChange(item.id)
+        setTransProperties(category = item)
+        viewModel.setPresenterState(PresenterState.EnteringAmountOfMoney)
     }
 }
 //TODO TRASH

@@ -30,6 +30,7 @@ import com.example.jibi.models.Transaction
 import com.example.jibi.models.TransactionEntity
 import com.example.jibi.models.mappers.toTransactionEntity
 import com.example.jibi.repository.buildResponse
+import com.example.jibi.ui.main.transaction.addedittransaction.AddEditTransactionFragment
 import com.example.jibi.ui.main.transaction.common.BaseFragment
 import com.example.jibi.ui.main.transaction.transactions.state.TransactionsStateEvent
 import com.example.jibi.ui.main.transaction.transactions.state.TransactionsViewState
@@ -353,6 +354,8 @@ constructor(
         viewModel.countOfActiveJobs.observe(
             viewLifecycleOwner
         ) {
+            Log.d(TAG, "handleLoading: activeJob: ${viewModel.getAllActiveJobs()}")
+
             showProgressBar(viewModel.areAnyJobsActive())
         }
     }

@@ -5,7 +5,9 @@ import com.example.jibi.repository.cateogry.CategoryRepository
 import com.example.jibi.repository.tranasction.TransactionRepository
 import com.example.jibi.ui.main.transaction.addedittransaction.state.AddEditTransactionStateEvent
 import com.example.jibi.ui.main.transaction.addedittransaction.state.AddEditTransactionViewState
+import com.example.jibi.ui.main.transaction.addedittransaction.state.PresenterState
 import com.example.jibi.ui.main.transaction.common.BaseViewModel
+import com.example.jibi.util.Constants.EXPENSES_OTHER_CATEGORY_ID
 import com.example.jibi.util.DataState
 import com.example.jibi.util.mahdiLog
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -53,7 +55,9 @@ constructor(
             insertedTransactionRawId = newViewState.insertedTransactionRawId
                 ?: outDate.insertedTransactionRawId,
             successfullyDeletedTransactionIndicator = newViewState.successfullyDeletedTransactionIndicator
-                ?: outDate.successfullyDeletedTransactionIndicator
+                ?: outDate.successfullyDeletedTransactionIndicator   ,
+            presenterState = newViewState.presenterState
+                ?: outDate.presenterState
         )
     }
 
@@ -65,5 +69,14 @@ constructor(
         }
         return result
     }
-    fun getSelectedCategoryId():Int  = getCurrentViewStateOrNew().transaction?.categoryId ?: 0
+
+    fun getSelectedCategoryId(): Int = getCurrentViewStateOrNew().transaction?.categoryId ?: EXPENSES_OTHER_CATEGORY_ID
+
+    fun setPresenterState(newState: PresenterState) {
+        setViewState(
+            AddEditTransactionViewState(
+                presenterState = newState
+            )
+        )
+    }
 }

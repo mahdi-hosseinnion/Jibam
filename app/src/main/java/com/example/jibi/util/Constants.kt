@@ -27,4 +27,5 @@ object Constants {
 
     const val EXPENSES_TYPE_MARKER = 1
     const val INCOME_TYPE_MARKER = 2
+    const val EXPENSES_OTHER_CATEGORY_ID = 28
 }

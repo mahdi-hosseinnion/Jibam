@@ -13,7 +13,8 @@ import kotlinx.coroutines.flow.*
 abstract class BaseViewModel<_ViewState, _StateEvent : StateEvent>() : ViewModel() {
 
     private val _viewState: MutableLiveData<_ViewState> = MutableLiveData()
-    val viewState: LiveData<_ViewState> = _viewState
+    val viewState: LiveData<_ViewState>
+        get() = _viewState
 
     private val _messageStack = MessageStack()
 
@@ -146,15 +147,17 @@ abstract class BaseViewModel<_ViewState, _StateEvent : StateEvent>() : ViewModel
     }
 
     fun getCurrentViewStateOrNew(): _ViewState {
-        return _viewState.value ?: initNewViewState()
+        return  _viewState.value ?:  initNewViewState()
     }
 
-    fun setViewState(viewState: _ViewState) =
-        viewModelScope.launch(Main) {
+    fun setViewState(viewState: _ViewState) {
+        //TODO FIX THIS PRBLE WITH getCurrentViewStateOrNew
+        //when we try to set data to viewState with launch(Main) app will lag if we try to call  getCurrentViewStateOrNew
+//        viewModelScope.launch(Main) {
             //other viewState data should maintain
             _viewState.value = updateViewState(viewState)
-        }
-
+//        }
+    }
 
     abstract fun initNewViewState(): _ViewState
 
