@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.text.*
 import android.text.method.LinkMovementMethod
@@ -36,6 +37,7 @@ import com.example.jibi.models.TransactionEntity
 import com.example.jibi.models.mappers.toTransactionEntity
 import com.example.jibi.ui.main.transaction.addedittransaction.categorybottomsheet.CategoryBottomSheetListAdapter
 import com.example.jibi.ui.main.transaction.addedittransaction.categorybottomsheet.CategoryBottomSheetViewPagerAdapter
+import com.example.jibi.ui.main.transaction.addedittransaction.categorybottomsheet.CategoryBottomSheetViewPagerAdapter.Companion.VIEW_PAGER_SIZE
 import com.example.jibi.ui.main.transaction.addedittransaction.state.AddEditTransactionStateEvent
 import com.example.jibi.ui.main.transaction.addedittransaction.state.PresenterState
 import com.example.jibi.ui.main.transaction.common.BaseFragment
@@ -301,19 +303,38 @@ constructor(
     }
 
     private fun setupCategoryBottomSheet(selectedCategoryId: Int) {
+        val isLeftToRight =
+            (TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == ViewCompat.LAYOUT_DIRECTION_LTR)
         //viewpager
         btmsheetViewPagerAdapter = CategoryBottomSheetViewPagerAdapter(
             context = this.requireContext(),
             categoryList = viewModel.getCategoriesList(),
             interaction = this,
             requestManager = requestManager,
-            isLeftToRight = (TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == ViewCompat.LAYOUT_DIRECTION_LTR),
+            isLeftToRight = isLeftToRight,
             packageName = this.requireActivity().packageName,
             _resources = _resources,
             selectedCategoryId = viewModel.getSelectedCategoryId()
         )
+
         bottom_sheet_viewpager.adapter = btmsheetViewPagerAdapter
         category_tab_layout.setupWithViewPager(bottom_sheet_viewpager)
+
+        if (!isLeftToRight) {
+            bottom_sheet_viewpager.currentItem = VIEW_PAGER_SIZE
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            category_tab_layout?.layoutDirection = View.LAYOUT_DIRECTION_LTR
+        } else {
+            //TODO TEST THIS
+            category_tab_layout?.let {
+                ViewCompat.setLayoutDirection(
+                    it,
+                    ViewCompat.LAYOUT_DIRECTION_LTR
+                )
+            }
+        }
 
     }
 
