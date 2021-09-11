@@ -38,7 +38,7 @@ import uk.co.samuelwall.materialtaptargetprompt.extras.focals.RectanglePromptFoc
 import java.util.*
 
 
-class CreateNewTransBottomSheet
+private class CreateNewTransBottomSheet
 constructor(
     private val categoryList: List<Category>,
     private val requestManager: RequestManager,
@@ -49,7 +49,7 @@ constructor(
     private val _resources: Resources
 ) : ViewPagerBottomSheetDialogFragment(), BottomSheetListAdapter.Interaction,
     ViewPager.OnPageChangeListener {
-    private val TAG = "CreateNewTransBottomSheet"
+    private val TAG = "CreateTransBottomSheet"
 
     //widgets
     private var tabLayout: TabLayout? = null
@@ -196,11 +196,7 @@ constructor(
             //Assign new width
             val indicatorParams = mIndicator!!.layoutParams as FrameLayout.LayoutParams
             indicatorParams.width = indicatorWidth
-//            if (appLanguage == Constants.PERSIAN_LANG_CODE) {
-//                indicatorParams.leftMargin = indicatorWidth
-//            }else if (appLanguage == Constants.ENGLISH_LANG_CODE){
-//                indicatorParams.rightMargin = indicatorWidth
-//            }
+            indicatorParams.rightMargin = indicatorWidth
             if (isLeftToRight) {
                 //english
                 indicatorParams.rightMargin = indicatorWidth

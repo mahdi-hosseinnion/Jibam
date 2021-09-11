@@ -1,4 +1,4 @@
-package com.example.jibi.ui.main.transaction.addedittransaction.bottomSheet
+package com.example.jibi.ui.main.transaction.addedittransaction.categorybottomsheet
 
 import android.content.res.Resources
 import android.view.LayoutInflater
@@ -16,8 +16,7 @@ import kotlinx.android.synthetic.main.layout_category_list_item.view.category_im
 import kotlinx.android.synthetic.main.layout_transaction_list_item.view.*
 import kotlin.random.Random
 
-
-class BottomSheetListAdapter(
+class CategoryBottomSheetListAdapter(
     private val requestManager: RequestManager,
     private val interaction: Interaction? = null,
     private val packageName: String,
@@ -64,7 +63,7 @@ class BottomSheetListAdapter(
 
 
     internal inner class BlogRecyclerChangeCallback(
-        private val adapter: BottomSheetListAdapter
+        private val adapter: CategoryBottomSheetListAdapter
     ) : ListUpdateCallback {
 
         override fun onChanged(position: Int, count: Int, payload: Any?) {

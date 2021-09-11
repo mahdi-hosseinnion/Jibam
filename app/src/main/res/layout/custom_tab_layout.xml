@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottom_sheet_tab_view_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="4dp"
+    android:layout_weight="1"
+    android:clipToPadding="false"
+    android:foregroundGravity="center">
+
+    <View
+        android:id="@+id/indicator"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="left"
+        android:background="@drawable/gradient_bg" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/bottom_sheet_tabs"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="@null"
+        app:tabIndicatorHeight="0dp"
+        app:tabMode="fixed"
+        app:tabRippleColor="@null"
+        app:tabSelectedTextColor="#ffffff"
+        app:tabTextColor="@color/black"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/tab_bg" />
+
+</FrameLayout>

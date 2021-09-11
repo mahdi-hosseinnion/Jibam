@@ -18,6 +18,8 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputConnection
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.core.text.TextUtilsCompat
+import androidx.core.view.ViewCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -32,13 +34,16 @@ import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
 import com.example.jibi.models.TransactionEntity
 import com.example.jibi.models.mappers.toTransactionEntity
-import com.example.jibi.ui.main.transaction.addedittransaction.bottomSheet.CreateNewTransBottomSheet
+import com.example.jibi.ui.main.transaction.addedittransaction.categorybottomsheet.CategoryBottomSheetListAdapter
+import com.example.jibi.ui.main.transaction.addedittransaction.categorybottomsheet.CategoryBottomSheetViewPagerAdapter
 import com.example.jibi.ui.main.transaction.addedittransaction.state.AddEditTransactionStateEvent
+import com.example.jibi.ui.main.transaction.categories.ViewCategoriesViewPagerAdapter
 import com.example.jibi.ui.main.transaction.common.BaseFragment
 import com.example.jibi.util.*
 import com.example.jibi.util.SolarCalendar.ShamsiPatterns.DETAIL_FRAGMENT
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
 import kotlinx.android.synthetic.main.fragment_add_transaction.view.*
+import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.android.synthetic.main.keyboard_add_transaction.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -69,7 +74,7 @@ constructor(
 ) : BaseFragment(
     R.layout.fragment_add_transaction,
     R.id.fragment_add_toolbar_main, _resources
-), CalculatorKeyboard.CalculatorInteraction {
+), CalculatorKeyboard.CalculatorInteraction, CategoryBottomSheetListAdapter.Interaction {
 
     private val viewModel by viewModels<AddEditTransactionViewModel> { viewModelFactory }
 
@@ -87,6 +92,7 @@ constructor(
     //we use this int to save transaction id for updating
     private var viewTransactionId: Int? = null
 
+    private lateinit var btmsheetViewPagerAdapter: CategoryBottomSheetViewPagerAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -116,7 +122,7 @@ constructor(
         }
 
         category_fab.setOnClickListener {
-            showBottomSheet()
+//            showBottomSheet()
         }
         fab_submit.setOnClickListener {
             insertNewTrans()
@@ -148,6 +154,7 @@ constructor(
                     //TODO BUG this should not call init ui for viwe
                     initUiForViewTransaction(it.toTransactionEntity())
                 }
+                viewState.categoriesList?.let { btmsheetViewPagerAdapter.submitData(it) }
 
                 viewState.insertedTransactionRawId?.let {
                     uiCommunicationListener.hideSoftKeyboard()
@@ -161,7 +168,7 @@ constructor(
         }
     }
 
-    private fun showBottomSheet() {
+/*    private fun showBottomSheet() {
         val categoryList = viewModel.getCategoriesList()
         val modalBottomSheet =
             CreateNewTransBottomSheet(
@@ -174,8 +181,8 @@ constructor(
                 _resources
             )
         modalBottomSheet.show(parentFragmentManager, "CreateNewTransBottomSheet")
-    }
-
+    }*/
+/*
     private val onDismissCalled =
         object : CreateNewTransBottomSheet.OnDismissCallback {
             override fun onDismissCalled(selectedCategory: Category?) {
@@ -188,7 +195,7 @@ constructor(
                 setTransProperties(category = selectedCategory)
             }
 
-        }
+        }*/
 
 
     private fun initUi() {
@@ -225,22 +232,41 @@ constructor(
             showCustomKeyboard(it)
         }
         uiCommunicationListener.hideSoftKeyboard()
+        setupCategoryBottomSheet()
+    }
+
+    private fun setupCategoryBottomSheet() {
+        //viewpager
+        btmsheetViewPagerAdapter = CategoryBottomSheetViewPagerAdapter(
+            context = this.requireContext(),
+            categoryList = null,
+            interaction = this,
+            requestManager = requestManager,
+            isLeftToRight = (TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == ViewCompat.LAYOUT_DIRECTION_LTR),
+            packageName = this.requireActivity().packageName,
+            _resources = _resources,
+            selectedCategoryId = 0
+        )
+        bottom_sheet_viewpager.adapter = btmsheetViewPagerAdapter
+        category_tab_layout.setupWithViewPager(bottom_sheet_viewpager)
+
     }
 
     private fun initUiForNewTransaction() {
         findNavController()
             .currentDestination?.label = _getString(R.string.add_transaction)
-        lifecycleScope.launch {
+        /*lifecycleScope.launch {
             delay(300)
             showBottomSheet()
-        }
+        }*/
+
         //add date to dat
         setDateToEditText()
         //submit button should always be displayed
         fab_submit.show()
 
-        edt_money.requestFocus()
-        showCustomKeyboard(edt_money)
+//        edt_money.requestFocus()
+//        showCustomKeyboard(edt_money)
     }
 
     private fun initUiForViewTransaction(transaction: TransactionEntity) {
@@ -559,7 +585,7 @@ constructor(
         transactionCategory = findCategoryByIdFromViewState(cat_id = categoryId)
 
         return if (transactionCategory == null) {
-            showBottomSheet()
+//            showBottomSheet()
             null
         } else {
             transactionCategory
@@ -654,7 +680,7 @@ constructor(
             Toast.LENGTH_SHORT
         )
             .show()
-        showBottomSheet()
+//        showBottomSheet()
     }
 
     private fun getTimeInSecond(): Int = ((combineCalender.timeInMillis) / 1000).toInt()
@@ -942,6 +968,10 @@ constructor(
             )
         )
 
+    }
+
+    override fun onItemSelected(position: Int, item: Category) {
+        TODO("Not yet implemented")
     }
 }
 //TODO TRASH
