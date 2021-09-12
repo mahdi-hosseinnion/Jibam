@@ -7,6 +7,7 @@ import com.example.jibi.util.StateEvent
 data class AddEditTransactionViewState(
 
     val transaction: Transaction? = null,
+    var transactionCategory: Category? = null,
     val categoriesList: List<Category>? = null,
     val insertedTransactionRawId: Long? = null,
     val successfullyDeletedTransactionIndicator: Int? = null,

@@ -82,7 +82,6 @@ constructor(
 
     private val args: AddEditTransactionFragmentArgs by navArgs()
 
-    private var transactionCategory: Category? = null
 
     private val textCalculator = TextCalculator()
 
@@ -102,6 +101,7 @@ constructor(
 
         override fun onStateChanged(bottomSheet: View, newState: Int) {
             if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+
                 if (edt_money.text.toString().isBlank()) {
                     viewModel.setPresenterState(PresenterState.EnteringAmountOfMoney)
                 } else {
@@ -142,7 +142,7 @@ constructor(
         }
 
         category_fab.setOnClickListener {
-//            showBottomSheet()
+            viewModel.setPresenterState(PresenterState.SelectingCategory(viewModel.getSelectedCategoryId()))
         }
         fab_submit.setOnClickListener {
             insertNewTrans()
@@ -177,7 +177,12 @@ constructor(
                 }
                 viewState.presenterState?.let { onPresenterChanged(it) }
 
-                viewState.categoriesList?.let { btmsheetViewPagerAdapter.submitData(it) }
+                viewState.categoriesList?.let {
+                    btmsheetViewPagerAdapter.submitData(it)
+                    viewModel.checkForTransactionCategoryToNotBeNull()
+                }
+
+                viewState.transactionCategory?.let { setCategoryNameAndIcon(it) }
 
                 viewState.insertedTransactionRawId?.let {
                     uiCommunicationListener.hideSoftKeyboard()
@@ -209,6 +214,7 @@ constructor(
         setupCategoryBottomSheet(defaultCategoryId)
         fab_submit.hide()
         category_fab.hide()
+        hideCustomKeyboard()
     }
 
     private fun setViewsToEnteringAmountOfMoney() {
@@ -223,6 +229,7 @@ constructor(
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         fab_submit.show()
         category_fab.show()
+        hideCustomKeyboard()
 
     }
 
@@ -274,9 +281,9 @@ constructor(
         // Make the custom keyboard appear
         edt_money.onFocusChangeListener = OnFocusChangeListener { v, hasFocus ->
             if (hasFocus)
-                showCustomKeyboard(v)
+                viewModel.setPresenterState(PresenterState.EnteringAmountOfMoney)
             else
-                hideCustomKeyboard()
+                viewModel.setPresenterState(PresenterState.NormalState)
         }
 
         edt_money.setOnTouchListener { view, motionEvent ->
@@ -288,7 +295,7 @@ constructor(
             return@setOnTouchListener true // Consume touch event
         }
         edt_money.setOnClickListener {
-            showCustomKeyboard(it)
+            viewModel.setPresenterState(PresenterState.EnteringAmountOfMoney)
         }
         uiCommunicationListener.hideSoftKeyboard()
 //        setupCategoryBottomSheet(viewModel.getSelectedCategoryId())
@@ -300,6 +307,7 @@ constructor(
         bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
         bottomSheetBehavior.isHideable = true
         bottomSheetBehavior.skipCollapsed = true
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     private fun setupCategoryBottomSheet(selectedCategoryId: Int) {
@@ -375,7 +383,7 @@ constructor(
             }
         }
 
-        setTransProperties(categoryId = transaction.cat_id, memo = transaction.memo)
+        setTransProperties(memo = transaction.memo)
         //change date to transaction date
         combineCalender.timeInMillis =
             ((transaction.date.toLong()) * 1000)//ALWAYS CALL BEFORE SET DATE
@@ -624,8 +632,8 @@ constructor(
 
     private fun setTransProperties(
         money: Int? = null,
-        category: Category? = null,
-        categoryId: Int? = null,
+//        category: Category? = null,
+//        categoryId: Int? = null,
         memo: String? = null
 //        specificDate: Int? = null,
 //        wallet_id: Int? = null,
@@ -636,20 +644,23 @@ constructor(
         memo?.let { edt_memo.setText(memo) }
 
         //set category by category or category id
-        if (category != null) {
-            setCategoryNameAndIcon(category)
-            transactionCategory = category
-        } else {
-            categoryId?.let { id ->
-                getCategoryById(id)?.let {
-                    setCategoryNameAndIcon(it)
-                }
-            }
-        }
+//        if (category != null) {
+//            setCategoryNameAndIcon(category)
+//            transactionCategory = category
+//        } else {
+//            categoryId?.let { id ->
+//                getCategoryById(id)?.let {
+//                    setCategoryNameAndIcon(it)
+//                }
+//            }
+//        }
     }
 
     private fun setCategoryNameAndIcon(category: Category) {
-
+        Log.d(
+            TAG,
+            "setCategoryNameAndIcon: CALLED with name: ${category.name} and icon: ${category.img_res} "
+        )
         category_fab.text =
             category.getCategoryNameFromStringFile(_resources, requireActivity().packageName) {
                 it.name
@@ -666,6 +677,7 @@ constructor(
             VectorDrawableCompat.create(resources, resourceId, null)
     }
 
+/*
     private fun getCategoryById(categoryId: Int): Category? {
         transactionCategory = findCategoryByIdFromViewState(cat_id = categoryId)
 
@@ -689,6 +701,7 @@ constructor(
         //TODO WRITE getting FORM database
         return null
     }
+*/
 
     private fun insertNewTrans() {
         if (checkForInsertingErrors()) {
@@ -700,6 +713,7 @@ constructor(
             val calculatedMoney = textCalculator.calculateResult(edt_money.text.toString())
             var money: Double = (calculatedMoney.replace(",".toRegex(), "").toDouble())
 
+            val transactionCategory = viewModel.getTransactionCategory()
             if (transactionCategory?.type == 1) {//if its expenses we save it with - marker
                 money *= -1
             }
@@ -713,11 +727,7 @@ constructor(
                     date = getTimeInSecond()
                 )
 
-                viewModel.launchNewJob(
-                    AddEditTransactionStateEvent.InsertTransaction(
-                        transaction
-                    )
-                )
+                viewModel.insertTransaction(transaction)
             } else {
                 //no category selected
                 unknownCategoryError()
@@ -745,20 +755,15 @@ constructor(
             edt_money.error = errorMsgMapper(ErrorMessages.NEGATIVE_MONEY)
             return false
         }
-        if (transactionCategory == null) {
+        if (viewModel.getTransactionCategory() == null) {
             unknownCategoryError()
             return false
         }
-        if (transactionCategory?.id!! < 1) {
-            unknownCategoryError()
-            return false
-        }
-
         return true
     }
 
     private fun unknownCategoryError() {
-        Log.e(TAG, "unknownCategoryError: UNKNOWN CATEGORY $transactionCategory")
+        Log.e(TAG, "unknownCategoryError: UNKNOWN CATEGORY ${viewModel.getTransactionCategory()}")
         Toast.makeText(
             this.requireContext(),
             errorMsgMapper(ErrorMessages.PLEASE_SELECT_CATEGORY),
@@ -816,8 +821,8 @@ constructor(
                     else finalNumberText
 
                 var newMoney = calculatedResult.toDoubleOrNull()
-                Log.d(TAG, "CHANGES: ${transactionCategory.toString()} ")
-                if (transactionCategory?.type == 1 && newMoney != null) {
+
+                if (viewModel.getTransactionCategory()?.type == 1 && newMoney != null) {
                     //if its expenses we save it with - marker
                     newMoney *= -1
                 }
@@ -1057,9 +1062,9 @@ constructor(
 
     override fun onItemSelected(position: Int, item: Category) {
         //on category changed
-        transactionCategory = item
+        viewModel.setTransactionCategory(item)
         submitButtonState?.onCategoryChange(item.id)
-        setTransProperties(category = item)
+
         viewModel.setPresenterState(PresenterState.EnteringAmountOfMoney)
     }
 }

@@ -1,6 +1,8 @@
 package com.example.jibi.ui.main.transaction.addedittransaction
 
+import android.util.Log
 import com.example.jibi.models.Category
+import com.example.jibi.models.TransactionEntity
 import com.example.jibi.repository.cateogry.CategoryRepository
 import com.example.jibi.repository.tranasction.TransactionRepository
 import com.example.jibi.ui.main.transaction.addedittransaction.state.AddEditTransactionStateEvent
@@ -9,7 +11,6 @@ import com.example.jibi.ui.main.transaction.addedittransaction.state.PresenterSt
 import com.example.jibi.ui.main.transaction.common.BaseViewModel
 import com.example.jibi.util.Constants.EXPENSES_OTHER_CATEGORY_ID
 import com.example.jibi.util.DataState
-import com.example.jibi.util.mahdiLog
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
@@ -51,11 +52,12 @@ constructor(
         val outDate = getCurrentViewStateOrNew()
         return AddEditTransactionViewState(
             transaction = newViewState.transaction ?: outDate.transaction,
+            transactionCategory = newViewState.transactionCategory ?: outDate.transactionCategory,
             categoriesList = newViewState.categoriesList ?: outDate.categoriesList,
             insertedTransactionRawId = newViewState.insertedTransactionRawId
                 ?: outDate.insertedTransactionRawId,
             successfullyDeletedTransactionIndicator = newViewState.successfullyDeletedTransactionIndicator
-                ?: outDate.successfullyDeletedTransactionIndicator   ,
+                ?: outDate.successfullyDeletedTransactionIndicator,
             presenterState = newViewState.presenterState
                 ?: outDate.presenterState
         )
@@ -70,7 +72,8 @@ constructor(
         return result
     }
 
-    fun getSelectedCategoryId(): Int = getCurrentViewStateOrNew().transaction?.categoryId ?: EXPENSES_OTHER_CATEGORY_ID
+    fun getSelectedCategoryId(): Int =
+        getCurrentViewStateOrNew().transaction?.categoryId ?: EXPENSES_OTHER_CATEGORY_ID
 
     fun setPresenterState(newState: PresenterState) {
         setViewState(
@@ -78,5 +81,64 @@ constructor(
                 presenterState = newState
             )
         )
+    }
+
+    fun getTransactionCategory(): Category? {
+        val result = viewState.value?.transactionCategory
+        if (result != null) {
+            return result
+        }
+        val defaultCategory = findCategoryById(EXPENSES_OTHER_CATEGORY_ID)
+        if (defaultCategory != null) {
+            setTransactionCategory(defaultCategory)
+            return defaultCategory
+        }
+        return viewState.value?.categoriesList?.get(0)
+    }
+
+    private fun findCategoryById(id: Int): Category? {
+        viewState.value?.categoriesList?.let {
+            for (item in it) {
+                if (item.id == id) {
+                    return item
+                }
+            }
+        }
+        return null
+    }
+
+    fun setTransactionCategory(category: Category) {
+        setViewState(
+            AddEditTransactionViewState(
+                transactionCategory = category
+            )
+        )
+    }
+
+    fun insertTransaction(transaction: TransactionEntity) {
+        launchNewJob(
+            AddEditTransactionStateEvent.InsertTransaction(
+                transaction
+            )
+        )
+    }
+
+    fun checkForTransactionCategoryToNotBeNull() {
+        if (viewState.value?.transactionCategory != null) {
+            return
+        }
+        Log.d(TAG, "setTransactionCategoryToNewDefault: called")
+        viewState.value?.categoriesList?.let {
+            val default = findCategoryById(EXPENSES_OTHER_CATEGORY_ID)
+            if (default != null) {
+                setTransactionCategory(default)
+                return
+            }
+            val first = it[0]
+            setTransactionCategory(first)
+            Log.d(TAG, "setTransactionCategoryToNewDefault: default: $default")
+            Log.d(TAG, "setTransactionCategoryToNewDefault: first: $first")
+
+        }
     }
 }
