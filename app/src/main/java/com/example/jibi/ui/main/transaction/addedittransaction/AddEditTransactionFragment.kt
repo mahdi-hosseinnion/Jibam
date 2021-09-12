@@ -97,11 +97,13 @@ constructor(
 
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
 
+    private val underBottomSheetPadding by lazy { convertDpToPx(24) }
+
     private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
 
         override fun onStateChanged(bottomSheet: View, newState: Int) {
             if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-
+                //bottomSheet slide animation stuff stuff
                 if (edt_money.text.toString().isBlank()) {
                     viewModel.setPresenterState(PresenterState.EnteringAmountOfMoney)
                 } else {
@@ -111,6 +113,10 @@ constructor(
         }
 
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            //bottomSheet slide animation stuff stuff
+            transaction_detail_container.alpha = 1f.minus(slideOffset)
+            val padding = slideOffset.times(underBottomSheetPadding).toInt()
+            transaction_detail_container.setPadding(padding, padding, padding, padding)
         }
     }
 
@@ -239,7 +245,7 @@ constructor(
         setupCategoryBottomSheet(defaultCategoryId)
         fab_submit.hide()
         category_fab.hide()
-        hideCustomKeyboard()
+//        hideCustomKeyboard()
     }
 
     private fun setViewsToEnteringAmountOfMoney() {
