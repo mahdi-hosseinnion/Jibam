@@ -83,29 +83,29 @@ constructor(
         )
     }
 
-    fun getTransactionCategory(): Category? {
-        val result = viewState.value?.transactionCategory
-        if (result != null) {
-            return result
-        }
-        val defaultCategory = findCategoryById(EXPENSES_OTHER_CATEGORY_ID)
-        if (defaultCategory != null) {
-            setTransactionCategory(defaultCategory)
-            return defaultCategory
-        }
-        return viewState.value?.categoriesList?.get(0)
-    }
+    fun getTransactionCategory(): Category? = viewState.value?.transactionCategory
+//        val result = viewState.value?.transactionCategory
+//        if (result != null) {
+//            return result
+//        }
+//        val defaultCategory = findCategoryById(EXPENSES_OTHER_CATEGORY_ID)
+//        if (defaultCategory != null) {
+//            setTransactionCategory(defaultCategory)
+//            return defaultCategory
+//        }
+//        return viewState.value?.categoriesList?.get(0)
+//    }
 
-    private fun findCategoryById(id: Int): Category? {
-        viewState.value?.categoriesList?.let {
-            for (item in it) {
-                if (item.id == id) {
-                    return item
-                }
-            }
-        }
-        return null
-    }
+//    private fun findCategoryById(id: Int): Category? {
+//        viewState.value?.categoriesList?.let {
+//            for (item in it) {
+//                if (item.id == id) {
+//                    return item
+//                }
+//            }
+//        }
+//        return null
+//    }
 
     fun setTransactionCategory(category: Category) {
         setViewState(
@@ -123,7 +123,7 @@ constructor(
         )
     }
 
-    fun checkForTransactionCategoryToNotBeNull() {
+/*    fun checkForTransactionCategoryToNotBeNull() {
         if (viewState.value?.transactionCategory != null) {
             return
         }
@@ -140,5 +140,5 @@ constructor(
             Log.d(TAG, "setTransactionCategoryToNewDefault: first: $first")
 
         }
-    }
+    }*/
 }

@@ -165,51 +165,52 @@
                     android:orientation="vertical"
                     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-                    <LinearLayout
+                    <com.google.android.material.appbar.AppBarLayout
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
-                        android:orientation="horizontal">
+                        android:background="@color/white"
+                        android:elevation="1dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center|start"
-                            android:padding="8dp"
-                            android:text="@string/categories"
-                            android:textSize="16sp" />
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
 
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1" />
+                            <com.google.android.material.tabs.TabLayout
+                                android:id="@+id/category_tab_layout"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:foregroundGravity="center"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:tabGravity="center" />
 
 
-                        <ImageButton
-                            android:id="@+id/bottom_sheet_back_arrow"
-                            android:layout_width="48dp"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="end"
-                            android:background="@color/white"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:tint="@color/black"
-                            app:srcCompat="@drawable/ic_baseline_close_24" />
+                            <ImageButton
+                                android:id="@+id/bottom_sheet_close_btn"
+                                android:layout_width="48dp"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="end"
+                                android:background="@color/white"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:tint="@color/black"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:srcCompat="@drawable/ic_baseline_close_24" />
 
-                    </LinearLayout>
+                        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <com.google.android.material.tabs.TabLayout
-                        android:id="@+id/category_tab_layout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:layout_gravity="center"
-                        android:foregroundGravity="center"
-                        app:tabGravity="center" />
+                    </com.google.android.material.appbar.AppBarLayout>
 
                     <androidx.viewpager.widget.ViewPager
                         android:id="@+id/bottom_sheet_viewpager"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:paddingTop="4dp" />
+                        android:paddingTop="8dp" />
 
                 </LinearLayout>
             </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -147,8 +147,28 @@ constructor(
         fab_submit.setOnClickListener {
             insertNewTrans()
         }
+        bottom_sheet_close_btn.setOnClickListener {
+            hideCategoryBottomSheet()
+        }
 
 
+    }
+
+    private fun hideCategoryBottomSheet() {
+        if (viewModel.getTransactionCategory() == null) {
+            Toast.makeText(
+                this.requireContext(),
+                "Please select category for this transaction",
+                Toast.LENGTH_SHORT
+            )
+                .show()
+        } else {
+            if (edt_money.text.toString().isBlank()) {
+                viewModel.setPresenterState(PresenterState.EnteringAmountOfMoney)
+            } else {
+                viewModel.setPresenterState(PresenterState.NormalState)
+            }
+        }
     }
 
     override fun handleLoading() {
@@ -179,10 +199,15 @@ constructor(
 
                 viewState.categoriesList?.let {
                     btmsheetViewPagerAdapter.submitData(it)
-                    viewModel.checkForTransactionCategoryToNotBeNull()
+//                    viewModel.checkForTransactionCategoryToNotBeNull()
                 }
 
                 viewState.transactionCategory?.let { setCategoryNameAndIcon(it) }
+                //if user did not select any category he shouldn't be able to hide category bottom sheet
+                val didUserSelectCategory = viewState.transactionCategory != null
+                bottomSheetBehavior.isDraggable = didUserSelectCategory
+                edt_money.isEnabled = didUserSelectCategory
+                finalNUmber.isEnabled = didUserSelectCategory
 
                 viewState.insertedTransactionRawId?.let {
                     uiCommunicationListener.hideSoftKeyboard()
@@ -322,7 +347,7 @@ constructor(
             isLeftToRight = isLeftToRight,
             packageName = this.requireActivity().packageName,
             _resources = _resources,
-            selectedCategoryId = viewModel.getSelectedCategoryId()
+            selectedCategoryId = -1
         )
 
         bottom_sheet_viewpager.adapter = btmsheetViewPagerAdapter
