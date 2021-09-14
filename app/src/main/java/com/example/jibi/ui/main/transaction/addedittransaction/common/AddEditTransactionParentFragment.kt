@@ -176,7 +176,7 @@ constructor(
 
         //set onClick to date and show DatePicker
         val dateOnClick = onClickedOnSpan(textColor = edt_date.currentTextColor) {
-            showDatePickerDialog()
+            onClickedOnDate()
         }
         val dateEndIndex = date.length
         ss.setSpan(
@@ -187,7 +187,7 @@ constructor(
         )
         //set onClick to time and show timePicker
         val timeOnClick = onClickedOnSpan(textColor = edt_date.currentTextColor) {
-            showTimePickerDialog()
+            onClickedOnTime()
         }
         var timeStartIndex = dateEndIndex.plus(spaceBetweenDateAndTime.length)
 
@@ -220,17 +220,17 @@ constructor(
             }
         }
 
-    private fun showDatePickerDialog() {
+    fun showDatePickerDialog(calender: GregorianCalendar) {
         if (currentLocale.isFarsi()) {
-            showShamsiDatePicker()
+            showShamsiDatePicker(calender)
         } else {
-            showGregorianDatePicker()
+            showGregorianDatePicker(calender)
         }
     }
 
-    private fun showShamsiDatePicker() {
+    private fun showShamsiDatePicker(calender: GregorianCalendar) {
         DatePicker.Builder()
-            .date(getCombineCalender())
+            .date(calender)
             .minDate(
                 SolarCalendar.minShamsiYear,
                 SolarCalendar.minShamsiMonth,
@@ -242,6 +242,7 @@ constructor(
                 SolarCalendar.maxShamsiDay
             )
             .build { id, calendar, day, month, year ->
+                removeDatePickerFromScreen()
                 if (calendar != null) {
                     setToCombineCalender(
                         year = calendar[Calendar.YEAR],
@@ -260,40 +261,41 @@ constructor(
     }
 
 
-    private fun showGregorianDatePicker() {
-        val combineCalender = getCombineCalender()
+    private fun showGregorianDatePicker(calender: GregorianCalendar) {
+
         val datePickerDialog =
             DatePickerDialog(
                 this.requireContext(),
                 { _, year, monthOfYear, dayOfMonth ->
+                    removeDatePickerFromScreen()
                     setToCombineCalender(
                         year = year,
                         month = monthOfYear,
                         day = dayOfMonth
                     )
                 },
-                combineCalender.get(Calendar.YEAR),
-                combineCalender.get(Calendar.MONTH),
-                combineCalender.get(Calendar.DAY_OF_MONTH)
+                calender.get(Calendar.YEAR),
+                calender.get(Calendar.MONTH),
+                calender.get(Calendar.DAY_OF_MONTH)
             )
         datePickerDialog.datePicker.minDate = SolarCalendar.minGregorianDate
         datePickerDialog.datePicker.maxDate = SolarCalendar.maxGregorianDate
         datePickerDialog.show()
     }
 
-    private fun showTimePickerDialog() {
-        val combineCalender = getCombineCalender()
+    fun showTimePickerDialog(calender: GregorianCalendar) {
+
         //show picker
         val timePickerDialog =
             TimePickerDialog(
                 this.requireContext(),
                 { _, hourOfDay, minute ->
-
+                    removeTimePickerFromScreen()
                     setToCombineCalender(GregorianCalendar.HOUR_OF_DAY, hourOfDay)
                     setToCombineCalender(GregorianCalendar.MINUTE, minute)
                 },
-                combineCalender.get(GregorianCalendar.HOUR_OF_DAY),
-                combineCalender.get(GregorianCalendar.MINUTE),
+                calender.get(GregorianCalendar.HOUR_OF_DAY),
+                calender.get(GregorianCalendar.MINUTE),
                 false
             )
         //TODO MAKE farst time picker SUPPORT IN FARSI
@@ -455,7 +457,6 @@ constructor(
      *     abstract functions
      */
 
-    abstract fun getCombineCalender(): GregorianCalendar
 
     abstract fun setToCombineCalender(year: Int, month: Int, day: Int)
 
@@ -464,6 +465,14 @@ constructor(
     abstract fun onMoneyEditTextFocusChanged(hasFocus: Boolean)
 
     abstract fun onClickedOnMoneyEditText()
+
+    abstract fun onClickedOnDate()
+
+    abstract fun onClickedOnTime()
+
+    abstract fun removeDatePickerFromScreen()
+
+    abstract fun removeTimePickerFromScreen()
 
     abstract fun onBottomSheetStateChanged(newState: Int)
 

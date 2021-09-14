@@ -154,6 +154,8 @@ constructor(
                 uiCommunicationListener.hideSoftKeyboard()
                 hideCustomKeyboard()
                 disableContentInteraction(edt_memo)
+                //apply
+                showDatePickerDialog(viewModel.getCombineCalender())
             }
 
             is ChangingTimeState -> {
@@ -163,6 +165,8 @@ constructor(
                 uiCommunicationListener.hideSoftKeyboard()
                 hideCustomKeyboard()
                 disableContentInteraction(edt_memo)
+                //apply
+                showTimePickerDialog(viewModel.getCombineCalender())
             }
 
 
@@ -234,8 +238,6 @@ constructor(
     }
 
 
-    override fun getCombineCalender(): GregorianCalendar = viewModel.getCombineCalender()
-
     override fun setToCombineCalender(year: Int, month: Int, day: Int) {
         viewModel.setToCombineCalender(year, month, day)
     }
@@ -253,6 +255,22 @@ constructor(
 
     override fun onClickedOnMoneyEditText() {
         viewModel.setPresenterState(EnteringAmountOfMoneyState)
+    }
+
+    override fun onClickedOnDate() {
+        viewModel.setPresenterState(ChangingDateState)
+    }
+
+    override fun onClickedOnTime() {
+        viewModel.setPresenterState(ChangingTimeState)
+    }
+
+    override fun removeDatePickerFromScreen() {
+        viewModel.setPresenterState(NoneState)
+    }
+
+    override fun removeTimePickerFromScreen() {
+        viewModel.setPresenterState(NoneState)
     }
 
     override fun onBottomSheetStateChanged(newState: Int) {
