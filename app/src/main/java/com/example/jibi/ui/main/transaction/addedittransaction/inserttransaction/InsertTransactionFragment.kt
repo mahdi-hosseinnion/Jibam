@@ -3,7 +3,6 @@ package com.example.jibi.ui.main.transaction.addedittransaction.inserttransactio
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.annotation.StringRes
 import androidx.fragment.app.viewModels
@@ -17,6 +16,8 @@ import com.example.jibi.models.TransactionEntity
 import com.example.jibi.ui.main.transaction.addedittransaction.common.AddEditTransactionParentFragment
 import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionPresenterState
 import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionPresenterState.*
+import com.example.jibi.util.Constants.EXPENSES_TYPE_MARKER
+import com.example.jibi.util.MessageType
 import com.example.jibi.util.StateMessageCallback
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
@@ -58,7 +59,9 @@ constructor(
     private fun setupUi() {
         category_fab.hide()
         showCustomKeyboard(edt_money)
-        //on clicks
+        /**
+         * on clicks
+         */
         bottom_sheet_close_btn.setOnClickListener {
             hideCategoryBottomSheet()
         }
@@ -91,7 +94,11 @@ constructor(
                     })
                 if (stateMessage.response.message == getString(R.string.transaction_successfully_inserted)) {
                     //transaction successfully inserted
+                    uiCommunicationListener.hideSoftKeyboard()
                     navigateBack()
+                }
+                if (stateMessage.response.messageType == MessageType.Error) {
+                    fab_submit.isEnabled = true
                 }
             }
         }
@@ -311,9 +318,15 @@ constructor(
 
         val calender = viewModel.getCombineCalender()
 
+        //add marker to money if its expenses
+        var money: Double = calculatedMoney.toDouble()
+        if (category.type == EXPENSES_TYPE_MARKER) {
+            money = money.times(-1)
+        }
+
         return TransactionEntity(
             id = 0,
-            money = calculatedMoney.toDouble(),
+            money = money,
             memo = edt_memo.text.toString(),
             cat_id = category.id,
             date = (calender.timeInMillis).div(1_000).toInt()
@@ -350,6 +363,7 @@ constructor(
         ).show()
 
     }
+
 
     companion object {
         private const val TAG = "InsertTransactionFragme"

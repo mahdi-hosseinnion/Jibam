@@ -8,9 +8,7 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.text.InputType
-import android.text.SpannableString
-import android.text.TextPaint
+import android.text.*
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.view.View
@@ -84,6 +82,9 @@ constructor(
     }
 
     private fun initUi() {
+
+        edt_money.addTextChangedListener(onTextChangedListener)
+
         setupBottomSheet()
         // prevent system keyboard from appearing when EditText is tapped
         edt_money.setRawInputType(InputType.TYPE_CLASS_TEXT)
@@ -307,6 +308,7 @@ constructor(
             activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
     }
+
     fun enableContentInteraction(edt: EditText) {
         edt.keyListener = EditText(this.requireContext()).keyListener
         edt.isFocusable = true
@@ -314,6 +316,7 @@ constructor(
         edt.isCursorVisible = true
         edt.requestFocus()
     }
+
     fun disableContentInteraction(edt: EditText) {
         edt.keyListener = null
         edt.isFocusable = false
@@ -321,7 +324,6 @@ constructor(
         edt.isCursorVisible = false
         edt.clearFocus()
     }
-
 
 
     private fun dateWithPattern(unixTimeInMillis: Long): String {
@@ -341,7 +343,7 @@ constructor(
         return SimpleDateFormat(TIME_PATTERN, currentLocale).format(df)
     }
 
-    fun showCustomKeyboard(view: View ) {
+    fun showCustomKeyboard(view: View) {
         val imm: InputMethodManager =
             activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
@@ -396,6 +398,57 @@ constructor(
 
     override fun onEqualClicked() {
         keyboard.preloadKeyboard(finalNUmber.text.toString())
+    }
+
+    private val onTextChangedListener = object : TextWatcher {
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+        override fun afterTextChanged(p0: Editable?) {
+            edt_money.removeTextChangedListener(this)
+            //calculate result of main edittext
+            val text = p0.toString()
+
+            if (text.indexOfAny(chars = listOfNumbers()) >= 0) {
+                val calculatedResult = textCalculator.calculateResult(text)
+
+                val finalNumberText =
+                    localizeDoubleNumber(calculatedResult.toDouble(), currentLocale)
+
+                finalNUmber.text =
+                    if (finalNumberText == edt_money.text.toString().removeOperationSigns()) ""
+                    else finalNumberText
+
+            } else {
+                finalNUmber.text = ""
+
+            }
+
+            edt_money.addTextChangedListener(this)
+        }
+
+    }
+
+    private fun listOfNumbers(): CharArray =
+        charArrayOf(
+            _getString(R.string._1)[0],
+            _getString(R.string._2)[0],
+            _getString(R.string._3)[0],
+            _getString(R.string._4)[0],
+            _getString(R.string._5)[0],
+            _getString(R.string._6)[0],
+            _getString(R.string._7)[0],
+            _getString(R.string._8)[0],
+            _getString(R.string._9)[0]
+        )
+
+    fun String.removeOperationSigns(): String {
+        var result = this
+        for (values in CalculatorKeyboard.listOfSigns) {
+            result = result.replace(values, "")
+        }
+        return result
     }
 
     /**
