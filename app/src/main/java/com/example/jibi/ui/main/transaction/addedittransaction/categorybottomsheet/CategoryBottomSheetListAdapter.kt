@@ -20,7 +20,7 @@ class CategoryBottomSheetListAdapter(
     private val requestManager: RequestManager,
     private val interaction: Interaction? = null,
     private val packageName: String,
-    private val selectedCategoryId: Int?,
+    private var selectedItemId: Int?,
     private val _resources: Resources
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -56,7 +56,7 @@ class CategoryBottomSheetListAdapter(
             interaction = interaction,
             requestManager = requestManager,
             packageName = packageName,
-            selectedCategoryId = selectedCategoryId,
+            selectedItemId = selectedItemId,
             _resources = _resources
         )
     }
@@ -133,23 +133,31 @@ class CategoryBottomSheetListAdapter(
         differ.submitList(sortedList)
     }
 
+    fun submitSelectedId(id: Int?) {
+        selectedItemId = id
+        notifyDataSetChanged()
+    }
+
     class CategoryViewHolder
     constructor(
         itemView: View,
         val requestManager: RequestManager,
         private val interaction: Interaction?,
         private val packageName: String,
-        private val selectedCategoryId: Int?,
+        private val selectedItemId: Int?,
         private val _resources: Resources
     ) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(item: Category) = with(itemView) {
             itemView.setOnClickListener {
+
                 setSelectedBackground(item.id)
                 interaction?.onItemSelected(adapterPosition, item)
             }
-            if (item.id == selectedCategoryId && item.id > 0) {
-                setSelectedBackground(selectedCategoryId)
+            if (item.id == selectedItemId && item.id > 0) {
+                setSelectedBackground(selectedItemId)
+            } else {
+                setUnSelectedBackground()
             }
 
 //            requestManager?.load(item.img_res)
@@ -210,6 +218,20 @@ class CategoryBottomSheetListAdapter(
             //change tint to white
             itemView.category_image.setColorFilter(
                 itemView.resources.getColor(R.color.white),
+                android.graphics.PorterDuff.Mode.SRC_IN
+            )
+        }
+
+        private fun setUnSelectedBackground() {
+            itemView.category_image.setBackgroundColor(
+
+                itemView.resources.getColor(
+                    R.color.category_list_item_image_background_color
+                )
+            )
+            //change tint to black
+            itemView.category_image.setColorFilter(
+                itemView.resources.getColor(R.color.black),
                 android.graphics.PorterDuff.Mode.SRC_IN
             )
         }

@@ -21,7 +21,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_margin="4dp"
-            card_view:cardBackgroundColor="#e0e0e0"
+            card_view:cardBackgroundColor="@color/category_list_item_image_background_color"
             card_view:cardCornerRadius="20dp">
 
 
@@ -30,7 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:background="#e0e0e0"
+                android:background="@color/category_list_item_image_background_color"
                 android:padding="8dp"
                 android:scaleType="center"
                 app:tint="@color/black" />

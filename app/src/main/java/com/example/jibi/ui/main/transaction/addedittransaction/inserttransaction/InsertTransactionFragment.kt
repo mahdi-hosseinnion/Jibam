@@ -121,9 +121,11 @@ constructor(
 
 
     private fun handlePresenterStateChange(newState: InsertTransactionPresenterState) =
+        //TODO add system to ensure presenter don't call twice
         when (newState) {
 
             is SelectingCategoryState -> {
+                btmsheetViewPagerAdapter.submitSelectedItemId(viewModel.getTransactionCategory()?.id)
                 bottomSheetBehavior.state = STATE_EXPANDED
                 category_fab.hide()
                 fab_submit.hide()

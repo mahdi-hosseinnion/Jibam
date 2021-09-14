@@ -29,14 +29,14 @@ class CategoryBottomSheetViewPagerAdapter(
         requestManager,
         interaction,
         packageName,
-        selectedCategoryId = selectedCategoryId,
+        selectedItemId = selectedCategoryId,
         _resources = _resources
     )
     private val incomeRecyclerViewAdapter = CategoryBottomSheetListAdapter(
         requestManager,
         interaction,
         packageName,
-        selectedCategoryId = selectedCategoryId,
+        selectedItemId = selectedCategoryId,
         _resources = _resources
     )
 
@@ -102,6 +102,12 @@ class CategoryBottomSheetViewPagerAdapter(
 
         expensesRecyclerViewAdapter.submitList(categoryList?.filter { it.type == EXPENSES_TYPE_MARKER })
         incomeRecyclerViewAdapter.submitList(categoryList?.filter { it.type == INCOME_TYPE_MARKER })
+    }
+
+    fun submitSelectedItemId(id: Int?) {
+
+        expensesRecyclerViewAdapter.submitSelectedId(id)
+        incomeRecyclerViewAdapter.submitSelectedId(id)
     }
 
     companion object {
