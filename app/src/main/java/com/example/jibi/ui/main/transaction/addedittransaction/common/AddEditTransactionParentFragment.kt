@@ -54,7 +54,8 @@ constructor(
     R.id.fragment_add_toolbar_main,
     _resources
 ), CalculatorKeyboard.CalculatorInteraction, CategoryBottomSheetListAdapter.Interaction {
-    private val textCalculator = TextCalculator()
+
+    val textCalculator = TextCalculator()
 
     lateinit var btmsheetViewPagerAdapter: CategoryBottomSheetViewPagerAdapter
 

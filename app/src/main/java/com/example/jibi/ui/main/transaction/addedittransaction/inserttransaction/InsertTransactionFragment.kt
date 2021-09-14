@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.annotation.StringRes
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
@@ -12,6 +13,7 @@ import com.bumptech.glide.RequestManager
 import com.example.jibi.R
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
+import com.example.jibi.models.TransactionEntity
 import com.example.jibi.ui.main.transaction.addedittransaction.common.AddEditTransactionParentFragment
 import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionPresenterState
 import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionPresenterState.*
@@ -66,11 +68,33 @@ constructor(
 
 
         edt_memo.setOnClickListener {
-            Log.d(TAG, "setupUi: CLICKED")
             viewModel.setPresenterState(AddingNoteState)
 
         }
+        fab_submit.setOnClickListener {
+            insertTransaction()
+        }
 
+    }
+
+
+    override fun handleStateMessages() {
+        viewModel.stateMessage.observe(viewLifecycleOwner) { sm ->
+            sm?.let { stateMessage ->
+
+                uiCommunicationListener.onResponseReceived(
+                    response = stateMessage.response,
+                    stateMessageCallback = object : StateMessageCallback {
+                        override fun removeMessageFromStack() {
+                            viewModel.clearStateMessage()
+                        }
+                    })
+                if (stateMessage.response.message == getString(R.string.transaction_successfully_inserted)) {
+                    //transaction successfully inserted
+                    navigateBack()
+                }
+            }
+        }
     }
 
     private fun subscribeObservers() {
@@ -109,7 +133,6 @@ constructor(
                 showCustomKeyboard(edt_money)
             }
             is AddingNoteState -> {
-                Log.d(TAG, "handlePresenterStateChange: CALLED")
                 bottomSheetBehavior.state = STATE_HIDDEN
                 category_fab.show()
                 fab_submit.show()
@@ -134,7 +157,6 @@ constructor(
                 hideCustomKeyboard()
                 disableContentInteraction(edt_memo)
             }
-
 
 
             is NoneState -> {
@@ -245,19 +267,6 @@ constructor(
         }
     }
 
-    override fun handleStateMessages() {
-        viewModel.stateMessage.observe(viewLifecycleOwner) { sm ->
-            sm?.let { stateMessage ->
-                uiCommunicationListener.onResponseReceived(
-                    response = stateMessage.response,
-                    stateMessageCallback = object : StateMessageCallback {
-                        override fun removeMessageFromStack() {
-                            viewModel.clearStateMessage()
-                        }
-                    })
-            }
-        }
-    }
 
     override fun onItemSelected(position: Int, item: Category) {
         //on category changed
@@ -265,13 +274,55 @@ constructor(
         viewModel.setPresenterState(EnteringAmountOfMoneyState)
     }
 
+    private fun insertTransaction() {
+        fab_submit.isEnabled = false
+        getTransactionEntityFiled()?.let {
+            viewModel.insertTransaction(it)
+        } ?: run {
+            fab_submit.isEnabled = true
+        }
+    }
+
+    private fun getTransactionEntityFiled(): TransactionEntity? {
+
+        val category = viewModel.getTransactionCategory()
+
+        if (category == null) {
+            showSnackBar(R.string.pls_select_category)
+            viewModel.setPresenterState(SelectingCategoryState)
+            return null
+        }
+        val moneyEditTextStr = edt_money.text.toString()
+
+        if (moneyEditTextStr.isBlank()) {
+            showSnackBar(R.string.pls_insert_some_money)
+            viewModel.setPresenterState(EnteringAmountOfMoneyState)
+            return null
+        }
+
+        val calculatedMoney = textCalculator.calculateResult(moneyEditTextStr)
+            .replace(",".toRegex(), "")
+
+        if (calculatedMoney.isBlank() || calculatedMoney.toDouble() <= 0) {
+            showSnackBar(R.string.pls_insert_valid_amount_of_money)
+            viewModel.setPresenterState(EnteringAmountOfMoneyState)
+            return null
+        }
+
+        val calender = viewModel.getCombineCalender()
+
+        return TransactionEntity(
+            id = 0,
+            money = calculatedMoney.toDouble(),
+            memo = edt_memo.text.toString(),
+            cat_id = category.id,
+            date = (calender.timeInMillis).div(1_000).toInt()
+        )
+    }
+
     private fun hideCategoryBottomSheet() {
         if (viewModel.getTransactionCategory() == null) {
-            Snackbar.make(
-                bottomCoordinator,
-                "Please select category for this transaction",
-                Snackbar.LENGTH_SHORT
-            ).show()
+            showSnackBar(R.string.pls_select_category)
         } else {
             if (edt_money.text.toString().isBlank()) {
                 //if user didn't insert money
@@ -281,7 +332,26 @@ constructor(
             }
         }
     }
-    companion object{
+
+    private fun showSnackBar(text: String) {
+        Snackbar.make(
+            bottomCoordinator,
+            text,
+            Snackbar.LENGTH_SHORT
+        ).show()
+
+    }
+
+    private fun showSnackBar(@StringRes resId: Int) {
+        Snackbar.make(
+            bottomCoordinator,
+            _getString(resId),
+            Snackbar.LENGTH_SHORT
+        ).show()
+
+    }
+
+    companion object {
         private const val TAG = "InsertTransactionFragme"
     }
 }

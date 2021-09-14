@@ -1,6 +1,7 @@
 package com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction
 
 import com.example.jibi.models.Category
+import com.example.jibi.models.TransactionEntity
 import com.example.jibi.repository.cateogry.CategoryRepository
 import com.example.jibi.repository.tranasction.TransactionRepository
 import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionPresenterState
@@ -134,4 +135,12 @@ constructor(
     }
 
     fun getTransactionCategory(): Category? = getCurrentViewStateOrNew().category
+
+    fun insertTransaction(entity: TransactionEntity) {
+        launchNewJob(
+            InsertTransactionStateEvent.InsertTransaction(
+                transactionEntity = entity
+            )
+        )
+    }
 }

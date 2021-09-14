@@ -137,10 +137,7 @@ constructor(
             ), stateCallback
         )
     }
-    fun navigateBack(){
-        findNavController().navigateUp()
 
-    }
     companion object {
         const val EXPENSES = 1
         const val INCOME = 2
