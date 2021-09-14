@@ -8,12 +8,12 @@ import com.bumptech.glide.RequestManager
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.ui.main.transaction.aboutus.AboutUsFragment
 import com.example.jibi.ui.main.transaction.MonthManger
+import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.InsertTransactionFragment
 import com.example.jibi.ui.main.transaction.setting.SettingFragment
 import com.example.jibi.ui.main.transaction.categories.AddCategoryFragment
 import com.example.jibi.ui.main.transaction.categories.ViewCategoriesFragment
 import com.example.jibi.ui.main.transaction.chart.ChartFragment
 import com.example.jibi.ui.main.transaction.chart.DetailChartFragment
-import com.example.jibi.ui.main.transaction.addedittransaction.AddEditTransactionFragment
 import com.example.jibi.ui.main.transaction.transactions.TransactionsFragment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -50,8 +50,8 @@ constructor(
                 )
             }
 
-            AddEditTransactionFragment::class.java.name -> {
-                AddEditTransactionFragment(
+            InsertTransactionFragment::class.java.name -> {
+                InsertTransactionFragment(
                     viewModelFactory,
                     requestManager,
                     currentLocale,

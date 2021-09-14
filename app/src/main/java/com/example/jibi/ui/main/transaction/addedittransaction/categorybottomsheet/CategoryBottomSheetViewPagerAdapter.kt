@@ -23,7 +23,7 @@ class CategoryBottomSheetViewPagerAdapter(
     interaction: CategoryBottomSheetListAdapter.Interaction? = null,
     requestManager: RequestManager,
     packageName: String,
-    selectedCategoryId: Int
+    selectedCategoryId: Int?
 ) : PagerAdapter() {
     private val expensesRecyclerViewAdapter = CategoryBottomSheetListAdapter(
         requestManager,

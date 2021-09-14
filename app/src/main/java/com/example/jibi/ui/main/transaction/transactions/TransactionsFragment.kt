@@ -30,7 +30,6 @@ import com.example.jibi.models.Transaction
 import com.example.jibi.models.TransactionEntity
 import com.example.jibi.models.mappers.toTransactionEntity
 import com.example.jibi.repository.buildResponse
-import com.example.jibi.ui.main.transaction.addedittransaction.AddEditTransactionFragment
 import com.example.jibi.ui.main.transaction.common.BaseFragment
 import com.example.jibi.ui.main.transaction.transactions.state.TransactionsStateEvent
 import com.example.jibi.ui.main.transaction.transactions.state.TransactionsViewState
@@ -341,12 +340,10 @@ constructor(
     }
 
 
-    private fun navigateToAddTransactionFragment(transactionId: Int = -1) {
+    private fun navigateToAddTransactionFragment() {
         //on category selected and bottomSheet hided
         val action =
-            TransactionsFragmentDirections.actionTransactionFragmentToCreateTransactionFragment(
-                transactionId = transactionId
-            )
+            TransactionsFragmentDirections.actionTransactionFragmentToCreateTransactionFragment()
         findNavController().navigate(action)
     }
 
@@ -574,7 +571,11 @@ constructor(
     }
 
     override fun onItemSelected(position: Int, item: Transaction) {
-        navigateToAddTransactionFragment(item.id)
+        navigateToDetailTransactionFragment(item.id)
+    }
+
+    private fun navigateToDetailTransactionFragment(id: Int) {
+//        TODO("Not yet implemented")
     }
 
     override fun restoreListPosition() {

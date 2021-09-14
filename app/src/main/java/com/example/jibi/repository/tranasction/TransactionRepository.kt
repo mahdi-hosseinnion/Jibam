@@ -2,6 +2,8 @@ package com.example.jibi.repository.tranasction
 
 import com.example.jibi.models.PieChartData
 import com.example.jibi.models.Transaction
+import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionStateEvent
+import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionViewState
 import com.example.jibi.ui.main.transaction.addedittransaction.state.AddEditTransactionStateEvent
 import com.example.jibi.ui.main.transaction.addedittransaction.state.AddEditTransactionViewState
 import com.example.jibi.ui.main.transaction.transactions.state.TransactionsStateEvent
@@ -50,6 +52,10 @@ interface TransactionRepository {
     suspend fun insertTransaction(
         stateEvent: AddEditTransactionStateEvent.InsertTransaction
     ): DataState<AddEditTransactionViewState>
+
+    suspend fun insertTransaction(
+        stateEvent: InsertTransactionStateEvent.InsertTransaction
+    ): DataState<InsertTransactionViewState>
 
     suspend fun deleteTransaction(
         stateEvent: AddEditTransactionStateEvent.DeleteTransaction

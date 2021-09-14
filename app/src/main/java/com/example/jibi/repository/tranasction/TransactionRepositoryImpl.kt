@@ -10,6 +10,8 @@ import com.example.jibi.models.TransactionEntity
 import com.example.jibi.persistence.*
 import com.example.jibi.repository.buildResponse
 import com.example.jibi.repository.safeCacheCall
+import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionStateEvent
+import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionViewState
 import com.example.jibi.ui.main.transaction.addedittransaction.state.AddEditTransactionStateEvent
 import com.example.jibi.ui.main.transaction.addedittransaction.state.AddEditTransactionViewState
 import com.example.jibi.ui.main.transaction.transactions.state.TransactionsStateEvent
@@ -190,6 +192,45 @@ constructor(
                             MessageType.Success
                         ),
                         data = AddEditTransactionViewState(
+                            insertedTransactionRawId = resultObj
+                        )
+                    )
+                } else {
+                    DataState.error(
+                        response = buildResponse(
+                            message = getString(R.string.transaction_error_inserted),
+                            UIComponentType.Toast,
+                            MessageType.Success
+                        ),
+                        stateEvent = stateEvent
+                    )
+                }
+            }
+        }.getResult()
+    }
+
+    override suspend fun insertTransaction(
+        stateEvent: InsertTransactionStateEvent.InsertTransaction
+    ): DataState<InsertTransactionViewState> {
+
+        val cacheResult = safeCacheCall {
+            recordsDao.insertOrReplace(stateEvent.transactionEntity)
+        }
+
+        return object : CacheResponseHandler<InsertTransactionViewState, Long>(
+            response = cacheResult,
+            stateEvent = stateEvent
+        ) {
+            override suspend fun handleSuccess(resultObj: Long): DataState<InsertTransactionViewState> {
+                tryIncreaseCategoryOrdering(stateEvent.transactionEntity.cat_id)
+                return if (resultObj > 0) {
+                    DataState.data(
+                        response = buildResponse(
+                            message = getString(R.string.transaction_successfully_inserted),
+                            UIComponentType.Toast,
+                            MessageType.Success
+                        ),
+                        data = InsertTransactionViewState(
                             insertedTransactionRawId = resultObj
                         )
                     )

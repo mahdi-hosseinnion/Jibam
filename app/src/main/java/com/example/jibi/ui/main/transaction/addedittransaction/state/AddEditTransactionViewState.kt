@@ -7,7 +7,8 @@ import com.example.jibi.util.StateEvent
 data class AddEditTransactionViewState(
 
     val transaction: Transaction? = null,
-    var transactionCategory: Category? = null,
+    //we need categoryType for inserting a transaction to determine if that is expenses or income
+    var categoryType: Int? = null,
     val categoriesList: List<Category>? = null,
     val insertedTransactionRawId: Long? = null,
     val successfullyDeletedTransactionIndicator: Int? = null,
@@ -16,9 +17,7 @@ data class AddEditTransactionViewState(
 
 sealed class PresenterState() {
 
-    data class SelectingCategory(
-        val default_category_id: Int
-    ) : PresenterState()
+    object SelectingCategory : PresenterState()
 
     object EnteringAmountOfMoney : PresenterState()
 

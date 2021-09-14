@@ -20,7 +20,7 @@ class CategoryBottomSheetListAdapter(
     private val requestManager: RequestManager,
     private val interaction: Interaction? = null,
     private val packageName: String,
-    private val selectedCategoryId: Int,
+    private val selectedCategoryId: Int?,
     private val _resources: Resources
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -139,7 +139,7 @@ class CategoryBottomSheetListAdapter(
         val requestManager: RequestManager,
         private val interaction: Interaction?,
         private val packageName: String,
-        private val selectedCategoryId: Int,
+        private val selectedCategoryId: Int?,
         private val _resources: Resources
     ) : RecyclerView.ViewHolder(itemView) {
 

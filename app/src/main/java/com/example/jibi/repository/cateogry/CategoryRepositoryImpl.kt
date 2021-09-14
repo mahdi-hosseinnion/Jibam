@@ -7,6 +7,8 @@ import com.example.jibi.models.Category
 import com.example.jibi.models.CategoryImages
 import com.example.jibi.persistence.CategoriesDao
 import com.example.jibi.repository.safeCacheCall
+import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionStateEvent
+import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionViewState
 import com.example.jibi.ui.main.transaction.addedittransaction.state.AddEditTransactionStateEvent
 import com.example.jibi.ui.main.transaction.addedittransaction.state.AddEditTransactionViewState
 import com.example.jibi.ui.main.transaction.categories.state.CategoriesStateEvent
@@ -90,6 +92,47 @@ constructor(
                         ),
                         data = CategoriesViewState(
                             categoryList = resultObj
+                        ),
+                        stateEvent = stateEvent
+                    )
+                } else {
+                    DataState.error(
+                        Response(
+                            message = getString(R.string.getting_all_categories_error),
+                            uiComponentType = UIComponentType.Dialog,
+                            messageType = MessageType.Error
+                        ),
+                        stateEvent = stateEvent
+                    )
+                }
+            }
+        }.getResult()
+
+    }
+
+    override suspend fun getAllOfCategories(
+        stateEvent: InsertTransactionStateEvent.GetAllOfCategories
+    ):
+            DataState<InsertTransactionViewState> {
+
+        val cacheResult = safeCacheCall {
+            categoriesDao.getAllOfCategories()
+        }
+        return object :
+            CacheResponseHandler<InsertTransactionViewState, List<Category>>(
+                response = cacheResult,
+                stateEvent = stateEvent
+            ) {
+            override suspend fun handleSuccess(resultObj: List<Category>): DataState<InsertTransactionViewState> {
+                return if (resultObj.isNotEmpty()) {
+                    DataState.data(
+                        Response(
+                            message = "Successfully return all of categories",
+                            uiComponentType = UIComponentType.None,
+                            messageType = MessageType.Success
+                        ),
+                        data = InsertTransactionViewState(
+                            allOfCategories = resultObj
                         ),
                         stateEvent = stateEvent
                     )
@@ -204,7 +247,7 @@ constructor(
         var didAllCategoriesUpdatedSuccessfully = true
 
         for (item in allCategories) {
-            newOrder[item.id]?.let {itemNewOrder->
+            newOrder[item.id]?.let { itemNewOrder ->
                 if (item.ordering != itemNewOrder) {
                     val result = changeOrder(item.id, itemNewOrder)
                     if (result !is CacheResult.Success) {

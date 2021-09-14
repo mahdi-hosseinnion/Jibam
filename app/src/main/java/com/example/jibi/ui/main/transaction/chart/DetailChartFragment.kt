@@ -119,11 +119,11 @@ constructor(
 
     private fun navigateToAddTransactionFragment(transactionId: Int) {
         //on category selected and bottomSheet hided
-        val action =
+/*        val action =
             DetailChartFragmentDirections.actionDetailChartFragmentToCreateTransactionFragment(
                 transactionId = transactionId
             )
-        findNavController().navigate(action)
+        findNavController().navigate(action)*/
     }
 
 }

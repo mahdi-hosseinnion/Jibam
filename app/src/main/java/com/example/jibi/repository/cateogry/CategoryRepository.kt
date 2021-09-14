@@ -2,6 +2,8 @@ package com.example.jibi.repository.cateogry
 
 import com.example.jibi.models.Category
 import com.example.jibi.models.CategoryImages
+import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionStateEvent
+import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionViewState
 import com.example.jibi.ui.main.transaction.addedittransaction.state.AddEditTransactionStateEvent
 import com.example.jibi.ui.main.transaction.addedittransaction.state.AddEditTransactionViewState
 import com.example.jibi.ui.main.transaction.categories.state.CategoriesStateEvent
@@ -24,6 +26,10 @@ interface CategoryRepository {
     suspend fun getAllOfCategories(
         stateEvent: CategoriesStateEvent.GetAllOfCategories
     ): DataState<CategoriesViewState>
+
+    suspend fun getAllOfCategories(
+        stateEvent: InsertTransactionStateEvent.GetAllOfCategories
+    ): DataState<InsertTransactionViewState>
 
     suspend fun insertCategory(
         stateEvent: CategoriesStateEvent.InsertCategory

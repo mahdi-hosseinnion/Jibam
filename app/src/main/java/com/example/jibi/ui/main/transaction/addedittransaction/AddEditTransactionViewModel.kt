@@ -2,6 +2,7 @@ package com.example.jibi.ui.main.transaction.addedittransaction
 
 import android.util.Log
 import com.example.jibi.models.Category
+import com.example.jibi.models.Transaction
 import com.example.jibi.models.TransactionEntity
 import com.example.jibi.repository.cateogry.CategoryRepository
 import com.example.jibi.repository.tranasction.TransactionRepository
@@ -52,7 +53,7 @@ constructor(
         val outDate = getCurrentViewStateOrNew()
         return AddEditTransactionViewState(
             transaction = newViewState.transaction ?: outDate.transaction,
-            transactionCategory = newViewState.transactionCategory ?: outDate.transactionCategory,
+            categoryType = newViewState.categoryType ?: outDate.categoryType,
             categoriesList = newViewState.categoriesList ?: outDate.categoriesList,
             insertedTransactionRawId = newViewState.insertedTransactionRawId
                 ?: outDate.insertedTransactionRawId,
@@ -72,8 +73,9 @@ constructor(
         return result
     }
 
-    fun getSelectedCategoryId(): Int =
-        getCurrentViewStateOrNew().transaction?.categoryId ?: EXPENSES_OTHER_CATEGORY_ID
+
+    fun getSelectedCategoryId(): Int? = getCurrentViewStateOrNew().transaction?.categoryId
+    fun getTransactionId(): Int? = getCurrentViewStateOrNew().transaction?.id
 
     fun setPresenterState(newState: PresenterState) {
         setViewState(
@@ -83,7 +85,7 @@ constructor(
         )
     }
 
-    fun getTransactionCategory(): Category? = viewState.value?.transactionCategory
+    fun getTransactionCategoryType(): Int? = viewState.value?.categoryType
 //        val result = viewState.value?.transactionCategory
 //        if (result != null) {
 //            return result
@@ -107,10 +109,25 @@ constructor(
 //        return null
 //    }
 
-    fun setTransactionCategory(category: Category) {
+    fun setTransactionCategoryType(category: Category, date: Int) {
+        val outdatedTransaction =
+            viewState.value?.transaction ?: Transaction(
+                id = 0,
+                money = 0.0,
+                memo = null,
+                categoryId = category.id,
+                categoryName = category.name,
+                categoryImage = category.img_res,
+                date = date
+            )
         setViewState(
             AddEditTransactionViewState(
-                transactionCategory = category
+                transaction = outdatedTransaction.copy(
+                    categoryId = category.id,
+                    categoryName = category.name,
+                    categoryImage = category.img_res,
+                ),
+                categoryType = category.type
             )
         )
     }
@@ -122,6 +139,11 @@ constructor(
             )
         )
     }
+
+    fun isThisNewTransaction(): Boolean {
+        TODO("Not yet implemented")
+    }
+
 
 /*    fun checkForTransactionCategoryToNotBeNull() {
         if (viewState.value?.transactionCategory != null) {
