@@ -20,8 +20,14 @@ constructor(
 ) : BaseViewModel<InsertTransactionViewState, InsertTransactionStateEvent>() {
 
     init {
+        //set calender to current date and time
+        setCombineCalender(GregorianCalendar(currentLocale))
+        //retrieve all of categories from cache
+        getAllOfCategories()
+        //when user navigate to this fragment the first thing he se should be category bottomSheet
         setPresenterState(InsertTransactionPresenterState.SelectingCategoryState)
     }
+
 
     override fun initNewViewState(): InsertTransactionViewState = InsertTransactionViewState()
 
@@ -63,6 +69,12 @@ constructor(
 
             newViewState.presenterState
                 ?: outDated.presenterState
+        )
+    }
+
+    private fun getAllOfCategories() {
+        launchNewJob(
+            InsertTransactionStateEvent.GetAllOfCategories
         )
     }
 
@@ -120,4 +132,6 @@ constructor(
             )
         )
     }
+
+    fun getTransactionCategory(): Category? = getCurrentViewStateOrNew().category
 }

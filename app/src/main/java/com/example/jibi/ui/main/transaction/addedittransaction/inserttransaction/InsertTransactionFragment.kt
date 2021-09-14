@@ -3,6 +3,7 @@ package com.example.jibi.ui.main.transaction.addedittransaction.inserttransactio
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -15,7 +16,9 @@ import com.example.jibi.ui.main.transaction.addedittransaction.common.AddEditTra
 import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionPresenterState
 import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionPresenterState.*
 import com.example.jibi.util.StateMessageCallback
-import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
+import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -51,43 +54,111 @@ constructor(
 
 
     private fun setupUi() {
+        category_fab.hide()
+        showCustomKeyboard(edt_money)
+        //on clicks
+        bottom_sheet_close_btn.setOnClickListener {
+            hideCategoryBottomSheet()
+        }
+        category_fab.setOnClickListener {
+            viewModel.setPresenterState(SelectingCategoryState)
+        }
+
+
+        edt_memo.setOnClickListener {
+            Log.d(TAG, "setupUi: CLICKED")
+            viewModel.setPresenterState(AddingNoteState)
+
+        }
 
     }
 
     private fun subscribeObservers() {
         viewModel.viewState.observe(viewLifecycleOwner) { vs ->
             vs?.let { viewState ->
+                handleBottomSheetDrag(viewState.category)
                 viewState.category?.let { setCategoryFields(it) }
                 viewState.moneyStr?.let { setMoneyStringFields(it) }
                 viewState.finalMoney?.let { setFinalMoneyFields(it) }
                 viewState.memo?.let { setMemoFields(it) }
                 viewState.combineCalender?.let { setDateFields(it) }
+                viewState.allOfCategories?.let { setAllOfCategoriesFields(it) }
                 viewState.presenterState?.let { handlePresenterStateChange(it) }
             }
         }
     }
 
+
     private fun handlePresenterStateChange(newState: InsertTransactionPresenterState) =
         when (newState) {
 
             is SelectingCategoryState -> {
+                bottomSheetBehavior.state = STATE_EXPANDED
+                category_fab.hide()
+                fab_submit.hide()
+                uiCommunicationListener.hideSoftKeyboard()
+                disableContentInteraction(edt_memo)
             }
 
             is EnteringAmountOfMoneyState -> {
+                bottomSheetBehavior.state = STATE_HIDDEN
+                category_fab.show()
+                fab_submit.show()
+                disableContentInteraction(edt_memo)
+//                uiCommunicationListener.hideSoftKeyboard()
+                showCustomKeyboard(edt_money)
             }
-
+            is AddingNoteState -> {
+                Log.d(TAG, "handlePresenterStateChange: CALLED")
+                bottomSheetBehavior.state = STATE_HIDDEN
+                category_fab.show()
+                fab_submit.show()
+                hideCustomKeyboard()
+                enableContentInteraction(edt_memo)
+                forceKeyBoardToOpenForEditText(edt_memo)
+            }
             is ChangingDateState -> {
+                bottomSheetBehavior.state = STATE_HIDDEN
+                category_fab.show()
+                fab_submit.show()
+                uiCommunicationListener.hideSoftKeyboard()
+                hideCustomKeyboard()
+                disableContentInteraction(edt_memo)
             }
 
             is ChangingTimeState -> {
+                bottomSheetBehavior.state = STATE_HIDDEN
+                category_fab.show()
+                fab_submit.show()
+                uiCommunicationListener.hideSoftKeyboard()
+                hideCustomKeyboard()
+                disableContentInteraction(edt_memo)
             }
 
-            is AddingNoteState -> {
-            }
+
 
             is NoneState -> {
+                bottomSheetBehavior.state = STATE_HIDDEN
+                category_fab.show()
+                fab_submit.show()
+                uiCommunicationListener.hideSoftKeyboard()
+                hideCustomKeyboard()
+                disableContentInteraction(edt_memo)
+
             }
         }
+
+    private fun handleBottomSheetDrag(category: Category?) {
+        val didUserSelectCategory = category != null
+        //user should not be able to drag down bottom sheet when no category has been selected
+        bottomSheetBehavior.isDraggable = didUserSelectCategory
+        edt_money.isEnabled = didUserSelectCategory
+        finalNUmber.isEnabled = didUserSelectCategory
+    }
+
+    private fun setAllOfCategoriesFields(list: List<Category>) {
+        btmsheetViewPagerAdapter.submitData(list)
+    }
 
     private fun setDateFields(calendar: GregorianCalendar) {
         setDateToEditTexts(calendar.timeInMillis)
@@ -156,7 +227,7 @@ constructor(
     }
 
     override fun onBottomSheetStateChanged(newState: Int) {
-        if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+        if (newState == STATE_HIDDEN) {
             //bottomSheet slide animation stuff stuff
             if (edt_money.text.toString().isBlank()) {
                 viewModel.setPresenterState(EnteringAmountOfMoneyState)
@@ -194,4 +265,23 @@ constructor(
         viewModel.setPresenterState(EnteringAmountOfMoneyState)
     }
 
+    private fun hideCategoryBottomSheet() {
+        if (viewModel.getTransactionCategory() == null) {
+            Snackbar.make(
+                bottomCoordinator,
+                "Please select category for this transaction",
+                Snackbar.LENGTH_SHORT
+            ).show()
+        } else {
+            if (edt_money.text.toString().isBlank()) {
+                //if user didn't insert money
+                viewModel.setPresenterState(EnteringAmountOfMoneyState)
+            } else {
+                viewModel.setPresenterState(NoneState)
+            }
+        }
+    }
+    companion object{
+        private const val TAG = "InsertTransactionFragme"
+    }
 }

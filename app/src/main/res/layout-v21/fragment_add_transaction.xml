@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.transaction.addedittransaction.AddEditTransactionFragment">
+    tools:context=".ui.main.transaction.addedittransaction.common.AddEditTransactionParentFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -99,7 +99,7 @@
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-
+                android:id="@+id/bottomCoordinator"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/topLinear">
 

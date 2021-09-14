@@ -2,6 +2,7 @@ package com.example.jibi.ui.main.transaction.addedittransaction.common
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.graphics.Color
@@ -16,11 +17,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputConnection
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.text.TextUtilsCompat
 import androidx.core.view.ViewCompat
+import androidx.lifecycle.lifecycleScope
 import com.alirezaafkar.sundatepicker.DatePicker
 import com.bumptech.glide.RequestManager
 import com.example.jibi.R
@@ -32,6 +35,8 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -51,9 +56,9 @@ constructor(
 ), CalculatorKeyboard.CalculatorInteraction, CategoryBottomSheetListAdapter.Interaction {
     private val textCalculator = TextCalculator()
 
-    private lateinit var btmsheetViewPagerAdapter: CategoryBottomSheetViewPagerAdapter
+    lateinit var btmsheetViewPagerAdapter: CategoryBottomSheetViewPagerAdapter
 
-    private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+    lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
 
     private val underBottomSheetPadding by lazy { convertDpToPx(24) }
 
@@ -214,8 +219,6 @@ constructor(
         }
 
     private fun showDatePickerDialog() {
-        //hide money keyboard
-        hideCustomKeyboard()
         if (currentLocale.isFarsi()) {
             showShamsiDatePicker()
         } else {
@@ -278,8 +281,6 @@ constructor(
 
     private fun showTimePickerDialog() {
         val combineCalender = getCombineCalender()
-        //hide money keyboard
-        hideCustomKeyboard()
         //show picker
         val timePickerDialog =
             TimePickerDialog(
@@ -299,13 +300,28 @@ constructor(
         timePickerDialog.show()
     }
 
-    private fun disableContentInteraction(edt: EditText) {
+    fun forceKeyBoardToOpenForEditText(editText: EditText) {
+        editText.requestFocus()
+        val imm: InputMethodManager =
+            activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
+    }
+    fun enableContentInteraction(edt: EditText) {
+        edt.keyListener = EditText(this.requireContext()).keyListener
+        edt.isFocusable = true
+        edt.isFocusableInTouchMode = true
+        edt.isCursorVisible = true
+        edt.requestFocus()
+    }
+    fun disableContentInteraction(edt: EditText) {
         edt.keyListener = null
         edt.isFocusable = false
         edt.isFocusableInTouchMode = false
         edt.isCursorVisible = false
         edt.clearFocus()
     }
+
+
 
     private fun dateWithPattern(unixTimeInMillis: Long): String {
         return if (currentLocale.isFarsi()) {
@@ -324,7 +340,33 @@ constructor(
         return SimpleDateFormat(TIME_PATTERN, currentLocale).format(df)
     }
 
-    private fun hideCustomKeyboard() {
+    fun showCustomKeyboard(view: View ) {
+        val imm: InputMethodManager =
+            activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+        keyboard.visibility = View.VISIBLE
+
+        //change bottom margin of fab
+        val _16Dp = convertDpToPx(16)
+
+        changeFabBottomMargin(keyboard.height.plus(_16Dp))
+        //b/c when fragment is created keyboard is not visible and keyboard height is 0
+        //so we check 10 times with 100 wait each time for keyboard to show up if it does'nt
+        //show up we don't care b/c if focus change this method will be call again
+        lifecycleScope.launch {
+            for (i in 1..10) {
+                delay(100)
+                if (keyboard.height > 0) {
+                    changeFabBottomMargin(keyboard.height.plus(_16Dp))
+                    break
+                }
+            }
+        }
+
+
+    }
+
+    fun hideCustomKeyboard() {
         keyboard.visibility = View.GONE
         val _16Dp = convertDpToPx(16)
         //change bottom margin of fab
@@ -350,6 +392,7 @@ constructor(
             this.requestLayout()
         }
     }
+
     override fun onEqualClicked() {
         keyboard.preloadKeyboard(finalNUmber.text.toString())
     }
