@@ -3,7 +3,7 @@ package com.example.jibi.ui.main.transaction.addedittransaction.state
 import com.example.jibi.models.TransactionEntity
 import com.example.jibi.util.StateEvent
 
-sealed class AddEditTransactionStateEvent : StateEvent {
+/*sealed class AddEditTransactionStateEvent : StateEvent {
 
 
     data class InsertTransaction(
@@ -29,14 +29,14 @@ sealed class AddEditTransactionStateEvent : StateEvent {
     }
 
 
-    data class GetTransactionById(
-        val transactionId: Int
-    ) : AddEditTransactionStateEvent() {
-        override fun errorInfo(): String = "ERROR: getting transaction!"
-
-        override fun getId(): String =
-            "GetSpecificTransaction id: $transactionId ${this.hashCode()}"
-    }
+//    data class GetTransactionById(
+//        val transactionId: Int
+//    ) : AddEditTransactionStateEvent() {
+//        override fun errorInfo(): String = "ERROR: getting transaction!"
+//
+//        override fun getId(): String =
+//            "GetSpecificTransaction id: $transactionId ${this.hashCode()}"
+//    }
 
     object GetAllOfCategories : AddEditTransactionStateEvent() {
         override fun errorInfo(): String = "Unable to get all of categories"
@@ -45,4 +45,4 @@ sealed class AddEditTransactionStateEvent : StateEvent {
             "GetAllOfCategories time: hash: ${this.hashCode()}"
     }
 
-}
+}*/

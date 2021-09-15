@@ -1,5 +1,5 @@
 package com.example.jibi.ui.main.transaction.addedittransaction
-
+/*
 import android.util.Log
 import com.example.jibi.models.Category
 import com.example.jibi.models.Transaction
@@ -162,5 +162,5 @@ constructor(
             Log.d(TAG, "setTransactionCategoryToNewDefault: first: $first")
 
         }
-    }*/
-}
+    }
+}*/

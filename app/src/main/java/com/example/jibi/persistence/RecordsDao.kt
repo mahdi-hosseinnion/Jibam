@@ -17,9 +17,10 @@ interface RecordsDao {
     suspend fun getRecordById(id: Int): TransactionEntity
 
     @Query(
-        """SELECT records.*,   
-            categories.category_Name as category_name,  
-            categories.type as categoryType, 
+        """
+            SELECT records.*, 
+            categories.category_Name as category_name, 
+            categories.cId as cat_id, 
             categories.img_res as category_image 
             FROM records LEFT JOIN categories ON records.cat_id = categories.cId 
             WHERE rId = :id

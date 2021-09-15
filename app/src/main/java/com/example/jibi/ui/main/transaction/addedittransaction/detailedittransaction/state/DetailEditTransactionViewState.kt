@@ -1,6 +1,9 @@
 package com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.state
 
+import com.example.jibi.models.Category
+import com.example.jibi.models.Transaction
 import com.example.jibi.models.TransactionEntity
+import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionPresenterState
 import com.example.jibi.util.StateEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -8,9 +11,29 @@ import kotlinx.coroutines.flow.combine
 import java.util.*
 
 data class DetailEditTransactionViewState(
-    private val combineCalender: GregorianCalendar? = null,
-)
+    val transaction: Transaction? = null,
+    val transactionCategoryType: Int? = null,
+    val combineCalender: GregorianCalendar? = null,
+    val allOfCategories: List<Category>? = null,
+    val successfullyDeletedTransactionIndicator:Int? = null,
+    val presenterState: DetailEditTransactionPresenterState? = null
 
+)
+sealed class DetailEditTransactionPresenterState() {
+
+    object SelectingCategoryState : DetailEditTransactionPresenterState()
+
+    object EnteringAmountOfMoneyState : DetailEditTransactionPresenterState()
+
+    object ChangingDateState : DetailEditTransactionPresenterState()
+
+    object ChangingTimeState : DetailEditTransactionPresenterState()
+
+    object AddingNoteState : DetailEditTransactionPresenterState()
+
+    object NoneState : DetailEditTransactionPresenterState()
+
+}
 class SubmitButtonState(private val defaultTransaction: TransactionEntity) {
 
     private val _doesMoneyChange = MutableStateFlow(false)
@@ -45,4 +68,5 @@ class SubmitButtonState(private val defaultTransaction: TransactionEntity) {
         _doesMoneyChange.value = defaultTransaction.date != newDate
 
     }
+
 }

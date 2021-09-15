@@ -7,10 +7,10 @@ import com.example.jibi.models.Category
 import com.example.jibi.models.CategoryImages
 import com.example.jibi.persistence.CategoriesDao
 import com.example.jibi.repository.safeCacheCall
+import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionStateEvent
+import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionViewState
 import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionStateEvent
 import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionViewState
-import com.example.jibi.ui.main.transaction.addedittransaction.state.AddEditTransactionStateEvent
-import com.example.jibi.ui.main.transaction.addedittransaction.state.AddEditTransactionViewState
 import com.example.jibi.ui.main.transaction.categories.state.CategoriesStateEvent
 import com.example.jibi.ui.main.transaction.categories.state.CategoriesViewState
 import com.example.jibi.util.*
@@ -31,18 +31,18 @@ constructor(
         categoriesDao.getCategoriesImages()
 
     override suspend fun getAllOfCategories(
-        stateEvent: AddEditTransactionStateEvent.GetAllOfCategories
-    ): DataState<AddEditTransactionViewState> {
+        stateEvent: DetailEditTransactionStateEvent.GetAllOfCategories
+    ): DataState<DetailEditTransactionViewState> {
 
         val cacheResult = safeCacheCall {
             categoriesDao.getAllOfCategories()
         }
         return object :
-            CacheResponseHandler<AddEditTransactionViewState, List<Category>>(
+            CacheResponseHandler<DetailEditTransactionViewState, List<Category>>(
                 response = cacheResult,
                 stateEvent = stateEvent
             ) {
-            override suspend fun handleSuccess(resultObj: List<Category>): DataState<AddEditTransactionViewState> {
+            override suspend fun handleSuccess(resultObj: List<Category>): DataState<DetailEditTransactionViewState> {
                 return if (resultObj.isNotEmpty()) {
                     DataState.data(
                         Response(
@@ -50,8 +50,8 @@ constructor(
                             uiComponentType = UIComponentType.None,
                             messageType = MessageType.Success
                         ),
-                        data = AddEditTransactionViewState(
-                            categoriesList = resultObj
+                        data = DetailEditTransactionViewState(
+                            allOfCategories = resultObj
                         ),
                         stateEvent = stateEvent
                     )

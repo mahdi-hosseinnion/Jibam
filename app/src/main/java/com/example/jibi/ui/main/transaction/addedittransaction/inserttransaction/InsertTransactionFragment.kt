@@ -7,6 +7,7 @@ import android.view.View
 import androidx.annotation.StringRes
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.bumptech.glide.RequestManager
 import com.example.jibi.R
@@ -237,6 +238,7 @@ constructor(
         txtField_memo.hint = _getString(R.string.write_note)
         txtField_date.hint = _getString(R.string.date)
         edt_money.hint = _getString(R.string._0)
+        findNavController().currentDestination?.label = _getString(R.string.add_transaction)
     }
 
 

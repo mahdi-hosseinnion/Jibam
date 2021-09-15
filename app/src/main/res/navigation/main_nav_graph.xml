@@ -45,6 +45,9 @@
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/slide_out" />
+        <action
+            android:id="@+id/action_transactionFragment_to_detailEditTransactionFragment"
+            app:destination="@id/detailEditTransactionFragment" />
     </fragment>
     <fragment
         android:id="@+id/insertTransactionFragment"
@@ -58,9 +61,6 @@
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/slide_out" />
-        <action
-            android:id="@+id/action_createTransactionFragment_to_detailChartFragment"
-            app:destination="@id/detailChartFragment" />
 
     </fragment>
 
@@ -156,8 +156,24 @@
             android:name="categoryId"
             android:defaultValue="-1"
             app:argType="integer" />
-<!--        <action
-            android:id="@+id/action_detailChartFragment_to_createTransactionFragment"
-            app:destination="@id/createTransactionFragment" />-->
+        <action
+            android:id="@+id/action_detailChartFragment_to_detailEditTransactionFragment"
+            app:destination="@id/detailEditTransactionFragment" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/detailEditTransactionFragment"
+        android:name="com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.DetailEditTransactionFragment"
+        android:label="DetailEditTransactionFragment" >
+        <action
+            android:id="@+id/action_detailEditTransactionFragment_to_transactionFragment"
+            app:destination="@id/transactionFragment" />
+        <action
+            android:id="@+id/action_detailEditTransactionFragment_to_detailChartFragment"
+            app:destination="@id/detailChartFragment" />
+        <argument
+            android:name="transactionId"
+            app:argType="integer"
+            android:defaultValue="-1" />
     </fragment>
 </navigation>

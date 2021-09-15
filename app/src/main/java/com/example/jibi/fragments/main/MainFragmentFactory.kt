@@ -8,6 +8,7 @@ import com.bumptech.glide.RequestManager
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.ui.main.transaction.aboutus.AboutUsFragment
 import com.example.jibi.ui.main.transaction.MonthManger
+import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.DetailEditTransactionFragment
 import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.InsertTransactionFragment
 import com.example.jibi.ui.main.transaction.setting.SettingFragment
 import com.example.jibi.ui.main.transaction.categories.AddCategoryFragment
@@ -52,6 +53,16 @@ constructor(
 
             InsertTransactionFragment::class.java.name -> {
                 InsertTransactionFragment(
+                    viewModelFactory,
+                    requestManager,
+                    currentLocale,
+                    sharedPreferences,
+                    sharedPrefsEditor,
+                    resources
+                )
+            }
+            DetailEditTransactionFragment::class.java.name -> {
+                DetailEditTransactionFragment(
                     viewModelFactory,
                     requestManager,
                     currentLocale,

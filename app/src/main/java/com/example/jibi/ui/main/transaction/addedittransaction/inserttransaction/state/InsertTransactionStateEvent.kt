@@ -1,7 +1,6 @@
 package com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state
 
 import com.example.jibi.models.TransactionEntity
-import com.example.jibi.ui.main.transaction.addedittransaction.state.AddEditTransactionStateEvent
 import com.example.jibi.util.StateEvent
 
 sealed class InsertTransactionStateEvent : StateEvent {
