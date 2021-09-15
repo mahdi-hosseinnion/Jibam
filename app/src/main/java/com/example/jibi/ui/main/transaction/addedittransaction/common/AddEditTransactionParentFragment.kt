@@ -19,6 +19,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.core.text.TextUtilsCompat
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.lifecycleScope
@@ -30,6 +31,7 @@ import com.example.jibi.ui.main.transaction.addedittransaction.categorybottomshe
 import com.example.jibi.ui.main.transaction.common.BaseFragment
 import com.example.jibi.util.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -451,6 +453,24 @@ constructor(
             result = result.replace(values, "")
         }
         return result
+    }
+
+    fun showSnackBar(text: String) {
+        Snackbar.make(
+            bottomCoordinator,
+            text,
+            Snackbar.LENGTH_SHORT
+        ).show()
+
+    }
+
+    fun showSnackBar(@StringRes resId: Int) {
+        Snackbar.make(
+            bottomCoordinator,
+            _getString(resId),
+            Snackbar.LENGTH_SHORT
+        ).show()
+
     }
 
     /**

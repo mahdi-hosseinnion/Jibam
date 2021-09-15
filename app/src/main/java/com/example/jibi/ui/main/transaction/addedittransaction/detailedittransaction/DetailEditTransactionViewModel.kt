@@ -160,6 +160,15 @@ constructor(
         )
     }
 
+    fun deleteTransaction(transactionId: Int) {
+        launchNewJob(
+            DetailEditTransactionStateEvent.DeleteTransaction(
+                transactionId = transactionId,
+                showSuccessToast = true
+            )
+        )
+    }
+
 
     companion object {
         private const val TAG = "DetailEditTransactionVi"

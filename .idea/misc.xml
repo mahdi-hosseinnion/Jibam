@@ -3,10 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable-anydpi/ic_delete_.xml" value="0.2916666666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/bg_summery_money.xml" value="0.2713541666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_baseline_navigate_before_24.xml" value="0.2916666666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_baseline_navigate_next_24.xml" value="0.2916666666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_endless_constellation.xml" value="0.2713541666666667" />
+        <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_round_delete_24.xml" value="0.2916666666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_round_navigate_before_24.xml" value="0.2916666666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/transaction_header_bg.xml" value="0.2713541666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout-v21/fragment_add_transaction.xml" value="0.2755208333333333" />
@@ -19,6 +21,7 @@
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/fragment_view_categories.xml" value="0.2755208333333333" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/layout_category_list_item.xml" value="0.2755208333333333" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/layout_view_categories_list_item.xml" value="0.2552083333333333" />
+        <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/menu/delete_menu.xml" value="0.2755208333333333" />
       </map>
     </option>
   </component>

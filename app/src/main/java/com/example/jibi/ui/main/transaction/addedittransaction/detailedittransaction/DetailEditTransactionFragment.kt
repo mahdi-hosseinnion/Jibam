@@ -3,6 +3,9 @@ package com.example.jibi.ui.main.transaction.addedittransaction.detailedittransa
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -17,10 +20,7 @@ import com.example.jibi.models.Transaction
 import com.example.jibi.ui.main.transaction.addedittransaction.common.AddEditTransactionParentFragment
 import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionPresenterState
 import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionPresenterState.*
-import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionPresenterState
-import com.example.jibi.util.MessageType
-import com.example.jibi.util.StateMessageCallback
-import com.example.jibi.util.convertDoubleToString
+import com.example.jibi.util.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -48,6 +48,8 @@ constructor(
     _resources = _resources
 ) {
 
+    private val TAG = "DetailEditTransactionFr"
+
     private val viewModel by viewModels<DetailEditTransactionViewModel> { viewModelFactory }
 
     private val args: DetailEditTransactionFragmentArgs by navArgs()
@@ -60,6 +62,7 @@ constructor(
     }
 
     private fun setupUi() {
+        setHasOptionsMenu(true)
         /**
          * on clicks
          */
@@ -79,6 +82,12 @@ constructor(
                             viewModel.clearStateMessage()
                         }
                     })
+                if (stateMessage.response.message ==
+                    _getString(R.string.transaction_successfully_deleted)
+                ) {
+                    uiCommunicationListener.hideSoftKeyboard()
+                    navigateBack()
+                }
             }
         }
     }
@@ -165,9 +174,11 @@ constructor(
 
             }
         }
+
     private fun setAllOfCategoriesFields(list: List<Category>) {
         btmsheetViewPagerAdapter.submitData(list)
     }
+
     private fun setTransactionFields(transaction: Transaction) {
 
         //set money to money edit text and calculator keyboard
@@ -276,4 +287,46 @@ constructor(
         viewModel.setTransactionCategory(item)
         viewModel.setPresenterState(NoneState)
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.delete_menu, menu)
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.delete_transaction) {
+            //delete stuff
+            checkForDelete(viewModel.getTransaction()?.id)
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun checkForDelete(transactionId: Int?) {
+        if (transactionId == null) {
+            //show toast error
+            viewModel.addToMessageStack(
+                _getString(R.string.unable_to_delete_no_transaction_found),
+                Throwable("$TAG : deleteTransaction: viewTransactionId is null!  viewTransactionId = $transactionId"),
+                UIComponentType.Toast,
+                MessageType.Error
+            )
+        } else {
+            val callback = object : AreYouSureCallback {
+                override fun proceed() {
+                    viewModel.deleteTransaction(transactionId)
+                }
+
+                override fun cancel() {}
+            }
+            viewModel.addToMessageStack(
+                message = _getString(R.string.are_you_sure_delete_transaction),
+                uiComponentType = UIComponentType.AreYouSureDialog(
+                    callback
+                ),
+                messageType = MessageType.Info
+            )
+        }
+    }
+
 }

@@ -87,7 +87,7 @@
         android:clickable="true"
         android:focusable="true"
         android:padding="16dp"
-        app:srcCompat="@drawable/ic_delete_"
+        app:srcCompat="@drawable/ic_round_delete_24"
         app:tint="@android:color/holo_red_light" />
 
     <ImageView

@@ -93,7 +93,7 @@ constructor(
                             viewModel.clearStateMessage()
                         }
                     })
-                if (stateMessage.response.message == getString(R.string.transaction_successfully_inserted)) {
+                if (stateMessage.response.message == _getString(R.string.transaction_successfully_inserted)) {
                     //transaction successfully inserted
                     uiCommunicationListener.hideSoftKeyboard()
                     navigateBack()
@@ -368,23 +368,7 @@ constructor(
         }
     }
 
-    private fun showSnackBar(text: String) {
-        Snackbar.make(
-            bottomCoordinator,
-            text,
-            Snackbar.LENGTH_SHORT
-        ).show()
 
-    }
-
-    private fun showSnackBar(@StringRes resId: Int) {
-        Snackbar.make(
-            bottomCoordinator,
-            _getString(resId),
-            Snackbar.LENGTH_SHORT
-        ).show()
-
-    }
 
 
     companion object {

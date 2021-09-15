@@ -239,5 +239,8 @@
     <string name="app_intro_slide_2_title">Practical graph</string>
     <string name="app_intro_slide_2_description">Know where your money goes with categories</string>
     <string name="categories">Categories</string>
+    <string name="unable_to_delete_no_transaction_found">
+        Unable to delete this transaction\nNo transaction found
+    </string>
 
 </resources>
