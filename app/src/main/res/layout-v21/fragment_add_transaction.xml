@@ -220,7 +220,7 @@
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
-                                app:srcCompat="@drawable/ic_baseline_keyboard_arrow_down_24" />
+                                app:srcCompat="@drawable/ic_round_close_24" />
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -251,6 +251,5 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:visibility="gone"
-
         app:srcCompat="@drawable/ic_check_green_24dp" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

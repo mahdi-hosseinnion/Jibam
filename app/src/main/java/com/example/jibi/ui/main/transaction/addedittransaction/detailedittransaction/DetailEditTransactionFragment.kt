@@ -7,8 +7,10 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
@@ -25,6 +27,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.collect
 import java.util.*
 import javax.inject.Inject
 
@@ -63,11 +66,31 @@ constructor(
 
     private fun setupUi() {
         setHasOptionsMenu(true)
+        fab_submit.hide()
+        lifecycleScope.launchWhenStarted {
+            viewModel.submitButtonState.isSubmitButtonEnable.collect {
+                if (it) {
+                    fab_submit.show()
+                } else {
+                    fab_submit.hide()
+                }
+            }
+        }
         /**
          * on clicks
          */
         category_fab.setOnClickListener {
             viewModel.setPresenterState(SelectingCategoryState)
+        }
+
+        edt_memo.setOnClickListener {
+            viewModel.setPresenterState(AddingNoteState)
+        }
+        edt_memo.addTextChangedListener {
+            viewModel.onMemoChanged(it.toString())
+        }
+        edt_money.addTextChangedListener {
+            viewModel.onMoneyChanged(textCalculator.calculateResult(it.toString()).toDoubleOrNull())
         }
     }
 
@@ -120,7 +143,6 @@ constructor(
                 btmsheetViewPagerAdapter.submitSelectedItemId(viewModel.getTransactionCategoryId())
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
                 category_fab.hide()
-                fab_submit.hide()
                 uiCommunicationListener.hideSoftKeyboard()
                 disableContentInteraction(edt_memo)
             }
@@ -128,7 +150,6 @@ constructor(
             is EnteringAmountOfMoneyState -> {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 category_fab.show()
-                fab_submit.show()
                 disableContentInteraction(edt_memo)
 //                uiCommunicationListener.hideSoftKeyboard()
                 showCustomKeyboard(edt_money)
@@ -136,7 +157,6 @@ constructor(
             is AddingNoteState -> {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 category_fab.show()
-                fab_submit.show()
                 hideCustomKeyboard()
                 enableContentInteraction(edt_memo)
                 forceKeyBoardToOpenForEditText(edt_memo)
@@ -144,7 +164,6 @@ constructor(
             is ChangingDateState -> {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 category_fab.show()
-                fab_submit.show()
                 uiCommunicationListener.hideSoftKeyboard()
                 hideCustomKeyboard()
                 disableContentInteraction(edt_memo)
@@ -155,7 +174,6 @@ constructor(
             is ChangingTimeState -> {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 category_fab.show()
-                fab_submit.show()
                 uiCommunicationListener.hideSoftKeyboard()
                 hideCustomKeyboard()
                 disableContentInteraction(edt_memo)
@@ -167,7 +185,6 @@ constructor(
             is NoneState -> {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 category_fab.show()
-                fab_submit.show()
                 uiCommunicationListener.hideSoftKeyboard()
                 hideCustomKeyboard()
                 disableContentInteraction(edt_memo)
@@ -188,8 +205,9 @@ constructor(
             (transaction.money.times(-1)).toString()
         else "0"
         val money = convertDoubleToString(transactionMoney)
-        keyboard.preloadKeyboard(money)
-
+        if (textCalculator.calculateResult(edt_money.text.toString()) != money ) {
+            keyboard.preloadKeyboard(money)
+        }
         //set category name and image to fab
         setCategoryFields(
             transaction.getCategoryNameFromStringFile(
@@ -200,7 +218,9 @@ constructor(
         )
 
         //set memo
-        edt_memo.setText(transaction.memo)
+        if (edt_memo.text.toString() != transaction.memo) {
+            edt_memo.setText(transaction.memo)
+        }
 
         //set date to edit text
         setDateToEditTexts(((transaction.date).toLong()).times(1_000))
@@ -297,7 +317,7 @@ constructor(
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.delete_transaction) {
             //delete stuff
-            checkForDelete(viewModel.getTransaction()?.id)
+            checkForDelete(viewModel.getDefaultTransaction()?.id)
         }
         return super.onOptionsItemSelected(item)
     }

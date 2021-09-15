@@ -3,15 +3,13 @@ package com.example.jibi.ui.main.transaction.addedittransaction.detailedittransa
 import android.util.Log
 import com.example.jibi.models.Category
 import com.example.jibi.models.Transaction
+import com.example.jibi.models.mappers.toTransactionEntity
 import com.example.jibi.repository.cateogry.CategoryRepository
 import com.example.jibi.repository.tranasction.TransactionRepository
 import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionPresenterState
 import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionStateEvent
 import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionViewState
 import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.state.SubmitButtonState
-import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionPresenterState
-import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionStateEvent
-import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionViewState
 import com.example.jibi.ui.main.transaction.common.BaseViewModel
 import com.example.jibi.util.Constants
 import com.example.jibi.util.DataState
@@ -30,6 +28,7 @@ constructor(
     private val currentLocale: Locale
 ) : BaseViewModel<DetailEditTransactionViewState, DetailEditTransactionStateEvent>() {
 
+    val submitButtonState = SubmitButtonState()
 
     init {
         //retrieve all of categories from cache
@@ -58,20 +57,23 @@ constructor(
     override fun updateViewState(newViewState: DetailEditTransactionViewState): DetailEditTransactionViewState {
         val outdated = getCurrentViewStateOrNew()
 
-        val transaction = newViewState.transaction ?: outdated.transaction
+        val defaultTransaction = newViewState.defaultTransaction ?: outdated.defaultTransaction
 
         val transactionCategoryType: Int? =
             newViewState.transactionCategoryType ?: outdated.transactionCategoryType
-            ?: transaction?.let {
+            ?: defaultTransaction?.let {
                 if (it.money > 0) {
                     Constants.INCOME_TYPE_MARKER
                 } else {
                     Constants.EXPENSES_TYPE_MARKER
                 }
             }
-
+        if (defaultTransaction != null) {
+            submitButtonState.setDefaultTransaction(defaultTransaction.toTransactionEntity())
+        }
         return DetailEditTransactionViewState(
-            transaction = transaction,
+            defaultTransaction = defaultTransaction,
+            transaction = newViewState.transaction ?: outdated.transaction ?: defaultTransaction,
             transactionCategoryType = transactionCategoryType,
             combineCalender = newViewState.combineCalender ?: outdated.combineCalender,
             allOfCategories = newViewState.allOfCategories ?: outdated.allOfCategories,
@@ -101,7 +103,9 @@ constructor(
         )
     }
 
-    fun getTransactionCategoryId(): Int? = viewState.value?.transaction?.categoryId
+    fun getTransactionCategoryId(): Int? = viewState.value?.defaultTransaction?.categoryId
+
+    fun getDefaultTransaction(): Transaction? = viewState.value?.defaultTransaction
 
     fun getTransaction(): Transaction? = viewState.value?.transaction
 
@@ -134,6 +138,18 @@ constructor(
             )
         )
 
+        val newDate = (updated.timeInMillis.div(1_000)).toInt()
+
+        val outDatedTransaction = getTransaction() ?: getDefaultTransaction()
+        setViewState(
+            DetailEditTransactionViewState(
+                transaction = outDatedTransaction?.copy(
+                    date = newDate
+                )
+            )
+        )
+        submitButtonState.onDateChange(newDate)
+
     }
 
     fun setToCombineCalender(year: Int, month: Int, day: Int) {
@@ -144,6 +160,16 @@ constructor(
                 combineCalender = updated
             )
         )
+        val newDate = (updated.timeInMillis.div(1_000)).toInt()
+        val outDatedTransaction = getTransaction() ?: getDefaultTransaction()
+        setViewState(
+            DetailEditTransactionViewState(
+                transaction = outDatedTransaction?.copy(
+                    date = newDate
+                )
+            )
+        )
+        submitButtonState.onDateChange(newDate)
     }
 
     fun setTransactionCategory(category: Category) {
@@ -158,6 +184,8 @@ constructor(
                 transactionCategoryType = category.type
             )
         )
+        submitButtonState.onCategoryChange(categoryId = category.id)
+
     }
 
     fun deleteTransaction(transactionId: Int) {
@@ -167,6 +195,33 @@ constructor(
                 showSuccessToast = true
             )
         )
+    }
+
+    fun onMemoChanged(memo: String) {
+        val outDatedTransaction = getTransaction() ?: getDefaultTransaction()
+        setViewState(
+            DetailEditTransactionViewState(
+                transaction = outDatedTransaction?.copy(
+                    memo = memo
+                )
+            )
+        )
+        submitButtonState.onMemoChange(memo)
+    }
+
+    fun onMoneyChanged(money: Double?) {
+        if (money == null) {
+            return
+        }
+        val outDatedTransaction = getTransaction() ?: getDefaultTransaction()
+        setViewState(
+            DetailEditTransactionViewState(
+                transaction = outDatedTransaction?.copy(
+                    money = money
+                )
+            )
+        )
+        submitButtonState.onMoneyChange(money)
     }
 
 

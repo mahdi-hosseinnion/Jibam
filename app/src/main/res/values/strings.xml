@@ -242,5 +242,6 @@
     <string name="unable_to_delete_no_transaction_found">
         Unable to delete this transaction\nNo transaction found
     </string>
+    <string name="edit_transaction">Edit transaction</string>
 
 </resources>

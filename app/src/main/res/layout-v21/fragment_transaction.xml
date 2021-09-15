@@ -302,7 +302,7 @@
                     android:padding="16dp"
                     android:tint="@color/black"
                     android:visibility="gone"
-                    app:srcCompat="@drawable/ic_baseline_close_24" />
+                    app:srcCompat="@drawable/ic_round_close_24" />
 
                 <ImageButton
                     android:id="@+id/main_bottom_sheet_search_btn"

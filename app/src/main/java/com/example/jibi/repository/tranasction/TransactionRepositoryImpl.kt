@@ -315,7 +315,7 @@ constructor(
                         MessageType.Success
                     ),
                     data = DetailEditTransactionViewState(
-                        transaction = resultObj
+                        defaultTransaction = resultObj
                     )
                 )
             }

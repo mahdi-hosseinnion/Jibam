@@ -11,14 +11,18 @@ import kotlinx.coroutines.flow.combine
 import java.util.*
 
 data class DetailEditTransactionViewState(
+    // default transaction used to determine if user update transaction or did not
+    val defaultTransaction: Transaction? = null,
+    // transaction used to maintain inserted data during configuration change
     val transaction: Transaction? = null,
     val transactionCategoryType: Int? = null,
     val combineCalender: GregorianCalendar? = null,
     val allOfCategories: List<Category>? = null,
-    val successfullyDeletedTransactionIndicator:Int? = null,
+    val successfullyDeletedTransactionIndicator: Int? = null,
     val presenterState: DetailEditTransactionPresenterState? = null
 
 )
+
 sealed class DetailEditTransactionPresenterState() {
 
     object SelectingCategoryState : DetailEditTransactionPresenterState()
@@ -34,7 +38,10 @@ sealed class DetailEditTransactionPresenterState() {
     object NoneState : DetailEditTransactionPresenterState()
 
 }
-class SubmitButtonState(private val defaultTransaction: TransactionEntity) {
+
+class SubmitButtonState() {
+
+    private var defaultTransaction: TransactionEntity? = null
 
     private val _doesMoneyChange = MutableStateFlow(false)
     private val _doesMemoChange = MutableStateFlow(false)
@@ -48,25 +55,32 @@ class SubmitButtonState(private val defaultTransaction: TransactionEntity) {
         _doesDateChange
     )
     { money, memo, category, date ->
+        if (defaultTransaction == null) {
+            return@combine false
+        }
         return@combine money || memo || category || date
     }
 
     fun onMoneyChange(newMoney: Double?) {
-        _doesMoneyChange.value = defaultTransaction.money != newMoney
+        _doesMoneyChange.value = defaultTransaction?.money != newMoney
     }
 
     fun onMemoChange(newMemo: String?) {
-        _doesMoneyChange.value = defaultTransaction.memo != newMemo
+        _doesMoneyChange.value = defaultTransaction?.memo != newMemo
     }
 
     fun onCategoryChange(categoryId: Int) {
-        _doesMoneyChange.value = defaultTransaction.cat_id != categoryId
+        _doesMoneyChange.value = defaultTransaction?.cat_id != categoryId
 
     }
 
     fun onDateChange(newDate: Int) {
-        _doesMoneyChange.value = defaultTransaction.date != newDate
+        _doesMoneyChange.value = defaultTransaction?.date != newDate
 
+    }
+
+    fun setDefaultTransaction(transaction: TransactionEntity) {
+        defaultTransaction = transaction
     }
 
 }
