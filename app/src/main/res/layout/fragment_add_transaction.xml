@@ -85,128 +85,167 @@
                 android:layout_margin="16dp"
                 android:layout_marginLeft="8dp"
                 android:gravity="center|left"
-                android:textColor="@color/white"
-                app:iconTint="@color/white"
                 app:layout_constraintBottom_toBottomOf="@+id/topLinear"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/topLinear"
                 tools:icon="@drawable/ic_cat_food"
                 tools:text="Food" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/txtField_date"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="32dp"
-                android:layout_marginEnd="8dp"
-                android:hint="@string/date"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/topLinear">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edt_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center|start"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center|start"
-                    android:inputType="none"
-                    android:padding="8dp"
-                    android:textSize="16sp" />
-            </com.google.android.material.textfield.TextInputLayout>
+            <!--                android:textColor="@color/white"-->
+            <!--                app:iconTint="@color/white"-->
 
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/txtField_memo"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="88dp"
-                android:hint="@string/write_note"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-
-                app:layout_constraintTop_toBottomOf="@+id/txtField_date">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edt_memo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="10"
-                    android:gravity="top"
-                    android:inputType="textMultiLine"
-                    android:maxLines="4"
-                    android:minLines="2" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <LinearLayout
-                android:id="@+id/select_category_bottom_sheet"
-                style="?attr/bottomSheetStyle"
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:id="@+id/bottomCoordinator"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:background="@color/white"
-                android:orientation="vertical"
-                app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/topLinear">
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/transaction_detail_container"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:orientation="horizontal">
+                    android:layout_height="match_parent">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center|start"
-                        android:padding="8dp"
-                        android:text="@string/categories"
-                        android:textSize="16sp" />
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/txtField_date"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="32dp"
+                        android:layout_marginEnd="8dp"
+                        android:hint="@string/date"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edt_date"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center|start"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center|start"
+                            android:inputType="none"
+                            android:padding="8dp"
+                            android:textSize="16sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
 
-                    <ImageButton
-                        android:id="@+id/bottom_sheet_back_arrow"
-                        android:layout_width="48dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="end"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/txtField_memo"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:hint="@string/write_note"
+
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+
+                        app:layout_constraintTop_toBottomOf="@+id/txtField_date"
+                        app:layout_constraintVertical_bias="0.0">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edt_memo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="10"
+                            android:gravity="top"
+                            android:inputType="textMultiLine"
+                            android:maxLines="4"
+                            android:minLines="2" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.example.jibi.util.CalculatorKeyboard
+                        android:id="@+id/keyboard"
+                        android:layout_width="match_parent"
+                        android:layout_height="288dp"
+                        android:elevation="2dp"
+                        android:layoutDirection="ltr"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                    android:id="@+id/fab_submit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="16dp"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_check_green_24dp" />
+
+                <LinearLayout
+                    android:id="@+id/select_category_bottom_sheet"
+                    style="?attr/bottomSheetStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:elevation="2dp"
+                    android:orientation="vertical"
+                    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+                    <com.google.android.material.appbar.AppBarLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
                         android:background="@color/white"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:tint="@color/black"
-                        app:srcCompat="@drawable/ic_round_close_24" />
+                        android:elevation="1dp">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <com.google.android.material.tabs.TabLayout
+                                android:id="@+id/category_tab_layout"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:foregroundGravity="center"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:tabGravity="center" />
+
+
+                            <ImageButton
+                                android:id="@+id/bottom_sheet_close_btn"
+                                android:layout_width="48dp"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="end"
+                                android:background="@color/white"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:tint="@color/black"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:srcCompat="@drawable/ic_round_close_24" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </com.google.android.material.appbar.AppBarLayout>
+
+                    <androidx.viewpager.widget.ViewPager
+                        android:id="@+id/bottom_sheet_viewpager"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingTop="8dp" />
 
                 </LinearLayout>
 
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/category_tab_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:foregroundGravity="center"
-                    app:tabGravity="center" />
 
-                <androidx.viewpager.widget.ViewPager
-                    android:id="@+id/bottom_sheet_viewpager"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingTop="4dp" />
-
-            </LinearLayout>
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -214,23 +253,7 @@
         <!--        </ScrollView>-->
 
 
-        <com.example.jibi.util.CalculatorKeyboard
-            android:id="@+id/keyboard"
-            android:layout_width="match_parent"
-            android:layout_height="288dp"
-            android:elevation="8dp"
-            android:layoutDirection="ltr"
-            android:orientation="vertical"
-            android:visibility="gone" />
     </LinearLayout>
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/fab_submit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:visibility="gone"
 
-        app:srcCompat="@drawable/ic_check_green_24dp" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

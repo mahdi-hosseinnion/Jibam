@@ -184,13 +184,14 @@
                     android:layout_margin="16dp"
                     android:visibility="gone"
                     app:srcCompat="@drawable/ic_check_green_24dp" />
+
                 <LinearLayout
                     android:id="@+id/select_category_bottom_sheet"
                     style="?attr/bottomSheetStyle"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/white"
-                    android:elevation="1dp"
+                    android:elevation="2dp"
                     android:orientation="vertical"
                     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
