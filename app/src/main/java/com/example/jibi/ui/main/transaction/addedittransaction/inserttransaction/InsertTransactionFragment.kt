@@ -46,7 +46,8 @@ constructor(
     currentLocale = currentLocale,
     sharedPreferences = sharedPreferences,
     sharedPrefsEditor = sharedPrefsEditor,
-    _resources = _resources
+    _resources = _resources,
+    fab_text = R.string.save
 ) {
     private val viewModel by viewModels<InsertTransactionViewModel> { viewModelFactory }
 
@@ -115,7 +116,8 @@ constructor(
                 viewState.memo?.let { setMemoFields(it) }
                 viewState.combineCalender?.let { setDateFields(it) }
                 viewState.allOfCategories?.let { setAllOfCategoriesFields(it) }
-                viewState.presenterState?.let { handlePresenterStateChange(it) }
+                viewState.presenterState?.getContentIfNotHandled()
+                    ?.let { handlePresenterStateChange(it) }
             }
         }
     }
@@ -367,8 +369,6 @@ constructor(
             }
         }
     }
-
-
 
 
     companion object {

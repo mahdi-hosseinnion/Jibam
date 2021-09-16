@@ -3,6 +3,7 @@ package com.example.jibi.ui.main.transaction.addedittransaction.detailedittransa
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -28,6 +29,7 @@ import kotlinx.android.synthetic.main.fragment_add_transaction.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.debounce
 import java.util.*
 import javax.inject.Inject
 
@@ -48,7 +50,8 @@ constructor(
     currentLocale = currentLocale,
     sharedPreferences = sharedPreferences,
     sharedPrefsEditor = sharedPrefsEditor,
-    _resources = _resources
+    _resources = _resources,
+    fab_text = R.string.update
 ) {
 
     private val TAG = "DetailEditTransactionFr"
@@ -56,6 +59,7 @@ constructor(
     private val viewModel by viewModels<DetailEditTransactionViewModel> { viewModelFactory }
 
     private val args: DetailEditTransactionFragmentArgs by navArgs()
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -66,15 +70,18 @@ constructor(
 
     private fun setupUi() {
         setHasOptionsMenu(true)
-        fab_submit.hide()
         lifecycleScope.launchWhenStarted {
-            viewModel.submitButtonState.isSubmitButtonEnable.collect {
-                if (it) {
-                    fab_submit.show()
-                } else {
-                    fab_submit.hide()
+            viewModel.submitButtonState.isSubmitButtonEnable
+                .collect {
+                    Log.d("DetailEditTransactionVi", "setupUi: $it ")
+                    fragment_add_toolbar_main.title = if (it) {
+                        fab_submit.show()
+                        _getString(R.string.edit_transaction)
+                    } else {
+                        fab_submit.hide()
+                        _getString(R.string.details)
+                    }
                 }
-            }
         }
         /**
          * on clicks
@@ -82,15 +89,18 @@ constructor(
         category_fab.setOnClickListener {
             viewModel.setPresenterState(SelectingCategoryState)
         }
-
+        bottom_sheet_close_btn.setOnClickListener {
+            viewModel.setPresenterState(NoneState)
+        }
         edt_memo.setOnClickListener {
             viewModel.setPresenterState(AddingNoteState)
         }
         edt_memo.addTextChangedListener {
+            Log.d(TAG, "setupUi: edt_memo: ${it.toString()} ")
             viewModel.onMemoChanged(it.toString())
         }
         edt_money.addTextChangedListener {
-            viewModel.onMoneyChanged(textCalculator.calculateResult(it.toString()).toDoubleOrNull())
+            viewModel.onMoneyChanged(it.toString())
         }
     }
 
@@ -127,22 +137,24 @@ constructor(
         viewModel.viewState.observe(viewLifecycleOwner) { vs ->
             vs?.let { viewState ->
                 viewState.transaction?.let { setTransactionFields(it) }
+                viewState.moneyStr?.let { setMoneyFields(it) }
                 viewState.combineCalender?.let { setCombineFields(it) }
-                viewState.presenterState?.let { handlePresenterStateChange(it) }
+                viewState.presenterState?.getContentIfNotHandled()
+                    ?.let { handlePresenterStateChange(it) }
                 viewState.allOfCategories?.let { setAllOfCategoriesFields(it) }
 
             }
         }
     }
 
-    private fun handlePresenterStateChange(newState: DetailEditTransactionPresenterState) =
-        //TODO add system to ensure presenter don't call twice
-        when (newState) {
+    private fun handlePresenterStateChange(newState: DetailEditTransactionPresenterState)
+      =  when (newState) {
 
             is SelectingCategoryState -> {
                 btmsheetViewPagerAdapter.submitSelectedItemId(viewModel.getTransactionCategoryId())
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
                 category_fab.hide()
+                viewModel.submitButtonState.forcedHidden(true)
                 uiCommunicationListener.hideSoftKeyboard()
                 disableContentInteraction(edt_memo)
             }
@@ -150,6 +162,7 @@ constructor(
             is EnteringAmountOfMoneyState -> {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 category_fab.show()
+                viewModel.submitButtonState.forcedHidden(false)
                 disableContentInteraction(edt_memo)
 //                uiCommunicationListener.hideSoftKeyboard()
                 showCustomKeyboard(edt_money)
@@ -157,6 +170,7 @@ constructor(
             is AddingNoteState -> {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 category_fab.show()
+                viewModel.submitButtonState.forcedHidden(false)
                 hideCustomKeyboard()
                 enableContentInteraction(edt_memo)
                 forceKeyBoardToOpenForEditText(edt_memo)
@@ -164,6 +178,7 @@ constructor(
             is ChangingDateState -> {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 category_fab.show()
+                viewModel.submitButtonState.forcedHidden(false)
                 uiCommunicationListener.hideSoftKeyboard()
                 hideCustomKeyboard()
                 disableContentInteraction(edt_memo)
@@ -174,6 +189,7 @@ constructor(
             is ChangingTimeState -> {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 category_fab.show()
+                viewModel.submitButtonState.forcedHidden(false)
                 uiCommunicationListener.hideSoftKeyboard()
                 hideCustomKeyboard()
                 disableContentInteraction(edt_memo)
@@ -185,6 +201,7 @@ constructor(
             is NoneState -> {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 category_fab.show()
+                viewModel.submitButtonState.forcedHidden(false)
                 uiCommunicationListener.hideSoftKeyboard()
                 hideCustomKeyboard()
                 disableContentInteraction(edt_memo)
@@ -192,22 +209,12 @@ constructor(
             }
         }
 
+
     private fun setAllOfCategoriesFields(list: List<Category>) {
         btmsheetViewPagerAdapter.submitData(list)
     }
 
     private fun setTransactionFields(transaction: Transaction) {
-
-        //set money to money edit text and calculator keyboard
-        val transactionMoney = if (transaction.money > 0)
-            transaction.money.toString()
-        else if (transaction.money < 0)
-            (transaction.money.times(-1)).toString()
-        else "0"
-        val money = convertDoubleToString(transactionMoney)
-        if (textCalculator.calculateResult(edt_money.text.toString()) != money ) {
-            keyboard.preloadKeyboard(money)
-        }
         //set category name and image to fab
         setCategoryFields(
             transaction.getCategoryNameFromStringFile(
@@ -225,6 +232,12 @@ constructor(
         //set date to edit text
         setDateToEditTexts(((transaction.date).toLong()).times(1_000))
 
+    }
+
+    private fun setMoneyFields(money: String) {
+        if (edt_money.text.toString() != money) {
+            keyboard.preloadKeyboard(money)
+        }
     }
 
     private fun setCategoryFields(
@@ -258,8 +271,8 @@ constructor(
     override fun onMoneyEditTextFocusChanged(hasFocus: Boolean) {
         if (hasFocus)
             viewModel.setPresenterState(EnteringAmountOfMoneyState)
-        else
-            viewModel.setPresenterState(NoneState)
+//        else
+//            viewModel.setPresenterState(NoneState)
     }
 
     override fun onClickedOnMoneyEditText() {
@@ -298,8 +311,7 @@ constructor(
         txtField_memo.hint = _getString(R.string.write_note)
         txtField_date.hint = _getString(R.string.date)
         edt_money.hint = _getString(R.string._0)
-        findNavController()
-            .currentDestination?.label = _getString(R.string.details)
+        fragment_add_toolbar_main.title = _getString(R.string.details)
     }
 
     override fun onItemSelected(position: Int, item: Category) {

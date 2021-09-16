@@ -1,6 +1,7 @@
 package com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state
 
 import com.example.jibi.models.Category
+import com.example.jibi.util.Event
 import java.util.*
 
 data class InsertTransactionViewState(
@@ -11,7 +12,7 @@ data class InsertTransactionViewState(
     val combineCalender: GregorianCalendar? = null,
     val allOfCategories: List<Category>? = null,
     val insertedTransactionRawId: Long? = null,
-    val presenterState: InsertTransactionPresenterState? = null
+    val presenterState: Event<InsertTransactionPresenterState>? = null
 
 )
 

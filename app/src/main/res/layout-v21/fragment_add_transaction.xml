@@ -85,21 +85,22 @@
                 android:layout_margin="16dp"
                 android:layout_marginLeft="8dp"
                 android:gravity="center|left"
-                android:textColor="@color/white"
-                app:iconTint="@color/white"
                 app:layout_constraintBottom_toBottomOf="@+id/topLinear"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/topLinear"
                 tools:icon="@drawable/ic_cat_food"
                 tools:text="Food" />
 
+            <!--                android:textColor="@color/white"-->
+            <!--                app:iconTint="@color/white"-->
+
 
             <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:id="@+id/bottomCoordinator"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:id="@+id/bottomCoordinator"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/topLinear">
 
@@ -175,6 +176,14 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
+                <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                    android:id="@+id/fab_submit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="16dp"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_check_green_24dp" />
                 <LinearLayout
                     android:id="@+id/select_category_bottom_sheet"
                     style="?attr/bottomSheetStyle"
@@ -234,6 +243,7 @@
 
                 </LinearLayout>
 
+
             </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -244,12 +254,5 @@
 
     </LinearLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_submit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:visibility="gone"
-        app:srcCompat="@drawable/ic_check_green_24dp" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

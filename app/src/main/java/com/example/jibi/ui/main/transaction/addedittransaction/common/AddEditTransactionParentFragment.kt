@@ -48,7 +48,8 @@ constructor(
     private val currentLocale: Locale,
     private val sharedPreferences: SharedPreferences,
     private val sharedPrefsEditor: SharedPreferences.Editor,
-    private val _resources: Resources
+    private val _resources: Resources,
+    @StringRes private val fab_text: Int
 ) : BaseFragment(
     R.layout.fragment_add_transaction,
     R.id.fragment_add_toolbar_main,
@@ -84,6 +85,8 @@ constructor(
     }
 
     private fun initUi() {
+        fab_submit.text = _getString(fab_text)
+        fab_submit.icon = resources.getDrawable(R.drawable.ic_check_green_24dp)
 
         edt_money.addTextChangedListener(onTextChangedListener)
 
@@ -384,9 +387,9 @@ constructor(
         val _16Dp = convertDpToPx(16)
         if (fab_submit.isShown) {
             //TODO ADD SLIDE ANIMATION HERE
-            fab_submit.hide()
+//            fab_submit.hide()
             fab_submit.setMargins(_16Dp, _16Dp, _16Dp, marginBottom ?: _16Dp)
-            fab_submit.show()
+//            fab_submit.show()
         } else {
             fab_submit.setMargins(_16Dp, _16Dp, _16Dp, marginBottom ?: _16Dp)
         }

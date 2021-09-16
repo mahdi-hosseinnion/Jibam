@@ -13,8 +13,11 @@ import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransac
 import com.example.jibi.ui.main.transaction.common.BaseViewModel
 import com.example.jibi.util.Constants
 import com.example.jibi.util.DataState
+import com.example.jibi.util.Event
+import com.example.jibi.util.convertDoubleToString
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.callbackFlow
 import java.util.*
 import javax.inject.Inject
 
@@ -68,11 +71,18 @@ constructor(
                     Constants.EXPENSES_TYPE_MARKER
                 }
             }
+        //money base value should be default transaction money
+        val moneyStr =
+            newViewState.moneyStr ?: outdated.moneyStr ?: convertTransactionMoneyToDoubleMoney(
+                defaultTransaction?.money
+            )
+
         if (defaultTransaction != null) {
             submitButtonState.setDefaultTransaction(defaultTransaction.toTransactionEntity())
         }
         return DetailEditTransactionViewState(
             defaultTransaction = defaultTransaction,
+            moneyStr = moneyStr,
             transaction = newViewState.transaction ?: outdated.transaction ?: defaultTransaction,
             transactionCategoryType = transactionCategoryType,
             combineCalender = newViewState.combineCalender ?: outdated.combineCalender,
@@ -81,6 +91,18 @@ constructor(
             successfullyDeletedTransactionIndicator = newViewState.successfullyDeletedTransactionIndicator
                 ?: outdated.successfullyDeletedTransactionIndicator,
         )
+    }
+
+    private fun convertTransactionMoneyToDoubleMoney(value: Double?): String? {
+        if (value == null) {
+            return null
+        }
+        val transactionMoney = if (value > 0)
+            value.toString()
+        else if (value < 0)
+            (value.times(-1)).toString()
+        else "0"
+        return convertDoubleToString(transactionMoney)
     }
 
     fun getTransactionById(transactionId: Int) {
@@ -98,7 +120,7 @@ constructor(
     fun setPresenterState(newState: DetailEditTransactionPresenterState) {
         setViewState(
             DetailEditTransactionViewState(
-                presenterState = newState
+                presenterState = Event(newState)
             )
         )
     }
@@ -209,19 +231,14 @@ constructor(
         submitButtonState.onMemoChange(memo)
     }
 
-    fun onMoneyChanged(money: Double?) {
-        if (money == null) {
-            return
-        }
-        val outDatedTransaction = getTransaction() ?: getDefaultTransaction()
+    fun onMoneyChanged(money: String) {
+
         setViewState(
             DetailEditTransactionViewState(
-                transaction = outDatedTransaction?.copy(
-                    money = money
-                )
+                moneyStr = money
             )
         )
-        submitButtonState.onMoneyChange(money)
+        submitButtonState.onMoneyChange(money.toDoubleOrNull())
     }
 
 

@@ -9,6 +9,7 @@ import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction
 import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionViewState
 import com.example.jibi.ui.main.transaction.common.BaseViewModel
 import com.example.jibi.util.DataState
+import com.example.jibi.util.Event
 import java.util.*
 import javax.inject.Inject
 
@@ -82,7 +83,7 @@ constructor(
     fun setPresenterState(newState: InsertTransactionPresenterState) {
         setViewState(
             InsertTransactionViewState(
-                presenterState = newState
+                presenterState = Event(newState)
             )
         )
     }

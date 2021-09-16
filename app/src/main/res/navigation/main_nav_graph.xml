@@ -164,7 +164,7 @@
     <fragment
         android:id="@+id/detailEditTransactionFragment"
         android:name="com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.DetailEditTransactionFragment"
-        android:label="DetailEditTransactionFragment" >
+        >
         <action
             android:id="@+id/action_detailEditTransactionFragment_to_transactionFragment"
             app:destination="@id/transactionFragment" />

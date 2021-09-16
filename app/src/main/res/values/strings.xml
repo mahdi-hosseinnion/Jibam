@@ -243,5 +243,7 @@
         Unable to delete this transaction\nNo transaction found
     </string>
     <string name="edit_transaction">Edit transaction</string>
+    <string name="update">Update</string>
+    <string name="save">Save</string>
 
 </resources>
