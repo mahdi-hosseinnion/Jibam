@@ -47,7 +47,11 @@
             app:popExitAnim="@anim/slide_out" />
         <action
             android:id="@+id/action_transactionFragment_to_detailEditTransactionFragment"
-            app:destination="@id/detailEditTransactionFragment" />
+            app:destination="@id/detailEditTransactionFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
     </fragment>
     <fragment
         android:id="@+id/insertTransactionFragment"
@@ -158,22 +162,33 @@
             app:argType="integer" />
         <action
             android:id="@+id/action_detailChartFragment_to_detailEditTransactionFragment"
-            app:destination="@id/detailEditTransactionFragment" />
+            app:destination="@id/detailEditTransactionFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
 
     </fragment>
     <fragment
         android:id="@+id/detailEditTransactionFragment"
-        android:name="com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.DetailEditTransactionFragment"
-        >
+        android:name="com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.DetailEditTransactionFragment">
         <action
             android:id="@+id/action_detailEditTransactionFragment_to_transactionFragment"
-            app:destination="@id/transactionFragment" />
+            app:destination="@id/transactionFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
         <action
             android:id="@+id/action_detailEditTransactionFragment_to_detailChartFragment"
-            app:destination="@id/detailChartFragment" />
+            app:destination="@id/detailChartFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
         <argument
             android:name="transactionId"
-            app:argType="integer"
-            android:defaultValue="-1" />
+            android:defaultValue="-1"
+            app:argType="integer" />
     </fragment>
 </navigation>
