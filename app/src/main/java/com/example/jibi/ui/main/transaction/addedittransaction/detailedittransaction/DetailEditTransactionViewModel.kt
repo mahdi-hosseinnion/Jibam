@@ -3,6 +3,7 @@ package com.example.jibi.ui.main.transaction.addedittransaction.detailedittransa
 import android.util.Log
 import com.example.jibi.models.Category
 import com.example.jibi.models.Transaction
+import com.example.jibi.models.TransactionEntity
 import com.example.jibi.models.mappers.toTransactionEntity
 import com.example.jibi.repository.cateogry.CategoryRepository
 import com.example.jibi.repository.tranasction.TransactionRepository
@@ -11,13 +12,13 @@ import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransac
 import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionViewState
 import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.state.SubmitButtonState
 import com.example.jibi.ui.main.transaction.common.BaseViewModel
-import com.example.jibi.util.Constants
+import com.example.jibi.util.Constants.EXPENSES_TYPE_MARKER
+import com.example.jibi.util.Constants.INCOME_TYPE_MARKER
 import com.example.jibi.util.DataState
 import com.example.jibi.util.Event
 import com.example.jibi.util.convertDoubleToString
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.callbackFlow
 import java.util.*
 import javax.inject.Inject
 
@@ -52,6 +53,9 @@ constructor(
         is DetailEditTransactionStateEvent.GetAllOfCategories -> categoryRepository.getAllOfCategories(
             stateEvent
         )
+        is DetailEditTransactionStateEvent.UpdateTransaction -> transactionRepository.updateTransaction(
+            stateEvent
+        )
         is DetailEditTransactionStateEvent.DeleteTransaction -> transactionRepository.deleteTransaction(
             stateEvent
         )
@@ -66,9 +70,9 @@ constructor(
             newViewState.transactionCategoryType ?: outdated.transactionCategoryType
             ?: defaultTransaction?.let {
                 if (it.money > 0) {
-                    Constants.INCOME_TYPE_MARKER
+                    INCOME_TYPE_MARKER
                 } else {
-                    Constants.EXPENSES_TYPE_MARKER
+                    EXPENSES_TYPE_MARKER
                 }
             }
         //money base value should be default transaction money
@@ -126,6 +130,8 @@ constructor(
     }
 
     fun getTransactionCategoryId(): Int? = viewState.value?.defaultTransaction?.categoryId
+
+    fun getTransactionCategoryType(): Int? = viewState.value?.transactionCategoryType
 
     fun getDefaultTransaction(): Transaction? = viewState.value?.defaultTransaction
 
@@ -239,6 +245,12 @@ constructor(
             )
         )
         submitButtonState.onMoneyChange(money.toDoubleOrNull())
+    }
+
+    fun updateTransaction(entity: TransactionEntity) {
+        launchNewJob(
+            DetailEditTransactionStateEvent.UpdateTransaction(entity)
+        )
     }
 
 

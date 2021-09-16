@@ -185,6 +185,7 @@
     <string name="transaction_error_inserted">Unable to insert transaction</string>
 
     <string name="transaction_successfully_updated">"Transaction successfully updated"</string>
+    <string name="transaction_error_updated">Unable to update transaction</string>
 
     <string name="transaction_successfully_deleted">"Transaction successfully deleted"</string>
     <string name="transaction_error_deleted">"Unable to delete transaction"</string>
@@ -245,5 +246,7 @@
     <string name="edit_transaction">Edit transaction</string>
     <string name="update">Update</string>
     <string name="save">Save</string>
+    <string name="no_transaction_found">No transaction found</string>
+    <string name="unknown_category_type">Unknown category type</string>
 
 </resources>

@@ -12,7 +12,6 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.bumptech.glide.RequestManager
@@ -20,16 +19,17 @@ import com.example.jibi.R
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Category
 import com.example.jibi.models.Transaction
+import com.example.jibi.models.TransactionEntity
 import com.example.jibi.ui.main.transaction.addedittransaction.common.AddEditTransactionParentFragment
 import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionPresenterState
 import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionPresenterState.*
+import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionPresenterState
 import com.example.jibi.util.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.debounce
 import java.util.*
 import javax.inject.Inject
 
@@ -102,7 +102,11 @@ constructor(
         edt_money.addTextChangedListener {
             viewModel.onMoneyChanged(it.toString())
         }
+        fab_submit.setOnClickListener {
+            updateTransaction()
+        }
     }
+
 
     override fun handleStateMessages() {
         viewModel.stateMessage.observe(viewLifecycleOwner) { sm ->
@@ -120,6 +124,14 @@ constructor(
                 ) {
                     uiCommunicationListener.hideSoftKeyboard()
                     navigateBack()
+                }
+                if (stateMessage.response.message == _getString(R.string.transaction_successfully_updated)) {
+                    //transaction successfully inserted
+                    uiCommunicationListener.hideSoftKeyboard()
+                    navigateBack()
+                }
+                if (stateMessage.response.messageType == MessageType.Error) {
+                    fab_submit.isEnabled = true
                 }
             }
         }
@@ -147,8 +159,8 @@ constructor(
         }
     }
 
-    private fun handlePresenterStateChange(newState: DetailEditTransactionPresenterState)
-      =  when (newState) {
+    private fun handlePresenterStateChange(newState: DetailEditTransactionPresenterState) =
+        when (newState) {
 
             is SelectingCategoryState -> {
                 btmsheetViewPagerAdapter.submitSelectedItemId(viewModel.getTransactionCategoryId())
@@ -360,5 +372,67 @@ constructor(
             )
         }
     }
+
+    private fun updateTransaction() {
+        fab_submit.isEnabled = false
+        getTransactionEntityFiled()?.let {
+            viewModel.updateTransaction(it)
+        } ?: run {
+            fab_submit.isEnabled = true
+        }
+    }
+
+    private fun getTransactionEntityFiled(): TransactionEntity? {
+
+        val transaction = viewModel.getTransaction()
+
+        if (transaction == null) {
+            showSnackBar(R.string.no_transaction_found)
+            navigateBack()
+            return null
+        }
+        val moneyEditTextStr = edt_money.text.toString()
+
+        if (moneyEditTextStr.isBlank()) {
+            showSnackBar(R.string.pls_insert_some_money)
+            viewModel.setPresenterState(EnteringAmountOfMoneyState)
+            return null
+        }
+
+        val calculatedMoney = textCalculator.calculateResult(moneyEditTextStr)
+            .replace(",".toRegex(), "")
+
+        if (calculatedMoney.isBlank() || calculatedMoney.toDouble() <= 0) {
+            showSnackBar(R.string.pls_insert_valid_amount_of_money)
+            viewModel.setPresenterState(EnteringAmountOfMoneyState)
+            return null
+        }
+
+        val calender = viewModel.getCombineCalender()
+
+        //add marker to money if its expenses
+        var money: Double = calculatedMoney.toDouble()
+
+        val type = viewModel.getTransactionCategoryType()
+
+        if (type == null) {
+            showSnackBar(R.string.unknown_category_type)
+            viewModel.setPresenterState(SelectingCategoryState)
+            return null
+        }
+
+        if (type == Constants.EXPENSES_TYPE_MARKER) {
+            money = money.times(-1)
+        }
+
+        return TransactionEntity(
+            id = transaction.id,
+            money = money,
+            memo = edt_memo.text.toString(),
+            cat_id = transaction.categoryId,
+            date = (calender.timeInMillis).div(1_000).toInt()
+        )
+    }
+
 
 }

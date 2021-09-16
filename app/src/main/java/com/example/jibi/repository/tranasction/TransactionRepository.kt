@@ -53,6 +53,10 @@ interface TransactionRepository {
         stateEvent: InsertTransactionStateEvent.InsertTransaction
     ): DataState<InsertTransactionViewState>
 
+    suspend fun updateTransaction(
+        stateEvent: DetailEditTransactionStateEvent.UpdateTransaction
+    ): DataState<DetailEditTransactionViewState>
+
     suspend fun deleteTransaction(
         stateEvent: DetailEditTransactionStateEvent.DeleteTransaction
     ): DataState<DetailEditTransactionViewState>

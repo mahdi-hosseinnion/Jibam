@@ -1,5 +1,6 @@
 package com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.state
 
+import com.example.jibi.models.TransactionEntity
 import com.example.jibi.util.StateEvent
 
 sealed class DetailEditTransactionStateEvent : StateEvent {
@@ -19,6 +20,16 @@ sealed class DetailEditTransactionStateEvent : StateEvent {
 
         override fun getId(): String =
             "GetAllOfCategories time: hash: ${this.hashCode()}"
+    }
+
+    data class UpdateTransaction(
+        val transactionEntity: TransactionEntity
+    ) : DetailEditTransactionStateEvent() {
+        override fun errorInfo(): String =
+            "Unable to update transaction"
+
+        override fun getId(): String =
+            "UpdateTransaction $transactionEntity hash: ${this.hashCode()} "
     }
 
     data class DeleteTransaction(

@@ -171,6 +171,41 @@ constructor(
         }.getResult()
     }
 
+    override suspend fun updateTransaction(
+        stateEvent: DetailEditTransactionStateEvent.UpdateTransaction
+    ): DataState<DetailEditTransactionViewState> {
+
+        val cacheResult = safeCacheCall {
+            recordsDao.updateRecord(transactionEntity = stateEvent.transactionEntity)
+        }
+        return object : CacheResponseHandler<DetailEditTransactionViewState, Int>(
+            response = cacheResult,
+            stateEvent = stateEvent
+        ) {
+            override suspend fun handleSuccess(resultObj: Int): DataState<DetailEditTransactionViewState> {
+                return if (resultObj > 0) {
+                    DataState.data(
+                        response = buildResponse(
+                            message = getString(R.string.transaction_successfully_updated),
+                            UIComponentType.Toast,
+                            MessageType.Success
+                        ),
+                        data = null
+                    )
+                } else {
+                    DataState.error(
+                        response = buildResponse(
+                            message = getString(R.string.transaction_error_updated),
+                            UIComponentType.Toast,
+                            MessageType.Success
+                        ),
+                        stateEvent = stateEvent
+                    )
+                }
+            }
+        }.getResult()
+    }
+
     override suspend fun insertTransaction(
         stateEvent: TransactionsStateEvent.InsertTransaction
     ): DataState<TransactionsViewState> {

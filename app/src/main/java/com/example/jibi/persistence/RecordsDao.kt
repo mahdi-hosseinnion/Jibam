@@ -30,11 +30,11 @@ interface RecordsDao {
 
 
     /**
-     * To delete one or more products.
+     * To delete one or more transaction.
      * Returns number of rows deleted. 0 if no row deleted.
      */
     @Update
-    suspend fun updateRecord(vararg transactionEntity: TransactionEntity): Int
+    suspend fun updateRecord(transactionEntity: TransactionEntity): Int
 
     @Delete
     suspend fun deleteRecord(vararg transactionEntity: TransactionEntity): Int
