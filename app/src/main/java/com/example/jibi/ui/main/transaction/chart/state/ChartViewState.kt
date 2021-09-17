@@ -1,6 +1,7 @@
 package com.example.jibi.ui.main.transaction.chart.state
 
+import com.example.jibi.models.Transaction
+
 data class ChartViewState(
-    //TODO DELETE THIS
-    var nothing: Nothing? = null
+    val recentlyDeletedTransaction: Transaction? = null
 )

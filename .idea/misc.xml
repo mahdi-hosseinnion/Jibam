@@ -9,6 +9,8 @@
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_baseline_navigate_before_24.xml" value="0.2916666666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_baseline_navigate_next_24.xml" value="0.2916666666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_endless_constellation.xml" value="0.2713541666666667" />
+        <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_error.xml" value="0.2916666666666667" />
+        <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_left_arrow.xml" value="0.2916666666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_round_delete_24.xml" value="0.2916666666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_round_navigate_before_24.xml" value="0.2916666666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/transaction_header_bg.xml" value="0.2713541666666667" />
@@ -18,6 +20,7 @@
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/bottom_sheet_create_new_trans.xml" value="0.2755208333333333" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/custom_tab_layout.xml" value="0.2755208333333333" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/fragment_add_transaction.xml" value="0.19519927536231885" />
+        <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/fragment_detail_chart.xml" value="0.2712820512820513" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/fragment_transaction.xml" value="0.25181159420289856" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/fragment_view_categories.xml" value="0.2755208333333333" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/layout_category_list_item.xml" value="0.2755208333333333" />

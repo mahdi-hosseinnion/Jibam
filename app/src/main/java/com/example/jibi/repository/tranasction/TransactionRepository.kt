@@ -6,6 +6,8 @@ import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransac
 import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionViewState
 import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionStateEvent
 import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionViewState
+import com.example.jibi.ui.main.transaction.chart.state.ChartStateEvent
+import com.example.jibi.ui.main.transaction.chart.state.ChartViewState
 import com.example.jibi.ui.main.transaction.transactions.state.TransactionsStateEvent
 import com.example.jibi.ui.main.transaction.transactions.state.TransactionsViewState
 import com.example.jibi.util.DataState
@@ -53,6 +55,10 @@ interface TransactionRepository {
         stateEvent: InsertTransactionStateEvent.InsertTransaction
     ): DataState<InsertTransactionViewState>
 
+    suspend fun insertTransaction(
+        stateEvent: ChartStateEvent.InsertTransaction
+    ): DataState<ChartViewState>
+
     suspend fun updateTransaction(
         stateEvent: DetailEditTransactionStateEvent.UpdateTransaction
     ): DataState<DetailEditTransactionViewState>
@@ -60,6 +66,10 @@ interface TransactionRepository {
     suspend fun deleteTransaction(
         stateEvent: DetailEditTransactionStateEvent.DeleteTransaction
     ): DataState<DetailEditTransactionViewState>
+
+    suspend fun deleteTransaction(
+        stateEvent: ChartStateEvent.DeleteTransaction
+    ): DataState<ChartViewState>
 
     suspend fun getTransactionById(
         stateEvent: DetailEditTransactionStateEvent.GetTransactionById

@@ -13,6 +13,8 @@ import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransac
 import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionViewState
 import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionStateEvent
 import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionViewState
+import com.example.jibi.ui.main.transaction.chart.state.ChartStateEvent
+import com.example.jibi.ui.main.transaction.chart.state.ChartViewState
 import com.example.jibi.ui.main.transaction.transactions.state.TransactionsStateEvent
 import com.example.jibi.ui.main.transaction.transactions.state.TransactionsViewState
 import com.example.jibi.util.*
@@ -156,6 +158,42 @@ constructor(
                         data = InsertTransactionViewState(
                             insertedTransactionRawId = resultObj
                         )
+                    )
+                } else {
+                    DataState.error(
+                        response = buildResponse(
+                            message = getString(R.string.transaction_error_inserted),
+                            UIComponentType.Toast,
+                            MessageType.Success
+                        ),
+                        stateEvent = stateEvent
+                    )
+                }
+            }
+        }.getResult()
+    }
+
+    override suspend fun insertTransaction(
+        stateEvent: ChartStateEvent.InsertTransaction
+    ): DataState<ChartViewState> {
+
+        val cacheResult = safeCacheCall {
+            recordsDao.insertOrReplace(stateEvent.transactionEntity)
+        }
+
+        return object : CacheResponseHandler<ChartViewState, Long>(
+            response = cacheResult,
+            stateEvent = stateEvent
+        ) {
+            override suspend fun handleSuccess(resultObj: Long): DataState<ChartViewState> {
+                return if (resultObj > 0) {
+                    DataState.data(
+                        response = buildResponse(
+                            message = getString(R.string.transaction_successfully_inserted),
+                            UIComponentType.Toast,
+                            MessageType.Success
+                        ),
+                        data = null
                     )
                 } else {
                     DataState.error(
@@ -315,6 +353,47 @@ constructor(
                         data = DetailEditTransactionViewState(
                             successfullyDeletedTransactionIndicator = resultObj
                         ),
+                        stateEvent = stateEvent
+                    )
+                } else {
+                    DataState.error(
+                        response = Response(
+                            message = getString(R.string.transaction_error_deleted),
+                            uiComponentType = UIComponentType.Toast,
+                            messageType = MessageType.Error
+                        )
+                    )
+                }
+
+            }
+        }.getResult()
+    }
+
+    override suspend fun deleteTransaction(
+        stateEvent: ChartStateEvent.DeleteTransaction
+    ): DataState<ChartViewState> {
+        val cacheResult = safeCacheCall {
+            recordsDao.deleteRecord(stateEvent.transactionId)
+        }
+        return object : CacheResponseHandler<ChartViewState, Int>(
+            response = cacheResult,
+            stateEvent = stateEvent
+        ) {
+            override suspend fun handleSuccess(resultObj: Int): DataState<ChartViewState> {
+                return if (resultObj > 0) {
+                    //success
+                    val uiComponentType: UIComponentType = if (stateEvent.showSuccessToast) {
+                        UIComponentType.Toast
+                    } else {
+                        UIComponentType.None
+                    }
+                    DataState.data(
+                        response = Response(
+                            message = getString(R.string.transaction_successfully_deleted),
+                            uiComponentType = uiComponentType,
+                            messageType = MessageType.Success
+                        ),
+                        data = null,
                         stateEvent = stateEvent
                     )
                 } else {

@@ -250,5 +250,6 @@
     <string name="unknown_category_type">Unknown category type</string>
     <string name="you_changes_have_not_saved">Your changes have not been saved</string>
     <string name="discard">Discard</string>
+    <string name="unable_to_restore_transaction">Unable to restore deleted transaction</string>
 
 </resources>

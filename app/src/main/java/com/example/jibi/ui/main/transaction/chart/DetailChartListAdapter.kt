@@ -60,6 +60,9 @@ class DetailChartListAdapter(
         notifyDataSetChanged()
     }
 
+    fun getTransaction(position: Int): Transaction? = this.data.get(index = position)
+
+
     class DetailChartViewHolder(
         itemView: View,
         private val interaction: Interaction?,
