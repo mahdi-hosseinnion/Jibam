@@ -62,8 +62,6 @@ constructor(
 
     lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
 
-    private val underBottomSheetPadding by lazy { convertDpToPx(24) }
-
     private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
 
         override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -73,8 +71,6 @@ constructor(
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
             //bottomSheet slide animation stuff stuff
             transaction_detail_container.alpha = 1f.minus(slideOffset)
-            val padding = slideOffset.times(underBottomSheetPadding).toInt()
-            transaction_detail_container.setPadding(padding, padding, padding, padding)
         }
     }
 

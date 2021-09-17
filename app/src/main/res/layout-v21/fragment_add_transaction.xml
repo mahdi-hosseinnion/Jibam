@@ -191,7 +191,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/white"
-                    android:elevation="2dp"
+                    android:elevation="4dp"
                     android:orientation="vertical"
                     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
@@ -199,7 +199,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:background="@color/white"
-                        android:elevation="1dp">
+                        android:elevation="2dp">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
@@ -239,8 +239,7 @@
                     <androidx.viewpager.widget.ViewPager
                         android:id="@+id/bottom_sheet_viewpager"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:paddingTop="8dp" />
+                        android:layout_height="match_parent" />
 
                 </LinearLayout>
 
