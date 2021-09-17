@@ -44,11 +44,13 @@ constructor(
 
     private val viewModel by viewModels<ChartViewModel> { viewModelFactory }
 
+    private lateinit var recyclerAdapter: DetailChartListAdapter
 
     override fun setTextToAllViews() {}
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initRecyclerView()
         subscribeObservers()
     }
 
@@ -75,15 +77,7 @@ constructor(
         viewModel.getAllTransactionByCategoryId(
             args.categoryId
         ).observe(viewLifecycleOwner) {
-            if (!it.isNullOrEmpty()) {
-                setCategoryData(
-                    it[0].getCategoryNameFromStringFile(
-                        _resources,
-                        this.requireActivity().packageName
-                    ) { it.categoryName }
-                )
-                initRecyclerView(it)
-            }
+            recyclerAdapter.swapData(it)
         }
     }
 
@@ -93,24 +87,17 @@ constructor(
         detailChartFragment_toolbar.title = categoryName + monthName
     }
 
-    private fun initRecyclerView(data: List<Transaction>) {
-        if (data.isNullOrEmpty()) {
-            return
-        }
-        error_txt.visibility = View.GONE
-
-
+    private fun initRecyclerView() {
         detail_chart_recycler.apply {
 
             layoutManager = LinearLayoutManager(this@DetailChartFragment.context)
 
-            val recyclerAdapter = DetailChartListAdapter(
+            recyclerAdapter = DetailChartListAdapter(
                 interaction = this@DetailChartFragment,
                 this@DetailChartFragment.requireActivity().packageName,
                 requestManager,
                 _resources,
-                currentLocale,
-                data
+                currentLocale
             )
 
             val swipeHandler =

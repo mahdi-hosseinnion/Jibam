@@ -1,12 +1,14 @@
 package com.example.jibi.repository.tranasction
 
 import android.content.res.Resources
-import android.util.Log
 import androidx.annotation.StringRes
 import com.example.jibi.R
 import com.example.jibi.models.PieChartData
 import com.example.jibi.models.Transaction
-import com.example.jibi.persistence.*
+import com.example.jibi.persistence.RecordsDao
+import com.example.jibi.persistence.getRecords
+import com.example.jibi.persistence.getSumOfExpenses
+import com.example.jibi.persistence.getSumOfIncome
 import com.example.jibi.repository.buildResponse
 import com.example.jibi.repository.safeCacheCall
 import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionStateEvent
@@ -20,7 +22,6 @@ import com.example.jibi.ui.main.transaction.transactions.state.TransactionsViewS
 import com.example.jibi.util.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.withTimeout
 import java.util.*
 import javax.inject.Inject
 
@@ -28,7 +29,6 @@ class TransactionRepositoryImpl
 @Inject
 constructor(
     private val recordsDao: RecordsDao,
-    private val categoriesDao: CategoriesDao,
     private val _resources: Resources
 ) : TransactionRepository {
 
@@ -110,30 +110,6 @@ constructor(
 
     fun getString(@StringRes id: Int) = _resources.getString(id)
 
-    private suspend fun tryIncreaseCategoryOrdering(categoryId: Int) {
-        try {
-            withTimeout(Constants.CACHE_TIMEOUT.times(2)) {
-                val category =
-                    categoriesDao.getCategoryById(categoryId)
-                if (category == null ||
-                    category.ordering < 0 || //if category got pinned
-                    category.ordering > Int.MAX_VALUE.minus(2)//if its to big even bigger then int max value
-                ) {
-                    return@withTimeout
-                }
-                //increase category ordering
-                categoriesDao.updateCategory(category.copy(ordering = category.ordering.plus(1)))
-            }
-        } catch (e: Exception) {
-            Log.e(
-                TAG,
-                "tryIncreaseCategoryOrdering: unable to update category order with id:$categoryId",
-                e
-            )
-        }
-    }
-
-
     override suspend fun insertTransaction(
         stateEvent: InsertTransactionStateEvent.InsertTransaction
     ): DataState<InsertTransactionViewState> {
@@ -147,7 +123,6 @@ constructor(
             stateEvent = stateEvent
         ) {
             override suspend fun handleSuccess(resultObj: Long): DataState<InsertTransactionViewState> {
-                tryIncreaseCategoryOrdering(stateEvent.transactionEntity.cat_id)
                 return if (resultObj > 0) {
                     DataState.data(
                         response = buildResponse(
@@ -257,7 +232,6 @@ constructor(
             stateEvent = stateEvent
         ) {
             override suspend fun handleSuccess(resultObj: Long): DataState<TransactionsViewState> {
-                tryIncreaseCategoryOrdering(stateEvent.transactionEntity.cat_id)
                 return if (resultObj > 0) {
                     DataState.data(
                         response = buildResponse(

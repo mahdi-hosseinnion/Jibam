@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.jibi.R
-import com.example.jibi.models.Category
 import com.example.jibi.models.Transaction
 import com.example.jibi.ui.main.transaction.transactions.TransactionsListAdapter
 import com.example.jibi.util.*
@@ -25,42 +24,69 @@ class DetailChartListAdapter(
     private var requestManager: RequestManager,
     private var resources: Resources,
     private var currentLocale: Locale,
-    private var data: List<Transaction> = ArrayList()
+    private var data: List<Transaction>? = null
 
-) : RecyclerView.Adapter<DetailChartListAdapter.DetailChartViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var totalAmount: Double = data.sumOf { abs(it.money) }
-    private var biggestAmount: Double = data.maxOf { abs(it.money) }
+    private var totalAmount: Double = data?.sumOf { abs(it.money) } ?: 0.0
+    private var biggestAmount: Double = data?.maxOf { abs(it.money) } ?: 0.0
 
     companion object {
         private const val DATE_PATTERN = "MM/dd/yyyy"
-    }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DetailChartViewHolder {
-        return DetailChartViewHolder(
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.layout_chart_list_item, parent, false),
-            interaction,
-            packageName,
-            requestManager,
-            resources,
-            currentLocale
+        private const val EMPTY_LIST_MARKER = -2
+        private val EMPTY_LIST_MARKER_TRANSACTION = Transaction(
+            id = EMPTY_LIST_MARKER,
+            0.0,
+            "",
+            0.0
         )
+
     }
 
-    override fun getItemCount() = data.size
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return if (viewType == EMPTY_LIST_MARKER) {
+            GenericViewHolder(
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.layout_detail_chart_empty_list_item, parent, false),
+                _resources = resources,
+                R.id.info_text,
+                R.string.no_transaction_found_with_this_category
+            )
+        } else {
+            DetailChartViewHolder(
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.layout_chart_list_item, parent, false),
+                interaction,
+                packageName,
+                requestManager,
+                resources,
+                currentLocale
+            )
+        }
+    }
 
-    override fun onBindViewHolder(holder: DetailChartViewHolder, position: Int) =
-        holder.bind(data[position], totalAmount, biggestAmount)
+    override fun getItemCount() = data?.size ?: 0
 
-    fun swapData(data: List<Transaction>) {
-        this.data = data
-        totalAmount = data.sumOf { abs(it.money) }
-        biggestAmount = data.maxOf { abs(it.money) }
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (holder is DetailChartViewHolder) {
+            val item = data?.get(position) ?: return
+            holder.bind(item, totalAmount, biggestAmount)
+        }
+    }
+
+    fun swapData(data: List<Transaction>?) {
+        if (data.isNullOrEmpty()) {
+            this.data = arrayListOf(EMPTY_LIST_MARKER_TRANSACTION)
+        } else {
+            this.data = data
+            totalAmount = data.sumOf { abs(it.money) }
+            biggestAmount = data.maxOf { abs(it.money) }
+        }
         notifyDataSetChanged()
     }
 
-    fun getTransaction(position: Int): Transaction? = this.data.get(index = position)
+    fun getTransaction(position: Int): Transaction? = this.data?.get(index = position)
 
 
     class DetailChartViewHolder(
@@ -163,7 +189,17 @@ class DetailChartListAdapter(
         }
     }
 
+    override fun getItemViewType(position: Int): Int {
+        if (data?.get(position)?.id == EMPTY_LIST_MARKER) {
+            return EMPTY_LIST_MARKER
+        }
+        return super.getItemViewType(position)
+    }
+
     interface Interaction {
         fun onItemSelected(position: Int, item: Transaction)
     }
+
+
 }
+

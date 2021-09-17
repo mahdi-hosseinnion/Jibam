@@ -16,17 +16,6 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/mtrl_toolbar_default_height"
             android:background="@color/purple_500" />
-        <!-- TODO: Update blank fragment layout -->
-        <TextView
-            android:id="@+id/error_txt"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="@string/no_transaction_found_with_this_category"
-            android:textColor="@color/black"
-            android:textSize="24sp"
-            android:visibility="visible" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/detail_chart_recycler"
