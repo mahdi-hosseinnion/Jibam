@@ -248,5 +248,7 @@
     <string name="save">Save</string>
     <string name="no_transaction_found">No transaction found</string>
     <string name="unknown_category_type">Unknown category type</string>
+    <string name="you_changes_have_not_saved">Your changes have not been saved</string>
+    <string name="discard">Discard</string>
 
 </resources>

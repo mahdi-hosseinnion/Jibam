@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -69,11 +70,20 @@ constructor(
     }
 
     private fun setupUi() {
+
         setHasOptionsMenu(true)
+
+        //add backstack listener for discard dialog
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            backStackForDialog
+        )
+
         lifecycleScope.launchWhenStarted {
             viewModel.submitButtonState.isSubmitButtonEnable
                 .collect {
                     Log.d("DetailEditTransactionVi", "setupUi: $it ")
+                    backStackForDialog.isEnabled = it
                     fragment_add_toolbar_main.title = if (it) {
                         fab_submit.show()
                         _getString(R.string.edit_transaction)
@@ -83,6 +93,7 @@ constructor(
                     }
                 }
         }
+
         /**
          * on clicks
          */
@@ -431,6 +442,33 @@ constructor(
             memo = edt_memo.text.toString(),
             cat_id = transaction.categoryId,
             date = (calender.timeInMillis).div(1_000).toInt()
+        )
+    }
+
+    private val backStackForDialog = object : OnBackPressedCallback(false) {
+        override fun handleOnBackPressed() {
+            //check for search view
+            showDiscardOrSaveDialog()
+        }
+
+    }
+
+    private fun showDiscardOrSaveDialog() {
+        val callback = object : DiscardOrSaveCallback {
+            override fun save() {
+                updateTransaction()
+            }
+
+            override fun discard() {
+                navigateBack()
+            }
+
+            override fun cancel() {}
+        }
+        viewModel.addToMessageStack(
+            message = _getString(R.string.you_changes_have_not_saved),
+            uiComponentType = UIComponentType.DiscardOrSaveDialog(callback),
+            messageType = MessageType.Info
         )
     }
 

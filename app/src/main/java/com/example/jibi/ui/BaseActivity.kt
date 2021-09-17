@@ -92,6 +92,17 @@ abstract class BaseActivity : AppCompatActivity(),
                 }
             }
 
+            is UIComponentType.DiscardOrSaveDialog -> {
+
+                response.message?.let {
+                    discardOrSaveDialog(
+                        message = it,
+                        callback = response.uiComponentType.callback,
+                        stateMessageCallback = stateMessageCallback
+                    )
+                }
+            }
+
             is UIComponentType.Toast -> {
                 response.message?.let {
                     displayToast(
@@ -107,6 +118,7 @@ abstract class BaseActivity : AppCompatActivity(),
                     stateMessageCallback = stateMessageCallback
                 )
             }
+
             is UIComponentType.UndoSnackBar -> {
                 displayUndoSnackBar(
                     message = response.message,
@@ -116,6 +128,7 @@ abstract class BaseActivity : AppCompatActivity(),
 
                 )
             }
+
             is UIComponentType.None -> {
                 // This would be a good place to send to your Error Reporting
                 // software of choice (ex: Firebase crash reporting)
@@ -232,6 +245,30 @@ abstract class BaseActivity : AppCompatActivity(),
                 stateMessageCallback.removeMessageFromStack()
             }
             .setCancelable(false)
+            .create()
+            .show()
+    }
+
+    private fun discardOrSaveDialog(
+        message: String,
+        callback: DiscardOrSaveCallback,
+        stateMessageCallback: StateMessageCallback
+    ) {
+        AlertDialog.Builder(this)
+            .setMessage(message)
+            .setPositiveButton(_getString(R.string.save)) { _, _ ->
+                callback.save()
+                stateMessageCallback.removeMessageFromStack()
+            }
+            .setNegativeButton(_getString(R.string.discard)) { _, _ ->
+                callback.discard()
+                stateMessageCallback.removeMessageFromStack()
+            }
+            .setCancelable(true)
+            .setOnCancelListener {
+                callback.cancel()
+                stateMessageCallback.removeMessageFromStack()
+            }
             .create()
             .show()
     }

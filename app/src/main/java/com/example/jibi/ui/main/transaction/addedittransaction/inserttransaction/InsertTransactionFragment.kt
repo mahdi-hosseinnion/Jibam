@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import android.content.res.Resources
 import android.os.Bundle
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.StringRes
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -18,12 +19,16 @@ import com.example.jibi.ui.main.transaction.addedittransaction.common.AddEditTra
 import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionPresenterState
 import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionPresenterState.*
 import com.example.jibi.util.Constants.EXPENSES_TYPE_MARKER
+import com.example.jibi.util.DiscardOrSaveCallback
 import com.example.jibi.util.MessageType
 import com.example.jibi.util.StateMessageCallback
+import com.example.jibi.util.UIComponentType
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
+import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.util.*
@@ -49,6 +54,7 @@ constructor(
     _resources = _resources,
     fab_text = R.string.save
 ) {
+
     private val viewModel by viewModels<InsertTransactionViewModel> { viewModelFactory }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -60,6 +66,11 @@ constructor(
 
     private fun setupUi() {
         category_fab.hide()
+        //add backstack listener for discard dialog
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            backStackForDialog
+        )
         showCustomKeyboard(edt_money)
         /**
          * on clicks
@@ -370,6 +381,36 @@ constructor(
         }
     }
 
+    private val backStackForDialog = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            //check for search view
+            if (viewModel.getTransactionCategory() != null) {
+                showDiscardOrSaveDialog()
+            }else{
+                navigateBack()
+            }
+        }
+
+    }
+
+    private fun showDiscardOrSaveDialog() {
+        val callback = object : DiscardOrSaveCallback {
+            override fun save() {
+                insertTransaction()
+            }
+
+            override fun discard() {
+                navigateBack()
+            }
+
+            override fun cancel() {}
+        }
+        viewModel.addToMessageStack(
+            message = _getString(R.string.you_changes_have_not_saved),
+            uiComponentType = UIComponentType.DiscardOrSaveDialog(callback),
+            messageType = MessageType.Info
+        )
+    }
 
     companion object {
         private const val TAG = "InsertTransactionFragme"

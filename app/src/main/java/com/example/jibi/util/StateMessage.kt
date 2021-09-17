@@ -10,37 +10,41 @@ data class Response(
     val messageType: MessageType
 )
 
-sealed class UIComponentType{
+sealed class UIComponentType {
 
     object Toast : UIComponentType()
 
-    object Dialog: UIComponentType()
+    object Dialog : UIComponentType()
 
     class AreYouSureDialog(
         val callback: AreYouSureCallback
-    ): UIComponentType()
+    ) : UIComponentType()
+
+    class DiscardOrSaveDialog(
+        val callback: DiscardOrSaveCallback
+    ) : UIComponentType()
 
     class UndoSnackBar(
         val callback: UndoCallback,
-        val parentView:View
-    ): UIComponentType()
+        val parentView: View
+    ) : UIComponentType()
 
-    object None: UIComponentType()
+    object None : UIComponentType()
 }
 
-sealed class MessageType{
+sealed class MessageType {
 
-    object Success: MessageType()
+    object Success : MessageType()
 
-    object Error: MessageType()
+    object Error : MessageType()
 
-    object Info: MessageType()
+    object Info : MessageType()
 
-    object None: MessageType()
+    object None : MessageType()
 }
 
 
-interface StateMessageCallback{
+interface StateMessageCallback {
 
     fun removeMessageFromStack()
 }
@@ -51,6 +55,17 @@ interface AreYouSureCallback {
 
     fun cancel()
 }
+
+interface DiscardOrSaveCallback {
+
+    fun save()
+
+    fun discard()
+
+    fun cancel()
+}
+
+
 interface UndoCallback {
 
     fun undo()
