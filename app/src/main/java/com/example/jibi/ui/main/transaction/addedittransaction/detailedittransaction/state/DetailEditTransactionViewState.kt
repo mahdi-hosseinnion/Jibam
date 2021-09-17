@@ -78,7 +78,7 @@ class SubmitButtonState() {
     }
 
     fun onMemoChange(newMemo: String?) {
-        _doesMemoChange.value = defaultTransaction?.memo != newMemo
+        _doesMemoChange.value = defaultTransaction?.memo ?: "" != newMemo ?: ""
     }
 
     fun onCategoryChange(categoryId: Int) {
