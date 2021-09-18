@@ -18,8 +18,7 @@ import kotlinx.android.synthetic.main.layout_category_images_list_item.view.*
 class AddCategoryListAdapter(
     private val requestManager: RequestManager?,
     private val interaction: Interaction? = null,
-    private val packageName: String,
-    private val _resources: Resources
+    private val packageName: String
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -76,7 +75,7 @@ class AddCategoryListAdapter(
                         false
                     ),
                     interaction = interaction,
-                    packageName = packageName, _resources = _resources
+                    packageName = packageName
                 )
             }
             else -> {
@@ -301,13 +300,12 @@ class AddCategoryListAdapter(
     constructor(
         itemView: View,
         private val interaction: Interaction?,
-        private val packageName: String,
-        private val _resources: Resources
+        private val packageName: String
     ) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(headerName: CategoryImages) = with(itemView) {
             itemView.header_name.text = headerName.getCategoryGroupNameFromStringFile(
-                _resources,
+                resources,
                 packageName = packageName
             ) {
                 it.group_name

@@ -23,7 +23,6 @@ import kotlin.random.Random
 class ViewCategoriesRecyclerAdapter(
     private var listOfCategories: List<Category>?,
     private val interaction: CategoryInteraction,
-    private val _resources: Resources,
     private val requestManager: RequestManager,
     private val packageName: String
 ) : RecyclerView.Adapter<ViewCategoriesRecyclerAdapter.ViewPagerRecyclerViewHolder>() {
@@ -39,7 +38,6 @@ class ViewCategoriesRecyclerAdapter(
                 false
             ),
             categoryInteraction = interaction,
-            _resources = _resources,
             requestManager = requestManager,
             packageName = packageName
         )
@@ -86,7 +84,6 @@ class ViewCategoriesRecyclerAdapter(
     class ViewPagerRecyclerViewHolder(
         itemView: View,
         private val categoryInteraction: CategoryInteraction,
-        private val _resources: Resources,
         private val requestManager: RequestManager,
         private val packageName: String
     ) : RecyclerView.ViewHolder(itemView) {
@@ -114,7 +111,7 @@ class ViewCategoriesRecyclerAdapter(
                         return@setOnTouchListener false
                     }
                     val categoryName = item.getCategoryNameFromStringFile(
-                        _resources,
+                        resources,
                         packageName
                     ) {
                         it.name
@@ -164,7 +161,8 @@ class ViewCategoriesRecyclerAdapter(
                     }
                 }
             } else {
-                itemView.nameOfCategory.text = _resources.getString(R.string.UNKNOWN_CATEGORY)
+                itemView.nameOfCategory.text =
+                    itemView.resources.getString(R.string.UNKNOWN_CATEGORY)
             }
         }
 

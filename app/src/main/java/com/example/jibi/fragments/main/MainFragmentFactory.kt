@@ -30,8 +30,7 @@ constructor(
     private val requestManager: RequestManager,
     private val currentLocale: Locale,
     private val sharedPreferences: SharedPreferences,
-    private val sharedPrefsEditor: SharedPreferences.Editor,
-    private val resources: Resources
+    private val sharedPrefsEditor: SharedPreferences.Editor
 ) : FragmentFactory() {
 
     override fun instantiate(classLoader: ClassLoader, className: String) =
@@ -44,8 +43,7 @@ constructor(
                     requestManager,
                     currentLocale,
                     sharedPreferences,
-                    sharedPrefsEditor,
-                    resources
+                    sharedPrefsEditor
                 )
             }
 
@@ -55,8 +53,7 @@ constructor(
                     requestManager,
                     currentLocale,
                     sharedPreferences,
-                    sharedPrefsEditor,
-                    resources
+                    sharedPrefsEditor
                 )
             }
             DetailEditTransactionFragment::class.java.name -> {
@@ -65,49 +62,45 @@ constructor(
                     requestManager,
                     currentLocale,
                     sharedPreferences,
-                    sharedPrefsEditor,
-                    resources
+                    sharedPrefsEditor
                 )
             }
             AddCategoryFragment::class.java.name -> {
-                AddCategoryFragment(viewModelFactory, requestManager, resources)
+                AddCategoryFragment(viewModelFactory, requestManager)
             }
             ViewCategoriesFragment::class.java.name -> {
                 ViewCategoriesFragment(
                     viewModelFactory,
                     requestManager,
                     sharedPreferences,
-                    sharedPrefsEditor,
-                    resources
+                    sharedPrefsEditor
                 )
             }
             SettingFragment::class.java.name -> {
-                SettingFragment(viewModelFactory, resources, sharedPreferences)
+                SettingFragment(viewModelFactory, sharedPreferences)
             }
             AboutUsFragment::class.java.name -> {
-                AboutUsFragment(viewModelFactory, requestManager, resources)
+                AboutUsFragment(viewModelFactory, requestManager)
             }
             ChartFragment::class.java.name -> {
                 ChartFragment(
                     viewModelFactory,
                     requestManager,
-                    currentLocale,
-                    resources
+                    currentLocale
                 )
             }
             DetailChartFragment::class.java.name -> {
                 DetailChartFragment(
                     viewModelFactory,
                     requestManager,
-                    currentLocale,
-                    resources
+                    currentLocale
                 )
             }
 
             else -> {
                 TransactionsFragment(
                     viewModelFactory, requestManager, currentLocale, sharedPreferences,
-                    sharedPrefsEditor, resources
+                    sharedPrefsEditor
                 )
             }
         }

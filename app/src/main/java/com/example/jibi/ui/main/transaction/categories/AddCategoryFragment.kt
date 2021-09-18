@@ -32,19 +32,13 @@ class AddCategoryFragment
 @Inject
 constructor(
     viewModelFactory: ViewModelProvider.Factory,
-    private val requestManager: RequestManager,
-    private val _resources: Resources
+    private val requestManager: RequestManager
 ) : BaseFragment(
     R.layout.fragment_add_category,
-    R.id.add_category_toolbar,
-    _resources
+    R.id.add_category_toolbar
 ), AddCategoryListAdapter.Interaction {
 
     private val viewModel by viewModels<CategoriesViewModel> { viewModelFactory }
-
-    override fun setTextToAllViews() {
-        edt_categoryName.hint = _getString(R.string.category_name)
-    }
 
     private val args: AddCategoryFragmentArgs by navArgs()
 
@@ -62,17 +56,17 @@ constructor(
             EXPENSES -> {
                 //TODO FIX ORDER ISSUE
                 newCategory = Category(0, 1, edt_categoryName.text.toString(), "", 0)
-                _getString(R.string.add_expenses_category)
+                getString(R.string.add_expenses_category)
             }
             INCOME -> {
                 //TODO FIX ORDER ISSUE
                 newCategory = Category(0, 2, edt_categoryName.text.toString(), "", 0)
 
-                _getString(R.string.add_income_category)
+                getString(R.string.add_income_category)
             }
             else -> {
                 showUnableToRecognizeCategoryTypeError()
-                _getString(R.string.unable_to_recognize_category_type)
+                getString(R.string.unable_to_recognize_category_type)
             }
         }
 
@@ -130,7 +124,7 @@ constructor(
 
         uiCommunicationListener.onResponseReceived(
             Response(
-                _getString(R.string.unable_to_recognize_category_type),
+                getString(R.string.unable_to_recognize_category_type),
                 //TODO SHOW OK DIALOG
                 UIComponentType.AreYouSureDialog(callback),
                 MessageType.Error
@@ -152,8 +146,7 @@ constructor(
             recyclerAdapter = AddCategoryListAdapter(
                 requestManager,
                 this@AddCategoryFragment,
-                this@AddCategoryFragment.requireActivity().packageName,
-                _resources
+                this@AddCategoryFragment.requireActivity().packageName
             )
             //control span size for full size item
             mLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {

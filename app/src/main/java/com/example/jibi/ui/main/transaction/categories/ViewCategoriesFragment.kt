@@ -33,11 +33,10 @@ constructor(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager,
     private val sharedPreferences: SharedPreferences,
-    private val sharedPrefsEditor: SharedPreferences.Editor,
-    private val _resources: Resources
+    private val sharedPrefsEditor: SharedPreferences.Editor
 ) : BaseFragment(
-    R.layout.fragment_view_categories, R.id.viewCategoriesToolbar,
-    _resources
+    R.layout.fragment_view_categories,
+    R.id.viewCategoriesToolbar
 ), ViewCategoriesRecyclerAdapter.CategoryInteraction {
 
     private val viewModel by viewModels<CategoriesViewModel> { viewModelFactory }
@@ -53,9 +52,6 @@ constructor(
         })
     }
 
-    override fun setTextToAllViews() {
-        txt_addNewCategory.text = _getString(R.string.add_new_category)
-    }
 
     //vars
     private lateinit var viewPagerAdapter: ViewCategoriesViewPagerAdapter
@@ -77,13 +73,13 @@ constructor(
 
     private fun setupUi() {
         findNavController()
-            .currentDestination?.label = _getString(R.string.category_setting)
+            .currentDestination?.label = getString(R.string.category_setting)
         //set titles
         val tabLayout = TabLayoutMediator(tab_layout, viewPager_viewCategories) { tab, position ->
             if (position == 0) {
-                tab.text = _getString(R.string.expenses)
+                tab.text = getString(R.string.expenses)
             } else {
-                tab.text = _getString(R.string.income)
+                tab.text = getString(R.string.income)
             }
         }.attach()
     }
@@ -95,7 +91,6 @@ constructor(
             expensesItemTouchHelper = expensesItemTouchHelper,
             incomeItemTouchHelper = incomeItemTouchHelper,
             categoryInteraction = this,
-            _resources = _resources,
             requestManager = requestManager,
             packageName = this.requireActivity().packageName
         )
@@ -161,7 +156,7 @@ constructor(
         }
         uiCommunicationListener.onResponseReceived(
             Response(
-                _getString(R.string.are_you_sure_delete_category),
+                getString(R.string.are_you_sure_delete_category),
                 UIComponentType.AreYouSureDialog(
                     callback
                 ), MessageType.Info
@@ -200,7 +195,7 @@ constructor(
 
         uiCommunicationListener.onResponseReceived(
             Response(
-                _getString(R.string.unable_to_recognize_category_type),
+                getString(R.string.unable_to_recognize_category_type),
                 //TODO SHOW OK DIALOG
                 UIComponentType.Dialog,
                 MessageType.Error

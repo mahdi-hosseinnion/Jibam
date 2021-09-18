@@ -30,7 +30,6 @@ import com.example.jibi.models.Transaction
 import com.example.jibi.models.TransactionEntity
 import com.example.jibi.models.mappers.toTransactionEntity
 import com.example.jibi.repository.buildResponse
-import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.DetailEditTransactionFragmentDirections
 import com.example.jibi.ui.main.transaction.common.BaseFragment
 import com.example.jibi.ui.main.transaction.transactions.state.TransactionsStateEvent
 import com.example.jibi.ui.main.transaction.transactions.state.TransactionsViewState
@@ -65,12 +64,10 @@ constructor(
     private val requestManager: RequestManager,
     private val currentLocale: Locale,
     private val sharedPreferences: SharedPreferences,
-    private val sharedPrefsEditor: SharedPreferences.Editor,
-    private val _resources: Resources
+    private val sharedPrefsEditor: SharedPreferences.Editor
 ) : BaseFragment(
     R.layout.fragment_transaction,
-    R.id.transaction_toolbar,
-    _resources
+    R.id.transaction_toolbar
 ), TransactionsListAdapter.Interaction {
 
     private val TAG = "TransactionFragment"
@@ -405,7 +402,7 @@ constructor(
                 requestManager,
                 this@TransactionsFragment,
                 this@TransactionsFragment.requireActivity().packageName,
-                currentLocale, _resources
+                currentLocale
             )
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -490,7 +487,7 @@ constructor(
         }
         uiCommunicationListener.onResponseReceived(
             buildResponse(
-                _getString(R.string.transaction_successfully_deleted),
+                getString(R.string.transaction_successfully_deleted),
                 UIComponentType.UndoSnackBar(undoCallback, fragment_transacion_root),
                 MessageType.Info
             ), object : StateMessageCallback {
@@ -752,8 +749,8 @@ constructor(
     private fun showFabPromote() {
         val mFabPrompt = MaterialTapTargetPrompt.Builder(this)
             .setTarget(R.id.fab)
-            .setPrimaryText(_getString(R.string.fab_tap_target_primary))
-            .setSecondaryText(_getString(R.string.fab_tap_target_secondary))
+            .setPrimaryText(getString(R.string.fab_tap_target_primary))
+            .setSecondaryText(getString(R.string.fab_tap_target_secondary))
             .setPromptStateChangeListener { _, state ->
                 if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED || state == MaterialTapTargetPrompt.STATE_DISMISSING) {
                     sharedPrefsEditor.putBoolean(
@@ -769,7 +766,7 @@ constructor(
     private fun showSummeryMoneyPromote() {
         val mFabPrompt = MaterialTapTargetPrompt.Builder(this)
             .setTarget(R.id.summery_money_root)
-            .setPrimaryText(_getString(R.string.summery_money_tap_target_primary))
+            .setPrimaryText(getString(R.string.summery_money_tap_target_primary))
             .setPromptBackground(RectanglePromptBackground().setCornerRadius(10f, 10f))
             .setPromptFocal(RectanglePromptFocal())
             .setPromptStateChangeListener { _, state ->
@@ -791,7 +788,7 @@ constructor(
     private fun showMonthMangerPromote() {
         val mFabPrompt = MaterialTapTargetPrompt.Builder(this)
             .setTarget(R.id.toolbar_month)
-            .setPrimaryText(_getString(R.string.month_manager_tap_target_primary))
+            .setPrimaryText(getString(R.string.month_manager_tap_target_primary))
             .setPromptStateChangeListener { _, state ->
                 if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED || state == MaterialTapTargetPrompt.STATE_DISMISSING) {
                     sharedPrefsEditor.putBoolean(
@@ -802,16 +799,6 @@ constructor(
             }
             .create()
         mFabPrompt!!.show()
-    }
-
-
-    override fun setTextToAllViews() {
-        txt_balance_viewHolder.text = _getString(R.string.total_balance)
-        txt_income_viewHolder.text = _getString(R.string.income)
-        txt_expenses_viewHolder.text = _getString(R.string.expenses)
-        bottom_sheet_title.text = _getString(R.string.transactions)
-        bottom_sheet_title.text = _getString(R.string.transactions)
-        bottom_sheet_search_edt.hint = _getString(R.string.search)
     }
 
     companion object {

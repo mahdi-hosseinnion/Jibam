@@ -24,7 +24,6 @@ import com.example.jibi.models.TransactionEntity
 import com.example.jibi.ui.main.transaction.addedittransaction.common.AddEditTransactionParentFragment
 import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionPresenterState
 import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionPresenterState.*
-import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionPresenterState
 import com.example.jibi.util.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
@@ -44,14 +43,12 @@ constructor(
     private val requestManager: RequestManager,
     private val currentLocale: Locale,
     private val sharedPreferences: SharedPreferences,
-    private val sharedPrefsEditor: SharedPreferences.Editor,
-    private val _resources: Resources
+    private val sharedPrefsEditor: SharedPreferences.Editor
 ) : AddEditTransactionParentFragment(
     requestManager = requestManager,
     currentLocale = currentLocale,
     sharedPreferences = sharedPreferences,
     sharedPrefsEditor = sharedPrefsEditor,
-    _resources = _resources,
     fab_text = R.string.update
 ) {
 
@@ -86,10 +83,10 @@ constructor(
                     backStackForDialog.isEnabled = it
                     fragment_add_toolbar_main.title = if (it) {
                         fab_submit.show()
-                        _getString(R.string.edit_transaction)
+                        getString(R.string.edit_transaction)
                     } else {
                         fab_submit.hide()
-                        _getString(R.string.details)
+                        getString(R.string.details)
                     }
                 }
         }
@@ -131,12 +128,12 @@ constructor(
                         }
                     })
                 if (stateMessage.response.message ==
-                    _getString(R.string.transaction_successfully_deleted)
+                    getString(R.string.transaction_successfully_deleted)
                 ) {
                     uiCommunicationListener.hideSoftKeyboard()
                     navigateBack()
                 }
-                if (stateMessage.response.message == _getString(R.string.transaction_successfully_updated)) {
+                if (stateMessage.response.message == getString(R.string.transaction_successfully_updated)) {
                     //transaction successfully inserted
                     uiCommunicationListener.hideSoftKeyboard()
                     navigateBack()
@@ -241,7 +238,7 @@ constructor(
         //set category name and image to fab
         setCategoryFields(
             transaction.getCategoryNameFromStringFile(
-                _resources,
+                resources,
                 requireActivity().packageName
             ) { it.categoryName },
             transaction.categoryImage
@@ -330,12 +327,6 @@ constructor(
     }
 
 
-    override fun setTextToAllViews() {
-        txtField_memo.hint = _getString(R.string.write_note)
-        txtField_date.hint = _getString(R.string.date)
-        edt_money.hint = _getString(R.string._0)
-        fragment_add_toolbar_main.title = _getString(R.string.details)
-    }
 
     override fun onItemSelected(position: Int, item: Category) {
         //on category changed
@@ -361,7 +352,7 @@ constructor(
         if (transactionId == null) {
             //show toast error
             viewModel.addToMessageStack(
-                _getString(R.string.unable_to_delete_no_transaction_found),
+                getString(R.string.unable_to_delete_no_transaction_found),
                 Throwable("$TAG : deleteTransaction: viewTransactionId is null!  viewTransactionId = $transactionId"),
                 UIComponentType.Toast,
                 MessageType.Error
@@ -375,7 +366,7 @@ constructor(
                 override fun cancel() {}
             }
             viewModel.addToMessageStack(
-                message = _getString(R.string.are_you_sure_delete_transaction),
+                message = getString(R.string.are_you_sure_delete_transaction),
                 uiComponentType = UIComponentType.AreYouSureDialog(
                     callback
                 ),
@@ -466,7 +457,7 @@ constructor(
             override fun cancel() {}
         }
         viewModel.addToMessageStack(
-            message = _getString(R.string.you_changes_have_not_saved),
+            message = getString(R.string.you_changes_have_not_saved),
             uiComponentType = UIComponentType.DiscardOrSaveDialog(callback),
             messageType = MessageType.Info
         )

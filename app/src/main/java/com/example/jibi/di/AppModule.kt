@@ -17,7 +17,6 @@ import com.example.jibi.repository.cateogry.CategoryRepository
 import com.example.jibi.repository.cateogry.CategoryRepositoryImpl
 import com.example.jibi.repository.tranasction.TransactionRepository
 import com.example.jibi.repository.tranasction.TransactionRepositoryImpl
-import com.example.jibi.util.LocaleHelper
 import com.example.jibi.util.PreferenceKeys
 import dagger.Binds
 import dagger.Module
@@ -107,7 +106,7 @@ object AppModule {
     @Singleton
     @Provides
     fun provideResources(application: Application): Resources {
-        return LocaleHelper.getLocale(application)?.resources ?: application.resources;
+        return  application.resources
     }
 
 }

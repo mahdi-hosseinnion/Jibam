@@ -1,6 +1,5 @@
 package com.example.jibi.ui
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.os.Bundle
@@ -50,11 +49,6 @@ abstract class BaseActivity : AppCompatActivity(),
                 window.decorView.layoutDirection = View.LAYOUT_DIRECTION_LTR
             }
         }
-    }
-
-
-    override fun attachBaseContext(newBase: Context?) {
-        super.attachBaseContext(LocaleHelper.onAttach(newBase))
     }
 
     private fun _getString(@StringRes resId: Int): String {

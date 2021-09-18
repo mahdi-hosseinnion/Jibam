@@ -20,8 +20,7 @@ class CategoryBottomSheetListAdapter(
     private val requestManager: RequestManager,
     private val interaction: Interaction? = null,
     private val packageName: String,
-    private var selectedItemId: Int?,
-    private val _resources: Resources
+    private var selectedItemId: Int?
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -56,8 +55,7 @@ class CategoryBottomSheetListAdapter(
             interaction = interaction,
             requestManager = requestManager,
             packageName = packageName,
-            selectedItemId = selectedItemId,
-            _resources = _resources
+            selectedItemId = selectedItemId
         )
     }
 
@@ -144,8 +142,7 @@ class CategoryBottomSheetListAdapter(
         val requestManager: RequestManager,
         private val interaction: Interaction?,
         private val packageName: String,
-        private val selectedItemId: Int?,
-        private val _resources: Resources
+        private val selectedItemId: Int?
     ) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(item: Category) = with(itemView) {
@@ -166,7 +163,7 @@ class CategoryBottomSheetListAdapter(
 
             itemView.category_name.text =
                 item.getCategoryNameFromStringFile(
-                    _resources,
+                    resources,
                     this@CategoryViewHolder.packageName
                 ) {
                     it.name

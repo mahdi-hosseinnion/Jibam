@@ -25,18 +25,24 @@ class AboutUsFragment
 @Inject
 constructor(
     viewModelFactory: ViewModelProvider.Factory,
-    private val requestManager: RequestManager,
-    private val _resources: Resources
+    private val requestManager: RequestManager
 ) : BaseFragment(
     R.layout.fragment_about_us,
-    R.id.about_us_toolbar,
-    _resources
+    R.id.about_us_toolbar
 ) {
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setBackground()
+        initUi()
+    }
+    private fun initUi(){
+        findNavController()
+            .currentDestination?.label = getString(R.string.about)
+        version_name.text = getVersionName()?.let {
+            getString(R.string.version) + ": ${it.localizeNumber(resources)}"
+        }
     }
 
     override fun handleStateMessages() {}
@@ -66,17 +72,6 @@ constructor(
         }
     }
 
-    override fun setTextToAllViews() {
-        findNavController()
-            .currentDestination?.label = _getString(R.string.about)
-        developement_members.text = _getString(R.string.developement_members)
-        about_app.text = _getString(R.string.about_app)
-        developement_title.text = _getString(R.string.developement_title)
-        version_name.text = getVersionName()?.let {
-            _getString(R.string.version) + ": ${it.localizeNumber(_resources)}"
-        }
-
-    }
     private fun getVersionName(): String? {
         try {
             val pInfo =

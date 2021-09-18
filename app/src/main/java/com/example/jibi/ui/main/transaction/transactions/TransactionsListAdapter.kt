@@ -32,8 +32,7 @@ class TransactionsListAdapter(
     private val requestManager: RequestManager?,
     private val interaction: Interaction? = null,
     private val packageName: String,
-    private val currentLocale: Locale,
-    private val _resources: Resources
+    private val currentLocale: Locale
 
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -165,7 +164,6 @@ class TransactionsListAdapter(
                         parent,
                         false
                     ),
-                    _resources,
                     R.id.big_JIBI,
                     R.string.jibi_capital
                 )
@@ -178,7 +176,6 @@ class TransactionsListAdapter(
                         parent,
                         false
                     ),
-                    _resources,
                     R.id.no_result_found,
                     R.string.no_result_found_for_this_search
                 )
@@ -191,7 +188,6 @@ class TransactionsListAdapter(
                         parent,
                         false
                     ),
-                    _resources,
                     R.id.nullTRANSACTION,
                     R.string.insert_some_transaction_with_add_button
                 )
@@ -216,7 +212,7 @@ class TransactionsListAdapter(
                         false
                     ),
                     interaction = interaction,
-                    currentLocale = currentLocale, _resources
+                    currentLocale = currentLocale
                 )
             }
             else -> {
@@ -418,7 +414,7 @@ class TransactionsListAdapter(
 
             if (item.memo.isNullOrBlank()) {
                 itemView.main_text.text = item.getCategoryNameFromStringFile(
-                    _resources,
+                    this.resources,
                     this@TransViewHolder.packageName
                 ) {
                     it.categoryName
@@ -475,8 +471,7 @@ class TransactionsListAdapter(
     constructor(
         itemView: View,
         private val interaction: Interaction?,
-        private val currentLocale: Locale,
-        private val _resources: Resources
+        private val currentLocale: Locale
     ) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(item: Transaction) = with(itemView) {
@@ -491,7 +486,7 @@ class TransactionsListAdapter(
             //money for expenses
             Log.d(TAG, "bind: sum of all expenses = ${item.money}")
             if (item.money != 0.0) {
-                itemView.header_expenses_sum.text = "${_resources.getString(R.string.expenses)}: ${
+                itemView.header_expenses_sum.text = "${resources.getString(R.string.expenses)}: ${
                     separate3By3(
                         item.money,
                         currentLocale
@@ -503,7 +498,7 @@ class TransactionsListAdapter(
             }
             //cat_id for income
             if (item.incomeSum != null && item.incomeSum != 0.0) {
-                itemView.header_income_sum.text = "${_resources.getString(R.string.income)}: ${
+                itemView.header_income_sum.text = "${resources.getString(R.string.income)}: ${
                     separate3By3(
                         item.incomeSum,
                         currentLocale
@@ -515,9 +510,9 @@ class TransactionsListAdapter(
             itemView.header_date.text = ""
 
             if (item.memo == TODAY) {
-                itemView.header_date_name.text = _resources.getString(R.string.today)
+                itemView.header_date_name.text = resources.getString(R.string.today)
             } else if (item.memo == YESTERDAY) {
-                itemView.header_date_name.text = _resources.getString(R.string.yesterday)
+                itemView.header_date_name.text = resources.getString(R.string.yesterday)
             } else {
                 try {
                     itemView.header_date_name.text = item.memo?.substring(

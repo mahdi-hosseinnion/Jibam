@@ -33,8 +33,8 @@ object MainFragmentsModule {
             requestManager,
             currentLocal,
             sharedPreferences,
-            sharedPrefEditor,
-            resources
+            sharedPrefEditor
+
         )
     }
 

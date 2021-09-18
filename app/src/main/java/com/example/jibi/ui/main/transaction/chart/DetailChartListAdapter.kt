@@ -22,7 +22,6 @@ class DetailChartListAdapter(
     private val interaction: Interaction? = null,
     private var packageName: String,
     private var requestManager: RequestManager,
-    private var resources: Resources,
     private var currentLocale: Locale,
     private var data: List<Transaction>? = null
 
@@ -49,7 +48,6 @@ class DetailChartListAdapter(
             GenericViewHolder(
                 LayoutInflater.from(parent.context)
                     .inflate(R.layout.layout_detail_chart_empty_list_item, parent, false),
-                _resources = resources,
                 R.id.info_text,
                 R.string.no_transaction_found_with_this_category
             )
@@ -60,7 +58,6 @@ class DetailChartListAdapter(
                 interaction,
                 packageName,
                 requestManager,
-                resources,
                 currentLocale
             )
         }
@@ -94,7 +91,6 @@ class DetailChartListAdapter(
         private val interaction: Interaction?,
         private var packageName: String,
         private var requestManager: RequestManager,
-        private var _resources: Resources,
         private var currentLocale: Locale
     ) : RecyclerView.ViewHolder(itemView) {
         fun bind(
@@ -107,7 +103,7 @@ class DetailChartListAdapter(
             //set text
             if (item.memo.isNullOrBlank()) {
                 itemView.category_name.text = item.getCategoryNameFromStringFile(
-                    _resources,
+                    itemView.resources,
                     packageName
                 ) {
                     it.categoryName
@@ -115,7 +111,7 @@ class DetailChartListAdapter(
             } else {
                 itemView.category_name.text = item.memo
             }
-            sumOfMoney.text = abs(item.money).toString().localizeNumber(_resources)
+            sumOfMoney.text = abs(item.money).toString().localizeNumber(resources)
 
             txt_date.text = dateWithPattern(item.date)
 
@@ -129,7 +125,7 @@ class DetailChartListAdapter(
             if (categoryId > 0) {
                 try {
                     itemView.cardView.setCardBackgroundColor(
-                        _resources.getColor(
+                        itemView.resources.getColor(
                             TransactionsListAdapter.listOfColor[(categoryId.minus(
                                 1
                             ))]
@@ -138,14 +134,14 @@ class DetailChartListAdapter(
                 } catch (e: Exception) {
                     //apply random color
                     itemView.cardView.setCardBackgroundColor(
-                        _resources.getColor(
+                        itemView.resources.getColor(
                             TransactionsListAdapter.listOfColor
                                     [Random.nextInt(TransactionsListAdapter.listOfColor.size)]
                         )
                     )
                 }
             }
-            val categoryImageUrl = this._resources.getIdentifier(
+            val categoryImageUrl = itemView.resources.getIdentifier(
                 "ic_cat_${categoryImage}",
                 "drawable",
                 packageName
@@ -170,7 +166,7 @@ class DetailChartListAdapter(
 
             itemView.txt_percentage.text =
                 ("${percentage}%").localizeNumber(
-                    _resources
+                    itemView.resources
                 )
             itemView.prg_percentage.progress = percentage.toInt()
             itemView.prg_percentage.max = calculatePercentage(biggestAmount, totalAmount).toInt()

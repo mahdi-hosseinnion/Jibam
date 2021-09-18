@@ -55,6 +55,10 @@
     <string name="pls_select_category">لطفا یک دسته انتخاب کنید!</string>
     <string name="money_shouldnt_be_negative">از اعداد منفی برای مقدار هزینه نمیتوان استفاده کرد!</string>
     <string name="pls_insert_some_money">لطفا برای تراکنش هزینه اضافه کنید!</string>
+    <string name="pls_insert_valid_amount_of_money">
+        لطفا مقدار پول صحیح وارد کنید
+        مقدار پول وارد شده نباید صفر یا منفی باشد
+    </string>
     <string name="transactions">تراکنش ها</string>
 
     <!--    CATEGORY NAMES-->
@@ -180,6 +184,8 @@
 
     <string name="transaction_successfully_inserted">"تراکنش با موفقیت ثبت شد"</string>
     <string name="transaction_successfully_updated">"تراکنش با موفقیت بروزرسانی شد"</string>
+    <string name="transaction_error_updated">متاسفانه تراکنش بروزرسانی نشد</string>
+
     <string name="transaction_successfully_deleted">"تراکنش با موفقیت حذف شد"</string>
     <string name="category_successfully_inserted">"دسته با موفقیت ثبت شد"</string>
     <string name="category_successfully_deleted">"دسته با موفقیت حذف شد"</string>
@@ -232,4 +238,17 @@
     <string name="app_intro_slide_2_title">نمودار های کابردی</string>
     <string name="app_intro_slide_2_description">با دسته بندی های ساده بدون پولات کجا میره</string>
 
+    <string name="unable_to_delete_no_transaction_found">
+        تراکنش حذف نشد.
+    </string>
+    <string name="edit_transaction">ویرایش تراکنش</string>
+    <string name="update">به روز رسانی</string>
+    <string name="save">ذخیره</string>
+    <string name="no_transaction_found">هیچ تراکنشی یافت نشد</string>
+    <string name="unknown_category_type">نوع دسته بندی ناشناخته است.</string>
+    <string name="you_changes_have_not_saved">تغییرات شما ذخیره نشده است</string>
+    <string name="discard">دور ریختن</string>
+    <string name="unable_to_restore_transaction">نمی توانیم تراکنش را بازگردانی کنیم</string>
+    <string name="back_to_current_month">برگرد به ماه فعلی</string>
+    <string name="no_setting">بدون تنظیمات</string>
 </resources><!--source https://developer.android.com/training/basics/supporting-devices/languages-->

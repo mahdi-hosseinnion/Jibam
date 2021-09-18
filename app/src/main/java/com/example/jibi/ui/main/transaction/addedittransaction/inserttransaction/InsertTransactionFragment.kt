@@ -5,7 +5,6 @@ import android.content.res.Resources
 import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
-import androidx.annotation.StringRes
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -23,12 +22,9 @@ import com.example.jibi.util.DiscardOrSaveCallback
 import com.example.jibi.util.MessageType
 import com.example.jibi.util.StateMessageCallback
 import com.example.jibi.util.UIComponentType
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
-import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.util.*
@@ -44,14 +40,12 @@ constructor(
     private val requestManager: RequestManager,
     private val currentLocale: Locale,
     private val sharedPreferences: SharedPreferences,
-    private val sharedPrefsEditor: SharedPreferences.Editor,
-    private val _resources: Resources
+    private val sharedPrefsEditor: SharedPreferences.Editor
 ) : AddEditTransactionParentFragment(
     requestManager = requestManager,
     currentLocale = currentLocale,
     sharedPreferences = sharedPreferences,
     sharedPrefsEditor = sharedPrefsEditor,
-    _resources = _resources,
     fab_text = R.string.save
 ) {
 
@@ -65,6 +59,8 @@ constructor(
 
 
     private fun setupUi() {
+        findNavController().currentDestination?.label = getString(R.string.add_transaction)
+
         category_fab.hide()
         //add backstack listener for discard dialog
         requireActivity().onBackPressedDispatcher.addCallback(
@@ -105,7 +101,7 @@ constructor(
                             viewModel.clearStateMessage()
                         }
                     })
-                if (stateMessage.response.message == _getString(R.string.transaction_successfully_inserted)) {
+                if (stateMessage.response.message == getString(R.string.transaction_successfully_inserted)) {
                     //transaction successfully inserted
                     uiCommunicationListener.hideSoftKeyboard()
                     navigateBack()
@@ -234,7 +230,7 @@ constructor(
     private fun setCategoryFields(category: Category) {
         //set name and icon
         category_fab.text =
-            category.getCategoryNameFromStringFile(_resources, requireActivity().packageName) {
+            category.getCategoryNameFromStringFile(resources, requireActivity().packageName) {
                 it.name
             }
         category_fab.extend()
@@ -247,12 +243,7 @@ constructor(
         category_fab.icon = VectorDrawableCompat.create(resources, resourceId, null)
     }
 
-    override fun setTextToAllViews() {
-        txtField_memo.hint = _getString(R.string.write_note)
-        txtField_date.hint = _getString(R.string.date)
-        edt_money.hint = _getString(R.string._0)
-        findNavController().currentDestination?.label = _getString(R.string.add_transaction)
-    }
+
 
 
     override fun setToCombineCalender(year: Int, month: Int, day: Int) {
@@ -406,7 +397,7 @@ constructor(
             override fun cancel() {}
         }
         viewModel.addToMessageStack(
-            message = _getString(R.string.you_changes_have_not_saved),
+            message = getString(R.string.you_changes_have_not_saved),
             uiComponentType = UIComponentType.DiscardOrSaveDialog(callback),
             messageType = MessageType.Info
         )

@@ -48,12 +48,10 @@ constructor(
     private val currentLocale: Locale,
     private val sharedPreferences: SharedPreferences,
     private val sharedPrefsEditor: SharedPreferences.Editor,
-    private val _resources: Resources,
     @StringRes private val fab_text: Int
 ) : BaseFragment(
     R.layout.fragment_add_transaction,
-    R.id.fragment_add_toolbar_main,
-    _resources
+    R.id.fragment_add_toolbar_main
 ), CalculatorKeyboard.CalculatorInteraction, CategoryBottomSheetListAdapter.Interaction {
 
     val textCalculator = TextCalculator()
@@ -81,7 +79,7 @@ constructor(
     }
 
     private fun initUi() {
-        fab_submit.text = _getString(fab_text)
+        fab_submit.text = getString(fab_text)
         fab_submit.icon = resources.getDrawable(R.drawable.ic_check_green_24dp)
 
         edt_money.addTextChangedListener(onTextChangedListener)
@@ -95,7 +93,7 @@ constructor(
         val ic: InputConnection = edt_money.onCreateInputConnection(EditorInfo())
         keyboard.inputConnection = ic
         keyboard.calculatorInteraction = this
-        keyboard._resources = _resources
+        keyboard._resources = resources
         keyboard.setTextToAllViews()
         //controll visibity
 
@@ -141,7 +139,6 @@ constructor(
             requestManager = requestManager,
             isLeftToRight = isLeftToRight,
             packageName = this.requireActivity().packageName,
-            _resources = _resources,
             selectedCategoryId = null
         )
 
@@ -254,7 +251,7 @@ constructor(
                     //TODO add backup plan and shamsi to gregorian converter
                     Toast.makeText(
                         this.requireContext(),
-                        _getString(R.string.unable_to_get_date),
+                        getString(R.string.unable_to_get_date),
                         Toast.LENGTH_LONG
                     ).show()
                 }
@@ -435,15 +432,15 @@ constructor(
 
     private fun listOfNumbers(): CharArray =
         charArrayOf(
-            _getString(R.string._1)[0],
-            _getString(R.string._2)[0],
-            _getString(R.string._3)[0],
-            _getString(R.string._4)[0],
-            _getString(R.string._5)[0],
-            _getString(R.string._6)[0],
-            _getString(R.string._7)[0],
-            _getString(R.string._8)[0],
-            _getString(R.string._9)[0]
+            getString(R.string._1)[0],
+            getString(R.string._2)[0],
+            getString(R.string._3)[0],
+            getString(R.string._4)[0],
+            getString(R.string._5)[0],
+            getString(R.string._6)[0],
+            getString(R.string._7)[0],
+            getString(R.string._8)[0],
+            getString(R.string._9)[0]
         )
 
     fun String.removeOperationSigns(): String {
@@ -466,7 +463,7 @@ constructor(
     fun showSnackBar(@StringRes resId: Int) {
         Snackbar.make(
             bottomCoordinator,
-            _getString(resId),
+            getString(resId),
             Snackbar.LENGTH_SHORT
         ).show()
 

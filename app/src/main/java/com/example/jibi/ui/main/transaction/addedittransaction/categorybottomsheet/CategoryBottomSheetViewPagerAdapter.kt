@@ -19,7 +19,6 @@ class CategoryBottomSheetViewPagerAdapter(
     private val context: Context,
     private val categoryList: List<Category>?,
     private var isLeftToRight: Boolean,
-    private val _resources: Resources,
     interaction: CategoryBottomSheetListAdapter.Interaction? = null,
     requestManager: RequestManager,
     packageName: String,
@@ -29,15 +28,15 @@ class CategoryBottomSheetViewPagerAdapter(
         requestManager,
         interaction,
         packageName,
-        selectedItemId = selectedCategoryId,
-        _resources = _resources
+        selectedItemId = selectedCategoryId
+
     )
     private val incomeRecyclerViewAdapter = CategoryBottomSheetListAdapter(
         requestManager,
         interaction,
         packageName,
-        selectedItemId = selectedCategoryId,
-        _resources = _resources
+        selectedItemId = selectedCategoryId
+
     )
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
@@ -90,8 +89,8 @@ class CategoryBottomSheetViewPagerAdapter(
 
 
     override fun getPageTitle(position: Int): CharSequence {
-        val expenses = _resources.getString(R.string.expenses)
-        val income = _resources.getString(R.string.income)
+        val expenses = this.context.resources.getString(R.string.expenses)
+        val income = this.context.resources.getString(R.string.income)
         return if (isLeftToRight)
             if (position == 0) expenses else income
         else

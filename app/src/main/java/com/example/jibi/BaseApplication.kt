@@ -5,14 +5,10 @@ import android.content.Context
 import com.example.jibi.di.AppComponent
 import com.example.jibi.di.DaggerAppComponent
 import com.example.jibi.di.main.MainComponent
-import com.example.jibi.util.LocaleHelper
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 class BaseApplication : Application() {
-    override fun attachBaseContext(base: Context?) {
-        super.attachBaseContext(LocaleHelper.onAttachToApplication(base));
-    }
 
     lateinit var appComponent: AppComponent
 

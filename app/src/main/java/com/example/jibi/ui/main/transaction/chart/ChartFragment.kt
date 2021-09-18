@@ -48,20 +48,15 @@ constructor(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager,
     private val currentLocale: Locale,
-    private val _resources: Resources
 ) : BaseFragment(
     R.layout.fragment_chart,
-    R.id.chartFragment_toolbar,
-    _resources
+    R.id.chartFragment_toolbar
 ), OnChartValueSelectedListener, ChartListAdapter.Interaction {
 
     private val TAG = "ChartFragment"
 
     private val viewModel by viewModels<ChartViewModel> { viewModelFactory }
 
-    override fun setTextToAllViews() {
-        fab_swap.text = _getString(R.string.swap_chart)
-    }
 
     enum class ChartState {
         EXPENSES_STATE,
@@ -104,10 +99,10 @@ constructor(
 
     private fun refreshChart() {
         val category_type_marker = if (currentChartState == INCOMES_STATE) {
-            chartFragment_toolbar_title.text = _getString(R.string.income_chart_title)
+            chartFragment_toolbar_title.text = getString(R.string.income_chart_title)
             INCOME_TYPE_MARKER
         } else {
-            chartFragment_toolbar_title.text = _getString(R.string.expenses_chart_title)
+            chartFragment_toolbar_title.text = getString(R.string.expenses_chart_title)
 
             EXPENSES_TYPE_MARKER
         }
@@ -128,7 +123,7 @@ constructor(
         pie_chart.description.isEnabled = false
         pie_chart.setExtraOffsets(2f, 2f, 2f, 2f)
 
-        pie_chart.setNoDataText(_getString(R.string.no_chart_data_available))
+        pie_chart.setNoDataText(getString(R.string.no_chart_data_available))
         pie_chart.setNoDataTextColor(Color.RED)
         pie_chart.dragDecelerationFrictionCoef = 0.50f
 
@@ -190,7 +185,7 @@ constructor(
         PieEntry(
             it.percentage?.toFloat() ?: 0f,
             it.getCategoryNameFromStringFile(
-                _resources,
+                resources,
                 this@ChartFragment.requireActivity().packageName
             ) { pi ->
                 pi.categoryName
@@ -203,8 +198,8 @@ constructor(
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
         // the chart.
         val chartLabel = if (currentChartState == INCOMES_STATE)
-            _getString(R.string.Income)
-        else _getString(R.string.expenses)
+            getString(R.string.Income)
+        else getString(R.string.expenses)
 
         val dataSet = PieDataSet(entries, chartLabel)
         dataSet.setDrawIcons(false)
@@ -252,7 +247,7 @@ constructor(
 
                 currentLocale,
                 this@ChartFragment.requireActivity().packageName,
-                _resources,
+                resources,
                 colors
             )
             isNestedScrollingEnabled = false

@@ -14,7 +14,6 @@ import com.bumptech.glide.RequestManager
 import com.example.jibi.R
 import com.example.jibi.models.Transaction
 import com.example.jibi.repository.buildResponse
-import com.example.jibi.ui.main.transaction.common.MonthManger
 import com.example.jibi.ui.main.transaction.chart.ChartViewModel.Companion.FORCE_TO_NULL
 import com.example.jibi.ui.main.transaction.common.BaseFragment
 import com.example.jibi.util.*
@@ -31,12 +30,10 @@ class DetailChartFragment
 constructor(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager,
-    private val currentLocale: Locale,
-    private val _resources: Resources
+    private val currentLocale: Locale
 ) : BaseFragment(
     R.layout.fragment_detail_chart,
-    R.id.detailChartFragment_toolbar,
-    _resources
+    R.id.detailChartFragment_toolbar
 ), DetailChartListAdapter.Interaction {
 
     val args: DetailChartFragmentArgs by navArgs()
@@ -45,7 +42,6 @@ constructor(
 
     private lateinit var recyclerAdapter: DetailChartListAdapter
 
-    override fun setTextToAllViews() {}
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -65,7 +61,7 @@ constructor(
         viewModel.stateMessage.observe(viewLifecycleOwner) {
             it?.let {
                 handleNewStateMessage(it) { viewModel.clearStateMessage() }
-                if (it.response.message == _getString(R.string.transaction_successfully_deleted)) {
+                if (it.response.message == getString(R.string.transaction_successfully_deleted)) {
                     showDeleteUndoSnackBar()
                 }
             }
@@ -90,7 +86,6 @@ constructor(
                 interaction = this@DetailChartFragment,
                 this@DetailChartFragment.requireActivity().packageName,
                 requestManager,
-                _resources,
                 currentLocale
             )
 
@@ -131,7 +126,7 @@ constructor(
             override fun undo() {
                 if (transaction == null) {
                     viewModel.addToMessageStack(
-                        message = _getString(R.string.unable_to_restore_transaction),
+                        message = getString(R.string.unable_to_restore_transaction),
                         uiComponentType = UIComponentType.Dialog,
                         messageType = MessageType.Error
                     )
@@ -146,7 +141,7 @@ constructor(
         }
         uiCommunicationListener.onResponseReceived(
             buildResponse(
-                _getString(R.string.transaction_successfully_deleted),
+                getString(R.string.transaction_successfully_deleted),
                 UIComponentType.UndoSnackBar(undoCallback, detail_chart_fragment_root),
                 MessageType.Info
             ), object : StateMessageCallback {

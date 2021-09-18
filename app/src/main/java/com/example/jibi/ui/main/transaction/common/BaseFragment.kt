@@ -23,8 +23,7 @@ constructor(
     @LayoutRes
     private val layoutRes: Int,
     @IdRes
-    private val toolbar: Int? = null,
-    private val _resources: Resources
+    private val toolbar: Int? = null
 ) : Fragment(layoutRes) {
     private val TAG = "BaseTransactionFragment"
 
@@ -62,18 +61,10 @@ constructor(
 
     override fun onResume() {
         super.onResume()
-        setTextToAllViews()
         toolbar?.let {
             uiCommunicationListener.setupActionBarWithNavController(_View.findViewById(toolbar))
         }
     }
-
-    fun _getString(@StringRes resId: Int): String {
-        return _resources.getString(resId)
-    }
-
-    //its needed to farsi support
-    abstract fun setTextToAllViews()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

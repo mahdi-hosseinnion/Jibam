@@ -23,7 +23,6 @@ class ViewCategoriesViewPagerAdapter(
     private var incomeItemTouchHelper: ItemTouchHelper,
     listOfCategories: List<Category>? = null,
     categoryInteraction: ViewCategoriesRecyclerAdapter.CategoryInteraction,
-    _resources: Resources,
     requestManager: RequestManager,
     packageName: String
 ) : RecyclerView.Adapter<ViewCategoriesViewPagerAdapter.ViewPagerViewHolder>() {
@@ -32,7 +31,6 @@ class ViewCategoriesViewPagerAdapter(
         ViewCategoriesRecyclerAdapter(
             listOfCategories = listOfCategories?.filter { it.type == EXPENSES_TYPE_MARKER },
             interaction = categoryInteraction,
-            _resources = _resources,
             requestManager = requestManager,
             packageName = packageName
 
@@ -42,7 +40,6 @@ class ViewCategoriesViewPagerAdapter(
         ViewCategoriesRecyclerAdapter(
             listOfCategories = listOfCategories?.filter { it.type == INCOME_TYPE_MARKER },
             interaction = categoryInteraction,
-            _resources = _resources,
             requestManager = requestManager,
             packageName = packageName
 

@@ -9,11 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 class GenericViewHolder
 constructor(
     itemView: View,
-    val _resources: Resources,
     viewId: Int,
     @StringRes stringId: Int
 ) : RecyclerView.ViewHolder(itemView) {
     init {
-        itemView.findViewById<TextView>(viewId).text = _resources.getString(stringId)
+        itemView.findViewById<TextView>(viewId).text = itemView.resources.getString(stringId)
     }
 }
