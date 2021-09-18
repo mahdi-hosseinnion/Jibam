@@ -15,7 +15,6 @@
         android:layout_height="match_parent"
         android:clickable="true"
         android:focusable="true"
-
         android:gravity="center"
         android:padding="8dp" />
 
@@ -24,8 +23,8 @@
         tools:text="May"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginStart="6dp"
-        android:layout_marginEnd="6dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
         android:gravity="center"
         android:textColor="#00141E"
         android:textSize="20sp" />
@@ -36,8 +35,8 @@
         app:tint="@color/black"
         android:layout_width="48dp"
         android:layout_height="match_parent"
-        android:layout_marginEnd="6dp"
-        android:layout_marginRight="6dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
         android:clickable="true"
         android:focusable="true"
         android:gravity="center"

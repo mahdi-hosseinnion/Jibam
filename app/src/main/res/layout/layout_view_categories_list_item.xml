@@ -7,9 +7,21 @@
     android:layout_width="match_parent"
     android:layout_height="56dp"
     android:orientation="horizontal"
-    android:paddingLeft="8dp"
-    android:paddingRight="8dp">
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp">
 
+    <ImageView
+        android:id="@+id/delete_category"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingLeft="8dp"
+        android:paddingTop="16dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="16dp"
+        app:srcCompat="@drawable/ic_round_delete_outline_24"
+        app:tint="@android:color/holo_red_light" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView_view_category"
@@ -54,49 +66,43 @@
         android:textSize="16dp"
         android:textStyle="bold"
         tools:text="Food" />
-<!--for debug-->
-<!--    <TextView-->
-<!--        android:id="@+id/category_id"-->
-<!--        android:layout_width="56dp"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:layout_gravity="center"-->
-<!--        android:clickable="true"-->
-<!--        android:focusable="true"-->
-<!--        android:gravity="center"-->
-<!--        android:textColor="@color/black"-->
-<!--        android:padding="16dp"-->
-<!--        android:textSize="20sp"-->
-<!--        tools:text="8" />-->
-<!--    <TextView-->
-<!--        android:id="@+id/ordering"-->
-<!--        android:layout_width="56dp"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:layout_gravity="center"-->
-<!--        android:clickable="true"-->
-<!--        android:focusable="true"-->
-<!--        android:gravity="center"-->
-<!--        android:textColor="@color/black"-->
-<!--        android:padding="16dp"-->
-<!--        android:textSize="20sp"-->
-<!--        tools:text="8" />-->
+    <!--for debug-->
+    <!--    <TextView-->
+    <!--        android:id="@+id/category_id"-->
+    <!--        android:layout_width="56dp"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:layout_gravity="center"-->
+    <!--        android:clickable="true"-->
+    <!--        android:focusable="true"-->
+    <!--        android:gravity="center"-->
+    <!--        android:textColor="@color/black"-->
+    <!--        android:padding="16dp"-->
+    <!--        android:textSize="20sp"-->
+    <!--        tools:text="8" />-->
+    <!--    <TextView-->
+    <!--        android:id="@+id/ordering"-->
+    <!--        android:layout_width="56dp"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:layout_gravity="center"-->
+    <!--        android:clickable="true"-->
+    <!--        android:focusable="true"-->
+    <!--        android:gravity="center"-->
+    <!--        android:textColor="@color/black"-->
+    <!--        android:padding="16dp"-->
+    <!--        android:textSize="20sp"-->
+    <!--        tools:text="8" />-->
 
-    <ImageView
-        android:id="@+id/delete_category"
-        android:layout_width="56dp"
-        android:layout_height="match_parent"
-        android:clickable="true"
-        android:focusable="true"
-        android:padding="16dp"
-        app:srcCompat="@drawable/ic_round_delete_24"
-        app:tint="@android:color/holo_red_light" />
 
     <ImageView
         android:id="@+id/change_category_order_handle"
-        android:layout_width="56dp"
+        android:layout_width="40dp"
         android:layout_height="match_parent"
         android:clickable="true"
         android:focusable="true"
-        android:padding="16dp"
+        android:paddingLeft="8dp"
+        android:paddingTop="16dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="16dp"
         app:srcCompat="@drawable/ic_round_reorder_24"
         app:tint="@color/black" />
 
