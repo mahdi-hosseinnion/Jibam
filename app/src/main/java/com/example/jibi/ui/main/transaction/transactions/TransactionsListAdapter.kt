@@ -28,7 +28,7 @@ import kotlin.collections.ArrayList
 import kotlin.random.Random
 
 
- class TransactionsListAdapter(
+class TransactionsListAdapter(
     private val requestManager: RequestManager?,
     private val interaction: Interaction? = null,
     private val packageName: String,
@@ -427,13 +427,13 @@ import kotlin.random.Random
                 itemView.main_text.text = item.memo
             }
             if (item.money >= 0.0) {
+                //income
                 itemView.price.text = separate3By3(item.money, currentLocale)
-                itemView.price.setTextColor(resources.getColor(R.color.incomeTextColor))
-                itemView.priceCard.setCardBackgroundColor(resources.getColor(R.color.incomeColor))
+                itemView.price.setTextColor(resources.getColor(R.color.blue_500))
             } else {
+                //expenses
                 itemView.price.text = separate3By3(item.money, currentLocale)
-                itemView.price.setTextColor(resources.getColor(R.color.expensesTextColor))
-                itemView.priceCard.setCardBackgroundColor(resources.getColor(R.color.expensesColor))
+                itemView.price.setTextColor(resources.getColor(R.color.red_500))
             }
             val categoryImageUrl = this.resources.getIdentifier(
                 "ic_cat_${item.categoryImage}",
@@ -542,7 +542,6 @@ import kotlin.random.Random
             ).toInt()
         }
     }
-
 
 
     interface Interaction {

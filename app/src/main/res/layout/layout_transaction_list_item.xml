@@ -17,19 +17,19 @@
         android:layout_height="40dp"
         android:layout_gravity="center"
         android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="12dp"
-        android:layout_marginBottom="8dp"
 
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="8dp"
         android:foregroundGravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/linear"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         card_view:cardBackgroundColor="#D297EA"
-        card_view:cardCornerRadius="20dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="12dp">
+        card_view:cardCornerRadius="20dp">
 
         <ImageView
             android:id="@+id/category_image"
@@ -51,7 +51,7 @@
         android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/priceCard"
+        app:layout_constraintEnd_toStartOf="@+id/price"
         app:layout_constraintStart_toEndOf="@+id/cardView"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -93,8 +93,8 @@
 
     </LinearLayout>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/priceCard"
+    <TextView
+        android:id="@+id/price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
@@ -103,37 +103,28 @@
         android:layout_marginEnd="4dp"
         android:layout_marginBottom="8dp"
         android:foregroundGravity="center"
+        android:gravity="center|end"
         android:padding="4dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/linear"
         app:layout_constraintTop_toTopOf="parent"
-        card_view:cardCornerRadius="8dp">
-
-
-        <TextView
-            android:id="@+id/price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center|end"
-            android:padding="4dp"
-            android:textSize="15sp"
-            android:textStyle="bold"
-
-            tools:text="-$5,000" />
-    </androidx.cardview.widget.CardView>
+        card_view:cardCornerRadius="8dp"
+        tools:text="-$5,000" />
 
     <View
         android:id="@+id/transaction_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginStart="60dp"
+        android:layout_marginLeft="60dp"
         android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
         android:background="#EBEBEB"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="4dp" />
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
