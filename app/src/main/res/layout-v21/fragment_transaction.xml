@@ -54,7 +54,9 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_margin="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginStart="4dp"
                 android:layout_weight="10"
                 android:elevation="1dp"
                 android:gravity="center"
@@ -86,12 +88,20 @@
                     android:textStyle="bold"
                     tools:text="58,300" />
             </LinearLayout>
-
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_up_arrow"
+                android:layout_gravity="center|bottom"
+                android:layout_marginBottom="28dp"
+                android:foregroundGravity="bottom"
+                app:tint="@color/blue_500" />
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_margin="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
                 android:layout_weight="10"
                 android:elevation="1dp"
                 android:gravity="center"
@@ -124,11 +134,21 @@
                     tools:text="12,500" />
             </LinearLayout>
 
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_down_arrow"
+                android:layout_gravity="center|bottom"
+                android:layout_marginBottom="28dp"
+                android:foregroundGravity="bottom"
+                app:tint="@color/red_500" />/>
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_margin="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginEnd="4dp"
                 android:layout_weight="10"
                 android:elevation="1dp"
                 android:gravity="center"
@@ -311,317 +331,4 @@
         android:src="@android:drawable/ic_input_add" />
 
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout><!--
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragment_transacion_root"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/purple_500"
-    tools:context=".ui.main.transaction.transactions.TransactionsFragment">
-    &lt;!&ndash;    android:background="#E6E6E6"&ndash;&gt;
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/transaction_fragment_view"
-        android:layout_width="match_parent"
-        android:layout_height="300dp">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/transaction_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/mtrl_toolbar_default_height"
-            android:background="@color/purple_500"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                android:id="@+id/toolbar_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawablePadding="8dp"
-                android:textColor="#00141E"
-                android:textSize="20sp"
-                app:drawableEndCompat="@drawable/ic_arrows_pointing_down" />
-        </androidx.appcompat.widget.Toolbar>
-
-        <LinearLayout
-            android:id="@+id/summery_money_root"
-            android:layout_width="match_parent"
-            android:layout_height="112dp"
-            android:layout_margin="16dp"
-            android:background="@drawable/bg_summery_money"
-            android:elevation="3dp"
-
-            android:orientation="horizontal"
-            android:paddingTop="0dp"
-            android:weightSum="30"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/transaction_toolbar">
-            &lt;!&ndash;            android:background="@drawable/main_card_bg"&ndash;&gt;
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_margin="4dp"
-                android:layout_weight="10"
-                android:elevation="1dp"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/txt_income_viewHolder"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="50"
-                    android:foregroundGravity="center|bottom"
-                    android:gravity="center|bottom"
-                    android:padding="4dp"
-                    android:text="@string/income"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/txt_income"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="50"
-                    android:foregroundGravity="top|center"
-                    android:gravity="top|center"
-
-                    android:padding="4dp"
-                    android:textColor="@color/blue_500"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    tools:text="58,300" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_margin="4dp"
-                android:layout_weight="10"
-                android:elevation="1dp"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/txt_expenses_viewHolder"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="50"
-                    android:foregroundGravity="center|bottom"
-                    android:gravity="center|bottom"
-                    android:padding="4dp"
-                    android:text="@string/expenses"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/txt_expenses"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="50"
-
-                    android:foregroundGravity="top|center"
-                    android:gravity="top|center"
-                    android:padding="4dp"
-                    android:textColor="@color/red_500"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    tools:text="12,500" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_margin="4dp"
-                android:layout_weight="10"
-                android:elevation="1dp"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/txt_balance_viewHolder"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="50"
-                    android:elevation="1dp"
-                    android:foregroundGravity="center|bottom"
-                    android:gravity="center|bottom"
-                    android:padding="4dp"
-                    android:text="@string/total_balance"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-
-                    />
-
-                <TextView
-                    android:id="@+id/txt_balance"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="50"
-                    android:elevation="1dp"
-
-                    android:foregroundGravity="top|center"
-                    android:gravity="top|center"
-                    android:padding="4dp"
-                    android:textColor="@color/green_500"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-
-                    tools:text="32,700" />
-            </LinearLayout>
-        </LinearLayout>
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <LinearLayout
-        android:id="@+id/main_standardBottomSheet"
-        style="?attr/bottomSheetStyle"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/bottom_sheet_bg"
-        android:elevation="4dp"
-        android:orientation="vertical"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
-
-
-        <FrameLayout
-            android:id="@+id/view_hastam"
-            android:layout_width="40dp"
-            android:layout_height="16dp"
-            android:layout_gravity="center">
-
-            <View
-                android:id="@+id/view_hastam2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="6dp"
-                android:background="@drawable/view_hastam2_bg" />
-            &lt;!&ndash;                card_view:cardBackgroundColor="#EBEBEB" />&ndash;&gt;
-        </FrameLayout>
-
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/last_transacion_app_bar"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_gravity="bottom"
-            android:background="@drawable/bottom_sheet_bg"
-            android:gravity="center"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-
-            <LinearLayout
-                android:id="@+id/bottom_sheet_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:visibility="visible">
-
-                <ImageButton
-                    android:id="@+id/main_bottom_sheet_back_arrow"
-                    android:layout_width="1px"
-                    android:layout_height="match_parent"
-                    android:background="@color/white"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:scaleType="centerInside"
-                    android:tint="@color/black"
-                    android:visibility="visible"
-                    app:srcCompat="@drawable/ic_baseline_arrow_back_24" />
-
-
-                <TextView
-                    android:id="@+id/bottom_sheet_title"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:gravity="start|center"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="8dp"
-                    android:text="@string/transactions"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:textStyle="normal" />
-
-                <EditText
-                    android:id="@+id/bottom_sheet_search_edt"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@color/transparent"
-                    android:hint="@string/search"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:scrollHorizontally="true"
-                    android:visibility="gone" />
-
-                <ImageButton
-                    android:id="@+id/bottom_sheet_search_clear"
-                    android:layout_width="@dimen/action_bar_size"
-                    android:layout_height="match_parent"
-                    android:background="@color/white"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:padding="16dp"
-                    android:tint="@color/black"
-                    android:visibility="gone"
-                    app:srcCompat="@drawable/ic_baseline_close_24" />
-
-                <ImageButton
-                    android:id="@+id/main_bottom_sheet_search_btn"
-                    android:layout_width="40dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/white"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:tint="@color/black"
-                    android:visibility="visible"
-                    app:srcCompat="@drawable/ic_baseline_search_24" />
-
-            </LinearLayout>
-            &lt;!&ndash;            </androidx.appcompat.widget.Toolbar>&ndash;&gt;
-        </com.google.android.material.appbar.AppBarLayout>
-
-        &lt;!&ndash;        <View&ndash;&gt;
-        &lt;!&ndash;            android:layout_width="match_parent"&ndash;&gt;
-        &lt;!&ndash;            android:layout_height="1dp"&ndash;&gt;
-        &lt;!&ndash;            android:background="#EBEBEB" />&ndash;&gt;
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/transaction_recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-    </LinearLayout>
-    &lt;!&ndash;        </androidx.core.widget.NestedScrollView>&ndash;&gt;
-
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="16dp"
-        android:contentDescription="@string/create_new_transaction"
-        android:elevation="6dp"
-        android:src="@android:drawable/ic_input_add" />
-
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>-->
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

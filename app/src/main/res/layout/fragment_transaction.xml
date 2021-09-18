@@ -19,15 +19,19 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/mtrl_toolbar_default_height"
             android:background="@color/purple_500"
+            android:elevation="1dp"
+            android:gravity="end"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
+
             <include
                 layout="@layout/toolbar_month_changer"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="end" />
+
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -37,9 +41,9 @@
             android:layout_height="112dp"
             android:layout_margin="16dp"
             android:background="@drawable/bg_summery_money"
+            android:elevation="3dp"
 
             android:orientation="horizontal"
-            android:paddingTop="0dp"
             android:weightSum="30"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -50,10 +54,14 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_margin="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginStart="4dp"
                 android:layout_weight="10"
+                android:elevation="1dp"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginLeft="4dp">
 
                 <TextView
                     android:id="@+id/txt_income_viewHolder"
@@ -81,13 +89,22 @@
                     android:textStyle="bold"
                     tools:text="58,300" />
             </LinearLayout>
-
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_up_arrow"
+                android:layout_gravity="center|bottom"
+                android:layout_marginBottom="28dp"
+                android:foregroundGravity="bottom"
+                app:tint="@color/blue_500" />
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_margin="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
                 android:layout_weight="10"
+                android:elevation="1dp"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -118,20 +135,33 @@
                     tools:text="12,500" />
             </LinearLayout>
 
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_down_arrow"
+                android:layout_gravity="center|bottom"
+                android:layout_marginBottom="28dp"
+                android:foregroundGravity="bottom"
+                app:tint="@color/red_500" />/>
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_margin="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginEnd="4dp"
                 android:layout_weight="10"
+                android:elevation="1dp"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginRight="4dp">
 
                 <TextView
                     android:id="@+id/txt_balance_viewHolder"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="50"
+                    android:elevation="1dp"
                     android:foregroundGravity="center|bottom"
                     android:gravity="center|bottom"
                     android:padding="4dp"
@@ -146,6 +176,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="50"
+                    android:elevation="1dp"
 
                     android:foregroundGravity="top|center"
                     android:gravity="top|center"
@@ -168,6 +199,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/bottom_sheet_bg"
+        android:elevation="4dp"
         android:orientation="vertical"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
@@ -229,12 +261,14 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:gravity="start|center"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="16dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="8dp"
                     android:text="@string/transactions"
                     android:textColor="@color/black"
                     android:textSize="20sp"
-                    android:textStyle="normal" />
+                    android:textStyle="normal"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="8dp" />
 
                 <EditText
                     android:id="@+id/bottom_sheet_search_edt"
@@ -297,6 +331,7 @@
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
         android:contentDescription="@string/create_new_transaction"
+        android:elevation="6dp"
         android:src="@android:drawable/ic_input_add" />
 
 
