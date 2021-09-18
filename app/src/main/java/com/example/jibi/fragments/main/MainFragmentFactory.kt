@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.ui.main.transaction.aboutus.AboutUsFragment
-import com.example.jibi.ui.main.transaction.MonthManger
+import com.example.jibi.ui.main.transaction.common.MonthManger
 import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.DetailEditTransactionFragment
 import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.InsertTransactionFragment
 import com.example.jibi.ui.main.transaction.setting.SettingFragment

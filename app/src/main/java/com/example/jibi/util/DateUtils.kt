@@ -115,6 +115,11 @@ object DateUtils {
         return gregorianToUnixTimestamp(stringDate)
     }
 
+    fun getCurrentUnixTimeInMilliSeconds(): Long = System.currentTimeMillis()
+
+    fun getCurrentUnixTimeInSeconds(): Long = ((System.currentTimeMillis()).div(1_000))
+
+
     val shamsiMonths = arrayOf(
         "فروردين",
         "ارديبهشت",

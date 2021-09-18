@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
 import com.example.jibi.fragments.main.MainFragmentFactory
-import com.example.jibi.ui.main.transaction.MonthManger
+import com.example.jibi.ui.main.transaction.common.MonthManger
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.ExperimentalCoroutinesApi

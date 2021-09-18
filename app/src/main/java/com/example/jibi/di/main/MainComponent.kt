@@ -2,7 +2,7 @@ package com.example.jibi.di.main
 
 import com.example.jibi.ui.app_intro.AppIntroActivity
 import com.example.jibi.ui.main.MainActivity
-import com.example.jibi.ui.main.transaction.MonthManger
+import com.example.jibi.ui.main.transaction.common.MonthManger
 import dagger.Subcomponent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview

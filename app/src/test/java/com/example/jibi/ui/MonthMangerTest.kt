@@ -1,6 +1,6 @@
 package com.example.jibi.ui
 
-import com.example.jibi.ui.main.transaction.MonthManger
+import com.example.jibi.ui.main.transaction.common.MonthManger
 import com.example.jibi.util.DateUtils.gregorianToUnixTimestamp
 import com.example.jibi.util.DateUtils.shamsiToUnixTimeStamp
 import com.example.jibi.util.mahdiLog

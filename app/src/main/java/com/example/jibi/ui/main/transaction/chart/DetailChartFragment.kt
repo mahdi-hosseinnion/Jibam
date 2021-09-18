@@ -14,7 +14,7 @@ import com.bumptech.glide.RequestManager
 import com.example.jibi.R
 import com.example.jibi.models.Transaction
 import com.example.jibi.repository.buildResponse
-import com.example.jibi.ui.main.transaction.MonthManger
+import com.example.jibi.ui.main.transaction.common.MonthManger
 import com.example.jibi.ui.main.transaction.chart.ChartViewModel.Companion.FORCE_TO_NULL
 import com.example.jibi.ui.main.transaction.common.BaseFragment
 import com.example.jibi.util.*

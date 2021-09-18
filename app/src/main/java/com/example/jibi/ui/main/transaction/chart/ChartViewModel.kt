@@ -6,7 +6,7 @@ import com.example.jibi.models.PieChartData
 import com.example.jibi.models.Transaction
 import com.example.jibi.models.mappers.toTransactionEntity
 import com.example.jibi.repository.tranasction.TransactionRepository
-import com.example.jibi.ui.main.transaction.MonthManger
+import com.example.jibi.ui.main.transaction.common.MonthManger
 import com.example.jibi.ui.main.transaction.chart.state.ChartStateEvent
 import com.example.jibi.ui.main.transaction.chart.state.ChartViewState
 import com.example.jibi.ui.main.transaction.common.BaseViewModel

@@ -251,5 +251,6 @@
     <string name="you_changes_have_not_saved">Your changes have not been saved</string>
     <string name="discard">Discard</string>
     <string name="unable_to_restore_transaction">Unable to restore deleted transaction</string>
+    <string name="back_to_current_month">Back to current month</string>
 
 </resources>

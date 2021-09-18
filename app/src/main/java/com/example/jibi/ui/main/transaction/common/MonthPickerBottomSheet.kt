@@ -18,6 +18,7 @@ constructor(
     private val _resources: Resources,
     private val defaultMonth: Int,
     private val defaultYear: Int,
+    private val isDefaultMonthTheCurrentMonth: Boolean
 ) : BottomSheetDialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,6 +34,13 @@ constructor(
     }
 
     private fun initViews() {
+
+        if (isDefaultMonthTheCurrentMonth) {
+            back_to_current_month_txt.visibility = View.GONE
+        } else {
+            back_to_current_month_txt.visibility = View.VISIBLE
+        }
+
         monthNumberPicker.minValue = 1
         monthNumberPicker.maxValue = 12
         if (isShamsi) {
@@ -47,6 +55,7 @@ constructor(
         monthNumberPicker.value = defaultMonth
         yearNumberPicker.value = defaultYear
         confirm_monthPicker.text = _resources.getString(R.string.confirm)
+        back_to_current_month_txt.text = _resources.getString(R.string.back_to_current_month)
         confirm_monthPicker.setOnClickListener {
             if (yearNumberPicker.value != defaultYear
                 ||
@@ -56,10 +65,16 @@ constructor(
             }
             dismiss()
         }
+        //on clicks
+        back_to_current_month_txt.setOnClickListener {
+            interaction.onNavigateToCurrentMonthClicked()
+            dismiss()
+        }
 
     }
 
     interface Interaction {
         fun onNewMonthSelected(month: Int, year: Int)
+        fun onNavigateToCurrentMonthClicked()
     }
 }

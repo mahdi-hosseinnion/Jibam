@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.RequestManager
 import com.example.jibi.R
 import com.example.jibi.models.PieChartData
-import com.example.jibi.ui.main.transaction.MonthManger
+import com.example.jibi.ui.main.transaction.common.MonthManger
 import com.example.jibi.ui.main.transaction.chart.ChartFragment.ChartState.*
 import com.example.jibi.ui.main.transaction.common.BaseFragment
 import com.example.jibi.util.Constants.EXPENSES_TYPE_MARKER

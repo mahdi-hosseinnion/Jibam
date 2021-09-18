@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.jibi.models.Month
 import com.example.jibi.models.Transaction
 import com.example.jibi.repository.tranasction.TransactionRepository
-import com.example.jibi.ui.main.transaction.MonthManger
+import com.example.jibi.ui.main.transaction.common.MonthManger
 import com.example.jibi.ui.main.transaction.common.BaseViewModel
 import com.example.jibi.ui.main.transaction.transactions.state.TransactionsStateEvent
 import com.example.jibi.ui.main.transaction.transactions.state.TransactionsViewState

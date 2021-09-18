@@ -1,10 +1,9 @@
-package com.example.jibi.ui.main.transaction
+package com.example.jibi.ui.main.transaction.common
 
 import android.content.res.Resources
 import androidx.fragment.app.FragmentManager
 import com.example.jibi.R
 import com.example.jibi.models.Month
-import com.example.jibi.ui.main.transaction.common.MonthPickerBottomSheet
 import com.example.jibi.util.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,12 +25,12 @@ constructor(
 
     private val _fromDate = MutableStateFlow(
         getStartOfCurrentMonth(
-            System.currentTimeMillis()
+            DateUtils.getCurrentUnixTimeInMilliSeconds()
         )
     )
     private val _toDate = MutableStateFlow(
         getEndOfCurrentMonth(
-            System.currentTimeMillis()
+            DateUtils.getCurrentUnixTimeInMilliSeconds()
         )
     )
 
@@ -214,18 +213,22 @@ constructor(
         return SimpleDateFormat("MMM", currentLocale).format(currentDate)
     }
 
-    fun getMonth(): Int {
+    fun getCurrentMonth(): Int = getMonth(DateUtils.getCurrentUnixTimeInMilliSeconds())
+
+    fun getMonth(timeStamp: Long = _fromDate.value): Int {
         return if (currentLocale.isFarsi()) {
             SolarCalendar.calcSolarCalendar(
-                _fromDate.value,
+                timeStamp,
                 SolarCalendar.ShamsiPatterns.JUST_MONTH_NUMBER,
                 currentLocale
             ).toInt()
         } else {
-            val currentDate = Date(_fromDate.value)
+            val currentDate = Date(timeStamp)
             return (SimpleDateFormat("M", currentLocale).format(currentDate)).toInt()
         }
     }
+
+    fun getCurrentYear(): Int = getYear(DateUtils.getCurrentUnixTimeInMilliSeconds())
 
     fun getYear(timeStamp: Long = _fromDate.value): Int {
         return if (currentLocale.isFarsi()) {
@@ -251,6 +254,16 @@ constructor(
                     _onNewMonthSelected(month, year)
                 }
             }
+
+            override fun onNavigateToCurrentMonthClicked() {
+                navigateToCurrentMonth()
+                if (_onNewMonthSelected != null) {
+                    _onNewMonthSelected(
+                        getMonth(DateUtils.getCurrentUnixTimeInMilliSeconds()),
+                        getYear(DateUtils.getCurrentUnixTimeInMilliSeconds())
+                    )
+                }
+            }
         }
         val monthPicker =
             MonthPickerBottomSheet(
@@ -258,7 +271,8 @@ constructor(
                 isShamsi = currentLocale.isFarsi(),
                 _resources = _resources,
                 defaultMonth = getMonth(),
-                defaultYear = getYear()
+                defaultYear = getYear(),
+                isDefaultMonthTheCurrentMonth = getMonth() == getCurrentMonth() && getYear() == getCurrentYear()
             )
         monthPicker.show(fragmentManager, "MonthPicker")
 
@@ -302,6 +316,13 @@ constructor(
         )
 
 
+    }
+
+    fun navigateToCurrentMonth() {
+        setMonthAndYear(
+            month = getCurrentMonth(),
+            year = getCurrentYear()
+        )
     }
 
 }
