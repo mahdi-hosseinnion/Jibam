@@ -4,11 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
-import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentFactory
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -20,11 +18,7 @@ import com.example.jibi.BaseApplication
 import com.example.jibi.R
 import com.example.jibi.ui.BaseActivity
 import com.example.jibi.ui.app_intro.AppIntroActivity
-import com.example.jibi.ui.app_intro.ChooseLanguageDialog
-import com.example.jibi.util.Constants
-import com.example.jibi.util.LocaleHelper
 import com.example.jibi.util.PreferenceKeys
-import com.example.jibi.util.isFarsi
 import com.jakewharton.processphoenix.ProcessPhoenix
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -60,54 +54,6 @@ class MainActivity : BaseActivity() {
             firstSetup()
         }
         uiSetup()
-    }
-
-    private fun didUserSelectLanguage(): Boolean = sharedPreferences.getBoolean(
-        PreferenceKeys.DID_USER_SELECT_LANGUAGE,
-        false
-    )
-
-    private fun showChooseLangDialog() {
-        //TODO ADD OTHER LANGUAGE TO IDN THIS CODE WILL WORK ON OTHER LANGUAGES
-        val systemLang = if (currentLocale.isFarsi()) {
-            ChooseLanguageDialog.LANGUAGE.PERSIAN
-        } else {
-            ChooseLanguageDialog.LANGUAGE.ENGLISH
-        }
-        val interaction = object : ChooseLanguageDialog.Interaction {
-            override fun onOkClicked(language: ChooseLanguageDialog.LANGUAGE) {
-                userSelectLanguage()
-                if (language != systemLang) {
-                    changeLanguageTo(language)
-                } else {
-                    checkForAppIntro()
-                }
-            }
-        }
-        val chooseLanguageDialog = ChooseLanguageDialog(
-            this, interaction,
-            systemLang
-        )
-        chooseLanguageDialog.show()
-    }
-
-    fun userSelectLanguage() {
-        sharedPreferences.edit().putBoolean(
-            PreferenceKeys.DID_USER_SELECT_LANGUAGE,
-            true
-        ).apply()
-    }
-
-    fun changeLanguageTo(language: ChooseLanguageDialog.LANGUAGE) {
-        when (language) {
-            ChooseLanguageDialog.LANGUAGE.PERSIAN -> {
-                LocaleHelper.setLocale(this, Constants.PERSIAN_LANG_CODE)
-            }
-            ChooseLanguageDialog.LANGUAGE.ENGLISH -> {
-                LocaleHelper.setLocale(this, Constants.ENGLISH_LANG_CODE)
-            }
-        }
-        recreateApp()
     }
 
     private fun recreateApp() {
@@ -232,12 +178,7 @@ class MainActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         navController.addOnDestinationChangedListener(listener)
-
-        if (didUserSelectLanguage()) {
-            checkForAppIntro()
-        } else {
-            showChooseLangDialog()
-        }
+        checkForAppIntro()
 
     }
 
