@@ -32,7 +32,6 @@ constructor(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager,
     private val currentLocale: Locale,
-    private val monthManger: MonthManger,
     private val _resources: Resources
 ) : BaseFragment(
     R.layout.fragment_detail_chart,
@@ -81,11 +80,6 @@ constructor(
         }
     }
 
-    private fun setCategoryData(categoryName: String) {
-        val monthName = " " + monthManger.getMonthName()
-
-        detailChartFragment_toolbar.title = categoryName + monthName
-    }
 
     private fun initRecyclerView() {
         detail_chart_recycler.apply {

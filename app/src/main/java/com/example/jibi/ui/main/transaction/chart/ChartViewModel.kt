@@ -1,15 +1,17 @@
 package com.example.jibi.ui.main.transaction.chart
 
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
+import com.example.jibi.models.Month
 import com.example.jibi.models.PieChartData
 import com.example.jibi.models.Transaction
 import com.example.jibi.models.mappers.toTransactionEntity
 import com.example.jibi.repository.tranasction.TransactionRepository
-import com.example.jibi.ui.main.transaction.common.MonthManger
 import com.example.jibi.ui.main.transaction.chart.state.ChartStateEvent
 import com.example.jibi.ui.main.transaction.chart.state.ChartViewState
 import com.example.jibi.ui.main.transaction.common.BaseViewModel
+import com.example.jibi.ui.main.transaction.common.MonthManger
 import com.example.jibi.util.DataState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -29,6 +31,7 @@ constructor(
 
     private val _pieChartData: LiveData<List<PieChartData>> =
         monthManger.currentMonth.flatMapLatest {
+            setCurrentMonth(it)
             transactionRepository.getPieChartData(
                 minDate = it.startOfMonth,
                 maxDate = it.endOfMonth
@@ -69,7 +72,8 @@ constructor(
                     ?: outDate.recentlyDeletedTransaction
 
         return ChartViewState(
-            recentlyDeletedTransaction = recentlyDeletedTransaction
+            recentlyDeletedTransaction = recentlyDeletedTransaction,
+            currentMonth = newViewState.currentMonth ?: outDate.currentMonth,
         )
     }
 
@@ -99,6 +103,24 @@ constructor(
                 transactionEntity = transaction.toTransactionEntity()
             )
         )
+    }
+
+    private fun setCurrentMonth(month: Month) {
+        setViewState(
+            ChartViewState(currentMonth = month)
+        )
+    }
+
+    fun showMonthPickerBottomSheet(parentFragmentManager: FragmentManager) {
+        monthManger.showMonthPickerBottomSheet(parentFragmentManager)
+    }
+
+    fun navigateToPreviousMonth() {
+        monthManger.navigateToPreviousMonth()
+    }
+
+    fun navigateToNextMonth() {
+        monthManger.navigateToNextMonth()
     }
 
     companion object {

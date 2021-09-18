@@ -9,13 +9,11 @@ import androidx.core.text.TextUtilsCompat
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.RequestManager
 import com.example.jibi.R
 import com.example.jibi.models.PieChartData
-import com.example.jibi.ui.main.transaction.common.MonthManger
 import com.example.jibi.ui.main.transaction.chart.ChartFragment.ChartState.*
 import com.example.jibi.ui.main.transaction.common.BaseFragment
 import com.example.jibi.util.Constants.EXPENSES_TYPE_MARKER
@@ -32,11 +30,9 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.utils.MPPointF
 import kotlinx.android.synthetic.main.fragment_chart.*
-import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.android.synthetic.main.toolbar_month_changer.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -52,7 +48,6 @@ constructor(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager,
     private val currentLocale: Locale,
-    private val monthManger: MonthManger,
     private val _resources: Resources
 ) : BaseFragment(
     R.layout.fragment_chart,
@@ -82,22 +77,15 @@ constructor(
         super.onViewCreated(view, savedInstanceState)
         initPieChart()
         subscribeObservers()
-        viewLifecycleOwner.lifecycleScope.launch(Main) {
-            monthManger.currentMonth.collect {
-                val monthName = " " + it.nameOfMonth
-                if (currentChartState == INCOMES_STATE) {
-                    chartFragment_toolbar_title.text =
-                        (_getString(R.string.income_chart_title) + monthName)
 
-                } else {
-                    chartFragment_toolbar_title.text =
-                        (_getString(R.string.expenses_chart_title) + monthName)
-                }
-
-            }
+        toolbar_month.setOnClickListener {
+            viewModel.showMonthPickerBottomSheet(parentFragmentManager)
         }
-        chartFragment_toolbar_title.setOnClickListener {
-            monthManger.showMonthPickerBottomSheet(parentFragmentManager)
+        month_manager_previous.setOnClickListener {
+            viewModel.navigateToPreviousMonth()
+        }
+        month_manager_next.setOnClickListener {
+            viewModel.navigateToNextMonth()
         }
         fab_swap.setOnClickListener {
             swapChartCategory()
@@ -115,12 +103,11 @@ constructor(
     }
 
     private fun refreshChart() {
-        val monthName = " " + monthManger.getMonthName()
         val category_type_marker = if (currentChartState == INCOMES_STATE) {
-            chartFragment_toolbar_title.text = _getString(R.string.income_chart_title) + monthName
+            chartFragment_toolbar_title.text = _getString(R.string.income_chart_title)
             INCOME_TYPE_MARKER
         } else {
-            chartFragment_toolbar_title.text = _getString(R.string.expenses_chart_title) + monthName
+            chartFragment_toolbar_title.text = _getString(R.string.expenses_chart_title)
 
             EXPENSES_TYPE_MARKER
         }
@@ -273,6 +260,7 @@ constructor(
             adapter = recyclerAdapter
         }
     }
+
     override fun handleLoading() {
         viewModel.countOfActiveJobs.observe(
             viewLifecycleOwner
@@ -290,7 +278,12 @@ constructor(
     }
 
     private fun subscribeObservers() {
-        viewModel.pieChartData.observe(viewLifecycleOwner){
+        viewModel.viewState.observe(viewLifecycleOwner) { vs ->
+            vs?.let { viewState ->
+                viewState.currentMonth?.let { toolbar_month.text = it.nameOfMonth }
+            }
+        }
+        viewModel.pieChartData.observe(viewLifecycleOwner) {
             it?.let { data ->
                 chartData = data
                 refreshChart()

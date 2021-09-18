@@ -211,7 +211,7 @@
     <string name="no_transaction_found_with_this_category">هیچ تراکنشی با این دسته بندی یافت نشد!</string>
     <string name="no_chart_data_available">هیچ داده ای برای نمایش وجود ندارد.</string>
 
-    <string name="income_chart_title">نمودار درآمد های</string>
+    <string name="income_chart_title">نمودار درآمد ها</string>
     <string name="expenses_chart_title">نمودار مخارج</string>
     <string name="swap_chart">تعویض نمودار</string>
     <string name="delete">حذف</string>

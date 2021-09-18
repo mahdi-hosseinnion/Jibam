@@ -1,5 +1,6 @@
 package com.example.jibi.ui
 
+import android.content.res.Resources
 import com.example.jibi.ui.main.transaction.common.MonthManger
 import com.example.jibi.util.DateUtils.gregorianToUnixTimestamp
 import com.example.jibi.util.DateUtils.shamsiToUnixTimeStamp
@@ -16,7 +17,7 @@ class MonthMangerTest {
     private val testLocale = Locale("en", "IR")
 
     //system under test
-    private val monthManager = MonthManger(testLocale)
+    private val monthManager = MonthManger(testLocale, Resources.getSystem())
 
     @ParameterizedTest
     @ValueSource(

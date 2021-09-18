@@ -7,14 +7,13 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
 import com.example.jibi.di.main.MainScope
 import com.example.jibi.ui.main.transaction.aboutus.AboutUsFragment
-import com.example.jibi.ui.main.transaction.common.MonthManger
 import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.DetailEditTransactionFragment
 import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.InsertTransactionFragment
-import com.example.jibi.ui.main.transaction.setting.SettingFragment
 import com.example.jibi.ui.main.transaction.categories.AddCategoryFragment
 import com.example.jibi.ui.main.transaction.categories.ViewCategoriesFragment
 import com.example.jibi.ui.main.transaction.chart.ChartFragment
 import com.example.jibi.ui.main.transaction.chart.DetailChartFragment
+import com.example.jibi.ui.main.transaction.setting.SettingFragment
 import com.example.jibi.ui.main.transaction.transactions.TransactionsFragment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -32,7 +31,6 @@ constructor(
     private val currentLocale: Locale,
     private val sharedPreferences: SharedPreferences,
     private val sharedPrefsEditor: SharedPreferences.Editor,
-    private val monthManger: MonthManger,
     private val resources: Resources
 ) : FragmentFactory() {
 
@@ -94,7 +92,6 @@ constructor(
                     viewModelFactory,
                     requestManager,
                     currentLocale,
-                    monthManger,
                     resources
                 )
             }
@@ -103,7 +100,6 @@ constructor(
                     viewModelFactory,
                     requestManager,
                     currentLocale,
-                    monthManger,
                     resources
                 )
             }

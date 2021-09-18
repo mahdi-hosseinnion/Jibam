@@ -26,47 +26,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <include
+                layout="@layout/toolbar_month_changer"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="end"
-                android:orientation="horizontal">
+                android:layout_gravity="end" />
 
-                <ImageView
-                    android:id="@+id/month_manager_previous"
-                    android:layout_width="48dp"
-                    android:layout_height="match_parent"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:padding="8dp"
 
-                    app:srcCompat="@drawable/ic_round_navigate_before_24"
-                    app:tint="@color/black" />
-
-                <TextView
-                    android:id="@+id/toolbar_month"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="6dp"
-                    android:layout_marginEnd="6dp"
-                    android:gravity="center"
-                    android:textColor="#00141E"
-                    android:textSize="20sp"
-                    tools:text="May" />
-
-                <ImageView
-                    android:id="@+id/month_manager_next"
-                    android:layout_width="48dp"
-                    android:layout_height="match_parent"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:padding="8dp"
-                    android:gravity="center"
-                    android:layout_marginEnd="6dp"
-                    app:srcCompat="@drawable/ic_round_navigate_next_24"
-                    app:tint="@color/black" />
-            </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
 
         <LinearLayout

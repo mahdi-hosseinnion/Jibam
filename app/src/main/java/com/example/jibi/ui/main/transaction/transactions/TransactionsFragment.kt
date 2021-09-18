@@ -45,6 +45,7 @@ import kotlinx.android.synthetic.main.fragment_add_transaction.*
 import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.android.synthetic.main.layout_chart_list_item.*
 import kotlinx.android.synthetic.main.layout_transaction_list_item.*
+import kotlinx.android.synthetic.main.toolbar_month_changer.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt
