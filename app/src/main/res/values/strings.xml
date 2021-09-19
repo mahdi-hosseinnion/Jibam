@@ -4,7 +4,6 @@
     <string name="income">Income</string>
     <string name="create_new_transaction">Create New Transaction</string>
     <string name="write_note">Write Some note</string>
-    <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
     <string name="cash">Cash</string>
     <string name="with">With</string>
@@ -252,5 +251,29 @@
     <string name="unable_to_restore_transaction">Unable to restore deleted transaction</string>
     <string name="back_to_current_month">Back to current month</string>
     <string name="no_setting">no setting</string>
-
+    <!--    solar calender-->
+    <string name="Farvardin">Farvardin</string>
+    <string name="Ordibehesht">Ordibehesht</string>
+    <string name="Khordad">Khordad</string>
+    <string name="Tir">Tir</string>
+    <string name="Mordad">Mordad</string>
+    <string name="Shahrivar">Shahrivar</string>
+    <string name="Mehr">Mehr</string>
+    <string name="Aban">Aban</string>
+    <string name="Azar">Azar</string>
+    <string name="Dey">Dey</string>
+    <string name="Bahman">Bahman</string>
+    <string name="Esfand">Esfand</string>
+    <!--    days of week-->
+    <string name="monday">Mon</string>
+    <string name="tuesday">Tue</string>
+    <string name="wednesday">Wed</string>
+    <string name="thursday">Thu</string>
+    <string name="friday">Fri</string>
+    <string name="saturday">Sat</string>
+    <string name="sunday">Sun</string>
+<!--    https://github.com/alirezaafkar/SunDatePicker/blob/master/sundatepicker/src/main/res/values/strings.xml-->
+    <string name="ok_btn">OK</string>
+    <string name="cancel_btn">cancel</string>
+    <string name="today">Today</string>
 </resources>

@@ -330,7 +330,9 @@ constructor(
         return if (currentLocale.isFarsi()) {
             SolarCalendar.calcSolarCalendar(
                 unixTimeInMillis,
-                SolarCalendar.ShamsiPatterns.DETAIL_FRAGMENT, currentLocale
+                SolarCalendar.ShamsiPatterns.DETAIL_FRAGMENT,
+                resources,
+                currentLocale
             )
         } else {
             val df = Date(unixTimeInMillis)

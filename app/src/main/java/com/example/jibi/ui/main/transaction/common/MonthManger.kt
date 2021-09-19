@@ -166,6 +166,7 @@ constructor(
         val shamsiDate = SolarCalendar.calcSolarCalendar(
             timeStamp,
             SolarCalendar.ShamsiPatterns.YEAR_MONTH,
+            _resources,
             currentLocale
         )
         val currentYear = shamsiDate.substring(0, shamsiDate.indexOf('_'))
@@ -180,6 +181,7 @@ constructor(
         val shamsiDate = SolarCalendar.calcSolarCalendar(
             timeStamp,
             SolarCalendar.ShamsiPatterns.YEAR_MONTH,
+            _resources,
             currentLocale
         )
         val currentYear = shamsiDate.substring(0, shamsiDate.indexOf('_'))
@@ -203,6 +205,7 @@ constructor(
         SolarCalendar.calcSolarCalendar(
             timeStamp,
             SolarCalendar.ShamsiPatterns.JUST_MONTH_NAME,
+            _resources,
             currentLocale
         )
 
@@ -220,6 +223,7 @@ constructor(
             SolarCalendar.calcSolarCalendar(
                 timeStamp,
                 SolarCalendar.ShamsiPatterns.JUST_MONTH_NUMBER,
+                _resources,
                 currentLocale
             ).toInt()
         } else {
@@ -235,6 +239,7 @@ constructor(
             SolarCalendar.calcSolarCalendar(
                 timeStamp,
                 SolarCalendar.ShamsiPatterns.JUST_YEAR_NUMBER,
+                _resources,
                 currentLocale
             ).toInt()
         } else {

@@ -176,7 +176,8 @@ class DetailChartListAdapter(
             return if (currentLocale.isFarsi()) {
                 SolarCalendar.calcSolarCalendar(
                     date.times(1000L),
-                    SolarCalendar.ShamsiPatterns.DETAIL_CHART_FRAGMENT, currentLocale
+
+                    SolarCalendar.ShamsiPatterns.DETAIL_CHART_FRAGMENT, null, currentLocale
                 )
             } else {
                 val df = Date(date.times(1000L))

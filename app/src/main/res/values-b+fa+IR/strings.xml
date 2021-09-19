@@ -4,7 +4,6 @@
     <string name="income">درآمد ها</string>
     <string name="create_new_transaction">ایجاد تراکنش جدید</string>
     <string name="write_note">یادداشت بگذارید</string>
-    <string name="today">امروز</string>
     <string name="yesterday">دیروز</string>
     <string name="cash">پول نقد</string>
     <string name="with">به همراه</string>
@@ -251,4 +250,31 @@
     <string name="unable_to_restore_transaction">نمی توانیم تراکنش را بازگردانی کنیم</string>
     <string name="back_to_current_month">برگرد به ماه فعلی</string>
     <string name="no_setting">بدون تنظیمات</string>
+<!--    solar calender-->
+    <string name="Farvardin">فروردين</string>
+    <string name="Ordibehesht">ارديبهشت</string>
+    <string name="Khordad">خرداد</string>
+    <string name="Tir">تير</string>
+    <string name="Mordad">مرداد</string>
+    <string name="Shahrivar">شهريور</string>
+    <string name="Mehr">مهر</string>
+    <string name="Aban">آبان</string>
+    <string name="Azar">آذر</string>
+    <string name="Dey">دي</string>
+    <string name="Bahman">بهمن</string>
+    <string name="Esfand">اسفند</string>
+<!--    days of week-->
+    <string name="saturday">شنبه</string>
+    <string name="sunday">يکشنبه</string>
+    <string name="monday">دوشنبه</string>
+    <string name="tuesday">سه شنبه</string>
+    <string name="wednesday">چهارشنبه</string>
+    <string name="thursday">پنج شنبه</string>
+    <string name="friday">جمعه</string>
+    <!--    https://github.com/alirezaafkar/SunDatePicker/blob/master/sundatepicker/src/main/res/values/strings.xml-->
+    <string name="ok_btn">تائید</string>
+    <string name="cancel_btn">انصراف</string>
+    <string name="today">امروز</string>
+
+
 </resources><!--source https://developer.android.com/training/basics/supporting-devices/languages-->

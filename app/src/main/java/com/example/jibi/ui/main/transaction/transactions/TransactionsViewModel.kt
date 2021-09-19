@@ -1,5 +1,6 @@
 package com.example.jibi.ui.main.transaction.transactions
 
+import android.content.res.Resources
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
@@ -29,6 +30,7 @@ class TransactionsViewModel
 constructor(
     private val transactionRepository: TransactionRepository,
     private val monthManger: MonthManger,
+    private val resources: Resources,
     private val currentLocale: Locale
 ) : BaseViewModel<TransactionsViewState, TransactionsStateEvent>() {
     init {
@@ -63,7 +65,10 @@ constructor(
             query = query
         ).handleLoadingAndException(GET_TRANSACTION_LIST)
             .map {
-                return@map AddHeaderToTransactions(currentLocale).addHeaderToTransactions(
+                return@map AddHeaderToTransactions(
+                    currentLocale,
+                    resources
+                ).addHeaderToTransactions(
                     it
                 )
             }
@@ -73,7 +78,6 @@ constructor(
             setCurrentMonth(it)
             getSummeryMoney(it.startOfMonth, it.endOfMonth)
         }.asLiveData()
-
 
 
     val summeryMoney: LiveData<SummaryMoney> = _summeryMoney
@@ -177,11 +181,12 @@ constructor(
     fun isSearchInVisible(): Boolean =
         getCurrentViewStateOrNew().searchViewState == SearchViewState.INVISIBLE
 
-    private fun setCurrentMonth(month:Month) {
+    private fun setCurrentMonth(month: Month) {
         setViewState(
             TransactionsViewState(currentMonth = month)
         )
     }
+
     fun showMonthPickerBottomSheet(parentFragmentManager: FragmentManager) {
         monthManger.showMonthPickerBottomSheet(parentFragmentManager)
     }

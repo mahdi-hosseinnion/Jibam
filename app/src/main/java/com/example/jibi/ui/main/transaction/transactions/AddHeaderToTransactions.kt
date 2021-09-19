@@ -1,5 +1,6 @@
 package com.example.jibi.ui.main.transaction.transactions
 
+import android.content.res.Resources
 import com.example.jibi.models.Transaction
 import com.example.jibi.ui.main.transaction.transactions.TransactionsListAdapter.Companion.NO_RESULT_FOUND_IN_DATABASE
 import com.example.jibi.util.SolarCalendar
@@ -10,7 +11,8 @@ import kotlin.collections.ArrayList
 
 class AddHeaderToTransactions
     (
-    private val currentLocale: Locale
+    private val currentLocale: Locale,
+    private val resources: Resources
 
 ) {
     val today: String =
@@ -103,7 +105,9 @@ class AddHeaderToTransactions
         return if (currentLocale.isFarsi()) {
             SolarCalendar.calcSolarCalendar(
                 df,
-                SolarCalendar.ShamsiPatterns.RECYCLER_VIEW, currentLocale
+                SolarCalendar.ShamsiPatterns.RECYCLER_VIEW,
+                resources,
+                currentLocale
             )
         } else {
             SimpleDateFormat(

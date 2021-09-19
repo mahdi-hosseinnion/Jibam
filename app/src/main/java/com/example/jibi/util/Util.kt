@@ -188,4 +188,4 @@ fun Int.toStringWith2Digit(): String = if (this < 10)
 else
     this.toString()
 
-fun Locale.isFarsi(): Boolean = (language == Constants.PERSIAN_LANG_CODE)
+fun Locale.isFarsi(): Boolean = true

@@ -1,5 +1,7 @@
 package com.example.jibi.util
 
+import android.content.res.Resources
+import com.example.jibi.R
 import com.example.jibi.ui.main.transaction.transactions.TransactionsListAdapter
 import java.util.*
 
@@ -24,14 +26,16 @@ object SolarCalendar {
     fun calcSolarCalendar(
         unixTimeStamp: Long,
         pattern: ShamsiPatterns,
+        resources: Resources?,
         loc: Locale
     ): String =
-        calcSolarCalendar(Date(unixTimeStamp), pattern, loc)
+        calcSolarCalendar(Date(unixTimeStamp), pattern, resources, loc)
 
     //    = Locale("en_US")
     fun calcSolarCalendar(
         gregorianDate: Date,
         pattern: ShamsiPatterns,
+        resources: Resources?,
         loc: Locale
     ): String {
         val ld: Int
@@ -164,28 +168,32 @@ object SolarCalendar {
                 year = miladiYear - 622
             }
         }
-        when (month) {
-            1 -> strMonth = "فروردين"
-            2 -> strMonth = "ارديبهشت"
-            3 -> strMonth = "خرداد"
-            4 -> strMonth = "تير"
-            5 -> strMonth = "مرداد"
-            6 -> strMonth = "شهريور"
-            7 -> strMonth = "مهر"
-            8 -> strMonth = "آبان"
-            9 -> strMonth = "آذر"
-            10 -> strMonth = "دي"
-            11 -> strMonth = "بهمن"
-            12 -> strMonth = "اسفند"
-        }
-        when (WeekDay) {
-            0 -> strWeekDay = "يکشنبه"
-            1 -> strWeekDay = "دوشنبه"
-            2 -> strWeekDay = "سه شنبه"
-            3 -> strWeekDay = "چهارشنبه"
-            4 -> strWeekDay = "پنج شنبه"
-            5 -> strWeekDay = "جمعه"
-            6 -> strWeekDay = "شنبه"
+        if (resources != null) {
+            strMonth = when (month) {
+                1 -> resources.getString(R.string.Farvardin)
+                2 -> resources.getString(R.string.Ordibehesht)
+                3 -> resources.getString(R.string.Khordad)
+                4 -> resources.getString(R.string.Tir)
+                5 -> resources.getString(R.string.Mordad)
+                6 -> resources.getString(R.string.Shahrivar)
+                7 -> resources.getString(R.string.Mehr)
+                8 -> resources.getString(R.string.Aban)
+                9 -> resources.getString(R.string.Azar)
+                10 -> resources.getString(R.string.Dey)
+                11 -> resources.getString(R.string.Bahman)
+                12 -> resources.getString(R.string.Esfand)
+                else -> "Unknown month"
+            }
+            strWeekDay = when (WeekDay) {
+                0 -> resources.getString(R.string.sunday)
+                1 -> resources.getString(R.string.monday)
+                2 -> resources.getString(R.string.tuesday)
+                3 -> resources.getString(R.string.wednesday)
+                4 -> resources.getString(R.string.thursday)
+                5 -> resources.getString(R.string.friday)
+                6 -> resources.getString(R.string.saturday)
+                else -> "Unknown day"
+            }
         }
         //TODO REFACTOR THIS
         return when (pattern) {
