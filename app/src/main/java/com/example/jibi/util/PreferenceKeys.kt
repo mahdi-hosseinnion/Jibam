@@ -21,7 +21,6 @@ object PreferenceKeys {
     const val PROMOTE_MONTH_MANGER = "PREFERENCES_PROMOTE_MONTH_MANGER"
     const val APP_INTRO_PREFERENCE = "APP_INTRO_PREFERENCE"
 
-    const val APP_LANGUAGE_PREF = "APP_LANGUAGE_PREF"
 
     fun calendarDefault(currentLocale: Locale): String =
         if (currentLocale.isFarsi()) {

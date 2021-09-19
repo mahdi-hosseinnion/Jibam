@@ -36,7 +36,6 @@ class AppIntroActivity : AppIntro() {
     override fun onCreate(savedInstanceState: Bundle?) {
         inject()
         super.onCreate(savedInstanceState)
-        checkForRtlUi()
         // Call addSlide passing your Fragments.
         // You can use AppIntroFragment to use a pre-built fragment
         this.setSkipText(_getString(R.string.skip))
@@ -66,22 +65,6 @@ class AppIntroActivity : AppIntro() {
                 backgroundDrawable = R.drawable.app_intro_back_slide_2,
             )
         )
-    }
-
-    private fun checkForRtlUi() {
-        val appLanguage = sharedPreferences.getString(
-            PreferenceKeys.APP_LANGUAGE_PREF,
-            Constants.APP_DEFAULT_LANGUAGE
-        )
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            if (appLanguage == Constants.PERSIAN_LANG_CODE) {
-                window.decorView.layoutDirection = View.LAYOUT_DIRECTION_RTL
-            }
-            if (appLanguage == Constants.ENGLISH_LANG_CODE) {
-                window.decorView.layoutDirection = View.LAYOUT_DIRECTION_LTR
-
-            }
-        }
     }
 
     private fun inject() {

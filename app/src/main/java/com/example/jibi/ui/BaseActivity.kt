@@ -16,6 +16,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
 
 abstract class BaseActivity : AppCompatActivity(),
     UICommunicationListener {
@@ -30,25 +31,11 @@ abstract class BaseActivity : AppCompatActivity(),
     @Inject
     lateinit var _resources: Resources
 
-    @ExperimentalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         (application as BaseApplication).appComponent
             .inject(this)
         super.onCreate(savedInstanceState)
 
-        val appLanguage = sharedPreferences.getString(
-            PreferenceKeys.APP_LANGUAGE_PREF,
-            Constants.APP_DEFAULT_LANGUAGE
-        )
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            if (appLanguage == Constants.PERSIAN_LANG_CODE) {
-                window.decorView.layoutDirection = View.LAYOUT_DIRECTION_RTL
-            }
-            if (appLanguage == Constants.ENGLISH_LANG_CODE) {
-                window.decorView.layoutDirection = View.LAYOUT_DIRECTION_LTR
-            }
-        }
     }
 
     private fun _getString(@StringRes resId: Int): String {
