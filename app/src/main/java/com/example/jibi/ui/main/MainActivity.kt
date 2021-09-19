@@ -7,7 +7,6 @@ import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentFactory
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -19,12 +18,9 @@ import com.example.jibi.R
 import com.example.jibi.ui.BaseActivity
 import com.example.jibi.ui.app_intro.AppIntroActivity
 import com.example.jibi.util.PreferenceKeys
-import com.jakewharton.processphoenix.ProcessPhoenix
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
@@ -56,40 +52,6 @@ class MainActivity : BaseActivity() {
         uiSetup()
     }
 
-    private fun recreateApp() {
-        showProgressBar(true)
-        lifecycleScope.launch {
-            delay(1000)
-            showProgressBar(false)
-            recreateActivity()
-        }
-    }
-
-    /*    //TODO REMVOVE THIS ASAP
-        private fun checkForRecreate(){
-            val shouldRecreate = sharedPreferences.getBoolean(
-                PreferenceKeys.SHOULD_RECREATE,
-                false
-            )
-            if (shouldRecreate){
-                sharedPreferences.edit().putBoolean(
-                    PreferenceKeys.SHOULD_RECREATE,
-                    false
-                ).commit()
-                sharedPreferences.edit().putBoolean(
-                    PreferenceKeys.APP_INTRO_PREFERENCE,
-                    true
-                ).commit()
-                val progressdialog = ProgressDialog(this)
-                progressdialog.show()
-                lifecycleScope.launch {
-                    delay(1000)
-                    progressdialog.dismiss()
-                    recreateActivity()
-                }
-            }
-
-        }*/
     private fun checkForAppIntro() {
         val isFirstRun = sharedPreferences.getBoolean(
             PreferenceKeys.APP_INTRO_PREFERENCE,
@@ -123,11 +85,6 @@ class MainActivity : BaseActivity() {
 
     }
 
-
-    override fun recreateActivity() {
-        val nextIntent = Intent(this, MainActivity::class.java)
-        ProcessPhoenix.triggerRebirth(this, nextIntent);
-    }
 
     override fun inject() {
         (application as BaseApplication).mainComponent()

@@ -13,21 +13,12 @@ interface UICommunicationListener {
         stateMessageCallback: StateMessageCallback
     )
 
-//    fun displayProgressBar(isLoading: Boolean)
-
-//    fun expandAppBar()
-
     fun hideSoftKeyboard()
 
-    //    fun hideToolbar()
-//
-//    fun showToolbar()
     fun setupActionBarWithNavController(toolbar: Toolbar, drawerLayout: DrawerLayout? = null)
 
     fun showProgressBar(isLoading: Boolean)
 
     fun changeDrawerState(closeIt: Boolean)
 
-    fun recreateActivity()
-//    fun isStoragePermissionGranted(): Boolean
 }
