@@ -1,7 +1,6 @@
 package com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction
 
 import android.content.SharedPreferences
-import android.content.res.Resources
 import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
@@ -244,8 +243,6 @@ constructor(
     }
 
 
-
-
     override fun setToCombineCalender(year: Int, month: Int, day: Int) {
         viewModel.setToCombineCalender(year, month, day)
     }
@@ -257,12 +254,14 @@ constructor(
     override fun onMoneyEditTextFocusChanged(hasFocus: Boolean) {
         if (hasFocus)
             viewModel.setPresenterState(EnteringAmountOfMoneyState)
-        else
-            viewModel.setPresenterState(NoneState)
     }
 
     override fun onClickedOnMoneyEditText() {
         viewModel.setPresenterState(EnteringAmountOfMoneyState)
+    }
+
+    override fun onClickedOnEmptyOfDetailContainer() {
+        viewModel.setPresenterState(NoneState)
     }
 
     override fun onClickedOnDate() {
@@ -377,7 +376,7 @@ constructor(
             //check for search view
             if (viewModel.getTransactionCategory() != null) {
                 showDiscardOrSaveDialog()
-            }else{
+            } else {
                 navigateBack()
             }
         }

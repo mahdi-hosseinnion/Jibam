@@ -4,7 +4,6 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.SharedPreferences
-import android.content.res.Resources
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -114,6 +113,9 @@ constructor(
         edt_money.setOnClickListener {
             onClickedOnMoneyEditText()
 
+        }
+        transaction_detail_container.setOnClickListener {
+            onClickedOnEmptyOfDetailContainer()
         }
         uiCommunicationListener.hideSoftKeyboard()
         setupCategoryBottomSheet()
@@ -494,6 +496,8 @@ constructor(
     abstract fun onMoneyEditTextFocusChanged(hasFocus: Boolean)
 
     abstract fun onClickedOnMoneyEditText()
+
+    abstract fun onClickedOnEmptyOfDetailContainer()
 
     abstract fun onClickedOnDate()
 

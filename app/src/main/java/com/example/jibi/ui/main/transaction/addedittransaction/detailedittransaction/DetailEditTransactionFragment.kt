@@ -1,7 +1,6 @@
 package com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction
 
 import android.content.SharedPreferences
-import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -291,12 +290,14 @@ constructor(
     override fun onMoneyEditTextFocusChanged(hasFocus: Boolean) {
         if (hasFocus)
             viewModel.setPresenterState(EnteringAmountOfMoneyState)
-//        else
-//            viewModel.setPresenterState(NoneState)
     }
 
     override fun onClickedOnMoneyEditText() {
         viewModel.setPresenterState(EnteringAmountOfMoneyState)
+    }
+
+    override fun onClickedOnEmptyOfDetailContainer() {
+        viewModel.setPresenterState(NoneState)
     }
 
     override fun onClickedOnDate() {
@@ -325,7 +326,6 @@ constructor(
             }
         }
     }
-
 
 
     override fun onItemSelected(position: Int, item: Category) {
