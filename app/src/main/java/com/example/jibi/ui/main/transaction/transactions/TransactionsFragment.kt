@@ -2,7 +2,6 @@ package com.example.jibi.ui.main.transaction.transactions
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.content.res.Resources
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.Editable
@@ -34,6 +33,7 @@ import com.example.jibi.ui.main.transaction.common.BaseFragment
 import com.example.jibi.ui.main.transaction.transactions.state.TransactionsStateEvent
 import com.example.jibi.ui.main.transaction.transactions.state.TransactionsViewState
 import com.example.jibi.util.*
+import com.example.jibi.util.PreferenceKeys.APP_CALENDAR_PREFERENCE
 import com.example.jibi.util.PreferenceKeys.PROMOTE_FAB_TRANSACTION_FRAGMENT
 import com.example.jibi.util.PreferenceKeys.PROMOTE_MONTH_MANGER
 import com.example.jibi.util.PreferenceKeys.PROMOTE_SUMMERY_MONEY
@@ -216,7 +216,8 @@ constructor(
             true
         ).apply()
 
-        Toast.makeText(requireContext(), "PROMOTE GUIDE STATE RESET", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "PROMOTE GUIDE STATE RESET", Toast.LENGTH_SHORT)
+            .show()
     }
 
     private fun enableSearchMode(query: String? = null) {
@@ -325,7 +326,8 @@ constructor(
                         memo = "memo ${Random.nextInt(451252)}",
                         cat_id = categoryId,
                         date = Random.nextInt(
-                            ((System.currentTimeMillis()).minus(dateRange)).div(1_000).toInt(),
+                            ((System.currentTimeMillis()).minus(dateRange)).div(1_000)
+                                .toInt(),
                             ((System.currentTimeMillis())).div(1_000).toInt()
                         )
                     )
@@ -417,10 +419,14 @@ constructor(
                     }
                 }
 
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                override fun onScrollStateChanged(
+                    recyclerView: RecyclerView,
+                    newState: Int
+                ) {
                     super.onScrollStateChanged(recyclerView, newState)
                     val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                    val lastPosition = layoutManager.findFirstCompletelyVisibleItemPosition()
+                    val lastPosition =
+                        layoutManager.findFirstCompletelyVisibleItemPosition()
                     if (lastPosition == 0) {
                         //user should be able to only drag the bottom sheet down when it's in first
                         //position
@@ -437,10 +443,15 @@ constructor(
 //            //swipe to delete
             val swipeHandler =
                 object : SwipeToDeleteCallback(this@TransactionsFragment.requireContext()) {
-                    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    override fun onSwiped(
+                        viewHolder: RecyclerView.ViewHolder,
+                        direction: Int
+                    ) {
 
-                        val adapter = transaction_recyclerView.adapter as TransactionsListAdapter
-                        val deletedTrans = adapter.getTransaction(viewHolder.adapterPosition)
+                        val adapter =
+                            transaction_recyclerView.adapter as TransactionsListAdapter
+                        val deletedTrans =
+                            adapter.getTransaction(viewHolder.adapterPosition)
 //                        delete from list
                         val removedHeader = adapter.removeAt(viewHolder.adapterPosition)
                         //add to recently deleted
@@ -498,7 +509,8 @@ constructor(
     }
 
     private fun insertRecentlyDeletedTrans() {
-        val recentlyDeletedFields = viewModel.getCurrentViewStateOrNew().recentlyDeletedFields
+        val recentlyDeletedFields =
+            viewModel.getCurrentViewStateOrNew().recentlyDeletedFields
         recentlyDeletedFields?.recentlyDeletedTrans?.let {
             //insert to list
             recyclerAdapter.insertTransactionAt(
@@ -524,6 +536,8 @@ constructor(
 
     override fun onResume() {
         super.onResume()
+        //check for calendar type
+        checkForCalendarTypeChange()
         uiCommunicationListener.changeDrawerState(false)
         //enable backStack listener when user  navigate to next fragment or rotate screen
         if (bottomSheetBehavior.state == STATE_EXPANDED || viewModel.isSearchVisible()) {
@@ -538,11 +552,16 @@ constructor(
             override fun onGlobalLayout() {
                 //TODO BIG BUG HERE
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                    fragment_transacion_root.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    fragment_transacion_root.viewTreeObserver.removeOnGlobalLayoutListener(
+                        this
+                    )
                 }
                 val rootHeight = fragment_transacion_root.height
                 val layoutHeight = transaction_fragment_view.height
-                Log.d(TAG, "onGlobalLayout: rootHeight:$rootHeight and layoutHeight $layoutHeight ")
+                Log.d(
+                    TAG,
+                    "onGlobalLayout: rootHeight:$rootHeight and layoutHeight $layoutHeight "
+                )
                 if (bottomSheetPeekHeight < 1) {
                     bottomSheetPeekHeight = rootHeight - layoutHeight
                 }
@@ -560,9 +579,31 @@ constructor(
 
     }
 
+
     override fun onStop() {
         super.onStop()
         uiCommunicationListener.changeDrawerState(true)
+    }
+
+    private fun checkForCalendarTypeChange() {
+
+        val viewModelValue = viewModel.getCalenderType()
+        val prefValue = sharedPreferences.getString(
+            APP_CALENDAR_PREFERENCE,
+            PreferenceKeys.calendarDefault(currentLocale)
+        )
+
+        if (viewModelValue == prefValue) {
+            return
+        }
+        if (viewModelValue.isNullOrBlank()) {
+            viewModel.setCalenderType(prefValue)
+            return
+        }
+        if (viewModelValue != prefValue && prefValue != null) {
+            viewModel.calenderTypeHaveBeenChangedTo(prefValue)
+        }
+
     }
 
     override fun onItemSelected(position: Int, item: Transaction) {
@@ -635,11 +676,13 @@ constructor(
 //            last_transacion_app_bar.setPadding(topHeight.toInt(), 0, topHeight.toInt(), 0)
         //change app bar height
         val appbarViewParams = last_transacion_app_bar.layoutParams
-        appbarViewParams.height = (normalAppBarHeight + (bottomSheetRadios - topHeight.toInt()))
+        appbarViewParams.height =
+            (normalAppBarHeight + (bottomSheetRadios - topHeight.toInt()))
         last_transacion_app_bar.layoutParams = appbarViewParams
         //change buttons height
         val buttonsViewParams = main_bottom_sheet_search_btn.layoutParams
-        buttonsViewParams.width = (normalAppBarHeight + (bottomSheetRadios - topHeight.toInt()))
+        buttonsViewParams.width =
+            (normalAppBarHeight + (bottomSheetRadios - topHeight.toInt()))
 
         main_bottom_sheet_search_btn.layoutParams = buttonsViewParams
 //            main_standardBottomSheet.setPadding(0, topHeight.toInt(), 0, 0)
@@ -684,11 +727,13 @@ constructor(
 //            last_transacion_app_bar.setPadding(topHeight.toInt(), 0, topHeight.toInt(), 0)
         //change app bar height
         val appbarViewParams = last_transacion_app_bar.layoutParams
-        appbarViewParams.height = (normalAppBarHeight + (bottomSheetRadios - topHeight.toInt()))
+        appbarViewParams.height =
+            (normalAppBarHeight + (bottomSheetRadios - topHeight.toInt()))
         last_transacion_app_bar.layoutParams = appbarViewParams
         //change buttons height
         val buttonsViewParams = main_bottom_sheet_search_btn.layoutParams
-        buttonsViewParams.width = (normalAppBarHeight + (bottomSheetRadios - topHeight.toInt()))
+        buttonsViewParams.width =
+            (normalAppBarHeight + (bottomSheetRadios - topHeight.toInt()))
 
         main_bottom_sheet_search_btn.layoutParams = buttonsViewParams
 //            main_standardBottomSheet.setPadding(0, topHeight.toInt(), 0, 0)

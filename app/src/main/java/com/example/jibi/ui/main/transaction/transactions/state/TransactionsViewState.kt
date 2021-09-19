@@ -9,7 +9,8 @@ data class TransactionsViewState(
     var insertedTransactionRawId: Long? = null,
     var successfullyDeletedTransactionIndicator: Int? = null,
     var searchViewState: SearchViewState? = null,
-    var currentMonth: Month? = null
+    var currentMonth: Month? = null,
+    var calendarType:String? =null
 ) {
 
     data class SummaryMoney(

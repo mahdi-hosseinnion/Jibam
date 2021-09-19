@@ -332,5 +332,19 @@ constructor(
         )
     }
 
+    /**
+     * this method is being used to refresh month data for when calendar type changed
+     * default calendar was gregorian and user change it into solar in setting
+     * this method just call setMonthAndYear and reset it with this month value
+     * we don't want to set it to old month b/c its interrupt in solar and gregorian month different
+     */
+    fun refreshData() {
+
+        setMonthAndYear(
+            month = getCurrentMonth(),
+            year = getCurrentYear()
+        )
+    }
+
 
 }

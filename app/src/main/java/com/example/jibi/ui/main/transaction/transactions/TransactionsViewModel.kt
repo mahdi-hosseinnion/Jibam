@@ -9,8 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.jibi.models.Month
 import com.example.jibi.models.Transaction
 import com.example.jibi.repository.tranasction.TransactionRepository
-import com.example.jibi.ui.main.transaction.common.MonthManger
 import com.example.jibi.ui.main.transaction.common.BaseViewModel
+import com.example.jibi.ui.main.transaction.common.MonthManger
 import com.example.jibi.ui.main.transaction.transactions.state.TransactionsStateEvent
 import com.example.jibi.ui.main.transaction.transactions.state.TransactionsViewState
 import com.example.jibi.ui.main.transaction.transactions.state.TransactionsViewState.*
@@ -44,12 +44,17 @@ constructor(
     // In our ViewModel
     private var _queryChannel = MutableStateFlow("")
 
+    //this is used just to refresh resource if calender type changed in setting
+    //actual value of this flow does not matter
+    private var _calendarType = MutableStateFlow("")
+
 
     private val _transactions: LiveData<List<Transaction>> =
         combine(
             _queryChannel,
-            monthManger.currentMonth
-        ) { query, month ->
+            monthManger.currentMonth,
+            _calendarType
+        ) { query, month, _ ->
             return@combine TransactionsQueryRequirement(query, month)
         }.flatMapLatest {
             getTransactionList(it.month.startOfMonth, it.month.endOfMonth, it.query)
@@ -169,8 +174,25 @@ constructor(
             successfullyDeletedTransactionIndicator = newViewState.successfullyDeletedTransactionIndicator
                 ?: outDate.successfullyDeletedTransactionIndicator,
             searchViewState = newViewState.searchViewState ?: outDate.searchViewState,
-            currentMonth = newViewState.currentMonth ?: outDate.currentMonth
+            currentMonth = newViewState.currentMonth ?: outDate.currentMonth,
+            calendarType = newViewState.calendarType ?: outDate.calendarType,
         )
+    }
+
+    fun getCalenderType(): String? = viewState.value?.calendarType
+
+    fun setCalenderType(newValue: String?) {
+        setViewState(
+            TransactionsViewState(
+                calendarType = newValue
+            )
+        )
+    }
+
+    fun calenderTypeHaveBeenChangedTo(value: String) {
+        setCalenderType(value)
+        _calendarType.value = value
+        monthManger.refreshData()
     }
 
     fun setSearchViewState(searchViewState: SearchViewState) {
