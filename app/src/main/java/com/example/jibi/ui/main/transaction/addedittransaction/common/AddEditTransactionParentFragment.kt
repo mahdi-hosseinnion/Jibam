@@ -30,6 +30,7 @@ import com.example.jibi.ui.main.transaction.addedittransaction.categorybottomshe
 import com.example.jibi.ui.main.transaction.addedittransaction.categorybottomsheet.CategoryBottomSheetViewPagerAdapter
 import com.example.jibi.ui.main.transaction.common.BaseFragment
 import com.example.jibi.util.*
+import com.example.jibi.util.PreferenceKeys.CALENDAR_SOLAR
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
@@ -219,7 +220,12 @@ constructor(
         }
 
     fun showDatePickerDialog(calender: GregorianCalendar) {
-        if (currentLocale.isFarsi()) {
+        val calendarType = sharedPreferences.getString(
+            PreferenceKeys.APP_CALENDAR_PREFERENCE,
+            PreferenceKeys.calendarDefault(currentLocale)
+        )
+
+        if (calendarType == CALENDAR_SOLAR) {
             showShamsiDatePicker(calender)
         } else {
             showGregorianDatePicker(calender)
@@ -327,7 +333,12 @@ constructor(
 
 
     private fun dateWithPattern(unixTimeInMillis: Long): String {
-        return if (currentLocale.isFarsi()) {
+        val calendarType = sharedPreferences.getString(
+            PreferenceKeys.APP_CALENDAR_PREFERENCE,
+            PreferenceKeys.calendarDefault(currentLocale)
+        )
+
+        return if (calendarType == CALENDAR_SOLAR) {
             SolarCalendar.calcSolarCalendar(
                 unixTimeInMillis,
                 SolarCalendar.ShamsiPatterns.DETAIL_FRAGMENT,

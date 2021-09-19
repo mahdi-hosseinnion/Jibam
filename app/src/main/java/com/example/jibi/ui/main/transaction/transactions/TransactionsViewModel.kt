@@ -1,5 +1,6 @@
 package com.example.jibi.ui.main.transaction.transactions
 
+import android.content.SharedPreferences
 import android.content.res.Resources
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
@@ -14,6 +15,7 @@ import com.example.jibi.ui.main.transaction.transactions.state.TransactionsState
 import com.example.jibi.ui.main.transaction.transactions.state.TransactionsViewState
 import com.example.jibi.ui.main.transaction.transactions.state.TransactionsViewState.*
 import com.example.jibi.util.DataState
+import com.example.jibi.util.isCalendarSolar
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
@@ -31,7 +33,8 @@ constructor(
     private val transactionRepository: TransactionRepository,
     private val monthManger: MonthManger,
     private val resources: Resources,
-    private val currentLocale: Locale
+    private val currentLocale: Locale,
+    private val sharedPreferences: SharedPreferences
 ) : BaseViewModel<TransactionsViewState, TransactionsStateEvent>() {
     init {
         setSearchViewState(SearchViewState.INVISIBLE)
@@ -67,7 +70,8 @@ constructor(
             .map {
                 return@map AddHeaderToTransactions(
                     currentLocale,
-                    resources
+                    resources,
+                    sharedPreferences.isCalendarSolar(currentLocale)
                 ).addHeaderToTransactions(
                     it
                 )

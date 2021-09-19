@@ -4,15 +4,14 @@ import android.content.res.Resources
 import com.example.jibi.models.Transaction
 import com.example.jibi.ui.main.transaction.transactions.TransactionsListAdapter.Companion.NO_RESULT_FOUND_IN_DATABASE
 import com.example.jibi.util.SolarCalendar
-import com.example.jibi.util.isFarsi
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class AddHeaderToTransactions
-    (
+class AddHeaderToTransactions(
     private val currentLocale: Locale,
-    private val resources: Resources
+    private val resources: Resources,
+    private val isSolarCalendar: Boolean
 
 ) {
     val today: String =
@@ -102,7 +101,7 @@ class AddHeaderToTransactions
     private fun getFormattedDate(unixTimeStamp: Long): String {
         val df: Date = Date(unixTimeStamp)
 
-        return if (currentLocale.isFarsi()) {
+        return if (isSolarCalendar) {
             SolarCalendar.calcSolarCalendar(
                 df,
                 SolarCalendar.ShamsiPatterns.RECYCLER_VIEW,

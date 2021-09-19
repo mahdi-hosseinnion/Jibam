@@ -11,6 +11,7 @@ import com.example.jibi.R
 import com.example.jibi.models.Transaction
 import com.example.jibi.ui.main.transaction.transactions.TransactionsListAdapter
 import com.example.jibi.util.*
+import com.example.jibi.util.PreferenceKeys.CALENDAR_SOLAR
 import kotlinx.android.synthetic.main.layout_chart_list_item.view.*
 import kotlinx.android.synthetic.main.layout_transaction_list_item.view.cardView
 import java.text.SimpleDateFormat
@@ -21,6 +22,7 @@ import kotlin.random.Random
 class DetailChartListAdapter(
     private val interaction: Interaction? = null,
     private var packageName: String,
+    private val isCalendarSolar: Boolean,
     private var requestManager: RequestManager,
     private var currentLocale: Locale,
     private var data: List<Transaction>? = null
@@ -56,6 +58,7 @@ class DetailChartListAdapter(
                 LayoutInflater.from(parent.context)
                     .inflate(R.layout.layout_chart_list_item, parent, false),
                 interaction,
+                isCalendarSolar,
                 packageName,
                 requestManager,
                 currentLocale
@@ -89,10 +92,12 @@ class DetailChartListAdapter(
     class DetailChartViewHolder(
         itemView: View,
         private val interaction: Interaction?,
+        private val isCalendarSolar: Boolean,
         private var packageName: String,
         private var requestManager: RequestManager,
         private var currentLocale: Locale
     ) : RecyclerView.ViewHolder(itemView) {
+
         fun bind(
             item: Transaction,
             totalAmount: Double,
@@ -173,7 +178,7 @@ class DetailChartListAdapter(
         }
 
         private fun dateWithPattern(date: Int): String {
-            return if (currentLocale.isFarsi()) {
+            return if (isCalendarSolar) {
                 SolarCalendar.calcSolarCalendar(
                     date.times(1000L),
 

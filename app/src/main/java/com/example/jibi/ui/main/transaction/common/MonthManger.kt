@@ -1,10 +1,12 @@
 package com.example.jibi.ui.main.transaction.common
 
+import android.content.SharedPreferences
 import android.content.res.Resources
 import androidx.fragment.app.FragmentManager
 import com.example.jibi.R
 import com.example.jibi.models.Month
 import com.example.jibi.util.*
+import com.example.jibi.util.PreferenceKeys.CALENDAR_SOLAR
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
@@ -19,8 +21,8 @@ class MonthManger
 constructor(
     private val currentLocale: Locale,
     private val _resources: Resources,
-
-    ) {
+    private val sharedPreferences: SharedPreferences
+) {
     private val TAG = "MonthManger"
 
     private val _fromDate = MutableStateFlow(
@@ -56,7 +58,7 @@ constructor(
 
     private fun getStartOfCurrentMonth(
         timeStamp: Long
-    ): Long = if (currentLocale.isFarsi()) {
+    ): Long = if (sharedPreferences.isCalendarSolar(currentLocale)) {
         getStartOfCurrentMonthShamsi(timeStamp)
     } else {
         getStartOfCurrentMonthGeorgian(timeStamp)
@@ -65,7 +67,7 @@ constructor(
 
     private fun getEndOfCurrentMonth(
         timeStamp: Long
-    ): Long = if (currentLocale.isFarsi()) {
+    ): Long = if (sharedPreferences.isCalendarSolar(currentLocale)) {
         getEndOfCurrentMonthShamsi(timeStamp)
     } else {
         getEndOfCurrentMonthGeorgian(timeStamp)
@@ -73,7 +75,7 @@ constructor(
 
     private fun getStartOfCurrentMonth(
         currentMonth: Int, currentYear: Int
-    ): Long = if (currentLocale.isFarsi()) {
+    ): Long = if (sharedPreferences.isCalendarSolar(currentLocale)) {
         getStartOfCurrentMonthShamsi(currentMonth, currentYear)
     } else {
         getStartOfCurrentMonthGeorgian(currentMonth, currentYear)
@@ -82,7 +84,7 @@ constructor(
 
     private fun getEndOfCurrentMonth(
         currentMonth: Int, currentYear: Int
-    ): Long = if (currentLocale.isFarsi()) {
+    ): Long = if (sharedPreferences.isCalendarSolar(currentLocale)) {
         getEndOfCurrentMonthShamsi(currentMonth, currentYear)
     } else {
         getEndOfCurrentMonthGeorgian(currentMonth, currentYear)
@@ -190,7 +192,7 @@ constructor(
     }
 
     fun getMonthName(timeStamp: Long = _fromDate.value): String {
-        val name = if (currentLocale.isFarsi()) {
+        val name = if (sharedPreferences.isCalendarSolar(currentLocale)) {
             getShamsiMonthName(timeStamp) + " " + _resources.getString(R.string.month)
         } else {
             getGeorgianMonthName(timeStamp)
@@ -219,7 +221,7 @@ constructor(
     fun getCurrentMonth(): Int = getMonth(DateUtils.getCurrentUnixTimeInMilliSeconds())
 
     fun getMonth(timeStamp: Long = _fromDate.value): Int {
-        return if (currentLocale.isFarsi()) {
+        return if (sharedPreferences.isCalendarSolar(currentLocale)) {
             SolarCalendar.calcSolarCalendar(
                 timeStamp,
                 SolarCalendar.ShamsiPatterns.JUST_MONTH_NUMBER,
@@ -235,7 +237,7 @@ constructor(
     fun getCurrentYear(): Int = getYear(DateUtils.getCurrentUnixTimeInMilliSeconds())
 
     fun getYear(timeStamp: Long = _fromDate.value): Int {
-        return if (currentLocale.isFarsi()) {
+        return if (sharedPreferences.isCalendarSolar(currentLocale)) {
             SolarCalendar.calcSolarCalendar(
                 timeStamp,
                 SolarCalendar.ShamsiPatterns.JUST_YEAR_NUMBER,
@@ -273,7 +275,7 @@ constructor(
         val monthPicker =
             MonthPickerBottomSheet(
                 interaction = monthPickerInteraction,
-                isShamsi = currentLocale.isFarsi(),
+                isShamsi = sharedPreferences.isCalendarSolar(currentLocale),
                 _resources = _resources,
                 defaultMonth = getMonth(),
                 defaultYear = getYear(),
@@ -329,5 +331,6 @@ constructor(
             year = getCurrentYear()
         )
     }
+
 
 }

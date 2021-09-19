@@ -101,7 +101,8 @@ constructor(
                 DetailChartFragment(
                     viewModelFactory,
                     requestManager,
-                    currentLocale
+                    currentLocale,
+                    sharedPreferences
                 )
             }
 

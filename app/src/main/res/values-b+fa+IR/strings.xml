@@ -277,4 +277,8 @@
     <string name="today">امروز</string>
 
 
+    <string name="calendar">تقویم</string>
+    <string name="solar_hijri">هجری خورشیدی (شمسی)</string>
+    <string name="gregorian">میلادی</string>
+
 </resources><!--source https://developer.android.com/training/basics/supporting-devices/languages-->

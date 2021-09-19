@@ -12,7 +12,6 @@ import com.example.jibi.util.PreferenceKeys
 import com.example.jibi.util.PreferenceKeys.APP_CALENDAR_PREFERENCE
 import com.example.jibi.util.PreferenceKeys.CALENDAR_GREGORIAN
 import com.example.jibi.util.PreferenceKeys.CALENDAR_SOLAR
-import com.example.jibi.util.isFarsi
 import kotlinx.android.synthetic.main.fragment_setting.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview

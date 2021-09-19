@@ -1,5 +1,6 @@
 package com.example.jibi.ui.main.transaction.chart
 
+import android.content.SharedPreferences
 import android.content.res.Resources
 import android.os.Bundle
 import android.view.View
@@ -30,7 +31,8 @@ class DetailChartFragment
 constructor(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager,
-    private val currentLocale: Locale
+    private val currentLocale: Locale,
+    private val sharedPreferences: SharedPreferences
 ) : BaseFragment(
     R.layout.fragment_detail_chart,
     R.id.detailChartFragment_toolbar
@@ -85,6 +87,7 @@ constructor(
             recyclerAdapter = DetailChartListAdapter(
                 interaction = this@DetailChartFragment,
                 this@DetailChartFragment.requireActivity().packageName,
+                sharedPreferences.isCalendarSolar(currentLocale),
                 requestManager,
                 currentLocale
             )

@@ -1,15 +1,14 @@
 package com.example.jibi.util
 
+import android.content.SharedPreferences
 import android.content.res.Resources
 import android.util.Log
 import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import com.example.jibi.R
-import com.example.jibi.models.Category
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.abs
 
 /*fun sortCategoriesWithPinned(categoryList: List<Category>?): List<Category>? {
@@ -189,3 +188,11 @@ else
     this.toString()
 
 fun Locale.isFarsi(): Boolean = (language == Constants.PERSIAN_LANG_CODE)
+
+fun SharedPreferences.isCalendarSolar(currentLocale: Locale): Boolean {
+    val calendarType = this.getString(
+        PreferenceKeys.APP_CALENDAR_PREFERENCE,
+        PreferenceKeys.calendarDefault(currentLocale)
+    )
+    return calendarType == PreferenceKeys.CALENDAR_SOLAR
+}
