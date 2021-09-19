@@ -276,4 +276,7 @@
     <string name="ok_btn">OK</string>
     <string name="cancel_btn">cancel</string>
     <string name="today">Today</string>
+    <string name="calendar">Calendar</string>
+    <string name="solar_hijri">Solar Hijri</string>
+    <string name="gregorian">Gregorian</string>
 </resources>

@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#e0e0e0"
     android:orientation="vertical"
-
     tools:context=".ui.main.transaction.setting.SettingFragment">
 
     <androidx.appcompat.widget.Toolbar
@@ -14,67 +14,58 @@
         android:layout_height="@dimen/mtrl_toolbar_default_height"
         android:background="@color/purple_500" />
 
-<!--    <TextView-->
-<!--        android:id="@+id/language"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="56dp"-->
-<!--        android:layout_gravity="center|start"-->
-<!--        android:layout_margin="8dp"-->
-<!--        android:gravity="center|start"-->
-<!--        android:text="@string/language"-->
-<!--        android:textColor="@color/black"-->
-<!--        android:textSize="24sp" />-->
-
-<!--    <RadioGroup-->
-<!--        android:id="@+id/language_radio_group"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content">-->
-
-<!--        <RadioButton-->
-<!--            android:id="@+id/default_radio"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="56dp"-->
-<!--            android:layout_gravity="center|start"-->
-<!--            android:layout_margin="8dp"-->
-<!--            android:gravity="center|start"-->
-
-<!--            android:text="@string/system_default" />-->
-
-<!--        <RadioButton-->
-<!--            android:id="@+id/persion_radio"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="56dp"-->
-<!--            android:layout_gravity="center|start"-->
-<!--            android:layout_margin="8dp"-->
-<!--            android:gravity="center|start"-->
-
-<!--            android:text="@string/farsi" />-->
-
-<!--        <RadioButton-->
-<!--            android:id="@+id/english_radio"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="56dp"-->
-<!--            android:layout_gravity="center|start"-->
-<!--            android:layout_margin="8dp"-->
-<!--            android:gravity="center|start"-->
-<!--            android:text="@string/english" />-->
-
-<!--    </RadioGroup>-->
-<!--    <TextView-->
-<!--        android:id="@+id/warning"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:textSize="16sp"-->
-<!--        android:layout_gravity="center|start"-->
-<!--        android:padding="8dp"-->
-<!--        android:layout_marginTop="8dp"-->
-<!--        android:textColor="@color/black"-->
-<!--        android:gravity="center|start"-->
-<!--        android:background="@color/backGround_gray"-->
-<!--        android:text="@string/changelanugaealart"/>-->
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/calender"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/no_setting"/>
+        android:layout_gravity="center|start"
+        android:background="#fff"
+
+        android:gravity="center|start"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="8dp"
+        android:paddingTop="16dp"
+        android:text="@string/calendar"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <RadioGroup
+        android:id="@+id/calender_radio_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:paddingStart="4dp"
+        android:paddingLeft="4dp">
+
+        <RadioButton
+            android:id="@+id/gregorian_rb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|start"
+            android:layout_margin="8dp"
+            android:gravity="center|start"
+            android:text="@string/gregorian"
+            android:textSize="16sp" />
+
+        <RadioButton
+            android:id="@+id/shamsi_rb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|start"
+            android:layout_margin="8dp"
+            android:gravity="center|start"
+            android:text="@string/solar_hijri"
+            android:textSize="16sp" />
+
+
+    </RadioGroup>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#323232" />
+
 
 </LinearLayout>

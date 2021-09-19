@@ -77,10 +77,18 @@ constructor(
                 )
             }
             SettingFragment::class.java.name -> {
-                SettingFragment(viewModelFactory, sharedPreferences)
+                SettingFragment(
+                    viewModelFactory,
+                    currentLocale,
+                    sharedPreferences,
+                    sharedPrefsEditor
+                )
             }
             AboutUsFragment::class.java.name -> {
-                AboutUsFragment(viewModelFactory, requestManager)
+                AboutUsFragment(
+                    viewModelFactory,
+                    requestManager
+                )
             }
             ChartFragment::class.java.name -> {
                 ChartFragment(

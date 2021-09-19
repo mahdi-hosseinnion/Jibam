@@ -1,10 +1,17 @@
 package com.example.jibi.util
 
+import java.util.*
+
 object PreferenceKeys {
     // Shared Preference Files:
     const val APP_MAIN_PREFERENCES: String = "APP_MAIN_PREFERENCES"
 
     // Shared Preference Keys
+    const val APP_CALENDAR_PREFERENCE = "APP_CALENDAR_PREFERENCE"
+    const val CALENDAR_GREGORIAN = "gregorian"
+    const val CALENDAR_SOLAR = "solar"
+
+    //Promote stuff
     const val PROMOTE_FAB_TRANSACTION_FRAGMENT = "PREFERENCES_PROMOTE_FAB_TRANSACTION_FRAGMENT"
     const val PROMOTE_ADD_TRANSACTION = "PREFERENCES_PROMOTE_ADD_TRANSACTION"
     const val PROMOTE_CATEGORY_LIST = "PREFERENCES_PROMOTE_CATEGORY_LIST"
@@ -15,4 +22,12 @@ object PreferenceKeys {
     const val APP_INTRO_PREFERENCE = "APP_INTRO_PREFERENCE"
 
     const val APP_LANGUAGE_PREF = "APP_LANGUAGE_PREF"
+
+    fun calendarDefault(currentLocale: Locale): String =
+        if (currentLocale.isFarsi()) {
+            CALENDAR_SOLAR
+        } else {
+            CALENDAR_GREGORIAN
+        }
+
 }
