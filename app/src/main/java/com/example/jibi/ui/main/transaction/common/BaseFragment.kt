@@ -1,13 +1,10 @@
 package com.example.jibi.ui.main.transaction.common
 
 import android.content.Context
-import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
-import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.jibi.ui.UICommunicationListener
@@ -21,9 +18,7 @@ import kotlinx.coroutines.FlowPreview
 abstract class BaseFragment
 constructor(
     @LayoutRes
-    private val layoutRes: Int,
-    @IdRes
-    private val toolbar: Int? = null
+    private val layoutRes: Int
 ) : Fragment(layoutRes) {
     private val TAG = "BaseTransactionFragment"
 
@@ -57,13 +52,6 @@ constructor(
                 }
             }
         )
-    }
-
-    override fun onResume() {
-        super.onResume()
-        toolbar?.let {
-            uiCommunicationListener.setupActionBarWithNavController(_View.findViewById(toolbar))
-        }
     }
 
     override fun onAttach(context: Context) {

@@ -1,6 +1,5 @@
 package com.example.jibi.ui.main.transaction.chart
 
-import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -30,6 +29,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.utils.MPPointF
 import kotlinx.android.synthetic.main.fragment_chart.*
+import kotlinx.android.synthetic.main.layout_toolbar_with_back_btn.*
 import kotlinx.android.synthetic.main.toolbar_month_changer.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -49,8 +49,7 @@ constructor(
     private val requestManager: RequestManager,
     private val currentLocale: Locale,
 ) : BaseFragment(
-    R.layout.fragment_chart,
-    R.id.chartFragment_toolbar
+    R.layout.fragment_chart
 ), OnChartValueSelectedListener, ChartListAdapter.Interaction {
 
     private val TAG = "ChartFragment"
@@ -73,6 +72,9 @@ constructor(
         initPieChart()
         subscribeObservers()
 
+        topAppBar.setNavigationOnClickListener {
+            navigateBack()
+        }
         toolbar_month.setOnClickListener {
             viewModel.showMonthPickerBottomSheet(parentFragmentManager)
         }
@@ -99,10 +101,11 @@ constructor(
 
     private fun refreshChart() {
         val category_type_marker = if (currentChartState == INCOMES_STATE) {
-            chartFragment_toolbar_title.text = getString(R.string.income_chart_title)
+            topAppBar.title = getString(R.string.income_chart_title)
+
             INCOME_TYPE_MARKER
         } else {
-            chartFragment_toolbar_title.text = getString(R.string.expenses_chart_title)
+            topAppBar.title = getString(R.string.expenses_chart_title)
 
             EXPENSES_TYPE_MARKER
         }

@@ -7,22 +7,18 @@
     android:orientation="vertical"
     tools:context=".ui.main.transaction.aboutus.AboutUsFragment">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/about_us_toolbar"
+    <include layout="@layout/layout_toolbar_with_back_btn" />
 
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/mtrl_toolbar_default_height"
-        android:background="@color/purple_500_transparent" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:id="@+id/linearLayout_textViews"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:id="@+id/linearLayout_textViews"
             android:orientation="vertical">
 
             <TextView

@@ -11,17 +11,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/fragment_add_toolbar_main"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/mtrl_toolbar_default_height"
-            android:layout_gravity="top"
-            android:background="@color/purple_500" />
-
-        <!--        <ScrollView-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="0dp"-->
-        <!--            android:layout_weight="1">-->
+        <include layout="@layout/layout_toolbar_with_back_btn" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -33,7 +23,7 @@
                 android:id="@+id/topLinear"
                 android:layout_width="match_parent"
                 android:layout_height="112dp"
-                android:background="@color/purple_500"
+                android:background="?attr/colorPrimary"
                 android:gravity="end"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -45,7 +35,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="70"
-                    android:background="@color/purple_500"
+                    android:background="?attr/colorPrimary"
                     android:foregroundGravity="right|center"
                     android:gravity="right|center"
                     android:hint="@string/_0"
@@ -56,7 +46,7 @@
                     android:paddingRight="32dp"
                     android:paddingBottom="4dp"
                     android:scrollHorizontally="true"
-                    android:textColor="@color/white"
+                    android:textColor="?attr/colorOnPrimary"
                     android:textDirection="ltr"
                     android:textSize="32dp"
                     tools:text="80+23" />
@@ -83,10 +73,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                android:textColor="@color/white"
-                app:iconTint="@color/white"
                 android:layout_marginLeft="8dp"
                 android:gravity="center|left"
+                android:textColor="@color/white"
+                app:iconTint="@color/white"
                 app:layout_constraintBottom_toBottomOf="@+id/topLinear"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/topLinear"
@@ -228,11 +218,11 @@
                                 android:background="@color/white"
                                 android:clickable="true"
                                 android:focusable="true"
-                                android:tint="@color/black"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
-                                app:srcCompat="@drawable/ic_round_close_24" />
+                                app:srcCompat="@drawable/ic_round_close_24"
+                                app:tint="@color/black" />
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
 

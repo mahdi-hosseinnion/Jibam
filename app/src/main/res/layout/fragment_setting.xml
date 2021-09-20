@@ -7,12 +7,7 @@
     android:orientation="vertical"
     tools:context=".ui.main.transaction.setting.SettingFragment">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/setting_toolbar"
-
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/mtrl_toolbar_default_height"
-        android:background="@color/purple_500" />
+    <include layout="@layout/layout_toolbar_with_back_btn" />
 
     <TextView
         android:id="@+id/calender"
@@ -23,9 +18,9 @@
 
         android:gravity="center|start"
         android:paddingLeft="8dp"
+        android:paddingTop="16dp"
         android:paddingRight="8dp"
         android:paddingBottom="8dp"
-        android:paddingTop="16dp"
         android:text="@string/calendar"
         android:textColor="@color/black"
         android:textSize="20sp" />

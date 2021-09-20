@@ -23,6 +23,9 @@
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/bottom_sheet_month_picker.xml" value="0.2712820512820513" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/choose_language_dialog.xml" value="0.2712820512820513" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/custom_tab_layout.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/drawer_header_layout.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/fragment_about_us.xml" value="0.2712820512820513" />
+        <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/fragment_add_category.xml" value="0.2712820512820513" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/fragment_add_transaction.xml" value="0.19519927536231885" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/fragment_chart.xml" value="0.2712820512820513" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/fragment_detail_chart.xml" value="0.2712820512820513" />
@@ -31,6 +34,8 @@
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/fragment_view_categories.xml" value="0.2755208333333333" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/layout_category_list_item.xml" value="0.2755208333333333" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/layout_detail_chart_empty_list_item.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/layout_toolbar_with_back_btn.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/layout_toolbar_with_month_changer.xml" value="0.2755208333333333" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/layout_transaction_list_item.xml" value="0.2712820512820513" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/layout_view_categories_list_item.xml" value="0.2552083333333333" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/recycler_view_layout.xml" value="0.2712820512820513" />

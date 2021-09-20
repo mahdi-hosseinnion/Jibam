@@ -26,6 +26,7 @@ import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransac
 import com.example.jibi.util.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
+import kotlinx.android.synthetic.main.layout_toolbar_with_back_btn.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collect
@@ -74,13 +75,16 @@ constructor(
             viewLifecycleOwner,
             backStackForDialog
         )
+        topAppBar.setNavigationOnClickListener {
+            backStackForDialog.handleOnBackPressed()
+        }
 
         lifecycleScope.launchWhenStarted {
             viewModel.submitButtonState.isSubmitButtonEnable
                 .collect {
                     Log.d("DetailEditTransactionVi", "setupUi: $it ")
                     backStackForDialog.isEnabled = it
-                    fragment_add_toolbar_main.title = if (it) {
+                    topAppBar.title = if (it) {
                         fab_submit.show()
                         getString(R.string.edit_transaction)
                     } else {
@@ -438,8 +442,12 @@ constructor(
 
     private val backStackForDialog = object : OnBackPressedCallback(false) {
         override fun handleOnBackPressed() {
-            //check for search view
-            showDiscardOrSaveDialog()
+            if (this.isEnabled) {
+                showDiscardOrSaveDialog()
+            } else {
+                uiCommunicationListener.hideSoftKeyboard()
+                navigateBack()
+            }
         }
 
     }
@@ -451,6 +459,7 @@ constructor(
             }
 
             override fun discard() {
+                uiCommunicationListener.hideSoftKeyboard()
                 navigateBack()
             }
 

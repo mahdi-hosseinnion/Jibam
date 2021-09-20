@@ -10,7 +10,6 @@ import androidx.fragment.app.FragmentFactory
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
 import com.example.jibi.BaseApplication
@@ -68,6 +67,8 @@ class MainActivity : BaseActivity() {
     }
 
     private fun uiSetup() {
+        navigation_view.setupWithNavController(navController)
+
         val menu = navigation_view.menu
         menu.findItem(R.id.chartFragment).title =
             _resources.getString(R.string.chart)
@@ -105,16 +106,6 @@ class MainActivity : BaseActivity() {
 
         appBarConfiguration = AppBarConfiguration(setOf(R.id.transactionFragment), drawer_layout)
 
-
-    }
-
-    override fun setupActionBarWithNavController(toolbar: Toolbar, drawerLayout: DrawerLayout?) {
-        setSupportActionBar(toolbar)
-        navigation_view.setupWithNavController(navController)
-
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
-
-
     }
 
     override fun showProgressBar(isLoading: Boolean) {
@@ -149,5 +140,9 @@ class MainActivity : BaseActivity() {
             drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         else
             drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+    }
+
+    override fun openDrawerMenu() {
+        drawer_layout.open()
     }
 }

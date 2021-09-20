@@ -39,12 +39,13 @@ import com.example.jibi.util.PreferenceKeys.PROMOTE_MONTH_MANGER
 import com.example.jibi.util.PreferenceKeys.PROMOTE_SUMMERY_MONEY
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.*
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_add_transaction.*
 import kotlinx.android.synthetic.main.fragment_transaction.*
-import kotlinx.android.synthetic.main.layout_chart_list_item.*
-import kotlinx.android.synthetic.main.layout_transaction_list_item.*
+import kotlinx.android.synthetic.main.fragment_transaction.fab
+import kotlinx.android.synthetic.main.fragment_transaction.transaction_recyclerView
+import kotlinx.android.synthetic.main.fragment_transaction.view.*
+import kotlinx.android.synthetic.main.layout_toolbar_with_back_btn.*
 import kotlinx.android.synthetic.main.toolbar_month_changer.*
+import kotlinx.android.synthetic.main.toolbar_month_changer.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt
@@ -66,8 +67,7 @@ constructor(
     private val sharedPreferences: SharedPreferences,
     private val sharedPrefsEditor: SharedPreferences.Editor
 ) : BaseFragment(
-    R.layout.fragment_transaction,
-    R.id.transaction_toolbar
+    R.layout.fragment_transaction
 ), TransactionsListAdapter.Interaction {
 
     private val TAG = "TransactionFragment"
@@ -117,6 +117,11 @@ constructor(
             viewLifecycleOwner,
             backStackForBottomSheet
         )
+        topAppBar.navigationIcon = resources.getDrawable(R.drawable.ic_round_menu_24)
+
+        topAppBar.setNavigationOnClickListener {
+            uiCommunicationListener.openDrawerMenu()
+        }
 
         bottomSheetBehavior = BottomSheetBehavior.from(main_standardBottomSheet)
 

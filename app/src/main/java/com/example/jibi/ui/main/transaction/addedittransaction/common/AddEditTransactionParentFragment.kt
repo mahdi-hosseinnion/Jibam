@@ -50,8 +50,7 @@ constructor(
     private val sharedPrefsEditor: SharedPreferences.Editor,
     @StringRes private val fab_text: Int
 ) : BaseFragment(
-    R.layout.fragment_add_transaction,
-    R.id.fragment_add_toolbar_main
+    R.layout.fragment_add_transaction
 ), CalculatorKeyboard.CalculatorInteraction, CategoryBottomSheetListAdapter.Interaction {
 
     val textCalculator = TextCalculator()

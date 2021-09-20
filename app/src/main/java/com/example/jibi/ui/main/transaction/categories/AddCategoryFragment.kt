@@ -1,6 +1,5 @@
 package com.example.jibi.ui.main.transaction.categories
 
-import android.content.res.Resources
 import android.os.Bundle
 import android.view.*
 import androidx.core.widget.addTextChangedListener
@@ -21,6 +20,7 @@ import com.example.jibi.util.*
 import kotlinx.android.synthetic.main.fragment_add_category.*
 import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.android.synthetic.main.layout_category_images_list_item.view.*
+import kotlinx.android.synthetic.main.layout_toolbar_with_back_btn.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
@@ -34,8 +34,7 @@ constructor(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager
 ) : BaseFragment(
-    R.layout.fragment_add_category,
-    R.id.add_category_toolbar
+    R.layout.fragment_add_category
 ), AddCategoryListAdapter.Interaction {
 
     private val viewModel by viewModels<CategoriesViewModel> { viewModelFactory }
@@ -51,8 +50,7 @@ constructor(
 
         setHasOptionsMenu(true)
         //Showing the title
-        findNavController()
-            .currentDestination?.label = when (args.categoryType) {
+        topAppBar.title = when (args.categoryType) {
             EXPENSES -> {
                 //TODO FIX ORDER ISSUE
                 newCategory = Category(0, 1, edt_categoryName.text.toString(), "", 0)
@@ -73,7 +71,9 @@ constructor(
         edt_categoryName.addTextChangedListener {
             newCategory = newCategory.copy(name = it.toString())
         }
-
+        topAppBar.setNavigationOnClickListener {
+            navigateBack()
+        }
         initRecyclerView()
         subscribeObservers()
     }

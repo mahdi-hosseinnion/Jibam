@@ -1,7 +1,6 @@
 package com.example.jibi.ui.main.transaction.chart
 
 import android.content.SharedPreferences
-import android.content.res.Resources
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
@@ -19,6 +18,7 @@ import com.example.jibi.ui.main.transaction.chart.ChartViewModel.Companion.FORCE
 import com.example.jibi.ui.main.transaction.common.BaseFragment
 import com.example.jibi.util.*
 import kotlinx.android.synthetic.main.fragment_detail_chart.*
+import kotlinx.android.synthetic.main.layout_toolbar_with_back_btn.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.util.*
@@ -34,8 +34,7 @@ constructor(
     private val currentLocale: Locale,
     private val sharedPreferences: SharedPreferences
 ) : BaseFragment(
-    R.layout.fragment_detail_chart,
-    R.id.detailChartFragment_toolbar
+    R.layout.fragment_detail_chart
 ), DetailChartListAdapter.Interaction {
 
     val args: DetailChartFragmentArgs by navArgs()
@@ -47,8 +46,15 @@ constructor(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupUi()
         initRecyclerView()
         subscribeObservers()
+    }
+
+    private fun setupUi() {
+        topAppBar.setNavigationOnClickListener {
+            navigateBack()
+        }
     }
 
     override fun handleLoading() {

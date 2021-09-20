@@ -11,28 +11,17 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.google.android.material.appbar.AppBarLayout
+        <include
+            android:id="@+id/transaction_toolbar"
+            layout="@layout/layout_toolbar_with_month_changer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/chartFragment_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/mtrl_toolbar_default_height"
-                android:background="@color/purple_500">
-                <TextView
-                    android:id="@+id/chartFragment_toolbar_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#00141E"
-                    android:textSize="20sp" />
-                <include
-                    layout="@layout/toolbar_month_changer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="end" />
-            </androidx.appcompat.widget.Toolbar>
-        </com.google.android.material.appbar.AppBarLayout>
+            android:layout_height="@dimen/mtrl_toolbar_default_height"
+            android:elevation="1dp"
+            android:gravity="end"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -66,6 +55,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
-        app:icon="@drawable/ic_baseline_swap_horiz_24"
-        android:text="@string/swap_chart"/>
+        android:text="@string/swap_chart"
+        app:icon="@drawable/ic_baseline_swap_horiz_24" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,12 +1,10 @@
 package com.example.jibi.ui.main.transaction.aboutus
 
 import android.content.pm.PackageManager
-import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
@@ -14,6 +12,7 @@ import com.example.jibi.R
 import com.example.jibi.ui.main.transaction.common.BaseFragment
 import com.example.jibi.util.localizeNumber
 import kotlinx.android.synthetic.main.fragment_about_us.*
+import kotlinx.android.synthetic.main.layout_toolbar_with_back_btn.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
@@ -27,8 +26,7 @@ constructor(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager
 ) : BaseFragment(
-    R.layout.fragment_about_us,
-    R.id.about_us_toolbar
+    R.layout.fragment_about_us
 ) {
 
 
@@ -37,11 +35,14 @@ constructor(
         setBackground()
         initUi()
     }
-    private fun initUi(){
-        findNavController()
-            .currentDestination?.label = getString(R.string.about)
+
+    private fun initUi() {
+        topAppBar.title = getString(R.string.about)
         version_name.text = getVersionName()?.let {
             getString(R.string.version) + ": ${it.localizeNumber(resources)}"
+        }
+        topAppBar.setNavigationOnClickListener {
+            navigateBack()
         }
     }
 

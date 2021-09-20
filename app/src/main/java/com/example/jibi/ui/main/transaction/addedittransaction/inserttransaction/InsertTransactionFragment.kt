@@ -24,6 +24,7 @@ import com.example.jibi.util.UIComponentType
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
+import kotlinx.android.synthetic.main.layout_toolbar_with_back_btn.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.util.*
@@ -67,6 +68,10 @@ constructor(
             backStackForDialog
         )
         showCustomKeyboard(edt_money)
+        topAppBar.title = getString(R.string.add_transaction)
+        topAppBar.setNavigationOnClickListener {
+            backStackForDialog.handleOnBackPressed()
+        }
         /**
          * on clicks
          */

@@ -1,11 +1,9 @@
 package com.example.jibi.ui.main.transaction.setting
 
 import android.content.SharedPreferences
-import android.content.res.Resources
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import com.example.jibi.R
 import com.example.jibi.ui.main.transaction.common.BaseFragment
 import com.example.jibi.util.PreferenceKeys
@@ -13,6 +11,7 @@ import com.example.jibi.util.PreferenceKeys.APP_CALENDAR_PREFERENCE
 import com.example.jibi.util.PreferenceKeys.CALENDAR_GREGORIAN
 import com.example.jibi.util.PreferenceKeys.CALENDAR_SOLAR
 import kotlinx.android.synthetic.main.fragment_setting.*
+import kotlinx.android.synthetic.main.layout_toolbar_with_back_btn.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.util.*
@@ -29,18 +28,20 @@ constructor(
     private val sharedPreferences: SharedPreferences,
     private val sharedPrefEditor: SharedPreferences.Editor
 ) : BaseFragment(
-    R.layout.fragment_setting,
-    R.id.setting_toolbar
+    R.layout.fragment_setting
 ) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        findNavController()
-            .currentDestination?.label = getString(R.string.setting)
+        topAppBar.title = getString(R.string.setting)
         initUi()
     }
 
     private fun initUi() {
+        topAppBar.setNavigationOnClickListener {
+            navigateBack()
+        }
+
         setDataToCalenderRadioGroup()
 
         gregorian_rb.setOnCheckedChangeListener { _, isChecked ->

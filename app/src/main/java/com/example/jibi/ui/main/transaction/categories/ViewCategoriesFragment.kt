@@ -1,7 +1,6 @@
 package com.example.jibi.ui.main.transaction.categories
 
 import android.content.SharedPreferences
-import android.content.res.Resources
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
@@ -21,6 +20,7 @@ import com.example.jibi.util.Constants.EXPENSES_TYPE_MARKER
 import com.example.jibi.util.Constants.INCOME_TYPE_MARKER
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.fragment_view_categories.*
+import kotlinx.android.synthetic.main.layout_toolbar_with_back_btn.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
@@ -35,8 +35,7 @@ constructor(
     private val sharedPreferences: SharedPreferences,
     private val sharedPrefsEditor: SharedPreferences.Editor
 ) : BaseFragment(
-    R.layout.fragment_view_categories,
-    R.id.viewCategoriesToolbar
+    R.layout.fragment_view_categories
 ), ViewCategoriesRecyclerAdapter.CategoryInteraction {
 
     private val viewModel by viewModels<CategoriesViewModel> { viewModelFactory }
@@ -72,8 +71,10 @@ constructor(
     }
 
     private fun setupUi() {
-        findNavController()
-            .currentDestination?.label = getString(R.string.category_setting)
+        topAppBar.title = getString(R.string.category_setting)
+        topAppBar.setNavigationOnClickListener {
+            navigateBack()
+        }
         //set titles
         val tabLayout = TabLayoutMediator(tab_layout, viewPager_viewCategories) { tab, position ->
             if (position == 0) {

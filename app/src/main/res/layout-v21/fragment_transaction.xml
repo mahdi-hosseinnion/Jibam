@@ -5,7 +5,7 @@
     android:id="@+id/fragment_transacion_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/purple_500"
+    android:background="?attr/colorPrimary"
     tools:context=".ui.main.transaction.transactions.TransactionsFragment">
     <!--    android:background="#E6E6E6"-->
 
@@ -14,26 +14,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.Toolbar
+        <include
             android:id="@+id/transaction_toolbar"
+            layout="@layout/layout_toolbar_with_month_changer"
             android:layout_width="match_parent"
             android:layout_height="@dimen/mtrl_toolbar_default_height"
-            android:background="@color/purple_500"
             android:elevation="1dp"
             android:gravity="end"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <include
-                layout="@layout/toolbar_month_changer"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="end" />
-
-
-        </androidx.appcompat.widget.Toolbar>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
             android:id="@+id/summery_money_root"
@@ -54,9 +45,9 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
+                android:layout_marginStart="4dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="4dp"
-                android:layout_marginStart="4dp"
                 android:layout_weight="10"
                 android:elevation="1dp"
                 android:gravity="center"
@@ -88,14 +79,16 @@
                     android:textStyle="bold"
                     tools:text="58,300" />
             </LinearLayout>
+
             <ImageView
                 android:layout_width="16dp"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_up_arrow"
                 android:layout_gravity="center|bottom"
                 android:layout_marginBottom="28dp"
                 android:foregroundGravity="bottom"
+                app:srcCompat="@drawable/ic_up_arrow"
                 app:tint="@color/blue_500" />
+
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -137,18 +130,19 @@
             <ImageView
                 android:layout_width="16dp"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_down_arrow"
                 android:layout_gravity="center|bottom"
                 android:layout_marginBottom="28dp"
                 android:foregroundGravity="bottom"
+                app:srcCompat="@drawable/ic_down_arrow"
                 app:tint="@color/red_500" />/>
+
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_marginTop="4dp"
-                android:layout_marginBottom="4dp"
                 android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
                 android:layout_weight="10"
                 android:elevation="1dp"
                 android:gravity="center"
@@ -247,9 +241,9 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:scaleType="centerInside"
-                    android:tint="@color/black"
                     android:visibility="visible"
-                    app:srcCompat="@drawable/ic_baseline_arrow_back_24" />
+                    app:srcCompat="@drawable/ic_baseline_arrow_back_24"
+                    app:tint="@color/black" />
 
 
                 <TextView
@@ -286,9 +280,9 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:padding="16dp"
-                    android:tint="@color/black"
                     android:visibility="gone"
-                    app:srcCompat="@drawable/ic_round_close_24" />
+                    app:srcCompat="@drawable/ic_round_close_24"
+                    app:tint="@color/black" />
 
                 <ImageButton
                     android:id="@+id/main_bottom_sheet_search_btn"
@@ -297,9 +291,9 @@
                     android:background="@color/white"
                     android:clickable="true"
                     android:focusable="true"
-                    android:tint="@color/black"
                     android:visibility="visible"
-                    app:srcCompat="@drawable/ic_baseline_search_24" />
+                    app:srcCompat="@drawable/ic_baseline_search_24"
+                    app:tint="@color/black" />
 
             </LinearLayout>
             <!--            </androidx.appcompat.widget.Toolbar>-->
@@ -328,7 +322,7 @@
         android:layout_margin="16dp"
         android:contentDescription="@string/create_new_transaction"
         android:elevation="6dp"
-        android:src="@android:drawable/ic_input_add" />
+        app:srcCompat="@drawable/ic_round_add_24" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

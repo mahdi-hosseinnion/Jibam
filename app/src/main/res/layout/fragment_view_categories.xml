@@ -7,11 +7,7 @@
     android:orientation="vertical"
     tools:context=".ui.main.transaction.categories.ViewCategoriesFragment">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/viewCategoriesToolbar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/mtrl_toolbar_default_height"
-        android:background="@color/purple_500" />
+    <include layout="@layout/layout_toolbar_with_back_btn" />
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -36,7 +32,7 @@
         android:id="@+id/add_new_appbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/action_bar_size"
-        android:background="@color/purple_500"
+        android:background="?attr/colorPrimary"
         android:clickable="true"
         android:focusable="true"
         app:liftOnScroll="false">
@@ -53,10 +49,10 @@
             android:paddingStart="28dp"
             android:paddingEnd="28dp"
             android:text="@string/add_new_category"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnPrimary"
             android:textSize="16sp"
-            app:drawableStartCompat="@android:drawable/ic_input_add"
-            app:drawableTint="@android:color/secondary_text_light" />
+            app:drawableStartCompat="@drawable/ic_round_add_24"
+            app:drawableTint="?attr/colorOnPrimary" />
     </com.google.android.material.appbar.AppBarLayout>
 
 
