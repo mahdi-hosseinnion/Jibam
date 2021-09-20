@@ -40,8 +40,6 @@ import com.example.jibi.util.PreferenceKeys.PROMOTE_SUMMERY_MONEY
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.*
 import kotlinx.android.synthetic.main.fragment_transaction.*
-import kotlinx.android.synthetic.main.fragment_transaction.fab
-import kotlinx.android.synthetic.main.fragment_transaction.transaction_recyclerView
 import kotlinx.android.synthetic.main.fragment_transaction.view.*
 import kotlinx.android.synthetic.main.layout_toolbar_with_back_btn.*
 import kotlinx.android.synthetic.main.toolbar_month_changer.*
