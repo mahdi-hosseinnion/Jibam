@@ -52,6 +52,8 @@ constructor(
     }
 
     private fun setupUi() {
+        topAppBar.title = args.categoryName.replaceFirstChar { it.uppercase() }
+
         topAppBar.setNavigationOnClickListener {
             navigateBack()
         }

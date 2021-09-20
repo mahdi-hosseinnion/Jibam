@@ -160,6 +160,7 @@
             android:name="categoryId"
             android:defaultValue="-1"
             app:argType="integer" />
+
         <action
             android:id="@+id/action_detailChartFragment_to_detailEditTransactionFragment"
             app:destination="@id/detailEditTransactionFragment"
@@ -167,6 +168,10 @@
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/slide_out" />
+        <argument
+            android:name="categoryName"
+            android:defaultValue=""
+            app:argType="string" />
 
     </fragment>
     <fragment

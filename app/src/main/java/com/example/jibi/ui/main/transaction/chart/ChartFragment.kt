@@ -298,7 +298,13 @@ constructor(
 
     override fun onItemSelected(position: Int, item: PieChartData) {
         val action =
-            ChartFragmentDirections.actionChartFragmentToDetailChartFragment(item.categoryId)
+            ChartFragmentDirections.actionChartFragmentToDetailChartFragment(
+                categoryId = item.categoryId,
+                categoryName = item.getCategoryNameFromStringFile(
+                    resources,
+                    requireActivity().packageName,
+                ) { it.categoryName }
+            )
         findNavController().navigate(action)
     }
 
