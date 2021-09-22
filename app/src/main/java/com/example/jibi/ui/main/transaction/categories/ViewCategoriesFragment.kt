@@ -85,6 +85,12 @@ constructor(
         }.attach()
     }
 
+    override fun onResume() {
+        super.onResume()
+        //if user add category and return from AddCategoryFragment data should be updated
+        viewModel.refreshCategoryList()
+    }
+
     private fun setupViewPager() {
         viewPagerAdapter = ViewCategoriesViewPagerAdapter(
             this.requireContext(),

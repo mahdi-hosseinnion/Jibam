@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.jibi.R
@@ -21,7 +22,6 @@ import com.example.jibi.ui.main.transaction.common.BaseFragment
 import com.example.jibi.ui.main.transaction.transactions.TransactionsListAdapter
 import com.example.jibi.util.*
 import kotlinx.android.synthetic.main.fragment_add_category.*
-import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.android.synthetic.main.layout_category_images_list_item.view.*
 import kotlinx.android.synthetic.main.layout_toolbar_with_back_btn.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -51,7 +51,6 @@ constructor(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setHasOptionsMenu(true)
         //Showing the title
         topAppBar.title = when (args.categoryType) {
             EXPENSES -> {
@@ -70,17 +69,29 @@ constructor(
                 getString(R.string.unable_to_recognize_category_type)
             }
         }
-        forceKeyBoardToOpenForEditText(edt_categoryName)
+        setupUI()
+        initRecyclerView()
+        subscribeObservers()
+    }
 
+    private fun setupUI() {
+        forceKeyBoardToOpenForEditText(edt_categoryName)
+        /**
+         * on text change listeners
+         */
         edt_categoryName.addTextChangedListener {
             newCategory = newCategory.copy(name = it.toString())
         }
+        /**
+         * on clicks
+         */
         topAppBar.setNavigationOnClickListener {
             uiCommunicationListener.hideSoftKeyboard()
             navigateBack()
         }
-        initRecyclerView()
-        subscribeObservers()
+        add_category_fab.setOnClickListener {
+            insertNewCategory()
+        }
     }
 
     override fun handleLoading() {
@@ -144,6 +155,19 @@ constructor(
     }
 
     private fun initRecyclerView() {
+        val onScrollListener = object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+
+                super.onScrolled(recyclerView, dx, dy)
+                    if (dy > 0) {
+                        add_category_fab?.hide()
+                    } else {
+                        add_category_fab?.show()
+                    }
+
+            }
+
+        }
 
         insert_category_recyclerView.apply {
             val mLayoutManager =
@@ -163,6 +187,7 @@ constructor(
                 }
             }
 
+            addOnScrollListener(onScrollListener)
 
             layoutManager = mLayoutManager
             adapter = recyclerAdapter
@@ -228,21 +253,7 @@ constructor(
     }
 
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.add_menu, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.save -> {
-                insertNewCategory()
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    fun forceKeyBoardToOpenForEditText(editText: EditText) {
+    private fun forceKeyBoardToOpenForEditText(editText: EditText) {
         editText.requestFocus()
         val imm: InputMethodManager =
             activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
