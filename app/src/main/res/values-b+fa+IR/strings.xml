@@ -47,7 +47,7 @@
 
     <string name="add_expenses_category">اضافه کردن دسته جدید برای هزینه ها</string>
     <string name="add_income_category">اضافه کردن دسته جدید برای درآمد ها</string>
-    <string name="unable_to_recognize_category_type">خطایی در هنگام شناسایی دسته بندی رخ داد</string>
+    <string name="unable_to_recognize_category_type">خطایی در هنگام شناسایی نوع دسته بندی رخ داده است</string>
     <string name="jibi">جیبی</string>
 
     <!--    ERRORS-->
@@ -281,4 +281,7 @@
     <string name="solar_hijri">هجری خورشیدی (شمسی)</string>
     <string name="gregorian">میلادی</string>
 
+    <string name="category_should_have_name">دسته بندی باید اسم داشته باشد</string>
+    <string name="unable_to_recognize_category_type_pls_return_back">متاسفانه نوع دسته بندی یافت نشد</string>
+    <string name="pls_select_image_for_category">برای این دسته بندی یک تصویر انتخاب کنید</string>
 </resources><!--source https://developer.android.com/training/basics/supporting-devices/languages-->

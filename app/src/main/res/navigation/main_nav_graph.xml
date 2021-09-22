@@ -95,7 +95,7 @@
         tools:layout="@layout/fragment_add_category">
         <argument
             android:name="category_type"
-            android:defaultValue="0"
+            android:defaultValue="-1"
             app:argType="integer" />
     </fragment>
     <fragment

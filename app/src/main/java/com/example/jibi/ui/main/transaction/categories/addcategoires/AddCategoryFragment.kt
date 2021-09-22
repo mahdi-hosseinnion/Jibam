@@ -5,24 +5,25 @@ import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import androidx.core.widget.addTextChangedListener
+import androidx.annotation.StringRes
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.jibi.R
-import com.example.jibi.models.Category
 import com.example.jibi.models.CategoryImages
-import com.example.jibi.ui.main.transaction.categories.viewcategories.ViewCategoriesViewModel
-import com.example.jibi.ui.main.transaction.categories.viewcategories.state.ViewCategoriesStateEvent
+import com.example.jibi.ui.main.transaction.categories.addcategoires.AddCategoryViewModel.Companion.INSERT_CATEGORY_SUCCESS_MARKER
 import com.example.jibi.ui.main.transaction.common.BaseFragment
 import com.example.jibi.ui.main.transaction.transactions.TransactionsListAdapter
 import com.example.jibi.util.*
+import com.example.jibi.util.Constants.EXPENSES_TYPE_MARKER
+import com.example.jibi.util.Constants.INCOME_TYPE_MARKER
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_add_category.*
+import kotlinx.android.synthetic.main.fragment_add_transaction.*
 import kotlinx.android.synthetic.main.layout_category_images_list_item.view.*
 import kotlinx.android.synthetic.main.layout_toolbar_with_back_btn.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -41,48 +42,39 @@ constructor(
     R.layout.fragment_add_category
 ), AddCategoryListAdapter.Interaction {
 
-    private val viewModel by viewModels<ViewCategoriesViewModel> { viewModelFactory }
+    private val viewModel by viewModels<AddCategoryViewModel> { viewModelFactory }
 
     private val args: AddCategoryFragmentArgs by navArgs()
-
-    private lateinit var newCategory: Category
 
     private lateinit var recyclerAdapter: AddCategoryListAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //Showing the title
-        topAppBar.title = when (args.categoryType) {
-            EXPENSES -> {
-                //TODO FIX ORDER ISSUE
-                newCategory = Category(0, 1, edt_categoryName.text.toString(), "", 0)
-                getString(R.string.add_expenses_category)
-            }
-            INCOME -> {
-                //TODO FIX ORDER ISSUE
-                newCategory = Category(0, 2, edt_categoryName.text.toString(), "", 0)
+        getCategoryTypeFromArgs(args.categoryType)
 
-                getString(R.string.add_income_category)
-            }
-            else -> {
-                showUnableToRecognizeCategoryTypeError()
-                getString(R.string.unable_to_recognize_category_type)
-            }
-        }
         setupUI()
         initRecyclerView()
         subscribeObservers()
     }
 
+    private fun getCategoryTypeFromArgs(categoryType: Int) {
+
+        if (categoryType == -1) {
+            //default value
+            //TODO ADD ON OK Clicked to dialog
+            viewModel.addToMessageStack(
+                message = getString(R.string.unable_to_recognize_category_type_pls_return_back),
+                uiComponentType = UIComponentType.Dialog,
+                messageType = MessageType.Error
+            )
+        } else {
+            viewModel.setCategoryType(categoryType)
+        }
+    }
+
     private fun setupUI() {
         forceKeyBoardToOpenForEditText(edt_categoryName)
-        /**
-         * on text change listeners
-         */
-        edt_categoryName.addTextChangedListener {
-            newCategory = newCategory.copy(name = it.toString())
-        }
         /**
          * on clicks
          */
@@ -107,6 +99,19 @@ constructor(
         viewModel.stateMessage.observe(viewLifecycleOwner) {
             it?.let {
                 handleNewStateMessage(it) { viewModel.clearStateMessage() }
+                val message = it.response.message
+
+                if (message == getString(R.string.unable_to_recognize_category_type_pls_return_back)
+                ) {
+                    uiCommunicationListener.hideSoftKeyboard()
+                    navigateBack()
+                }
+
+                if (message == getString(R.string.category_successfully_inserted)
+                ) {
+                    uiCommunicationListener.hideSoftKeyboard()
+                    navigateBack()
+                }
             }
         }
     }
@@ -115,39 +120,15 @@ constructor(
         viewModel.categoriesImages.observe(viewLifecycleOwner) {
             recyclerAdapter.submitList(it)
         }
-        viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
-            viewState.insertedCategoryRow?.let {
-                navigateBack()
+        viewModel.viewState.observe(viewLifecycleOwner) { vs ->
+            vs?.let { viewState ->
+                viewState.categoryImage?.let { setCategoryImageToImageView(it) }
+                viewState.categoryType?.let { setCategoryTypeToolbar(it) }
             }
         }
 
     }
 
-    private fun showUnableToRecognizeCategoryTypeError() {
-        val callback = object : AreYouSureCallback {
-            override fun proceed() {
-                navigateBack()
-            }
-
-            override fun cancel() {
-                navigateBack()
-            }
-        }
-        val stateCallback = object : StateMessageCallback {
-            override fun removeMessageFromStack() {
-                navigateBack()
-            }
-        }
-
-        uiCommunicationListener.onResponseReceived(
-            Response(
-                getString(R.string.unable_to_recognize_category_type),
-                //TODO SHOW OK DIALOG
-                UIComponentType.AreYouSureDialog(callback),
-                MessageType.Error
-            ), stateCallback
-        )
-    }
 
     companion object {
         const val EXPENSES = 1
@@ -160,11 +141,11 @@ constructor(
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
 
                 super.onScrolled(recyclerView, dx, dy)
-                    if (dy > 0) {
-                        add_category_fab?.hide()
-                    } else {
-                        add_category_fab?.show()
-                    }
+                if (dy > 0) {
+                    add_category_fab?.hide()
+                } else {
+                    add_category_fab?.show()
+                }
 
             }
 
@@ -198,15 +179,23 @@ constructor(
 
 
     override fun onItemSelected(position: Int, categoryImages: CategoryImages) {
-        newCategory = newCategory.copy(img_res = categoryImages.image_res)
-        //set image to image view
-        setCategoryImageTo(categoryImages)
+        viewModel.setCategoryImage(categoryImages)
     }
 
     override fun restoreListPosition() {
     }
 
-    fun setCategoryImageTo(categoryImages: CategoryImages) {
+    private fun setCategoryTypeToolbar(categoryType: Int) {
+        topAppBar.title =
+            if (categoryType == EXPENSES_TYPE_MARKER)
+                getString(R.string.add_expenses_category)
+            else if (categoryType == INCOME_TYPE_MARKER)
+                getString(R.string.add_income_category)
+            else
+                ""
+    }
+
+    private fun setCategoryImageToImageView(categoryImages: CategoryImages) {
         val categoryImageUrl = this.resources.getIdentifier(
             "ic_cat_${categoryImages.image_res}",
             "drawable",
@@ -233,21 +222,20 @@ constructor(
     }
 
     private fun insertNewCategory() {
-        val newCategory = newCategory
-        if (isValidForInsertion(newCategory)) {
-            viewModel.launchNewJob(
-                ViewCategoriesStateEvent.InsertCategory(
-                    newCategory
-                )
-            )
-            //TODO FIX THIS
-            uiCommunicationListener.hideSoftKeyboard()
-            findNavController().navigateUp()
+        if (isValidForInsertion()) {
+            val viewModelResponse = viewModel.insertCategory(edt_categoryName.text.toString())
+
+            if (viewModelResponse != INSERT_CATEGORY_SUCCESS_MARKER) {
+                showSnackBar(viewModelResponse)
+            }
+
         }
     }
 
-    private fun isValidForInsertion(category: Category?): Boolean {
-        if (category == null) {
+    private fun isValidForInsertion(): Boolean {
+        if (edt_categoryName.text.toString().isBlank()) {
+            showSnackBar(R.string.category_should_have_name)
+            forceKeyBoardToOpenForEditText(edt_categoryName)
             return false
         }
         return true
@@ -261,4 +249,12 @@ constructor(
         imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
     }
 
+    private fun showSnackBar(@StringRes resId: Int) {
+        Snackbar.make(
+            add_category_fragment_root,
+            getString(resId),
+            Snackbar.LENGTH_SHORT
+        ).setAnchorView(fab_submit).show()
+
+    }
 }

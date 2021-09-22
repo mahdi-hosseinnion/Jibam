@@ -1,8 +1,5 @@
 package com.example.jibi.ui.main.transaction.categories.viewcategories
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.asLiveData
-import com.example.jibi.models.CategoryImages
 import com.example.jibi.repository.cateogry.CategoryRepository
 import com.example.jibi.ui.main.transaction.categories.viewcategories.state.ViewCategoriesStateEvent
 import com.example.jibi.ui.main.transaction.categories.viewcategories.state.ViewCategoriesViewState
@@ -26,20 +23,10 @@ constructor(
         refreshCategoryList()
     }
 
-    private val _categoriesImages: LiveData<List<CategoryImages>> =
-        categoryRepository.getCategoryImages()
-            .asLiveData()
-
-    val categoriesImages: LiveData<List<CategoryImages>> = _categoriesImages
-
-
     override fun initNewViewState(): ViewCategoriesViewState = ViewCategoriesViewState()
 
     override suspend fun getResultByStateEvent(stateEvent: ViewCategoriesStateEvent): DataState<ViewCategoriesViewState> =
         when (stateEvent) {
-            is ViewCategoriesStateEvent.InsertCategory -> categoryRepository.insertCategory(
-                stateEvent
-            )
             is ViewCategoriesStateEvent.DeleteCategory -> categoryRepository.deleteCategory(
                 stateEvent
             )

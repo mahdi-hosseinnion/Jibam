@@ -279,4 +279,8 @@
     <string name="calendar">Calendar</string>
     <string name="solar_hijri">Solar Hijri</string>
     <string name="gregorian">Gregorian</string>
+
+    <string name="category_should_have_name">Category should have name</string>
+    <string name="unable_to_recognize_category_type_pls_return_back">Unable to recognize category type</string>
+    <string name="pls_select_image_for_category">Select image for this category</string>
 </resources>

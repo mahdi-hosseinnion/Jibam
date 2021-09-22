@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.jibi.di.main.keys.MainViewModelKey
 import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.DetailEditTransactionViewModel
 import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.InsertTransactionViewModel
+import com.example.jibi.ui.main.transaction.categories.addcategoires.AddCategoryViewModel
 import com.example.jibi.ui.main.transaction.categories.viewcategories.ViewCategoriesViewModel
 import com.example.jibi.ui.main.transaction.chart.ChartViewModel
 import com.example.jibi.ui.main.transaction.transactions.TransactionsViewModel
@@ -65,6 +66,15 @@ abstract class MainViewModelModule {
     @MainViewModelKey(DetailEditTransactionViewModel::class)
     abstract fun bindDetailEditTransactionViewModel(
         detailEditTransactionViewModel: DetailEditTransactionViewModel
+    ): ViewModel
+
+    @FlowPreview
+    @ExperimentalCoroutinesApi
+    @Binds
+    @IntoMap
+    @MainViewModelKey(AddCategoryViewModel::class)
+    abstract fun bindAddCategoryViewModel(
+        addCategoryViewModel: AddCategoryViewModel
     ): ViewModel
 
 }

@@ -6,6 +6,8 @@ import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransac
 import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionViewState
 import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionStateEvent
 import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionViewState
+import com.example.jibi.ui.main.transaction.categories.addcategoires.state.AddCategoryStateEvent
+import com.example.jibi.ui.main.transaction.categories.addcategoires.state.AddCategoryViewState
 import com.example.jibi.ui.main.transaction.categories.viewcategories.state.ViewCategoriesStateEvent
 import com.example.jibi.ui.main.transaction.categories.viewcategories.state.ViewCategoriesViewState
 import com.example.jibi.util.DataState
@@ -32,8 +34,8 @@ interface CategoryRepository {
     ): DataState<InsertTransactionViewState>
 
     suspend fun insertCategory(
-        stateEvent: ViewCategoriesStateEvent.InsertCategory
-    ): DataState<ViewCategoriesViewState>
+        stateEvent: AddCategoryStateEvent.InsertCategory
+    ): DataState<AddCategoryViewState>
 
     suspend fun deleteCategory(
         stateEvent: ViewCategoriesStateEvent.DeleteCategory
