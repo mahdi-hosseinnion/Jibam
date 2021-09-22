@@ -1,8 +1,9 @@
-package com.example.jibi.ui.main.transaction.categories
+package com.example.jibi.ui.main.transaction.categories.viewcategories
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.*
 import androidx.recyclerview.widget.RecyclerView
+import com.example.jibi.ui.main.transaction.categories.viewcategories.ViewCategoriesRecyclerAdapter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 

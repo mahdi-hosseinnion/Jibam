@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.main.transaction.categories.ViewCategoriesFragment">
+    tools:context=".ui.main.transaction.categories.viewcategories.ViewCategoriesFragment">
 
     <include layout="@layout/layout_toolbar_with_back_btn" />
 

@@ -1,7 +1,5 @@
-package com.example.jibi.ui.main.transaction.categories
+package com.example.jibi.ui.main.transaction.categories.viewcategories
 
-import android.content.res.Resources
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View

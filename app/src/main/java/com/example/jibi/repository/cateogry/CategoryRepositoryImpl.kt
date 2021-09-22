@@ -11,8 +11,8 @@ import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransac
 import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionViewState
 import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionStateEvent
 import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionViewState
-import com.example.jibi.ui.main.transaction.categories.state.CategoriesStateEvent
-import com.example.jibi.ui.main.transaction.categories.state.CategoriesViewState
+import com.example.jibi.ui.main.transaction.categories.viewcategories.state.ViewCategoriesStateEvent
+import com.example.jibi.ui.main.transaction.categories.viewcategories.state.ViewCategoriesViewState
 import com.example.jibi.util.*
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -71,18 +71,18 @@ constructor(
     }
 
     override suspend fun getAllOfCategories(
-        stateEvent: CategoriesStateEvent.GetAllOfCategories
-    ): DataState<CategoriesViewState> {
+        stateEvent: ViewCategoriesStateEvent.GetAllOfCategories
+    ): DataState<ViewCategoriesViewState> {
 
         val cacheResult = safeCacheCall {
             categoriesDao.getAllOfCategories()
         }
         return object :
-            CacheResponseHandler<CategoriesViewState, List<Category>>(
+            CacheResponseHandler<ViewCategoriesViewState, List<Category>>(
                 response = cacheResult,
                 stateEvent = stateEvent
             ) {
-            override suspend fun handleSuccess(resultObj: List<Category>): DataState<CategoriesViewState> {
+            override suspend fun handleSuccess(resultObj: List<Category>): DataState<ViewCategoriesViewState> {
                 return if (resultObj.isNotEmpty()) {
                     DataState.data(
                         Response(
@@ -90,7 +90,7 @@ constructor(
                             uiComponentType = UIComponentType.None,
                             messageType = MessageType.Success
                         ),
-                        data = CategoriesViewState(
+                        data = ViewCategoriesViewState(
                             categoryList = resultObj
                         ),
                         stateEvent = stateEvent
@@ -152,20 +152,20 @@ constructor(
     }
 
     override suspend fun insertCategory(
-        stateEvent: CategoriesStateEvent.InsertCategory
-    ): DataState<CategoriesViewState> {
+        stateEvent: ViewCategoriesStateEvent.InsertCategory
+    ): DataState<ViewCategoriesViewState> {
         val cacheResult = safeCacheCall {
             categoriesDao.insertOrReplace(stateEvent.category)
         }
-        return object : CacheResponseHandler<CategoriesViewState, Long>(
+        return object : CacheResponseHandler<ViewCategoriesViewState, Long>(
             response = cacheResult,
             stateEvent = stateEvent
         ) {
-            override suspend fun handleSuccess(resultObj: Long): DataState<CategoriesViewState> {
+            override suspend fun handleSuccess(resultObj: Long): DataState<ViewCategoriesViewState> {
                 return if (resultObj > 0) {
                     //success
                     DataState.data(
-                        data = CategoriesViewState(insertedCategoryRow = resultObj),
+                        data = ViewCategoriesViewState(insertedCategoryRow = resultObj),
                         response = Response(
                             message = getString(R.string.category_successfully_inserted),
                             uiComponentType = UIComponentType.Toast,
@@ -187,16 +187,16 @@ constructor(
     }
 
     override suspend fun deleteCategory(
-        stateEvent: CategoriesStateEvent.DeleteCategory
-    ): DataState<CategoriesViewState> {
+        stateEvent: ViewCategoriesStateEvent.DeleteCategory
+    ): DataState<ViewCategoriesViewState> {
         val cacheResult = safeCacheCall {
             categoriesDao.deleteCategory(stateEvent.categoryId)
         }
-        return object : CacheResponseHandler<CategoriesViewState, Int>(
+        return object : CacheResponseHandler<ViewCategoriesViewState, Int>(
             response = cacheResult,
             stateEvent = stateEvent
         ) {
-            override suspend fun handleSuccess(resultObj: Int): DataState<CategoriesViewState> {
+            override suspend fun handleSuccess(resultObj: Int): DataState<ViewCategoriesViewState> {
                 return if (resultObj > 0) {
                     //success
                     DataState.data(
@@ -222,8 +222,8 @@ constructor(
 
 
     override suspend fun changeCategoryOrder(
-        stateEvent: CategoriesStateEvent.ChangeCategoryOrder
-    ): DataState<CategoriesViewState> {
+        stateEvent: ViewCategoriesStateEvent.ChangeCategoryOrder
+    ): DataState<ViewCategoriesViewState> {
         val allCategoriesResponse = safeCacheCall {
             categoriesDao.getAllOfCategoriesWithType(stateEvent.type)
         }
@@ -277,8 +277,8 @@ constructor(
 
     private fun changeCategoryOrderFailStateMessage(
         message: String,
-        stateEvent: CategoriesStateEvent.ChangeCategoryOrder
-    ): DataState<CategoriesViewState> = DataState.error(
+        stateEvent: ViewCategoriesStateEvent.ChangeCategoryOrder
+    ): DataState<ViewCategoriesViewState> = DataState.error(
         response = Response(
             message = message,
             uiComponentType = UIComponentType.Dialog,

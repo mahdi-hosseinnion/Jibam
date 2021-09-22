@@ -1,4 +1,4 @@
-package com.example.jibi.ui.main.transaction.categories
+package com.example.jibi.ui.main.transaction.categories.viewcategories
 
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -11,9 +11,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.example.jibi.R
 import com.example.jibi.models.Category
-import com.example.jibi.ui.main.transaction.categories.AddCategoryFragment.Companion.EXPENSES
-import com.example.jibi.ui.main.transaction.categories.AddCategoryFragment.Companion.INCOME
-import com.example.jibi.ui.main.transaction.categories.state.CategoriesStateEvent
+import com.example.jibi.ui.main.transaction.categories.addcategoires.AddCategoryFragment.Companion.EXPENSES
+import com.example.jibi.ui.main.transaction.categories.addcategoires.AddCategoryFragment.Companion.INCOME
+import com.example.jibi.ui.main.transaction.categories.viewcategories.state.ViewCategoriesStateEvent
 import com.example.jibi.ui.main.transaction.common.BaseFragment
 import com.example.jibi.util.*
 import com.example.jibi.util.Constants.EXPENSES_TYPE_MARKER
@@ -38,7 +38,7 @@ constructor(
     R.layout.fragment_view_categories
 ), ViewCategoriesRecyclerAdapter.CategoryInteraction {
 
-    private val viewModel by viewModels<CategoriesViewModel> { viewModelFactory }
+    private val viewModel by viewModels<ViewCategoriesViewModel> { viewModelFactory }
 
     private val expensesItemTouchHelper by lazy {
         ItemTouchHelper(ViewCategoryItemTouchHelperCallback {
@@ -188,7 +188,7 @@ constructor(
 
     fun deleteCategory(category: Category) {
         viewModel.launchNewJob(
-            CategoriesStateEvent.DeleteCategory(
+            ViewCategoriesStateEvent.DeleteCategory(
                 category.id
             )
         )

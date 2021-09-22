@@ -1,7 +1,6 @@
 package com.example.jibi.fragments.main
 
 import android.content.SharedPreferences
-import android.content.res.Resources
 import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
@@ -9,8 +8,8 @@ import com.example.jibi.di.main.MainScope
 import com.example.jibi.ui.main.transaction.aboutus.AboutUsFragment
 import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.DetailEditTransactionFragment
 import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.InsertTransactionFragment
-import com.example.jibi.ui.main.transaction.categories.AddCategoryFragment
-import com.example.jibi.ui.main.transaction.categories.ViewCategoriesFragment
+import com.example.jibi.ui.main.transaction.categories.addcategoires.AddCategoryFragment
+import com.example.jibi.ui.main.transaction.categories.viewcategories.ViewCategoriesFragment
 import com.example.jibi.ui.main.transaction.chart.ChartFragment
 import com.example.jibi.ui.main.transaction.chart.DetailChartFragment
 import com.example.jibi.ui.main.transaction.setting.SettingFragment

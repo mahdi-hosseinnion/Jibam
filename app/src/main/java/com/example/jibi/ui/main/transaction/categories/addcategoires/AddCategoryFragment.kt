@@ -1,4 +1,4 @@
-package com.example.jibi.ui.main.transaction.categories
+package com.example.jibi.ui.main.transaction.categories.addcategoires
 
 import android.content.Context
 import android.os.Bundle
@@ -17,7 +17,8 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.jibi.R
 import com.example.jibi.models.Category
 import com.example.jibi.models.CategoryImages
-import com.example.jibi.ui.main.transaction.categories.state.CategoriesStateEvent
+import com.example.jibi.ui.main.transaction.categories.viewcategories.ViewCategoriesViewModel
+import com.example.jibi.ui.main.transaction.categories.viewcategories.state.ViewCategoriesStateEvent
 import com.example.jibi.ui.main.transaction.common.BaseFragment
 import com.example.jibi.ui.main.transaction.transactions.TransactionsListAdapter
 import com.example.jibi.util.*
@@ -40,7 +41,7 @@ constructor(
     R.layout.fragment_add_category
 ), AddCategoryListAdapter.Interaction {
 
-    private val viewModel by viewModels<CategoriesViewModel> { viewModelFactory }
+    private val viewModel by viewModels<ViewCategoriesViewModel> { viewModelFactory }
 
     private val args: AddCategoryFragmentArgs by navArgs()
 
@@ -235,7 +236,7 @@ constructor(
         val newCategory = newCategory
         if (isValidForInsertion(newCategory)) {
             viewModel.launchNewJob(
-                CategoriesStateEvent.InsertCategory(
+                ViewCategoriesStateEvent.InsertCategory(
                     newCategory
                 )
             )

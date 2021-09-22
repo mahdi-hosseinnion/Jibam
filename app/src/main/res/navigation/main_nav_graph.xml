@@ -70,7 +70,7 @@
 
     <fragment
         android:id="@+id/viewCategoriesFragment"
-        android:name="com.example.jibi.ui.main.transaction.categories.ViewCategoriesFragment"
+        android:name="com.example.jibi.ui.main.transaction.categories.viewcategories.ViewCategoriesFragment"
         android:label=""
         tools:layout="@layout/fragment_view_categories">
         <action
@@ -90,7 +90,7 @@
     </fragment>
     <fragment
         android:id="@+id/addCategoryFragment"
-        android:name="com.example.jibi.ui.main.transaction.categories.AddCategoryFragment"
+        android:name="com.example.jibi.ui.main.transaction.categories.addcategoires.AddCategoryFragment"
         android:label=""
         tools:layout="@layout/fragment_add_category">
         <argument

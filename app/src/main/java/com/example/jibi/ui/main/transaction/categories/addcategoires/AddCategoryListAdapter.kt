@@ -1,6 +1,5 @@
-package com.example.jibi.ui.main.transaction.categories
+package com.example.jibi.ui.main.transaction.categories.addcategoires
 
-import android.content.res.Resources
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
