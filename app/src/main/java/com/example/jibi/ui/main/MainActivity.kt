@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentFactory
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -18,8 +19,8 @@ import com.example.jibi.ui.BaseActivity
 import com.example.jibi.ui.app_intro.AppIntroActivity
 import com.example.jibi.util.PreferenceKeys
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.Main
 import java.util.*
 import javax.inject.Inject
 
@@ -108,10 +109,22 @@ class MainActivity : BaseActivity() {
 
     }
 
+    var loadingJob: Job? = null
+
     override fun showProgressBar(isLoading: Boolean) {
         if (isLoading) {
-            progressBar.visibility = View.VISIBLE
+            val transitionAnimTime = resources.getInteger(R.integer.transitionAnimationDuration)
+            //if one job takes under 260(transition animation time) we don't want to show progress bar for it
+            loadingJob?.cancel()
+            loadingJob = null
+            loadingJob = lifecycleScope.launch(Main) {
+                delay(transitionAnimTime.toLong())
+                ensureActive()
+                progressBar.visibility = View.VISIBLE
+            }
         } else {
+            loadingJob?.cancel()
+            loadingJob = null
             progressBar.visibility = View.INVISIBLE
         }
     }

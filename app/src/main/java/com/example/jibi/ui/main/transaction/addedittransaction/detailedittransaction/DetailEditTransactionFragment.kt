@@ -68,6 +68,7 @@ constructor(
     }
 
     private fun setupUi() {
+        topAppBar.title = getString(R.string.details)
 
         setHasOptionsMenu(true)
 
