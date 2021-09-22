@@ -290,9 +290,7 @@ class CalculatorKeyboard(
 
     fun preloadKeyboard(value: String) {
         try {
-            val value1 =
-                if (_getString(R.string._1) != "1") value.convertEnglishDigitsToFarsiDigits()
-                else value
+            val value1 = value.localizeNumber(resources)
             //clear last text
             inputConnection!!.clearText()
             text.clear()

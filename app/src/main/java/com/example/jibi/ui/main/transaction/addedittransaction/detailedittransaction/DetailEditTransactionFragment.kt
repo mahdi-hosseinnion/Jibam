@@ -29,6 +29,7 @@ import kotlinx.android.synthetic.main.fragment_add_transaction.*
 import kotlinx.android.synthetic.main.layout_toolbar_with_back_btn.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import java.util.*
 import javax.inject.Inject
@@ -80,6 +81,9 @@ constructor(
         }
 
         lifecycleScope.launchWhenStarted {
+            //we use delay here
+            //b/c its fab flashed(appear and disappear quickly) when data did not set to editTexts
+            delay(500)
             viewModel.submitButtonState.isSubmitButtonEnable
                 .collect {
                     Log.d("DetailEditTransactionVi", "setupUi: $it ")
@@ -111,7 +115,7 @@ constructor(
             viewModel.onMemoChanged(it.toString())
         }
         edt_money.addTextChangedListener {
-            viewModel.onMoneyChanged(it.toString())
+            viewModel.onMoneyChanged(it.toString(), resources)
         }
         fab_submit.setOnClickListener {
             updateTransaction()

@@ -4,11 +4,10 @@ import android.util.Log
 import com.example.jibi.models.Category
 import com.example.jibi.models.Transaction
 import com.example.jibi.models.TransactionEntity
-import com.example.jibi.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionPresenterState
 import com.example.jibi.util.Event
-import com.example.jibi.util.StateEvent
 import kotlinx.coroutines.flow.*
 import java.util.*
+import kotlin.math.absoluteValue
 
 data class DetailEditTransactionViewState(
     // default transaction used to determine if user update transaction or did not
@@ -74,7 +73,10 @@ class SubmitButtonState() {
     }.distinctUntilChanged()
 
     fun onMoneyChange(newMoney: Double?) {
-        _doesMoneyChange.value = defaultTransaction?.money != newMoney
+        //default money is negative when transaction is in expenses category but newMoney is
+        //always positive but so we use .absoluteValue
+        _doesMoneyChange.value =
+            defaultTransaction?.money?.absoluteValue != newMoney?.absoluteValue
     }
 
     fun onMemoChange(newMemo: String?) {

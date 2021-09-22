@@ -1,5 +1,6 @@
 package com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction
 
+import android.content.res.Resources
 import android.util.Log
 import com.example.jibi.models.Category
 import com.example.jibi.models.Transaction
@@ -12,11 +13,9 @@ import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransac
 import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionViewState
 import com.example.jibi.ui.main.transaction.addedittransaction.detailedittransaction.state.SubmitButtonState
 import com.example.jibi.ui.main.transaction.common.BaseViewModel
+import com.example.jibi.util.*
 import com.example.jibi.util.Constants.EXPENSES_TYPE_MARKER
 import com.example.jibi.util.Constants.INCOME_TYPE_MARKER
-import com.example.jibi.util.DataState
-import com.example.jibi.util.Event
-import com.example.jibi.util.convertDoubleToString
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.util.*
@@ -237,14 +236,15 @@ constructor(
         submitButtonState.onMemoChange(memo)
     }
 
-    fun onMoneyChanged(money: String) {
+    fun onMoneyChanged(money: String, resources: Resources) {
 
         setViewState(
             DetailEditTransactionViewState(
                 moneyStr = money
             )
         )
-        submitButtonState.onMoneyChange(money.toDoubleOrNull())
+        //we show user the inserted money in their language digits not in english so we need to convert it here
+        submitButtonState.onMoneyChange((money.convertLocaleNumberToEnglish(resources)).toDoubleOrNull())
     }
 
     fun updateTransaction(entity: TransactionEntity) {

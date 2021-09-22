@@ -163,6 +163,18 @@ fun String.localizeNumber(resources: Resources) =
         .replace("8", resources.getString(R.string._8))
         .replace("9", resources.getString(R.string._9))
 
+fun String.convertLocaleNumberToEnglish(resources: Resources) =
+    this.replace(resources.getString(R.string._0), "0")
+        .replace(resources.getString(R.string._1), "1")
+        .replace(resources.getString(R.string._2), "2")
+        .replace(resources.getString(R.string._3), "3")
+        .replace(resources.getString(R.string._4), "4")
+        .replace(resources.getString(R.string._5), "5")
+        .replace(resources.getString(R.string._6), "6")
+        .replace(resources.getString(R.string._7), "7")
+        .replace(resources.getString(R.string._8), "8")
+        .replace(resources.getString(R.string._9), "9")
+
 fun trySafe(method: () -> Unit) =
     try {
         method()
