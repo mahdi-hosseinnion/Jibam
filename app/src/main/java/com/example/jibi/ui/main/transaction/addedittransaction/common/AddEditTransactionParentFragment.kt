@@ -465,21 +465,13 @@ constructor(
         return result
     }
 
-    fun showSnackBar(text: String) {
-        Snackbar.make(
-            bottomCoordinator,
-            text,
-            Snackbar.LENGTH_SHORT
-        ).show()
-
-    }
 
     fun showSnackBar(@StringRes resId: Int) {
         Snackbar.make(
             bottomCoordinator,
             getString(resId),
             Snackbar.LENGTH_SHORT
-        ).show()
+        ).setAnchorView(fab_submit).show()
 
     }
 
