@@ -1,7 +1,10 @@
 package com.example.jibi.ui.main.transaction.categories
 
+import android.content.Context
 import android.os.Bundle
 import android.view.*
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -67,11 +70,13 @@ constructor(
                 getString(R.string.unable_to_recognize_category_type)
             }
         }
+        forceKeyBoardToOpenForEditText(edt_categoryName)
 
         edt_categoryName.addTextChangedListener {
             newCategory = newCategory.copy(name = it.toString())
         }
         topAppBar.setNavigationOnClickListener {
+            uiCommunicationListener.hideSoftKeyboard()
             navigateBack()
         }
         initRecyclerView()
@@ -235,6 +240,13 @@ constructor(
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    fun forceKeyBoardToOpenForEditText(editText: EditText) {
+        editText.requestFocus()
+        val imm: InputMethodManager =
+            activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
     }
 
 }

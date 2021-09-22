@@ -10,58 +10,59 @@
 
     <include layout="@layout/layout_toolbar_with_back_btn" />
 
-    <LinearLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
+        android:background="?attr/colorSurface"
+        android:elevation="4dp">
 
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardView"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="12dp"
-            android:layout_marginRight="12dp"
-            android:layout_marginBottom="8dp"
-            android:foregroundGravity="center"
-            card_view:cardBackgroundColor="#D297EA"
-            card_view:cardCornerRadius="20dp">
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp">
 
-            <ImageView
-                android:id="@+id/category_image"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginBottom="8dp"
+                android:foregroundGravity="center"
+                card_view:cardBackgroundColor="#D297EA"
+                card_view:cardCornerRadius="20dp">
+
+                <ImageView
+                    android:id="@+id/category_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:padding="8dp"
+                    android:scaleType="center" />
+                <!--        best size 24-->
+                <!--            tools:srcCompat="@drawable/ic_cat_travel"/>-->
+                <!--            app:tint="@color/black" />-->
+            </androidx.cardview.widget.CardView>
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/edt_categoryName"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:padding="8dp"
-                android:scaleType="center" />
-            <!--        best size 24-->
-            <!--            tools:srcCompat="@drawable/ic_cat_travel"/>-->
-            <!--            app:tint="@color/black" />-->
-        </androidx.cardview.widget.CardView>
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/edt_categoryName"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="@string/category_name" />
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="8dp"
-        android:background="@color/white" />
+                android:hint="@string/category_name"
+                android:textColor="?attr/colorOnSurface" />
+        </LinearLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/insert_category_recyclerView"
-
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="8dp"
         android:padding="4dp" />
 
 </LinearLayout>
