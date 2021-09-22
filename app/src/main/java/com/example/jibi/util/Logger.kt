@@ -15,3 +15,4 @@ fun mahdiLog(className: String?, message: String) {
 //const
 const val TAG = "AppDebug6724" // Tag for logs
 const val DEBUG = true // enable logging
+//throwExceptionIfDebugElseLogToCrashlytics

@@ -141,7 +141,7 @@ constructor(
             enableSearchMode()
         }
 
-        fab.setOnClickListener {
+        add_fab.setOnClickListener {
             navigateToAddTransactionFragment()
         }
         //TODO DELETE THIS LINE FOR FINAL PROJECT JUST OF TESTING
@@ -401,6 +401,39 @@ constructor(
 
     private fun initRecyclerView() {
 
+        val onScrollListener = object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (bottomSheetBehavior.state == STATE_EXPANDED) {
+                    if (dy > 0) {
+                        add_fab?.hide()
+                    } else {
+                        add_fab?.show()
+                    }
+
+                }
+            }
+
+            override fun onScrollStateChanged(
+                recyclerView: RecyclerView,
+                newState: Int
+            ) {
+                super.onScrollStateChanged(recyclerView, newState)
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val lastPosition =
+                    layoutManager.findFirstCompletelyVisibleItemPosition()
+                if (lastPosition == 0) {
+                    //user should be able to only drag the bottom sheet down when it's in first
+                    //position
+                    if (viewModel.isSearchInVisible()) {
+                        //while searching you should not be able to drag down
+                        bottomSheetBehavior.isDraggable = true
+                    }
+                } else {
+                    bottomSheetBehavior.isDraggable = false
+                }
+            }
+        }
         transaction_recyclerView.apply {
             layoutManager = LinearLayoutManager(this@TransactionsFragment.context)
             recyclerAdapter = TransactionsListAdapter(
@@ -409,39 +442,7 @@ constructor(
                 this@TransactionsFragment.requireActivity().packageName,
                 currentLocale
             )
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-                    if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
-                        if (dy > 0) {
-                            fab.hide()
-                        } else {
-                            fab.show()
-                        }
-
-                    }
-                }
-
-                override fun onScrollStateChanged(
-                    recyclerView: RecyclerView,
-                    newState: Int
-                ) {
-                    super.onScrollStateChanged(recyclerView, newState)
-                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                    val lastPosition =
-                        layoutManager.findFirstCompletelyVisibleItemPosition()
-                    if (lastPosition == 0) {
-                        //user should be able to only drag the bottom sheet down when it's in first
-                        //position
-                        if (viewModel.isSearchInVisible()) {
-                            //while searching you should not be able to drag down
-                            bottomSheetBehavior.isDraggable = true
-                        }
-                    } else {
-                        bottomSheetBehavior.isDraggable = false
-                    }
-                }
-            })
+            addOnScrollListener(onScrollListener)
 
 //            //swipe to delete
             val swipeHandler =
@@ -547,7 +548,7 @@ constructor(
             backStackForBottomSheet.isEnabled = true
         }
         //set bottom sheet peek height
-        if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED)
+        if (bottomSheetBehavior.state == STATE_EXPANDED)
             resetIt(1f)
 
         fragment_transacion_root.viewTreeObserver.addOnGlobalLayoutListener(object :
@@ -648,9 +649,9 @@ constructor(
         }
 
         if (STATE_DRAGGING == newState) {
-            fab.hide()
+            add_fab.hide()
         } else {
-            fab.show()
+            add_fab.show()
         }
 
     }
@@ -796,7 +797,7 @@ constructor(
 
     private fun showFabPromote() {
         val mFabPrompt = MaterialTapTargetPrompt.Builder(this)
-            .setTarget(R.id.fab)
+            .setTarget(R.id.add_fab)
             .setPrimaryText(getString(R.string.fab_tap_target_primary))
             .setSecondaryText(getString(R.string.fab_tap_target_secondary))
             .setPromptStateChangeListener { _, state ->
