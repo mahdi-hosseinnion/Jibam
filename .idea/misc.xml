@@ -21,8 +21,8 @@
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_up_arrow.xml" value="0.2916666666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/transaction_header_bg.xml" value="0.2713541666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout-v21/fragment_add_transaction.xml" value="0.2755208333333333" />
-        <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout-v21/fragment_transaction.xml" value="0.33" />
-        <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/activity_main.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout-v21/fragment_transaction.xml" value="0.1" />
+        <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/bottom_sheet_create_new_trans.xml" value="0.2755208333333333" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/bottom_sheet_month_picker.xml" value="0.2712820512820513" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/choose_language_dialog.xml" value="0.2712820512820513" />

@@ -60,31 +60,12 @@ class MainActivity : BaseActivity() {
         if (isFirstRun) {
             val intent = Intent(this, AppIntroActivity::class.java)
             startActivity(intent)
-        } else {
-            splash_screen.visibility = View.GONE
-            main_content.visibility = View.VISIBLE
         }
 
     }
 
     private fun uiSetup() {
-        navigation_view.setupWithNavController(navController)
-
-        val menu = navigation_view.menu
-        menu.findItem(R.id.chartFragment).title =
-            _resources.getString(R.string.chart)
-
-        menu.findItem(R.id.viewCategoriesFragment).title =
-            _resources.getString(R.string.category_setting)
-        menu.findItem(R.id.aboutUsFragment).title =
-            _resources.getString(R.string.about)
-        menu.findItem(R.id.settingFragment).title =
-            _resources.getString(R.string.setting)
-
-        val header_layout = navigation_view.getHeaderView(0)
-        val navHeaderText = header_layout.findViewById<TextView>(R.id.drawer_name)
-        navHeaderText.text = _resources.getString(R.string.jibi)
-
+//        navigation_view.setupWithNavController(navController)
     }
 
 
@@ -93,7 +74,7 @@ class MainActivity : BaseActivity() {
             .inject(this)
     }
 
-    fun firstSetup() {
+    private fun firstSetup() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
@@ -105,7 +86,7 @@ class MainActivity : BaseActivity() {
                 setSupportActionBar(Toolbar(this))
             }
 
-        appBarConfiguration = AppBarConfiguration(setOf(R.id.transactionFragment), drawer_layout)
+        appBarConfiguration = AppBarConfiguration(setOf(R.id.transactionFragment))
 
     }
 
@@ -148,14 +129,14 @@ class MainActivity : BaseActivity() {
         navController.removeOnDestinationChangedListener(listener)
     }
 
-    override fun changeDrawerState(closeIt: Boolean) {
-        if (closeIt)
-            drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-        else
-            drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-    }
-
-    override fun openDrawerMenu() {
-        drawer_layout.open()
-    }
+//    override fun changeDrawerState(closeIt: Boolean) {
+////        if (closeIt)
+////            drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+////        else
+////            drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+//    }
+//
+//    override fun openDrawerMenu() {
+////        drawer_layout.open()
+//    }
 }

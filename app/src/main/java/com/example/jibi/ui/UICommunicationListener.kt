@@ -15,8 +15,8 @@ interface UICommunicationListener {
 
     fun showProgressBar(isLoading: Boolean)
 
-    fun changeDrawerState(closeIt: Boolean)
+//    fun changeDrawerState(closeIt: Boolean)
 
-    fun openDrawerMenu()
+//    fun openDrawerMenu()
 
 }

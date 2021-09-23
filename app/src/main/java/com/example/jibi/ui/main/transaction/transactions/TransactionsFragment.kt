@@ -118,7 +118,8 @@ constructor(
         topAppBar.navigationIcon = resources.getDrawable(R.drawable.ic_round_menu_24)
 
         topAppBar.setNavigationOnClickListener {
-            uiCommunicationListener.openDrawerMenu()
+            drawer_layout.open()
+//            uiCommunicationListener.openDrawerMenu()
         }
 
         bottomSheetBehavior = BottomSheetBehavior.from(main_standardBottomSheet)
@@ -542,7 +543,6 @@ constructor(
         super.onResume()
         //check for calendar type
         checkForCalendarTypeChange()
-        uiCommunicationListener.changeDrawerState(false)
         //enable backStack listener when user  navigate to next fragment or rotate screen
         if (bottomSheetBehavior.state == STATE_EXPANDED || viewModel.isSearchVisible()) {
             backStackForBottomSheet.isEnabled = true
@@ -583,11 +583,6 @@ constructor(
 
     }
 
-
-    override fun onStop() {
-        super.onStop()
-        uiCommunicationListener.changeDrawerState(true)
-    }
 
     private fun checkForCalendarTypeChange() {
 
