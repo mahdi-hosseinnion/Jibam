@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="end"
     android:orientation="horizontal"
-    tools:background="#000">
+    tools:background="?attr/colorPrimary">
 
     <ImageView
         android:id="@+id/month_manager_previous"

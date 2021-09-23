@@ -19,7 +19,6 @@
             layout="@layout/layout_toolbar_with_month_changer"
             android:layout_width="match_parent"
             android:layout_height="@dimen/mtrl_toolbar_default_height"
-            android:elevation="1dp"
             android:gravity="end"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -32,7 +31,7 @@
             android:layout_height="112dp"
             android:layout_margin="16dp"
             android:background="@drawable/bg_summery_money"
-            android:elevation="3dp"
+            android:elevation="4dp"
 
             android:orientation="horizontal"
             android:weightSum="30"
@@ -49,7 +48,6 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="4dp"
                 android:layout_weight="10"
-                android:elevation="1dp"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -96,7 +94,6 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="4dp"
                 android:layout_weight="10"
-                android:elevation="1dp"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -144,7 +141,6 @@
                 android:layout_marginEnd="4dp"
                 android:layout_marginBottom="4dp"
                 android:layout_weight="10"
-                android:elevation="1dp"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -153,7 +149,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="50"
-                    android:elevation="1dp"
                     android:foregroundGravity="center|bottom"
                     android:gravity="center|bottom"
                     android:padding="4dp"
@@ -168,7 +163,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="50"
-                    android:elevation="1dp"
 
                     android:foregroundGravity="top|center"
                     android:gravity="top|center"
