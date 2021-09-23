@@ -83,6 +83,7 @@ constructor(
             navigateBack()
         }
         add_category_fab.setOnClickListener {
+            add_category_fab.isEnabled = false
             insertNewCategory()
         }
     }
@@ -112,6 +113,7 @@ constructor(
                     uiCommunicationListener.hideSoftKeyboard()
                     navigateBack()
                 }
+                add_category_fab.isEnabled = true
             }
         }
     }
@@ -226,9 +228,12 @@ constructor(
             val viewModelResponse = viewModel.insertCategory(edt_categoryName.text.toString())
 
             if (viewModelResponse != INSERT_CATEGORY_SUCCESS_MARKER) {
+                add_category_fab.isEnabled = true
                 showSnackBar(viewModelResponse)
             }
 
+        }else{
+            add_category_fab.isEnabled = true
         }
     }
 
