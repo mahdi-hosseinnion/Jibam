@@ -182,6 +182,7 @@ constructor(
 
     override fun onItemSelected(position: Int, categoryImages: CategoryImages) {
         viewModel.setCategoryImage(categoryImages)
+        add_category_fab.show()
     }
 
     override fun restoreListPosition() {
