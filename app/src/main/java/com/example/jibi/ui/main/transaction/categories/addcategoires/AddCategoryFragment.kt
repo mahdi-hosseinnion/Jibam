@@ -16,10 +16,8 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.jibi.R
 import com.example.jibi.models.CategoryImages
-import com.example.jibi.ui.main.transaction.categories.addcategoires.AddCategoryListAdapter.Companion.DEFAULT_CATEGORY_IMAGE_POSITION
 import com.example.jibi.ui.main.transaction.categories.addcategoires.AddCategoryViewModel.Companion.INSERT_CATEGORY_SUCCESS_MARKER
 import com.example.jibi.ui.main.transaction.common.BaseFragment
-import com.example.jibi.ui.main.transaction.transactions.TransactionsListAdapter
 import com.example.jibi.util.*
 import com.example.jibi.util.Constants.EXPENSES_TYPE_MARKER
 import com.example.jibi.util.Constants.INCOME_TYPE_MARKER
@@ -210,15 +208,11 @@ constructor(
         )
 
         // set background
-        if (categoryImages.id > 0) {
-            cardView.setCardBackgroundColor(
-                resources.getColor(
-                    TransactionsListAdapter.listOfColor[(categoryImages.id.minus(
-                        1
-                    ))]
-                )
+        cardView.setCardBackgroundColor(
+            resources.getColor(
+                CategoriesImageBackgroundColors.getCategoryColorById(categoryImages.id)
             )
-        }
+        )
         //load image
         requestManager
             .load(categoryImageUrl)

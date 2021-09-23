@@ -12,6 +12,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withC
 import com.example.jibi.R
 import com.example.jibi.models.Category
 import com.example.jibi.models.Transaction
+import com.example.jibi.util.CategoriesImageBackgroundColors
 import com.example.jibi.util.GenericViewHolder
 import com.example.jibi.util.separate3By3
 import kotlinx.android.synthetic.main.fragment_add_transaction.view.*
@@ -87,50 +88,6 @@ class TransactionsListAdapter(
         const val HEADER_DATE_PATTERN = "E,$DAY_OF_WEEK_MARKER MMM dd yyyy"
 //        const val HEADER_DATE_PATTERN="MM/dd/yy (E)"
 
-
-        val listOfColor = listOf(
-            R.color.category_background_color_1,
-            R.color.category_background_color_2,
-            R.color.category_background_color_3,
-            R.color.category_background_color_4,
-            R.color.category_background_color_5,
-            R.color.category_background_color_6,
-            R.color.category_background_color_7,
-            R.color.category_background_color_8,
-            R.color.category_background_color_9,
-            R.color.category_background_color_10,
-            R.color.category_background_color_11,
-            R.color.category_background_color_12,
-            R.color.category_background_color_13,
-            R.color.category_background_color_14,
-            R.color.category_background_color_15,
-            R.color.category_background_color_16,
-            R.color.category_background_color_17,
-            R.color.category_background_color_18,
-            R.color.category_background_color_19,
-            R.color.category_background_color_20,
-            R.color.category_background_color_21,
-            R.color.category_background_color_22,
-            R.color.category_background_color_23,
-            R.color.category_background_color_24,
-            R.color.category_background_color_25,
-            R.color.category_background_color_26,
-            R.color.category_background_color_27,
-            R.color.category_background_color_28,
-            R.color.category_background_color_29,
-            R.color.category_background_color_30,
-            R.color.category_background_color_31,
-            R.color.category_background_color_32,
-            R.color.category_background_color_33,
-            R.color.category_background_color_34,
-            R.color.category_background_color_35,
-            R.color.category_background_color_36,
-            R.color.category_background_color_37,
-            R.color.category_background_color_38,
-            R.color.category_background_color_39,
-            R.color.category_background_color_40,
-            R.color.category_background_color_41
-        )
     }
 
     val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Transaction>() {
@@ -438,24 +395,12 @@ class TransactionsListAdapter(
             )
             //TODO
 //            itemView.card
-            if (item.categoryId > 0) {
-                try {
-                    itemView.cardView.setCardBackgroundColor(
-                        resources.getColor(
-                            listOfColor[(item.categoryId.minus(
-                                1
-                            ))]
-                        )
-                    )
-                } catch (e: Exception) {
-                    //apply random color
-                    itemView.cardView.setCardBackgroundColor(
-                        resources.getColor(
-                            listOfColor[Random.nextInt(listOfColor.size)]
-                        )
-                    )
-                }
-            }
+            itemView.cardView.setCardBackgroundColor(
+                resources.getColor(
+                    CategoriesImageBackgroundColors.getCategoryColorById(item.categoryId)
+                )
+            )
+
             requestManager
                 ?.load(categoryImageUrl)
                 ?.centerInside()

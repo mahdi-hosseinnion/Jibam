@@ -1,6 +1,5 @@
 package com.example.jibi.ui.main.transaction.addedittransaction.categorybottomsheet
 
-import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,12 +8,11 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.example.jibi.R
 import com.example.jibi.models.Category
-import com.example.jibi.ui.main.transaction.transactions.TransactionsListAdapter
+import com.example.jibi.util.CategoriesImageBackgroundColors
 import kotlinx.android.synthetic.main.layout_category_images_list_item.view.*
 import kotlinx.android.synthetic.main.layout_category_list_item.view.*
 import kotlinx.android.synthetic.main.layout_category_list_item.view.category_image
 import kotlinx.android.synthetic.main.layout_transaction_list_item.view.*
-import kotlin.random.Random
 
 class CategoryBottomSheetListAdapter(
     private val requestManager: RequestManager,
@@ -192,25 +190,11 @@ class CategoryBottomSheetListAdapter(
 
         private fun setSelectedBackground(categoryId: Int) {
             // set to selected mode
-            try {
-                itemView.category_image.setBackgroundColor(
-
-                    itemView.resources.getColor(
-                        TransactionsListAdapter.listOfColor[(categoryId.minus(
-                            1
-                        ))]
-                    )
+            itemView.category_image.setBackgroundColor(
+                itemView.resources.getColor(
+                    CategoriesImageBackgroundColors.getCategoryColorById(categoryId)
                 )
-            } catch (e: Exception) {
-                //apply random color
-                itemView.category_image.setBackgroundColor(
-                    itemView.resources.getColor(
-                        TransactionsListAdapter.listOfColor[Random.nextInt(
-                            TransactionsListAdapter.listOfColor.size
-                        )]
-                    )
-                )
-            }
+            )
 
             //change tint to white
             itemView.category_image.setColorFilter(

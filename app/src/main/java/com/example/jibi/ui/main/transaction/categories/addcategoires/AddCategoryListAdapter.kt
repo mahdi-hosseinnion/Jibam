@@ -9,7 +9,7 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.example.jibi.R
 import com.example.jibi.models.CategoryImages
-import com.example.jibi.ui.main.transaction.transactions.TransactionsListAdapter.Companion.listOfColor
+import com.example.jibi.util.CategoriesImageBackgroundColors
 import kotlinx.android.synthetic.main.layout_category_images_header.view.*
 import kotlinx.android.synthetic.main.layout_category_images_list_item.view.*
 
@@ -282,21 +282,18 @@ class AddCategoryListAdapter(
         override fun setSelectedBackground(categoryId: Int) {
             // set to selected mode
             Log.d(TAG, "change background: $categoryId ")
-            if (categoryId > 0) {
-                //TODO ADD TRY
-                itemView.category_images.setBackgroundColor(
-                    itemView.resources.getColor(
-                        listOfColor[(categoryId.minus(
-                            1
-                        ))]
-                    )
+            //TODO ADD TRY
+            itemView.category_images.setBackgroundColor(
+                itemView.resources.getColor(
+                    CategoriesImageBackgroundColors.getCategoryColorById(categoryId)
                 )
-                //change tint to white
-                itemView.category_images.setColorFilter(
-                    itemView.resources.getColor(R.color.white),
-                    android.graphics.PorterDuff.Mode.SRC_IN
-                )
-            }
+            )
+            //change tint to white
+            itemView.category_images.setColorFilter(
+                itemView.resources.getColor(R.color.white),
+                android.graphics.PorterDuff.Mode.SRC_IN
+            )
+
         }
 
     }

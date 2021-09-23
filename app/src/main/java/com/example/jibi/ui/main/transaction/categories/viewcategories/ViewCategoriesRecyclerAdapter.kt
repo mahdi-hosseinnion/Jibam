@@ -10,6 +10,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.jibi.R
 import com.example.jibi.models.Category
 import com.example.jibi.ui.main.transaction.transactions.TransactionsListAdapter
+import com.example.jibi.util.CategoriesImageBackgroundColors
 import kotlinx.android.synthetic.main.layout_view_categories_list_item.view.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -121,26 +122,12 @@ class ViewCategoriesRecyclerAdapter(
 //                    val color = if (item.ordering == adapterPosition) Color.BLACK else Color.RED
 //                    itemView.ordering.setTextColor(color)
 
-                    if (item.id > 0) {
-                        try {
-                            cardView_view_category.setCardBackgroundColor(
-                                resources.getColor(
-                                    TransactionsListAdapter.listOfColor[(item.id.minus(
-                                        1
-                                    ))]
-                                )
-                            )
-                        } catch (e: Exception) {
-                            //apply random color
-                            cardView_view_category.setCardBackgroundColor(
-                                resources.getColor(
-                                    TransactionsListAdapter.listOfColor[Random.nextInt(
-                                        TransactionsListAdapter.listOfColor.size
-                                    )]
-                                )
-                            )
-                        }
-                    }
+                    cardView_view_category.setCardBackgroundColor(
+                        resources.getColor(
+                            CategoriesImageBackgroundColors.getCategoryColorById(item.id)
+
+                        )
+                    )
 
                     val categoryImageUrl = this.resources.getIdentifier(
                         "ic_cat_${item.img_res}",

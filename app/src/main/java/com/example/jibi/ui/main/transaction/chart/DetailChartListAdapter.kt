@@ -127,25 +127,14 @@ class DetailChartListAdapter(
 
 
         private fun loadImage(categoryId: Int, categoryImage: String) {
-            if (categoryId > 0) {
-                try {
-                    itemView.cardView.setCardBackgroundColor(
-                        itemView.resources.getColor(
-                            TransactionsListAdapter.listOfColor[(categoryId.minus(
-                                1
-                            ))]
-                        )
-                    )
-                } catch (e: Exception) {
-                    //apply random color
-                    itemView.cardView.setCardBackgroundColor(
-                        itemView.resources.getColor(
-                            TransactionsListAdapter.listOfColor
-                                    [Random.nextInt(TransactionsListAdapter.listOfColor.size)]
-                        )
-                    )
-                }
-            }
+
+            itemView.cardView.setCardBackgroundColor(
+                itemView.resources.getColor(
+                    CategoriesImageBackgroundColors.getCategoryColorById(categoryId)
+
+                )
+            )
+
             val categoryImageUrl = itemView.resources.getIdentifier(
                 "ic_cat_${categoryImage}",
                 "drawable",
