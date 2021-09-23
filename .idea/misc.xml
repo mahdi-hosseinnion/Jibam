@@ -16,6 +16,7 @@
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_endless_constellation.xml" value="0.2713541666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_error.xml" value="0.2916666666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_left_arrow.xml" value="0.2916666666666667" />
+        <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_outline_pie_chart_24.xml" value="0.1962962962962963" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_round_delete_24.xml" value="0.2916666666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_round_navigate_before_24.xml" value="0.2916666666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_up_arrow.xml" value="0.2916666666666667" />
@@ -45,6 +46,7 @@
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/recycler_view_layout.xml" value="0.2712820512820513" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/toolbar_month_changer.xml" value="0.2755208333333333" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/menu/delete_menu.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/menu/navigation_drawer_menu.xml" value="0.2755208333333333" />
       </map>
     </option>
   </component>

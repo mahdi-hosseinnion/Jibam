@@ -15,6 +15,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.core.view.GravityCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -126,7 +127,7 @@ constructor(
 
         bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
         onBottomSheetStateChanged(bottomSheetBehavior.state)
-
+        setupNavigationView()
         initRecyclerView()
         subscribeObservers()
 
@@ -184,6 +185,35 @@ constructor(
             viewModel.navigateToNextMonth()
         }
         checkForGuidePromote()
+    }
+
+    private fun setupNavigationView() {
+        navigation_view.setNavigationItemSelectedListener { menuItem ->
+
+            when (menuItem.itemId) {
+                R.id.chartFragment -> {
+                    findNavController().navigate(R.id.action_transactionFragment_to_chartFragment)
+                }
+                R.id.viewCategoriesFragment -> {
+                    findNavController().navigate(R.id.action_transactionFragment_to_viewCategoriesFragment)
+                }
+                R.id.settingFragment -> {
+                    findNavController().navigate(R.id.action_transactionFragment_to_settingFragment)
+                }
+                R.id.aboutUsFragment -> {
+                    findNavController().navigate(R.id.action_transactionFragment_to_aboutUsFragment)
+                }
+            }
+            closeDrawer()
+
+            return@setNavigationItemSelectedListener true
+        }
+    }
+
+    private fun closeDrawer() {
+        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
+            drawer_layout.closeDrawer(GravityCompat.START,true)
+        }
     }
 
     private fun resetPromoteState() {

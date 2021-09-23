@@ -5,22 +5,18 @@
     <item
         android:id="@+id/chartFragment"
         android:icon="@drawable/ic_outline_pie_chart_24"
-        android:iconTint="@color/black"
         android:title="@string/chart" />
     <item
         android:id="@+id/viewCategoriesFragment"
         android:icon="@drawable/ic_category_setting"
-        android:iconTint="@color/black"
         android:title="@string/category_setting" />
     <item
         android:id="@+id/settingFragment"
         android:icon="@drawable/ic_settings"
-        android:iconTint="@color/black"
         android:title="@string/setting" />
 
     <item
         android:id="@+id/aboutUsFragment"
         android:icon="@drawable/ic_about"
-        android:iconTint="@color/black"
         android:title="@string/about" />
 </menu>
