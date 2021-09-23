@@ -156,8 +156,13 @@ constructor(
     override suspend fun insertCategory(
         stateEvent: AddCategoryStateEvent.InsertCategory
     ): DataState<AddCategoryViewState> {
+
+        //we don't care if we were able to increase all of categories order in same type
+        //b/c use can reorder it manually later
+        increaseAllOfOrdersByOne(stateEvent.category.type)
+
         val cacheResult = safeCacheCall {
-            categoriesDao.insertOrReplace(stateEvent.category)
+            categoriesDao.insertOrReplace(stateEvent.category.copy(ordering = 0))
         }
         return object : CacheResponseHandler<AddCategoryViewState, Long>(
             response = cacheResult,
@@ -187,6 +192,11 @@ constructor(
             }
         }.getResult()
     }
+
+   private suspend fun increaseAllOfOrdersByOne(type: Int): CacheResult<Unit?> = safeCacheCall {
+        categoriesDao.increaseAllOfOrdersByOne(type)
+    }
+
 
     override suspend fun deleteCategory(
         stateEvent: ViewCategoriesStateEvent.DeleteCategory

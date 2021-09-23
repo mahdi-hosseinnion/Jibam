@@ -15,7 +15,7 @@ interface CategoriesDao {
     fun getAllOfCategories(): List<Category>
 
     @Query("SELECT * FROM categories WHERE type = :type $CATEGORY_ORDER")
-    fun getAllOfCategoriesWithType(type:Int): List<Category>
+    fun getAllOfCategoriesWithType(type: Int): List<Category>
 
     @Query("SELECT * FROM category_images")
     fun getCategoriesImages(): Flow<List<CategoryImages>>
@@ -64,6 +64,9 @@ interface CategoriesDao {
         fromOrder: Int,
         toOrder: Int
     ): List<Category>
+
+    @Query("""UPDATE categories SET ordering = (ordering + 1) WHERE type = :type""")
+    fun increaseAllOfOrdersByOne(type: Int)
 
     companion object {
         private const val CATEGORY_ORDER = "ORDER BY ordering ASC"
