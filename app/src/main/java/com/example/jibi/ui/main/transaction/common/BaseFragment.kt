@@ -64,7 +64,7 @@ constructor(
 
     }
 
-    fun navigateBack() {
+    open fun navigateBack() {
         findNavController().navigateUp()
     }
 

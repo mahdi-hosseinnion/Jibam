@@ -42,6 +42,8 @@ class AddCategoryListAdapter(
             "",
         )
 
+        const val DEFAULT_CATEGORY_IMAGE_POSITION = 1
+
     }
 
     val DIFF_CALLBACK = object : DiffUtil.ItemCallback<CategoryImages>() {
@@ -143,7 +145,11 @@ class AddCategoryListAdapter(
         return differ.currentList.size
     }
 
-    fun getCategoryImages(position: Int): CategoryImages = differ.currentList[position]
+    fun getCategoryImages(position: Int): CategoryImages? = try {
+        differ.currentList[position]
+    } catch (e: Exception) {
+        null
+    }
 
     fun insertCategoryImagesAt(
         transaction: CategoryImages,
@@ -228,7 +234,7 @@ class AddCategoryListAdapter(
         {
             restoreToDefaultBackground()
 
-            if (adapterPosition == 1 && currentSelectedItem == null) {
+            if (adapterPosition == DEFAULT_CATEGORY_IMAGE_POSITION && currentSelectedItem == null) {
                 //this viewHolder is the first image
                 onClickedOnItem(item)
             }
@@ -329,4 +335,5 @@ class AddCategoryListAdapter(
         fun setSelectedBackground(categoryId: Int)
 
     }
+
 }

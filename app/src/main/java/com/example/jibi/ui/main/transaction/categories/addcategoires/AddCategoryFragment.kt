@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import androidx.activity.addCallback
 import androidx.annotation.StringRes
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -15,6 +16,7 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.example.jibi.R
 import com.example.jibi.models.CategoryImages
+import com.example.jibi.ui.main.transaction.categories.addcategoires.AddCategoryListAdapter.Companion.DEFAULT_CATEGORY_IMAGE_POSITION
 import com.example.jibi.ui.main.transaction.categories.addcategoires.AddCategoryViewModel.Companion.INSERT_CATEGORY_SUCCESS_MARKER
 import com.example.jibi.ui.main.transaction.common.BaseFragment
 import com.example.jibi.ui.main.transaction.transactions.TransactionsListAdapter
@@ -75,15 +77,19 @@ constructor(
 
     private fun setupUI() {
         forceKeyBoardToOpenForEditText(edt_categoryName)
+        //add on back pressed for if user insert something
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner
+        ) {
+            checkForInsertionBeforeNavigateBack()
+        }
         /**
          * on clicks
          */
         topAppBar.setNavigationOnClickListener {
-            uiCommunicationListener.hideSoftKeyboard()
-            navigateBack()
+            checkForInsertionBeforeNavigateBack()
         }
         add_category_fab.setOnClickListener {
-            add_category_fab.isEnabled = false
             insertNewCategory()
         }
     }
@@ -104,13 +110,11 @@ constructor(
 
                 if (message == getString(R.string.unable_to_recognize_category_type_pls_return_back)
                 ) {
-                    uiCommunicationListener.hideSoftKeyboard()
                     navigateBack()
                 }
 
                 if (message == getString(R.string.category_successfully_inserted)
                 ) {
-                    uiCommunicationListener.hideSoftKeyboard()
                     navigateBack()
                 }
                 add_category_fab.isEnabled = true
@@ -226,6 +230,7 @@ constructor(
 
     private fun insertNewCategory() {
         if (isValidForInsertion()) {
+            add_category_fab.isEnabled = false
             val viewModelResponse = viewModel.insertCategory(edt_categoryName.text.toString())
 
             if (viewModelResponse != INSERT_CATEGORY_SUCCESS_MARKER) {
@@ -233,9 +238,8 @@ constructor(
                 showSnackBar(viewModelResponse)
             }
 
-        }else{
-            add_category_fab.isEnabled = true
         }
+
     }
 
     private fun isValidForInsertion(): Boolean {
@@ -261,6 +265,38 @@ constructor(
             getString(resId),
             Snackbar.LENGTH_SHORT
         ).setAnchorView(fab_submit).show()
-
     }
+
+    private fun checkForInsertionBeforeNavigateBack() {
+        if (edt_categoryName.text.toString().isNotBlank())
+            showDiscardOrSaveDialog()
+        else
+            navigateBack()
+    }
+
+    override fun navigateBack() {
+        uiCommunicationListener.hideSoftKeyboard()
+        super.navigateBack()
+    }
+
+
+    private fun showDiscardOrSaveDialog() {
+        val callback = object : DiscardOrSaveCallback {
+            override fun save() {
+                insertNewCategory()
+            }
+
+            override fun discard() {
+                navigateBack()
+            }
+
+            override fun cancel() {}
+        }
+        viewModel.addToMessageStack(
+            message = getString(R.string.you_changes_have_not_saved),
+            uiComponentType = UIComponentType.DiscardOrSaveDialog(callback),
+            messageType = MessageType.Info
+        )
+    }
+
 }
