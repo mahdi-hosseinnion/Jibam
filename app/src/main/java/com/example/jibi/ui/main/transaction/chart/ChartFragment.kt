@@ -134,10 +134,15 @@ constructor(
 //        pie_chart.setCenterText(generateCenterSpannableText())
 
         pie_chart.isDrawHoleEnabled = true
-        pie_chart.setHoleColor(Color.WHITE)
+        pie_chart.setHoleColor(getThemeAttributeColor(this.requireContext(), R.attr.colorSurface))
 
-        pie_chart.setTransparentCircleColor(Color.WHITE)
-        pie_chart.setTransparentCircleAlpha(110)
+        pie_chart.setTransparentCircleColor(
+            getThemeAttributeColor(
+                this.requireContext(),
+                R.attr.colorSurface
+            )
+        )
+        pie_chart.setTransparentCircleAlpha(50)
 
         pie_chart.holeRadius = 42f
         pie_chart.transparentCircleRadius = pie_chart.holeRadius.plus(3)
@@ -178,7 +183,12 @@ constructor(
 
 
         // entry label styling
-        pie_chart.setEntryLabelColor(Color.BLACK)
+        pie_chart.setEntryLabelColor(
+            getThemeAttributeColor(
+                this.requireContext(),
+                R.attr.colorOnSurface
+            )
+        )
 //        pie_chart.setEntryLabelTypeface(tfRegular)
         pie_chart.setEntryLabelTextSize(12f)
 

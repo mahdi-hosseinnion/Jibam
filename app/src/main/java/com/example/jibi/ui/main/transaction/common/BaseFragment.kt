@@ -3,6 +3,7 @@ package com.example.jibi.ui.main.transaction.common
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
@@ -63,7 +64,11 @@ constructor(
         }
 
     }
-
+    fun getThemeAttributeColor(context: Context, resId: Int): Int {
+        val value = TypedValue()
+        context.getTheme().resolveAttribute(resId, value, true)
+        return value.data
+    }
     open fun navigateBack() {
         findNavController().navigateUp()
     }
