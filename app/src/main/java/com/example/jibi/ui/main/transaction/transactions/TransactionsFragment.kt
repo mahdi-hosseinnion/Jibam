@@ -204,15 +204,14 @@ constructor(
                     findNavController().navigate(R.id.action_transactionFragment_to_aboutUsFragment)
                 }
             }
-            closeDrawer()
 
             return@setNavigationItemSelectedListener true
         }
     }
 
-    private fun closeDrawer() {
+    private fun closeDrawer(animate:Boolean = true) {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
-            drawer_layout.closeDrawer(GravityCompat.START,true)
+            drawer_layout.closeDrawer(GravityCompat.START,animate)
         }
     }
 
@@ -571,6 +570,8 @@ constructor(
 
     override fun onResume() {
         super.onResume()
+        closeDrawer(false)
+
         //check for calendar type
         checkForCalendarTypeChange()
         //enable backStack listener when user  navigate to next fragment or rotate screen
