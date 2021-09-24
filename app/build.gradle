@@ -16,6 +16,7 @@ android {
         targetSdkVersion 30
         versionCode 8
         versionName "1.0.7"
+        multiDexEnabled true
 
         vectorDrawables.useSupportLibrary = true // for support .svg file api < 21
 
@@ -174,4 +175,12 @@ dependencies {
     //App intro library
     //https://github.com/AppIntro/AppIntro
     implementation 'com.github.AppIntro:AppIntro:6.1.0'
+
+    // leakCanary
+    def leakCanary_version = '2.7'
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanary_version"
+    //multi dex for leakcanary
+    def multidex_version = "2.0.1"
+    implementation "androidx.multidex:multidex:$multidex_version"
+
 }

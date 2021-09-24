@@ -1,14 +1,15 @@
 package com.example.jibi
 
-import android.app.Application
-import android.content.Context
+import androidx.multidex.MultiDexApplication
 import com.example.jibi.di.AppComponent
 import com.example.jibi.di.DaggerAppComponent
 import com.example.jibi.di.main.MainComponent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
+@FlowPreview
 @ExperimentalCoroutinesApi
-class BaseApplication : Application() {
+class BaseApplication : MultiDexApplication() {
 
     lateinit var appComponent: AppComponent
 
