@@ -203,6 +203,10 @@ constructor(
         bottomSheetBehavior.isDraggable = didUserSelectCategory
         edt_money.isEnabled = didUserSelectCategory
         finalNUmber.isEnabled = didUserSelectCategory
+        bottom_sheet_close_btn.visibility = if (category == null)
+            View.GONE
+        else
+            View.VISIBLE
     }
 
     private fun setAllOfCategoriesFields(list: List<Category>) {
