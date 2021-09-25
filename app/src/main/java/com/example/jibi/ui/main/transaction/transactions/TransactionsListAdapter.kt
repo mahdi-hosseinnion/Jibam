@@ -26,7 +26,6 @@ import kotlinx.android.synthetic.main.layout_transacion_header.view.header_incom
 import kotlinx.android.synthetic.main.layout_transaction_list_item.view.*
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.random.Random
 
 
 class TransactionsListAdapter(

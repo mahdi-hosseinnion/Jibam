@@ -25,6 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="112dp"
                 android:background="?attr/colorPrimary"
+                android:elevation="0dp"
                 android:gravity="end"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -37,6 +38,8 @@
                     android:layout_height="0dp"
                     android:layout_weight="70"
                     android:background="?attr/colorPrimary"
+
+                    android:elevation="0dp"
                     android:foregroundGravity="right|center"
                     android:gravity="right|center"
                     android:hint="@string/_0"
