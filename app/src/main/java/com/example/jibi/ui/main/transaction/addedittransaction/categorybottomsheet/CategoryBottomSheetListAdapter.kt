@@ -52,8 +52,7 @@ class CategoryBottomSheetListAdapter(
             ),
             interaction = interaction,
             requestManager = requestManager,
-            packageName = packageName,
-            selectedItemId = selectedItemId
+            packageName = packageName
         )
     }
 
@@ -82,7 +81,7 @@ class CategoryBottomSheetListAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is CategoryViewHolder -> {
-                holder.bind(differ.currentList.get(position))
+                holder.bind(differ.currentList.get(position), selectedItemId)
             }
         }
     }
@@ -139,11 +138,10 @@ class CategoryBottomSheetListAdapter(
         itemView: View,
         val requestManager: RequestManager,
         private val interaction: Interaction?,
-        private val packageName: String,
-        private val selectedItemId: Int?
+        private val packageName: String
     ) : RecyclerView.ViewHolder(itemView) {
 
-        fun bind(item: Category) = with(itemView) {
+        fun bind(item: Category, selectedItemId: Int?) = with(itemView) {
             itemView.setOnClickListener {
 
                 setSelectedBackground(item.id)

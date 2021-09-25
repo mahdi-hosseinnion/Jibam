@@ -128,7 +128,7 @@ constructor(
         )
     }
 
-    fun getTransactionCategoryId(): Int? = viewState.value?.defaultTransaction?.categoryId
+    fun getTransactionCategoryId(): Int? = viewState.value?.transaction?.categoryId
 
     fun getTransactionCategoryType(): Int? = viewState.value?.transactionCategoryType
 
