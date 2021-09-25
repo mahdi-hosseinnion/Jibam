@@ -207,7 +207,31 @@ constructor(
     }
 
     private fun setDataToChartAndRecyclerView(values: List<PieChartData>) {
-        val entries = values.convertPieChartDataToPieEntry()
+        val entries = ArrayList(values.convertPieChartDataToPieEntry())
+        /**
+         * we don't want ot show many entries of pie chart b/c the pie portion would be small
+         * and messy
+         */
+        if (entries.size > CHART_MAX_COUNT_OF_DATA) {
+            //get etc values from entries
+            //we need to should make new arraylist otherwise we will get java.util.ConcurrentModificationException
+            val etc: List<PieEntry> =
+                ArrayList(
+                    entries.subList(
+                        CHART_MAX_COUNT_OF_DATA.minus(1),
+                        entries.size
+                    )
+                )
+            //remove etc values from main data
+            entries.removeAll(etc)
+            //add all of etc object values to single one and add it to entries
+            val otherEntry = PieEntry(
+                (etc.sumOf { it.value.toDouble() }).toFloat(),
+                getString(R.string.etc)
+
+            )
+            entries.add(otherEntry)
+        }
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
         // the chart.
         val chartLabel = if (currentChartState == INCOMES_STATE)
@@ -225,16 +249,17 @@ constructor(
         // add a lot of colors
         val colors = java.util.ArrayList<Int>()
         for (c in ColorTemplate.VORDIPLOM_COLORS) colors.add(c)
-        for (c in ColorTemplate.JOYFUL_COLORS) colors.add(c)
-        for (c in ColorTemplate.COLORFUL_COLORS) colors.add(c)
         for (c in ColorTemplate.LIBERTY_COLORS) colors.add(c)
+        for (c in ColorTemplate.MATERIAL_COLORS) colors.add(c)
+        for (c in ColorTemplate.COLORFUL_COLORS) colors.add(c)
+        for (c in ColorTemplate.JOYFUL_COLORS) colors.add(c)
         for (c in ColorTemplate.PASTEL_COLORS) colors.add(c)
         colors.add(ColorTemplate.getHoloBlue())
         dataSet.colors = colors
 
         val data = PieData(dataSet)
         data.setValueFormatter(PercentFormatter())
-        data.setValueTextSize(11f)
+        data.setValueTextSize(13f)
         data.setValueTextColor(resources.getColor(R.color.black))
 //        data.setValueTypeface(tfLight)
         pie_chart.data = data
@@ -318,4 +343,8 @@ constructor(
         findNavController().navigate(action)
     }
 
+    companion object {
+        /** the max count of entry in pie chart */
+        const val CHART_MAX_COUNT_OF_DATA = 8
+    }
 }
