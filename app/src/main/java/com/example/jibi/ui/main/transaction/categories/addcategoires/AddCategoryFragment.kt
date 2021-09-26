@@ -28,14 +28,11 @@ import kotlinx.android.synthetic.main.layout_category_images_list_item.view.*
 import kotlinx.android.synthetic.main.layout_toolbar_with_back_btn.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import javax.inject.Inject
 
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-class AddCategoryFragment
-@Inject
-constructor(
+class AddCategoryFragment(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager
 ) : BaseFragment(

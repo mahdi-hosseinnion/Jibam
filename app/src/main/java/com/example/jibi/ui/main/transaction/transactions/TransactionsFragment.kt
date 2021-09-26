@@ -24,7 +24,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.example.jibi.R
-import com.example.jibi.di.main.MainScope
 import com.example.jibi.models.Month
 import com.example.jibi.models.Transaction
 import com.example.jibi.models.TransactionEntity
@@ -51,15 +50,11 @@ import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt
 import uk.co.samuelwall.materialtaptargetprompt.extras.backgrounds.RectanglePromptBackground
 import uk.co.samuelwall.materialtaptargetprompt.extras.focals.RectanglePromptFocal
 import java.util.*
-import javax.inject.Inject
 import kotlin.random.Random
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-@MainScope
-class TransactionsFragment
-@Inject
-constructor(
+class TransactionsFragment(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager,
     private val currentLocale: Locale,
@@ -209,9 +204,9 @@ constructor(
         }
     }
 
-    private fun closeDrawer(animate:Boolean = true) {
+    private fun closeDrawer(animate: Boolean = true) {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
-            drawer_layout.closeDrawer(GravityCompat.START,animate)
+            drawer_layout.closeDrawer(GravityCompat.START, animate)
         }
     }
 

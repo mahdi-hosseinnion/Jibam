@@ -15,14 +15,11 @@ import kotlinx.android.synthetic.main.layout_toolbar_with_back_btn.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.util.*
-import javax.inject.Inject
 
 
 @ExperimentalCoroutinesApi
 @FlowPreview
-class SettingFragment
-@Inject
-constructor(
+class SettingFragment(
     viewModelFactory: ViewModelProvider.Factory,
     private val currentLocale: Locale,
     private val sharedPreferences: SharedPreferences,

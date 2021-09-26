@@ -34,7 +34,6 @@ import kotlinx.android.synthetic.main.toolbar_month_changer.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.util.*
-import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 
@@ -42,9 +41,7 @@ import kotlin.collections.ArrayList
 
 @ExperimentalCoroutinesApi
 @FlowPreview
-class ChartFragment
-@Inject
-constructor(
+class ChartFragment(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager,
     private val currentLocale: Locale,

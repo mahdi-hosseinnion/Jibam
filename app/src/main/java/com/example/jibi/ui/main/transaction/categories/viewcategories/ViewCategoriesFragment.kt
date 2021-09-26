@@ -23,13 +23,10 @@ import kotlinx.android.synthetic.main.fragment_view_categories.*
 import kotlinx.android.synthetic.main.layout_toolbar_with_back_btn.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import javax.inject.Inject
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-class ViewCategoriesFragment
-@Inject
-constructor(
+class ViewCategoriesFragment(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager,
     private val sharedPreferences: SharedPreferences,

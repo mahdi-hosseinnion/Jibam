@@ -15,14 +15,11 @@ import kotlinx.android.synthetic.main.fragment_about_us.*
 import kotlinx.android.synthetic.main.layout_toolbar_with_back_btn.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import javax.inject.Inject
 
 
 @ExperimentalCoroutinesApi
 @FlowPreview
-class AboutUsFragment
-@Inject
-constructor(
+class AboutUsFragment(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager
 ) : BaseFragment(
