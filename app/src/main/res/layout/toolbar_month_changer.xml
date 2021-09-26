@@ -12,6 +12,7 @@
         android:id="@+id/month_manager_previous"
         android:layout_width="48dp"
         android:layout_height="match_parent"
+        android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
         android:gravity="center"
@@ -25,6 +26,9 @@
         android:layout_height="match_parent"
         android:layout_marginStart="4dp"
         android:layout_marginEnd="4dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
         android:gravity="center"
         android:textColor="?attr/colorOnPrimary"
         android:textSize="18sp"
@@ -35,11 +39,13 @@
         android:layout_width="48dp"
         android:layout_height="match_parent"
         android:layout_marginEnd="4dp"
-        android:layout_marginRight="4dp"
+        android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
         android:gravity="center"
         android:padding="8dp"
         app:srcCompat="@drawable/ic_round_navigate_next_24"
         app:tint="?attr/colorOnPrimary" />
+
+
 </LinearLayout>
