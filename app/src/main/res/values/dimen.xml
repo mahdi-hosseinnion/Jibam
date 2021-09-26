@@ -3,5 +3,6 @@
     <dimen name="action_bar_size">56dp</dimen>
     <dimen name="categoryIconHeight">38dp</dimen>
     <dimen name="categoryIconWidth">38dp</dimen>
+    <dimen name="viewport_height_and_width">512</dimen>
 
 </resources>

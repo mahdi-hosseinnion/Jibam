@@ -1,5 +1,8 @@
 package com.example.jibi.ui.main.transaction.addedittransaction.categorybottomsheet
 
+import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -153,10 +156,6 @@ class CategoryBottomSheetListAdapter(
                 setUnSelectedBackground()
             }
 
-//            requestManager?.load(item.img_res)
-//                ?.transition(withCrossFade())
-//                ?.into(itemView.category_image)
-
             itemView.category_name.text =
                 item.getCategoryNameFromStringFile(
                     resources,
@@ -179,40 +178,51 @@ class CategoryBottomSheetListAdapter(
                 .error(R.drawable.ic_error)
                 .into(itemView.category_image)
 
-            if (item.ordering < 0)
-                itemView.pinned_marker_image.visibility = View.VISIBLE
-            else
-                itemView.pinned_marker_image.visibility = View.INVISIBLE
+
         }
 
 
         private fun setSelectedBackground(categoryId: Int) {
-            // set to selected mode
-            itemView.category_image.setBackgroundColor(
-                itemView.resources.getColor(
-                    CategoriesImageBackgroundColors.getCategoryColorById(categoryId)
-                )
-            )
+            try {
 
-            //change tint to white
-            itemView.category_image.setColorFilter(
-                itemView.resources.getColor(R.color.white),
-                android.graphics.PorterDuff.Mode.SRC_IN
-            )
+
+                val circle_drawable = itemView.category_image_frame.background as Drawable
+
+                circle_drawable?.setColorFilter(
+                    itemView.resources.getColor(
+                        CategoriesImageBackgroundColors.getCategoryColorById(categoryId)
+                    ), PorterDuff.Mode.MULTIPLY
+                )
+
+
+                //change tint to white
+                itemView.category_image.setColorFilter(
+                    itemView.resources.getColor(R.color.white),
+                    android.graphics.PorterDuff.Mode.SRC_IN
+                )
+            } catch (e: Exception) {
+                Log.e("CategoryViewHolder", "setSelectedBackground: message: ${e.message}", e)
+            }
         }
 
         private fun setUnSelectedBackground() {
-            itemView.category_image.setBackgroundColor(
-
-                itemView.resources.getColor(
-                    R.color.category_list_item_image_background_color
-                )
-            )
-            //change tint to black
-            itemView.category_image.setColorFilter(
-                itemView.resources.getColor(R.color.black),
-                android.graphics.PorterDuff.Mode.SRC_IN
-            )
+            // set to selected mode
+/*            val circle_drawable = ResourcesCompat.getDrawable(
+                itemView.resources,
+                R.drawable.shape_category_item_circle,
+                null
+            )*/
+//            itemView.category_image.setBackgroundColor(
+//
+//                itemView.resources.getColor(
+//                    R.color.category_list_item_image_background_color
+//                )
+//            )
+//            //change tint to black
+//            itemView.category_image.setColorFilter(
+//                itemView.resources.getColor(R.color.black),
+//                android.graphics.PorterDuff.Mode.SRC_IN
+//            )
         }
 
     }
