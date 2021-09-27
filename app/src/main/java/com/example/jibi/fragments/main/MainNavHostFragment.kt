@@ -6,12 +6,14 @@ import androidx.annotation.NavigationRes
 import androidx.navigation.fragment.NavHostFragment
 import com.example.jibi.ui.main.MainActivity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
 //article https://medium.com/@zawadz88/androidx-navigation-with-dagger-2-fragmentfactory-789b01b43214
 //and https://github.com/mitchtabian/Open-API-Android-App
+@FlowPreview
+@ExperimentalCoroutinesApi
 class MainNavHostFragment : NavHostFragment() {
 
-    @ExperimentalCoroutinesApi
     override fun onAttach(context: Context) {
         childFragmentManager.fragmentFactory =
             (activity as MainActivity).fragmentFactory
