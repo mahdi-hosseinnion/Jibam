@@ -186,12 +186,12 @@
         <LinearLayout
             android:id="@+id/main_standardBottomSheet"
             style="?attr/bottomSheetStyle"
-            android:clickable="true"
-            android:focusable="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/bottom_sheet_bg"
+            android:clickable="true"
             android:elevation="4dp"
+            android:focusable="true"
             android:orientation="vertical"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
@@ -288,10 +288,11 @@
                         android:id="@+id/main_bottom_sheet_search_btn"
                         android:layout_width="40dp"
                         android:layout_height="match_parent"
-                        android:visibility="visible"
+                        android:layout_marginEnd="4dp"
                         android:background="?attr/selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
+                        android:visibility="visible"
                         app:srcCompat="@drawable/ic_baseline_search_24"
                         app:tint="@color/black" />
 

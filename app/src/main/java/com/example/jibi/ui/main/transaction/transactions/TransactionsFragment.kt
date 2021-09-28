@@ -15,6 +15,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -576,6 +577,9 @@ class TransactionsFragment(
         //set bottom sheet peek height
         if (bottomSheetBehavior.state == STATE_EXPANDED)
             resetIt(1f)
+        else if (bottomSheetBehavior.state == STATE_COLLAPSED) {
+            resetIt(0f)
+        }
 
         fragment_transacion_root.viewTreeObserver.addOnGlobalLayoutListener(object :
             ViewTreeObserver.OnGlobalLayoutListener {
@@ -647,8 +651,6 @@ class TransactionsFragment(
     }
 
     private fun onBottomSheetStateChanged(newState: Int) {
-        Log.d(TAG, "onBottomSheetStateChanged: state changed to $newState ")
-
         if (STATE_EXPANDED == newState) {
             if (viewModel.isSearchVisible()) {
                 // If theres bug with search bar this line is dangerous and bugkhiz
@@ -677,28 +679,33 @@ class TransactionsFragment(
 
     }
 
+    private var bottomSheetBackGround: GradientDrawable? = null
+
     private fun onBottomSheetSlide(slideOffset: Float) {
         main_bottom_sheet_back_arrow.alpha = slideOffset
 
-        val bottomSheetBackGround = main_standardBottomSheet.background as GradientDrawable
+        bottomSheetBackGround =
+            ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.bottom_sheet_bg,
+                null
+            ) as GradientDrawable
 
-        val topHeight = (bottomSheetRadios * (1f - slideOffset))
+        val topHeight = if (slideOffset <= 1f)
+            (bottomSheetRadios * (1f - slideOffset))
+        else {
+            0f
+        }
 
         //change bottom sheet raidus
-        bottomSheetBackGround.cornerRadius = topHeight
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-            main_standardBottomSheet.background = bottomSheetBackGround
-        } else {
-            main_standardBottomSheet.setBackgroundColor(resources.getColor(R.color.white))
+        bottomSheetBackGround?.cornerRadius = topHeight
+        bottomSheetBackGround?.let {
+            main_standardBottomSheet.background = it
+            last_transacion_app_bar.background = it
         }
         //change app bar
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-            last_transacion_app_bar.background = bottomSheetBackGround
-        } else {
-            last_transacion_app_bar.setBackgroundColor(resources.getColor(R.color.white))
-        }
-//            last_transacion_app_bar.setPadding(topHeight.toInt(), 0, topHeight.toInt(), 0)
+        //            last_transacion_app_bar.setPadding(topHeight.toInt(), 0, topHeight.toInt(), 0)
         //change app bar height
         val appbarViewParams = last_transacion_app_bar.layoutParams
         appbarViewParams.height =
@@ -732,24 +739,27 @@ class TransactionsFragment(
         }
 
         main_bottom_sheet_back_arrow.alpha = slideOffset
-        val bottomSheetBackGround = main_standardBottomSheet.background as GradientDrawable
 
-        val topHeight = (bottomSheetRadios * (1f - slideOffset))
+        bottomSheetBackGround =
+            ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.bottom_sheet_bg,
+                null
+            ) as GradientDrawable
+
+        val topHeight = if (slideOffset <= 1f)
+            (bottomSheetRadios * (1f - slideOffset))
+        else {
+            0f
+        }
 
         //change bottom sheet raidus
-        bottomSheetBackGround.cornerRadius = topHeight
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-            main_standardBottomSheet.background = bottomSheetBackGround
-        } else {
-            main_standardBottomSheet.setBackgroundColor(resources.getColor(R.color.white))
+        bottomSheetBackGround?.cornerRadius = topHeight
+        bottomSheetBackGround?.let {
+            main_standardBottomSheet.background = it
+            last_transacion_app_bar.background = it
         }
-        //change app bar
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-            last_transacion_app_bar.background = bottomSheetBackGround
-        } else {
-            last_transacion_app_bar.setBackgroundColor(resources.getColor(R.color.white))
-        }
-//            last_transacion_app_bar.setPadding(topHeight.toInt(), 0, topHeight.toInt(), 0)
+        //            last_transacion_app_bar.setPadding(topHeight.toInt(), 0, topHeight.toInt(), 0)
         //change app bar height
         val appbarViewParams = last_transacion_app_bar.layoutParams
         appbarViewParams.height =
