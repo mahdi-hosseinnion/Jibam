@@ -50,6 +50,7 @@
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_cat_vegetables.xml" value="0.2916666666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_category_setting.xml" value="0.2916666666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_check_green_24dp.xml" value="0.2916666666666667" />
+        <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_delete_keyboard.xml" value="0.2916666666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_down_arrow.xml" value="0.2916666666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_endless_constellation.xml" value="0.2713541666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_error.xml" value="0.2916666666666667" />
@@ -90,6 +91,7 @@
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/layout_no_results_found_list_item.xml" value="0.2755208333333333" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/layout_toolbar_with_back_btn.xml" value="0.2755208333333333" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/layout_toolbar_with_month_changer.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/layout_transacion_header.xml" value="0.2755208333333333" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/layout_transaction_list_item.xml" value="0.2712820512820513" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/layout_view_categories_list_item.xml" value="0.2552083333333333" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/layout_viewpager_list_item.xml" value="0.2755208333333333" />
