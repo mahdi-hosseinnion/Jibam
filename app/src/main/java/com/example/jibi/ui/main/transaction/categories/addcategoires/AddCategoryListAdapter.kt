@@ -1,9 +1,12 @@
 package com.example.jibi.ui.main.transaction.categories.addcategoires
 
+import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.*
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
@@ -270,8 +273,15 @@ class AddCategoryListAdapter(
         }
 
         override fun restoreToDefaultBackground() {
+
             //set to default (gray) background
-            itemView.category_images.setBackgroundColor(itemView.resources.getColor(R.color.imageDefaultBackground))
+            val cricle_background = ResourcesCompat.getDrawable(
+                itemView.resources,
+                R.drawable.shape_category_item_circle,
+                null
+            )
+            itemView.category_images_frame.background = cricle_background
+
             //change image tint to black
             itemView.category_images.setColorFilter(
                 itemView.resources.getColor(R.color.black),
@@ -280,22 +290,27 @@ class AddCategoryListAdapter(
         }
 
         override fun setSelectedBackground(categoryId: Int) {
-            // set to selected mode
-            Log.d(TAG, "change background: $categoryId ")
-            //TODO ADD TRY
-            itemView.category_images.setBackgroundColor(
-                itemView.resources.getColor(
-                    CategoriesImageBackgroundColors.getCategoryColorById(categoryId)
+            try {
+
+
+                val circle_drawable = itemView.category_images_frame.background as Drawable
+
+                circle_drawable?.setColorFilter(
+                    itemView.resources.getColor(
+                        CategoriesImageBackgroundColors.getCategoryColorById(categoryId)
+                    ), PorterDuff.Mode.MULTIPLY
                 )
-            )
-            //change tint to white
-            itemView.category_images.setColorFilter(
-                itemView.resources.getColor(R.color.white),
-                android.graphics.PorterDuff.Mode.SRC_IN
-            )
 
+
+                //change tint to white
+                itemView.category_images.setColorFilter(
+                    itemView.resources.getColor(R.color.white),
+                    android.graphics.PorterDuff.Mode.SRC_IN
+                )
+            } catch (e: Exception) {
+                Log.e("CategoryViewHolder", "setSelectedBackground: message: ${e.message}", e)
+            }
         }
-
     }
 
     class HeaderViewHolder

@@ -134,7 +134,7 @@ class AddCategoryFragment(
     companion object {
         const val EXPENSES = 1
         const val INCOME = 2
-        const val RECYCLER_VIEW_SPAN_SIZE = 4
+        const val RECYCLER_VIEW_SPAN_SIZE = 5
     }
 
     private fun initRecyclerView() {
