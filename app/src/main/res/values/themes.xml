@@ -49,7 +49,7 @@
         <item name="android:focusable">true</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textStyle">bold</item>
-        <item name="backgroundTint">#ffffff</item>
+        <item name="backgroundTint">#F5F5F5</item>
         <item name="elevation">4dp</item>
         <item name="android:insetBottom">0dp</item>
         <item name="android:insetTop">0dp</item>
@@ -68,7 +68,7 @@
         <item name="android:focusable">true</item>
         <item name="android:textColor">@color/purple_700</item>
         <item name="android:textStyle">bold</item>
-        <item name="backgroundTint">#ffffff</item>
+        <item name="backgroundTint">#F5F5F5</item>
         <item name="elevation">4dp</item>
         <item name="android:insetBottom">0dp</item>
         <item name="android:insetTop">0dp</item>
