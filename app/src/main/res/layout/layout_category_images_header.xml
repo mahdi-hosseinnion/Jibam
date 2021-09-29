@@ -1,31 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_transaction_header"
     android:layout_width="match_parent"
-    android:layout_height="40dp"
-    android:background="@color/header_item_background"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+    android:background="#EEEEFF"
     android:padding="8dp">
 
     <TextView
         android:id="@+id/header_name"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginStart="4dp"
         android:gravity="center"
-        android:text=""
+        android:maxLines="1"
+        android:minLines="1"
         android:textColor="@color/black"
-        android:textSize="20sp"
-        tools:text="Education"
-        android:layout_marginLeft="4dp" />
-    <!--        <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/black"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />-->
+        android:textSize="18sp"
+        tools:text="Education" />
+
 </FrameLayout>
