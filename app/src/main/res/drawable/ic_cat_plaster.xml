@@ -1,0 +1,58 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="@dimen/categoryIconWidth"
+    android:height="@dimen/categoryIconHeight"
+    android:autoMirrored="true"
+    android:viewportWidth="327.2"
+    android:viewportHeight="327.2">
+    <path
+        android:fillColor="@color/category_icon_foreground"
+        android:pathData="M244.775,46m-11.6,0a11.6,11.6 0,1 1,23.2 0a11.6,11.6 0,1 1,-23.2 0" />
+    <path
+        android:fillColor="@color/category_icon_foreground"
+        android:pathData="M212.775,78m-11.6,0a11.6,11.6 0,1 1,23.2 0a11.6,11.6 0,1 1,-23.2 0" />
+    <path
+        android:fillColor="@color/category_icon_foreground"
+        android:pathData="M281.175,82.4m-11.6,0a11.6,11.6 0,1 1,23.2 0a11.6,11.6 0,1 1,-23.2 0" />
+    <path
+        android:fillColor="@color/category_icon_foreground"
+        android:pathData="M249.175,114.4m-11.6,0a11.6,11.6 0,1 1,23.2 0a11.6,11.6 0,1 1,-23.2 0" />
+    <path
+        android:fillColor="@color/category_icon_foreground"
+        android:pathData="M82.375,46m-11.6,0a11.6,11.6 0,1 1,23.2 0a11.6,11.6 0,1 1,-23.2 0" />
+    <path
+        android:fillColor="@color/category_icon_foreground"
+        android:pathData="M114.375,78m-11.6,0a11.6,11.6 0,1 1,23.2 0a11.6,11.6 0,1 1,-23.2 0" />
+    <path
+        android:fillColor="@color/category_icon_foreground"
+        android:pathData="M45.975,82.4m-11.6,0a11.6,11.6 0,1 1,23.2 0a11.6,11.6 0,1 1,-23.2 0" />
+    <path
+        android:fillColor="@color/category_icon_foreground"
+        android:pathData="M77.975,114.4m-11.6,0a11.6,11.6 0,1 1,23.2 0a11.6,11.6 0,1 1,-23.2 0" />
+    <path
+        android:fillColor="@color/category_icon_foreground"
+        android:pathData="M244.775,281.2m-11.6,0a11.6,11.6 0,1 1,23.2 0a11.6,11.6 0,1 1,-23.2 0" />
+    <path
+        android:fillColor="@color/category_icon_foreground"
+        android:pathData="M212.775,249.2m-11.6,0a11.6,11.6 0,1 1,23.2 0a11.6,11.6 0,1 1,-23.2 0" />
+    <path
+        android:fillColor="@color/category_icon_foreground"
+        android:pathData="M281.175,244.8m-11.6,0a11.6,11.6 0,1 1,23.2 0a11.6,11.6 0,1 1,-23.2 0" />
+    <path
+        android:fillColor="@color/category_icon_foreground"
+        android:pathData="M249.175,212.8m-11.6,0a11.6,11.6 0,1 1,23.2 0a11.6,11.6 0,1 1,-23.2 0" />
+    <path
+        android:fillColor="@color/category_icon_foreground"
+        android:pathData="M267.975,163.6l37.6,-37.6c28.8,-28.8 28.8,-75.6 0,-104.4c-14,-14 -32.4,-21.6 -52,-21.6c-19.6,0 -38.4,7.6 -52,21.6l-38,37.6l-37.6,-37.6c-14,-14 -32.4,-21.6 -52,-21.6c-19.6,0 -38.4,7.6 -52,21.6c-28.8,28.8 -28.8,75.6 0,104.4l37.6,37.6l-37.6,37.6c-29.2,28.8 -29.2,75.6 -0.4,104.4c14,14 32.4,21.6 52,21.6c19.6,0 38.4,-7.6 52,-21.6l37.6,-37.6l37.6,37.6c14,14 32.4,21.6 52,21.6c19.6,0 38.4,-7.6 52,-21.6c28.8,-28.8 28.8,-75.6 0,-104.4L267.975,163.6zM211.175,31.6c11.2,-11.2 26.4,-17.6 42,-17.6c16,0 30.8,6 42,17.6c23.2,23.2 23.2,61.2 0,84.4l-37.6,37.6l-84,-84.4L211.175,31.6zM31.575,116c-23.2,-23.2 -23.2,-61.2 0,-84.4c11.2,-11.2 26.4,-17.6 42,-17.6c16,0 30.8,6 42,17.6l37.6,37.6l-84,84.4L31.575,116zM115.975,295.6c-11.2,11.2 -26.4,17.6 -42,17.6c-16,0 -30.8,-6 -42,-17.6c-23.2,-23.2 -23.2,-61.2 0,-84.4l37.2,-37.6l84.4,84.4L115.975,295.6zM79.175,163.6l84.4,-84.4l84.4,84.4l-84.4,84.4L79.175,163.6zM295.575,295.6c-11.2,11.2 -26.4,17.6 -42,17.6c-16,0 -30.8,-6 -42,-17.6l-37.6,-37.6l84.4,-84.4l37.6,37.6C318.775,234.4 318.775,272.4 295.575,295.6z" />
+    <path
+        android:fillColor="@color/category_icon_foreground"
+        android:pathData="M82.375,281.2m-11.6,0a11.6,11.6 0,1 1,23.2 0a11.6,11.6 0,1 1,-23.2 0" />
+    <path
+        android:fillColor="@color/category_icon_foreground"
+        android:pathData="M114.375,249.2m-11.6,0a11.6,11.6 0,1 1,23.2 0a11.6,11.6 0,1 1,-23.2 0" />
+    <path
+        android:fillColor="@color/category_icon_foreground"
+        android:pathData="M45.975,244.8m-11.6,0a11.6,11.6 0,1 1,23.2 0a11.6,11.6 0,1 1,-23.2 0" />
+    <path
+        android:fillColor="@color/category_icon_foreground"
+        android:pathData="M77.975,212.8m-11.6,0a11.6,11.6 0,1 1,23.2 0a11.6,11.6 0,1 1,-23.2 0" />
+</vector>

@@ -1,0 +1,22 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="@dimen/categoryIconWidth"
+    android:height="@dimen/categoryIconHeight"
+    android:autoMirrored="true"
+    android:viewportWidth="74"
+    android:viewportHeight="74">
+    <path
+        android:fillColor="@color/category_icon_foreground"
+        android:pathData="m67,66h-60a5,5 0,0 1,-5 -5v-38a5,5 0,0 1,5 -5h60a5,5 0,0 1,5 5v38a5,5 0,0 1,-5 5zM7,20a3,3 0,0 0,-3 3v38a3,3 0,0 0,3 3h60a3,3 0,0 0,3 -3v-38a3,3 0,0 0,-3 -3z" />
+    <path
+        android:fillColor="@color/category_icon_foreground"
+        android:pathData="m49,20h-24a1,1 0,0 1,-1 -1v-6a5,5 0,0 1,5 -5h16a5,5 0,0 1,5 5v6a1,1 0,0 1,-1 1zM26,18h22v-5a3,3 0,0 0,-3 -3h-16a3,3 0,0 0,-3 3z" />
+    <path
+        android:fillColor="@color/category_icon_foreground"
+        android:pathData="m33.08,42h-2.46a44.21,44.21 0,0 1,-28.26 -10.23l1.28,-1.54a42.22,42.22 0,0 0,27 9.77h2.46z" />
+    <path
+        android:fillColor="@color/category_icon_foreground"
+        android:pathData="m43.38,42h-2.3v-2h2.3a42.22,42.22 0,0 0,27 -9.77l1.28,1.54a44.21,44.21 0,0 1,-28.28 10.23z" />
+    <path
+        android:fillColor="@color/category_icon_foreground"
+        android:pathData="m41.08,46.92h-8a1,1 0,0 1,-1 -1v-10a1,1 0,0 1,1 -1h8a1,1 0,0 1,1 1v10a1,1 0,0 1,-1 1zM34.08,44.92h6v-8h-6z" />
+</vector>
