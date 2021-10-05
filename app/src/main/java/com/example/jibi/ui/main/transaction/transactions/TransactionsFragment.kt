@@ -112,7 +112,8 @@ class TransactionsFragment(
             viewLifecycleOwner,
             backStackForBottomSheet
         )
-        topAppBar.navigationIcon = resources.getDrawable(R.drawable.ic_round_menu_24)
+        topAppBar.navigationIcon =
+            ResourcesCompat.getDrawable(resources, R.drawable.ic_round_menu_24, null)
 
         topAppBar.setNavigationOnClickListener {
             drawer_layout.open()

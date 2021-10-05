@@ -3,7 +3,6 @@
     <string name="expenses">هزینه ها</string>
     <string name="income">درآمد ها</string>
     <string name="create_new_transaction">ایجاد تراکنش جدید</string>
-    <string name="write_note">یادداشت بگذارید</string>
     <string name="yesterday">دیروز</string>
     <string name="cash">پول نقد</string>
     <string name="with">به همراه</string>
