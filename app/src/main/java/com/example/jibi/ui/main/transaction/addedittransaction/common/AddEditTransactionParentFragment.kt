@@ -103,7 +103,7 @@ constructor(
             edt_money.inputType = InputType.TYPE_NULL // Disable standard keyboard
             edt_money.onTouchEvent(motionEvent)               // Call native handler
             edt_money.inputType = inType // Restore input type
-
+            view.performClick()
             return@setOnTouchListener true // Consume touch event
         }
         edt_money.setOnClickListener {

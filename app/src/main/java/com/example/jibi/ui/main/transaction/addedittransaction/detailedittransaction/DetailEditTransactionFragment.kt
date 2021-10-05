@@ -293,8 +293,8 @@ constructor(
     }
 
     override fun onMoneyEditTextFocusChanged(hasFocus: Boolean) {
-        if (hasFocus)
-            viewModel.setPresenterState(EnteringAmountOfMoneyState)
+//        if (hasFocus)
+//            viewModel.setPresenterState(EnteringAmountOfMoneyState)
     }
 
     override fun onClickedOnMoneyEditText() {
@@ -322,7 +322,7 @@ constructor(
     }
 
     override fun onBottomSheetStateChanged(newState: Int) {
-        if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+        if (newState == BottomSheetBehavior.STATE_HIDDEN && viewModel.getTransactionCategoryId() != null) {
             //bottomSheet slide animation stuff stuff
             if (edt_money.text.toString().isBlank()) {
                 viewModel.setPresenterState(EnteringAmountOfMoneyState)
