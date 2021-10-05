@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_transaction_item"
     android:layout_width="match_parent"
-    android:layout_height="56dp"
+    android:layout_height="64dp"
     android:orientation="horizontal"
     android:paddingLeft="4dp"
 
@@ -27,8 +27,8 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView_view_category"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_gravity="center"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
@@ -38,7 +38,7 @@
         android:layout_marginBottom="8dp"
         android:foregroundGravity="center"
         app:cardBackgroundColor="@color/background_gray"
-        card_view:cardCornerRadius="20dp">
+        card_view:cardCornerRadius="24dp">
 
         <ImageView
             android:id="@+id/category_image"
@@ -46,8 +46,9 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:padding="8dp"
+            android:elevation="2dp"
             android:scaleType="center"
-            app:tint="@color/black" />
+            app:tint="@color/white" />
         <!--        best size 24-->
         <!--            tools:srcCompat="@drawable/ic_cat_travel"/>-->
         <!--            app:tint="@color/black" />-->

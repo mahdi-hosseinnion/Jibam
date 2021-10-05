@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_chart_item"
     android:layout_width="match_parent"
-    android:layout_height="56dp"
+    android:layout_height="64dp"
     android:background="?attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
@@ -14,15 +14,12 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_gravity="center"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="12dp"
-
-        android:layout_marginRight="12dp"
         android:layout_marginBottom="8dp"
         android:foregroundGravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -30,13 +27,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         card_view:cardBackgroundColor="#D297EA"
-        card_view:cardCornerRadius="20dp">
+        card_view:cardCornerRadius="24dp">
 
         <ImageView
             android:id="@+id/category_img"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
+            android:elevation="2dp"
             android:padding="8dp"
             android:scaleType="center"
             app:tint="@color/black" />
