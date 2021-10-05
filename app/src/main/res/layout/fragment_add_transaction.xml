@@ -107,25 +107,57 @@
                     android:layout_height="match_parent">
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/txtField_date"
+                        android:id="@+id/txtField_date_holder"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="56dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="32dp"
                         android:layout_marginEnd="8dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
                         android:hint="@string/date"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/txtField_time_holder"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/edt_date"
+                            android:id="@+id/edt_date_sp"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center|start"
                             android:clickable="true"
                             android:focusable="true"
+                            android:gravity="center|start"
+                            android:inputType="none"
+                            android:padding="8dp"
+                            android:textSize="16sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/txtField_time_holder"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="56dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:hint="@string/time"
+                        app:layout_constraintBottom_toBottomOf="@+id/txtField_date_holder"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/txtField_date_holder"
+                        app:layout_constraintTop_toTopOf="@+id/txtField_date_holder">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edt_time"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center|start"
+                            android:clickable="true"
+                            android:focusable="true"
+
                             android:gravity="center|start"
                             android:inputType="none"
                             android:padding="8dp"
@@ -139,14 +171,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginBottom="8dp"
                         android:hint="@string/write_note"
-
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-
-                        app:layout_constraintTop_toBottomOf="@+id/txtField_date"
+                        app:layout_constraintTop_toBottomOf="@+id/txtField_date_holder"
                         app:layout_constraintVertical_bias="0.0">
 
                         <com.google.android.material.textfield.TextInputEditText

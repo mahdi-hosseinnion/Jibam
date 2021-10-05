@@ -4,12 +4,9 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.SharedPreferences
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.text.*
-import android.text.method.LinkMovementMethod
-import android.text.style.ClickableSpan
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -116,6 +113,12 @@ constructor(
         transaction_detail_container.setOnClickListener {
             onClickedOnEmptyOfDetailContainer()
         }
+        edt_date_sp.setOnClickListener {
+            onClickedOnDate()
+        }
+        edt_time.setOnClickListener {
+            onClickedOnTime()
+        }
         uiCommunicationListener.hideSoftKeyboard()
         setupCategoryBottomSheet()
     }
@@ -166,59 +169,16 @@ constructor(
     }
 
     fun setDateToEditTexts(unixTimeInMillis: Long) {
-        disableContentInteraction(edt_date)
+        disableContentInteraction(edt_date_sp)
+        disableContentInteraction(edt_time)
 
         val date = dateWithPattern(unixTimeInMillis)
         val time = timeWithPattern(unixTimeInMillis)
-        val spaceBetweenDateAndTime = "   "
-        val ss = SpannableString("$date$spaceBetweenDateAndTime$time")
 
+        edt_date_sp.setText(date)
+        edt_time.setText(time)
 
-        //set onClick to date and show DatePicker
-        val dateOnClick = onClickedOnSpan(textColor = edt_date.currentTextColor) {
-            onClickedOnDate()
-        }
-        val dateEndIndex = date.length
-        ss.setSpan(
-            dateOnClick,
-            0,
-            dateEndIndex,
-            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        //set onClick to time and show timePicker
-        val timeOnClick = onClickedOnSpan(textColor = edt_date.currentTextColor) {
-            onClickedOnTime()
-        }
-        var timeStartIndex = dateEndIndex.plus(spaceBetweenDateAndTime.length)
-
-        if (timeStartIndex < dateEndIndex)
-            timeStartIndex = dateEndIndex
-        ss.setSpan(
-            timeOnClick,
-            timeStartIndex,
-            ss.lastIndex.plus(1),
-            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        //some customization
-        edt_date.setText(ss)
-        edt_date.movementMethod = LinkMovementMethod.getInstance()
-        edt_date.highlightColor = Color.TRANSPARENT
     }
-
-    private fun onClickedOnSpan(textColor: Int, onClicked: (v: View) -> Unit): ClickableSpan =
-        object : ClickableSpan() {
-            override fun onClick(p0: View) {
-                onClicked(p0)
-            }
-
-            override fun updateDrawState(ds: TextPaint) {
-                super.updateDrawState(ds)
-                //remove under line and background color
-                ds.isUnderlineText = false
-                //this line cause fail during rotation so we get text color every time
-                ds.color = textColor
-            }
-        }
 
     fun showDatePickerDialog(calender: GregorianCalendar) {
         val calendarType = sharedPreferences.getString(

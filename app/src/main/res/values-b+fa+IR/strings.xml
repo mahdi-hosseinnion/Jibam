@@ -22,6 +22,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">سلام این یک فرگنت خالیه!</string>
     <string name="date">تاریخ</string>
+    <string name="time">زمان</string>
     <string name="memo">یادداشت</string>
     <string name="details">جزئیات</string>
     <string name="add_transaction">ایجاد تراکنش جدید</string>
