@@ -24,12 +24,10 @@ constructor(
     private val TAG = "BaseTransactionFragment"
 
     lateinit var uiCommunicationListener: UICommunicationListener
-    lateinit var _View: View
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         showProgressBar(false)
-        _View = view
         handleLoading()
         handleStateMessages()
     }
