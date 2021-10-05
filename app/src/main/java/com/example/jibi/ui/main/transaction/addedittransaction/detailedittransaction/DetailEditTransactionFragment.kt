@@ -66,8 +66,6 @@ constructor(
     private fun setupUi() {
         topAppBar.title = getString(R.string.details)
 
-        setHasOptionsMenu(true)
-
         //add backstack listener for discard dialog
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
@@ -75,6 +73,12 @@ constructor(
         )
         topAppBar.setNavigationOnClickListener {
             backStackForDialog.handleOnBackPressed()
+        }
+        topAppBar_img_btn.visibility = View.VISIBLE
+
+        topAppBar_img_btn.setOnClickListener {
+            checkForDelete(viewModel.getDefaultTransaction()?.id)
+
         }
 
         lifecycleScope.launchWhenStarted {
@@ -337,20 +341,6 @@ constructor(
         //on category changed
         viewModel.setTransactionCategory(item)
         viewModel.setPresenterState(NoneState)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.delete_menu, menu)
-
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.delete_transaction) {
-            //delete stuff
-            checkForDelete(viewModel.getDefaultTransaction()?.id)
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     private fun checkForDelete(transactionId: Int?) {
