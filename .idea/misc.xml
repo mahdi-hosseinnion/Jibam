@@ -5,6 +5,7 @@
       <map>
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable-anydpi/ic_delete_.xml" value="0.2916666666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/bg_summery_money.xml" value="0.2713541666666667" />
+        <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_app_logo_svg.xml" value="0.28717948717948716" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_baseline_close_24.xml" value="0.2916666666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_baseline_navigate_before_24.xml" value="0.2916666666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_baseline_navigate_next_24.xml" value="0.2916666666666667" />
@@ -130,6 +131,7 @@
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/menu/delete_menu.xml" value="0.2755208333333333" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/menu/navigation_drawer_menu.xml" value="0.2755208333333333" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2916666666666667" />
+        <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.28717948717948716" />
       </map>
     </option>
   </component>
