@@ -78,6 +78,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.test:core-ktx:1.4.0'
     // -------- INSTRUMENTATION TESTS (use JUnit4)
     androidTestImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

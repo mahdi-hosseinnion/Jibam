@@ -1,9 +1,13 @@
 package com.ssmmhh.jibam.ui
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.content.res.Resources
+import androidx.test.core.app.ApplicationProvider
 import com.ssmmhh.jibam.ui.main.transaction.common.MonthManger
 import com.ssmmhh.jibam.util.DateUtils.gregorianToUnixTimestamp
 import com.ssmmhh.jibam.util.DateUtils.shamsiToUnixTimeStamp
+import com.ssmmhh.jibam.util.PreferenceKeys
 import com.ssmmhh.jibam.util.mahdiLog
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.params.ParameterizedTest
@@ -17,7 +21,11 @@ class MonthMangerTest {
     private val testLocale = Locale("en", "IR")
 
     //system under test
-    private val monthManager = MonthManger(testLocale, Resources.getSystem())
+    val sharedPref: SharedPreferences =
+        ApplicationProvider.getApplicationContext<Context>()?.getSharedPreferences(
+            PreferenceKeys.APP_MAIN_PREFERENCES, Context.MODE_PRIVATE
+        )!!
+    private val monthManager = MonthManger(testLocale, Resources.getSystem(), sharedPref)
 
     @ParameterizedTest
     @ValueSource(
