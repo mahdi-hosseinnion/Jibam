@@ -193,13 +193,13 @@ constructor(
 
     fun getMonthName(timeStamp: Long = _fromDate.value): String {
         val name = if (sharedPreferences.isCalendarSolar(currentLocale)) {
-            getShamsiMonthName(timeStamp) + " " + _resources.getString(R.string.month)
+            getShamsiMonthName(timeStamp)
         } else {
             getGeorgianMonthName(timeStamp)
         }
         return if (getYear() != getYear(System.currentTimeMillis())) {
             //if month is not in this year
-            name + " " + getYear().toString().localizeNumber(_resources)
+            name + "\n" + getYear().toString().localizeNumber(_resources)
         } else name
     }
 
