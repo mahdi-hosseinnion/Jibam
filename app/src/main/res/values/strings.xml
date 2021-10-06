@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Jibi</string>
+    <string name="app_name">Jibam</string>
     <string name="expenses">Expenses</string>
     <string name="income">Income</string>
     <string name="create_new_transaction">Create New Transaction</string>
@@ -273,7 +273,7 @@
     <string name="sunday">Sun</string>
 <!--    https://github.com/alirezaafkar/SunDatePicker/blob/master/sundatepicker/src/main/res/values/strings.xml-->
     <string name="ok_btn">OK</string>
-    <string name="cancel_btn">cancel</string>
+    <string name="cancel_btn">Cancel</string>
     <string name="today">Today</string>
     <string name="calendar">Calendar</string>
     <string name="solar_hijri">Solar Hijri</string>

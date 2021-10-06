@@ -13,7 +13,7 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "com.example.jibi"
+        applicationId "com.ssmmhh.jibam"
         minSdkVersion 17
         targetSdkVersion 30
         versionCode 10

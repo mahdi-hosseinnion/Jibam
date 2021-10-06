@@ -10,7 +10,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"
-        android:name="com.example.jibi.fragments.main.MainNavHostFragment"
+        android:name="com.ssmmhh.jibam.fragments.main.MainNavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:defaultNavHost="true"

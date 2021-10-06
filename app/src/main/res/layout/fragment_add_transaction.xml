@@ -191,7 +191,7 @@
                             android:minLines="2" />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.example.jibi.util.CalculatorKeyboard
+                    <com.ssmmhh.jibam.util.CalculatorKeyboard
                         android:id="@+id/keyboard"
                         android:layout_width="match_parent"
                         android:layout_height="300dp"
