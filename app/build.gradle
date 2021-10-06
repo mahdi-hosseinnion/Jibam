@@ -16,8 +16,8 @@ android {
         applicationId "com.example.jibi"
         minSdkVersion 17
         targetSdkVersion 30
-        versionCode 9
-        versionName "1.0.8"
+        versionCode 10
+        versionName "1.0.9"
         multiDexEnabled true
 
         vectorDrawables.useSupportLibrary = true // for support .svg file api < 21
