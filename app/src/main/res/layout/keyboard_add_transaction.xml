@@ -7,16 +7,10 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <View
-            android:id="@+id/padding"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?attr/colorPrimary" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#D2D2D4"
+            android:background="@color/calculator_keyboard_background"
             android:orientation="horizontal"
             android:paddingLeft="8dp"
             android:paddingTop="4dp"
