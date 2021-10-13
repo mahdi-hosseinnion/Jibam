@@ -123,7 +123,12 @@ constructor(
         setupCategoryBottomSheet()
     }
 
-
+    override fun onPause() {
+        super.onPause()
+        if (edt_money.hasFocus()){
+            edt_money.clearFocus()
+        }
+    }
     private fun setupBottomSheet() {
 
         bottomSheetBehavior = BottomSheetBehavior.from(select_category_bottom_sheet)
