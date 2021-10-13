@@ -190,7 +190,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/bottom_sheet_bg"
             android:clickable="true"
-            android:elevation="4dp"
+            android:elevation="6dp"
             android:focusable="true"
             android:orientation="vertical"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
