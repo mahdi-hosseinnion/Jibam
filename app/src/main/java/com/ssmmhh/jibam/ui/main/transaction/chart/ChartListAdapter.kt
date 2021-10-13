@@ -16,7 +16,6 @@ import com.ssmmhh.jibam.util.separate3By3
 import kotlinx.android.synthetic.main.layout_chart_list_item.view.*
 import kotlinx.android.synthetic.main.layout_transaction_list_item.view.*
 import kotlinx.android.synthetic.main.layout_transaction_list_item.view.cardView
-import java.lang.Exception
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.absoluteValue
@@ -92,6 +91,7 @@ class ChartListAdapter(
             itemView.setOnClickListener {
                 interaction?.onItemSelected(adapterPosition, item)
             }
+            txt_date.visibility = View.GONE
 
             category_name.text = item.getCategoryNameFromStringFile(
                 _resources,
@@ -110,9 +110,9 @@ class ChartListAdapter(
                 "drawable",
                 packageName
             )
-            try{
+            try {
                 itemView.cardView.setCardBackgroundColor((colors[adapterPosition]))
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 itemView.cardView.setCardBackgroundColor(resources.getColor(R.color.category_list_item_image_background_color))
             }
 

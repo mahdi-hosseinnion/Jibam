@@ -113,7 +113,7 @@ class DetailChartListAdapter(
                 itemView.category_name.text = item.memo
             }
             sumOfMoney.text = abs(item.money).toString().localizeNumber(resources)
-
+            txt_date.visibility = View.VISIBLE
             txt_date.text = dateWithPattern(item.date)
 
             setOnClickListener {
