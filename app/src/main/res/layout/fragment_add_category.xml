@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:id="@+id/add_category_fragment_root"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.main.transaction.categories.addcategoires.AddCategoryFragment">
 
@@ -34,10 +35,8 @@
                     android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:layout_marginStart="8dp"
-                    android:layout_marginLeft="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="12dp"
-                    android:layout_marginRight="12dp"
                     android:layout_marginBottom="8dp"
                     android:foregroundGravity="center"
                     card_view:cardBackgroundColor="#D297EA"
@@ -45,14 +44,13 @@
 
                     <ImageView
                         android:id="@+id/category_image"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:layout_gravity="center"
-                        android:padding="8dp"
-                        android:scaleType="center" />
-                    <!--        best size 24-->
-                    <!--            tools:srcCompat="@drawable/ic_cat_travel"/>-->
-                    <!--            app:tint="@color/black" />-->
+                        android:layout_margin="8dp"
+                        android:elevation="2dp"
+                        android:scaleType="center"
+                        app:tint="@color/black" />
                 </androidx.cardview.widget.CardView>
 
                 <androidx.appcompat.widget.AppCompatEditText
@@ -72,8 +70,8 @@
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:layout_width="wrap_content"
         android:id="@+id/add_category_fab"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
