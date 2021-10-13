@@ -2,11 +2,13 @@ package com.ssmmhh.jibam.ui.main.transaction.categories.addcategoires
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.activity.addCallback
 import androidx.annotation.StringRes
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
@@ -77,6 +79,11 @@ class AddCategoryFragment(
             viewLifecycleOwner
         ) {
             checkForInsertionBeforeNavigateBack()
+        }
+        edt_categoryName.addTextChangedListener {
+            if (!add_category_fab.isShown) {
+                add_category_fab.show()
+            }
         }
         /**
          * on clicks
