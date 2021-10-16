@@ -88,7 +88,7 @@ class AddCategoryFragment(
         /**
          * on clicks
          */
-        topAppBar.setNavigationOnClickListener {
+        topAppBar_normal.setNavigationOnClickListener {
             checkForInsertionBeforeNavigateBack()
         }
         add_category_fab.setOnClickListener {
@@ -195,7 +195,7 @@ class AddCategoryFragment(
     }
 
     private fun setCategoryTypeToolbar(categoryType: Int) {
-        topAppBar.title =
+        topAppBar_normal.title =
             if (categoryType == EXPENSES_TYPE_MARKER)
                 getString(R.string.add_expenses_category)
             else if (categoryType == INCOME_TYPE_MARKER)

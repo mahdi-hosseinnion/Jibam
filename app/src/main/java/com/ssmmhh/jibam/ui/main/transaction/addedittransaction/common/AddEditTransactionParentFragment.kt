@@ -16,6 +16,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.text.TextUtilsCompat
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.lifecycleScope
@@ -76,7 +77,8 @@ constructor(
 
     private fun initUi() {
         fab_submit.text = getString(fab_text)
-        fab_submit.icon = resources.getDrawable(R.drawable.ic_check_green_24dp)
+        fab_submit.icon =
+            ResourcesCompat.getDrawable(resources, R.drawable.ic_check_green_24dp, requireContext().theme)
 
         edt_money.addTextChangedListener(onTextChangedListener)
 

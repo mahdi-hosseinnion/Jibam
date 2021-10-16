@@ -1,5 +1,6 @@
 package com.ssmmhh.jibam
 
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDexApplication
 import com.ssmmhh.jibam.di.AppComponent
 import com.ssmmhh.jibam.di.DaggerAppComponent
@@ -19,6 +20,7 @@ class BaseApplication : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
         initAppComponent()
     }
 

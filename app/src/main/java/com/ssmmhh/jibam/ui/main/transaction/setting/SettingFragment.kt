@@ -30,12 +30,12 @@ class SettingFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        topAppBar.title = getString(R.string.setting)
+        topAppBar_normal.title = getString(R.string.setting)
         initUi()
     }
 
     private fun initUi() {
-        topAppBar.setNavigationOnClickListener {
+        topAppBar_normal.setNavigationOnClickListener {
             navigateBack()
         }
 

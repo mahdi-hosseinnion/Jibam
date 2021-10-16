@@ -64,8 +64,8 @@ constructor(
             backStackForDialog
         )
         showCustomKeyboard(edt_money)
-        topAppBar.title = getString(R.string.add_transaction)
-        topAppBar.setNavigationOnClickListener {
+        topAppBar_normal.title = getString(R.string.add_transaction)
+        topAppBar_normal.setNavigationOnClickListener {
             backStackForDialog.handleOnBackPressed()
         }
         /**

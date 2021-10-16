@@ -11,12 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.RequestManager
-import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.models.PieChartData
-import com.ssmmhh.jibam.ui.main.transaction.chart.ChartFragment.ChartState.*
-import com.ssmmhh.jibam.ui.main.transaction.common.BaseFragment
-import com.ssmmhh.jibam.util.Constants.EXPENSES_TYPE_MARKER
-import com.ssmmhh.jibam.util.Constants.INCOME_TYPE_MARKER
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.Entry
@@ -28,8 +22,15 @@ import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.utils.MPPointF
+import com.ssmmhh.jibam.R
+import com.ssmmhh.jibam.models.PieChartData
+import com.ssmmhh.jibam.ui.main.transaction.chart.ChartFragment.ChartState.*
+import com.ssmmhh.jibam.ui.main.transaction.common.BaseFragment
+import com.ssmmhh.jibam.util.Constants.EXPENSES_TYPE_MARKER
+import com.ssmmhh.jibam.util.Constants.INCOME_TYPE_MARKER
 import kotlinx.android.synthetic.main.fragment_chart.*
 import kotlinx.android.synthetic.main.layout_toolbar_with_back_btn.*
+import kotlinx.android.synthetic.main.layout_toolbar_with_month_changer.*
 import kotlinx.android.synthetic.main.toolbar_month_changer.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -69,7 +70,7 @@ class ChartFragment(
         initPieChart()
         subscribeObservers()
 
-        topAppBar.setNavigationOnClickListener {
+        topAppBar_month.setNavigationOnClickListener {
             navigateBack()
         }
         toolbar_month.setOnClickListener {
@@ -98,11 +99,11 @@ class ChartFragment(
 
     private fun refreshChart() {
         val category_type_marker = if (currentChartState == INCOMES_STATE) {
-            topAppBar.title = getString(R.string.income_chart_title)
+            topAppBar_month.title = getString(R.string.income_chart_title)
 
             INCOME_TYPE_MARKER
         } else {
-            topAppBar.title = getString(R.string.expenses_chart_title)
+            topAppBar_month.title = getString(R.string.expenses_chart_title)
 
             EXPENSES_TYPE_MARKER
         }

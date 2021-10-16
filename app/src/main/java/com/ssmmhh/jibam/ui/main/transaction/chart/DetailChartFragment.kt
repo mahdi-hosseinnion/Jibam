@@ -49,9 +49,9 @@ class DetailChartFragment(
     }
 
     private fun setupUi() {
-        topAppBar.title = args.categoryName.replaceFirstChar { it.uppercase() }
+        topAppBar_normal.title = args.categoryName.replaceFirstChar { it.uppercase() }
 
-        topAppBar.setNavigationOnClickListener {
+        topAppBar_normal.setNavigationOnClickListener {
             navigateBack()
         }
     }

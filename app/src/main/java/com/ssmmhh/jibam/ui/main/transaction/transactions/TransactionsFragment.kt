@@ -24,6 +24,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.*
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.models.Month
 import com.ssmmhh.jibam.models.Transaction
@@ -38,11 +40,9 @@ import com.ssmmhh.jibam.util.PreferenceKeys.APP_CALENDAR_PREFERENCE
 import com.ssmmhh.jibam.util.PreferenceKeys.PROMOTE_FAB_TRANSACTION_FRAGMENT
 import com.ssmmhh.jibam.util.PreferenceKeys.PROMOTE_MONTH_MANGER
 import com.ssmmhh.jibam.util.PreferenceKeys.PROMOTE_SUMMERY_MONEY
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetBehavior.*
 import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.android.synthetic.main.fragment_transaction.view.*
-import kotlinx.android.synthetic.main.layout_toolbar_with_back_btn.*
+import kotlinx.android.synthetic.main.layout_toolbar_with_month_changer.*
 import kotlinx.android.synthetic.main.toolbar_month_changer.*
 import kotlinx.android.synthetic.main.toolbar_month_changer.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -112,10 +112,10 @@ class TransactionsFragment(
             viewLifecycleOwner,
             backStackForBottomSheet
         )
-        topAppBar.navigationIcon =
-            ResourcesCompat.getDrawable(resources, R.drawable.ic_round_menu_24, null)
+        topAppBar_month.navigationIcon =
+            ResourcesCompat.getDrawable(resources, R.drawable.ic_round_menu_24, requireContext().theme)
 
-        topAppBar.setNavigationOnClickListener {
+        topAppBar_month.setNavigationOnClickListener {
             drawer_layout.open()
 //            uiCommunicationListener.openDrawerMenu()
         }

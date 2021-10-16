@@ -68,8 +68,8 @@ class ViewCategoriesFragment(
     }
 
     private fun setupUi() {
-        topAppBar.title = getString(R.string.category_setting)
-        topAppBar.setNavigationOnClickListener {
+        topAppBar_normal.title = getString(R.string.category_setting)
+        topAppBar_normal.setNavigationOnClickListener {
             navigateBack()
         }
         //set titles

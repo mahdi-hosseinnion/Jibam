@@ -34,11 +34,11 @@ class AboutUsFragment(
     }
 
     private fun initUi() {
-        topAppBar.title = getString(R.string.about)
+        topAppBar_normal.title = getString(R.string.about)
         version_name.text = getVersionName()?.let {
             getString(R.string.version) + ": ${it.localizeNumber(resources)}"
         }
-        topAppBar.setNavigationOnClickListener {
+        topAppBar_normal.setNavigationOnClickListener {
             navigateBack()
         }
     }

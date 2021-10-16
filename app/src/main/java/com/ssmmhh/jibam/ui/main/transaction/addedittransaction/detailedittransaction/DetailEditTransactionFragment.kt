@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.bumptech.glide.RequestManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.models.Category
 import com.ssmmhh.jibam.models.Transaction
@@ -20,7 +21,6 @@ import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.common.AddEditTra
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionPresenterState
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionPresenterState.*
 import com.ssmmhh.jibam.util.*
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
 import kotlinx.android.synthetic.main.layout_toolbar_with_back_btn.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -61,14 +61,14 @@ constructor(
     }
 
     private fun setupUi() {
-        topAppBar.title = getString(R.string.details)
+        topAppBar_normal.title = getString(R.string.details)
 
         //add backstack listener for discard dialog
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             backStackForDialog
         )
-        topAppBar.setNavigationOnClickListener {
+        topAppBar_normal.setNavigationOnClickListener {
             backStackForDialog.handleOnBackPressed()
         }
         topAppBar_img_btn.visibility = View.VISIBLE
@@ -86,7 +86,7 @@ constructor(
                 .collect {
                     Log.d("DetailEditTransactionVi", "setupUi: $it ")
                     backStackForDialog.isEnabled = it
-                    topAppBar.title = if (it) {
+                    topAppBar_normal.title = if (it) {
                         fab_submit.show()
                         getString(R.string.edit_transaction)
                     } else {
