@@ -118,6 +118,7 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:hint="@string/date"
+                        app:boxStrokeColor="@color/edit_text_outline_color"
                         app:layout_constraintEnd_toStartOf="@+id/txtField_time_holder"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
@@ -145,6 +146,7 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:hint="@string/time"
+                        app:boxStrokeColor="@color/edit_text_outline_color"
                         app:layout_constraintBottom_toBottomOf="@+id/txtField_date_holder"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/txtField_date_holder"
@@ -175,6 +177,7 @@
                         android:layout_marginEnd="8dp"
                         android:layout_marginBottom="8dp"
                         android:hint="@string/note"
+                        app:boxStrokeColor="@color/edit_text_outline_color"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/txtField_date_holder"
