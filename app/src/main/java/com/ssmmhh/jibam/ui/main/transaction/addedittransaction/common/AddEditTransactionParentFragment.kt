@@ -289,6 +289,7 @@ constructor(
         edt.isFocusableInTouchMode = true
         edt.isCursorVisible = true
         edt.requestFocus()
+        edt.setSelection(edt.text.length)
     }
 
     fun disableContentInteraction(edt: EditText) {
