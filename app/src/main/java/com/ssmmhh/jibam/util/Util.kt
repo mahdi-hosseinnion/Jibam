@@ -63,7 +63,10 @@ private fun separate3By3_(money1: Double, locale: Locale): String {
         formatter.format(money)
 }
 
-fun localizeDoubleNumber(money1: Double, locale: Locale): String {
+fun localizeDoubleNumber(money1: Double?, locale: Locale): String? {
+    if (money1 == null) {
+        return null
+    }
     var money = money1
     if (money < 0.0) {
         money *= -1.0

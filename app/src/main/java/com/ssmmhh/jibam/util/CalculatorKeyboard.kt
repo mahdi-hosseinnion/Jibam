@@ -290,13 +290,15 @@ class CalculatorKeyboard(
 
     fun preloadKeyboard(value: String) {
         try {
-            val value1 = value.localizeNumber(resources)
+            //remove scientific notion like 'E' in double
+            val bigDecimal = value.toBigDecimalOrNull()?.toPlainString() ?: return
+            val localizedValue = bigDecimal.localizeNumber(resources)
             //clear last text
             inputConnection!!.clearText()
             text.clear()
             //add current text
-            inputConnection!!.commitText(value1, 1)
-            text.append(value)
+            inputConnection!!.commitText(localizedValue, 1)
+            text.append(bigDecimal)
         } catch (e: NullPointerException) {
             Log.e(TAG, "preloadKeyboard : cannot set text to inputConnection", e)
         } catch (e: Exception) {

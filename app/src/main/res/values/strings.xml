@@ -286,4 +286,5 @@
     <string name="time">Time</string>
     <string name="category_image">Category image</string>
     <string name="close_category_list">Close category list</string>
+    <string name="invalid_number_error">Invalid number</string>
 </resources>

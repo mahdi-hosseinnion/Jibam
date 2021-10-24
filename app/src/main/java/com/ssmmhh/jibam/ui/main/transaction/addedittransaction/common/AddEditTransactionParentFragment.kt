@@ -7,6 +7,7 @@ import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.text.*
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -78,7 +79,11 @@ constructor(
     private fun initUi() {
         fab_submit.text = getString(fab_text)
         fab_submit.icon =
-            ResourcesCompat.getDrawable(resources, R.drawable.ic_check_green_24dp, requireContext().theme)
+            ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.ic_check_green_24dp,
+                requireContext().theme
+            )
 
         edt_money.addTextChangedListener(onTextChangedListener)
 
@@ -127,10 +132,11 @@ constructor(
 
     override fun onPause() {
         super.onPause()
-        if (edt_money.hasFocus()){
+        if (edt_money.hasFocus()) {
             edt_money.clearFocus()
         }
     }
+
     private fun setupBottomSheet() {
 
         bottomSheetBehavior = BottomSheetBehavior.from(select_category_bottom_sheet)
@@ -394,14 +400,16 @@ constructor(
 
             if (text.indexOfAny(chars = listOfNumbers()) >= 0) {
                 val calculatedResult = textCalculator.calculateResult(text)
-
                 val finalNumberText =
-                    localizeDoubleNumber(calculatedResult.toDouble(), currentLocale)
+                    localizeDoubleNumber(calculatedResult.toDoubleOrNull(), currentLocale)
 
-                finalNUmber.text =
-                    if (finalNumberText == edt_money.text.toString().removeOperationSigns()) ""
-                    else finalNumberText
-
+                if (finalNumberText == null) {
+                    finalNUmber.text = getString(R.string.invalid_number_error)
+                } else {
+                    finalNUmber.text =
+                        if (finalNumberText == edt_money.text.toString().removeOperationSigns()) ""
+                        else finalNumberText
+                }
             } else {
                 finalNUmber.text = ""
 
