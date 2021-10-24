@@ -35,6 +35,8 @@
                 android:layout_height="112dp"
                 android:layout_margin="16dp"
                 android:background="@drawable/bg_summery_money"
+                android:elevation="4dp"
+
                 android:orientation="horizontal"
                 android:weightSum="30"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -188,6 +190,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/bottom_sheet_bg"
             android:clickable="true"
+            android:elevation="6dp"
             android:focusable="true"
             android:orientation="vertical"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
@@ -319,6 +322,7 @@
             android:layout_gravity="end|bottom"
             android:layout_margin="16dp"
             android:contentDescription="@string/create_new_transaction"
+            android:elevation="6dp"
             app:srcCompat="@drawable/ic_round_add_24" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

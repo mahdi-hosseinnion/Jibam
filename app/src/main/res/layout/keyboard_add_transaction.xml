@@ -5,172 +5,166 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:background="?attr/colorPrimary"
+        android:orientation="horizontal"
+        android:padding="2dp"
+        android:weightSum="100">
+
+        <!--                android:background="#f9f9f9"-->
+        <LinearLayout
+
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="25"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btn_clearAll"
+                style="@style/calcutorTextViewStyle"
+                android:layout_weight="20"
+                android:text="C"
+                android:textColor="#C2185B" />
+
+
+            <Button
+                android:id="@+id/btn_7"
+                style="@style/calcutorTextViewStyle"
+
+
+                android:text="@string/_7" />
+
+            <Button
+                android:id="@+id/btn_4"
+                style="@style/calcutorTextViewStyle"
+
+                android:text="@string/_4" />
+
+            <Button
+                android:id="@+id/btn_1"
+                style="@style/calcutorTextViewStyle"
+
+                android:text="@string/_1" />
+
+            <Button
+                android:id="@+id/btn_00"
+                style="@style/calcutorTextViewStyle"
+
+                android:text="@string/_00" />
+        </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="?attr/colorPrimary"
-            android:orientation="horizontal"
-            android:padding="2dp"
-            android:weightSum="100">
+            android:layout_weight="25"
+            android:orientation="vertical">
 
-            <!--                android:background="#f9f9f9"-->
-            <LinearLayout
+            <Button
+                android:id="@+id/btn_division"
+                style="@style/calcutorTextViewStyleForOperations"
 
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="25"
-                android:orientation="vertical">
+                android:layout_weight="20"
+                android:text="÷" />
 
-                <Button
-                    android:id="@+id/btn_clearAll"
-                    style="@style/calcutorTextViewStyle"
-                    android:layout_weight="20"
-                    android:text="C"
-                    android:textColor="#C2185B" />
+            <Button
+                android:id="@+id/btn_8"
+                style="@style/calcutorTextViewStyle"
+
+                android:text="@string/_8" />
 
 
-                <Button
-                    android:id="@+id/btn_7"
-                    style="@style/calcutorTextViewStyle"
+            <Button
+                android:id="@+id/btn_5"
+                style="@style/calcutorTextViewStyle"
 
+                android:text="@string/_5" />
 
-                    android:text="@string/_7" />
+            <Button
+                android:id="@+id/btn_2"
+                style="@style/calcutorTextViewStyle"
 
-                <Button
-                    android:id="@+id/btn_4"
-                    style="@style/calcutorTextViewStyle"
+                android:text="@string/_2" />
 
-                    android:text="@string/_4" />
+            <Button
+                android:id="@+id/btn_0"
+                style="@style/calcutorTextViewStyle"
 
-                <Button
-                    android:id="@+id/btn_1"
-                    style="@style/calcutorTextViewStyle"
-
-                    android:text="@string/_1" />
-
-                <Button
-                    android:id="@+id/btn_00"
-                    style="@style/calcutorTextViewStyle"
-
-                    android:text="@string/_00" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="25"
-                android:orientation="vertical">
-
-                <Button
-                    android:id="@+id/btn_division"
-                    style="@style/calcutorTextViewStyleForOperations"
-
-                    android:layout_weight="20"
-                    android:text="÷" />
-
-                <Button
-                    android:id="@+id/btn_8"
-                    style="@style/calcutorTextViewStyle"
-
-                    android:text="@string/_8" />
-
-
-                <Button
-                    android:id="@+id/btn_5"
-                    style="@style/calcutorTextViewStyle"
-
-                    android:text="@string/_5" />
-
-                <Button
-                    android:id="@+id/btn_2"
-                    style="@style/calcutorTextViewStyle"
-
-                    android:text="@string/_2" />
-
-                <Button
-                    android:id="@+id/btn_0"
-                    style="@style/calcutorTextViewStyle"
-
-                    android:text="@string/_0" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="25"
-                android:orientation="vertical">
-
-                <Button
-                    android:id="@+id/btn_times"
-                    style="@style/calcutorTextViewStyleForOperations"
-                    android:layout_weight="20"
-
-
-                    android:text="×" />
-
-                <Button
-                    android:id="@+id/btn_9"
-                    style="@style/calcutorTextViewStyle"
-
-                    android:text="@string/_9" />
-
-                <Button
-                    android:id="@+id/btn_6"
-                    style="@style/calcutorTextViewStyle"
-
-                    android:text="@string/_6" />
-
-                <Button
-                    android:id="@+id/btn_3"
-                    style="@style/calcutorTextViewStyle"
-
-                    android:text="@string/_3" />
-
-                <Button
-                    android:id="@+id/btn_period"
-                    style="@style/calcutorTextViewStyle"
-
-                    android:text="." />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="25"
-                android:orientation="vertical">
-                <!--TODO REMOVE NESTED VIEWS b/c ITS BAD FOR PERFORMANCE-->
-                <Button
-                    android:id="@+id/btn_c"
-                    style="@style/calcutorTextViewStyle"
-                    android:layout_weight="20"
-                    android:foregroundGravity="center"
-                    android:gravity="center"
-                    app:icon="@drawable/ic_delete_keyboard"
-                    app:iconTint="#C2185B" />
-
-                <Button
-                    android:id="@+id/btn_mines"
-                    style="@style/calcutorTextViewStyleForOperations"
-                    android:text="-" />
-
-                <Button
-                    android:id="@+id/btn_plus"
-                    style="@style/calcutorTextViewStyleForOperations"
-
-                    android:text="+" />
-
-                <Button
-                    android:id="@+id/btn_equal"
-                    style="@style/calcutorTextViewStyleForOperations"
-                    android:layout_weight="42"
-                    android:text="=" />
-            </LinearLayout>
+                android:text="@string/_0" />
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="25"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btn_times"
+                style="@style/calcutorTextViewStyleForOperations"
+                android:layout_weight="20"
+
+
+                android:text="×" />
+
+            <Button
+                android:id="@+id/btn_9"
+                style="@style/calcutorTextViewStyle"
+
+                android:text="@string/_9" />
+
+            <Button
+                android:id="@+id/btn_6"
+                style="@style/calcutorTextViewStyle"
+
+                android:text="@string/_6" />
+
+            <Button
+                android:id="@+id/btn_3"
+                style="@style/calcutorTextViewStyle"
+
+                android:text="@string/_3" />
+
+            <Button
+                android:id="@+id/btn_period"
+                style="@style/calcutorTextViewStyle"
+
+                android:text="." />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="25"
+            android:orientation="vertical">
+            <!--TODO REMOVE NESTED VIEWS b/c ITS BAD FOR PERFORMANCE-->
+            <Button
+                android:id="@+id/btn_c"
+                style="@style/calcutorTextViewStyle"
+                android:layout_weight="20"
+                android:foregroundGravity="center"
+                android:gravity="center"
+                app:icon="@drawable/ic_delete_keyboard"
+                app:iconTint="#C2185B" />
+
+            <Button
+                android:id="@+id/btn_mines"
+                style="@style/calcutorTextViewStyleForOperations"
+                android:text="-" />
+
+            <Button
+                android:id="@+id/btn_plus"
+                style="@style/calcutorTextViewStyleForOperations"
+
+                android:text="+" />
+
+            <Button
+                android:id="@+id/btn_equal"
+                style="@style/calcutorTextViewStyleForOperations"
+                android:layout_weight="42"
+                android:text="=" />
+        </LinearLayout>
 
     </LinearLayout>
+
+
 </merge>

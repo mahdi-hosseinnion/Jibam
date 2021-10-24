@@ -195,6 +195,7 @@
                         android:id="@+id/keyboard"
                         android:layout_width="match_parent"
                         android:layout_height="252dp"
+                        android:elevation="4dp"
                         android:layoutDirection="ltr"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -209,6 +210,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/white"
+                    android:elevation="4dp"
                     android:orientation="vertical"
                     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
@@ -217,6 +219,7 @@
                         android:layout_height="48dp"
                         android:background="@color/white"
                         android:clickable="true"
+                        android:elevation="2dp"
                         android:focusable="true">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
@@ -244,7 +247,6 @@
                                 android:layout_gravity="end"
                                 android:background="@color/white"
                                 android:clickable="true"
-                                android:contentDescription="@string/close_category_list"
                                 android:focusable="true"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"

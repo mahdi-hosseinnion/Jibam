@@ -4,6 +4,9 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable-anydpi/ic_delete_.xml" value="0.2916666666666667" />
+        <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/app_intro_back_slide_2.xml" value="0.29375" />
+        <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/app_intro_back_slide_3.xml" value="0.29375" />
+        <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/app_intro_back_slide_5.xml" value="0.29375" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/bg_summery_money.xml" value="0.2713541666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_app_logo_svg.xml" value="0.28717948717948716" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_baseline_close_24.xml" value="0.2916666666666667" />
@@ -88,14 +91,19 @@
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_left_arrow.xml" value="0.2916666666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_outline_pie_chart_24.xml" value="0.1962962962962963" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_round_delete_24.xml" value="0.2916666666666667" />
-          <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_round_menu_24.xml" value="0.1648148148148148" />
+        <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_round_menu_24.xml" value="0.1648148148148148" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_round_navigate_before_24.xml" value="0.2916666666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/ic_up_arrow.xml" value="0.2916666666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/shape_category_item_circle.xml" value="0.2916666666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/shape_simple_circle.xml" value="0.2916666666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/transaction_header_bg.xml" value="0.2713541666666667" />
+        <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout-v21/fragment_add_category.xml" value="0.27760416666666665" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout-v21/fragment_add_transaction.xml" value="0.2755208333333333" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout-v21/fragment_transaction.xml" value="0.1" />
+        <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout-v21/layout_category_images_header.xml" value="0.27760416666666665" />
+        <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout-v21/layout_chart_list_item.xml" value="0.27760416666666665" />
+        <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout-v21/layout_transaction_list_item.xml" value="0.27760416666666665" />
+        <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout-v21/layout_view_categories_list_item.xml" value="0.27760416666666665" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/bottom_sheet_create_new_trans.xml" value="0.2755208333333333" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/layout/bottom_sheet_month_picker.xml" value="0.2712820512820513" />

@@ -18,7 +18,6 @@ import com.ssmmhh.jibam.util.separate3By3
 import kotlinx.android.synthetic.main.fragment_add_transaction.view.*
 import kotlinx.android.synthetic.main.fragment_transaction.*
 import kotlinx.android.synthetic.main.fragment_transaction.view.*
-import kotlinx.android.synthetic.main.layout_new_transaction_list_item.view.*
 import kotlinx.android.synthetic.main.layout_transacion_header.view.*
 import kotlinx.android.synthetic.main.layout_transacion_header.view.header_date
 import kotlinx.android.synthetic.main.layout_transacion_header.view.header_expenses_sum

@@ -10,9 +10,7 @@
     android:paddingTop="4dp"
     android:paddingRight="8dp"
     android:paddingBottom="4dp">
-    <!--    android:background="@drawable/transaction_header_bg"-->
-    <!--    card_view:background="@drawable/transaction_header_bg"-->
-    <!--    card_view:cardUseCompatPadding="true">-->
+
 
 
     <TextView
@@ -26,8 +24,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Mon"
-        android:layout_marginLeft="8dp" />
+        tools:text="Mon" />
 
     <TextView
         android:id="@+id/header_date"
@@ -41,8 +38,7 @@
         app:layout_constraintBottom_toBottomOf="@id/header_date_name"
         app:layout_constraintStart_toEndOf="@id/header_date_name"
         app:layout_constraintTop_toTopOf="@id/header_date_name"
-        tools:text="12/13"
-        android:layout_marginLeft="4dp" />
+        tools:text="12/13" />
 
 
     <TextView
@@ -60,8 +56,7 @@
         app:layout_constraintEnd_toStartOf="@+id/header_expenses_sum"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.39"
-        tools:text="Income: 5000"
-        android:layout_marginRight="8dp" />
+        tools:text="Income: 5000" />
 
     <TextView
         android:id="@+id/header_expenses_sum"
@@ -76,14 +71,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Expenses: 1500"
-        android:layout_marginRight="4dp" />
+        tools:text="Expenses: 1500" />
 
-    <!--        <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/black"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />-->
 </androidx.constraintlayout.widget.ConstraintLayout>

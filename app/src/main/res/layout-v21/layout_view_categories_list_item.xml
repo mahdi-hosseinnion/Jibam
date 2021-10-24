@@ -44,6 +44,7 @@
             android:layout_height="24dp"
             android:layout_gravity="center"
             android:layout_margin="8dp"
+            android:elevation="2dp"
             android:scaleType="center"
             app:tint="@color/white" />
 
@@ -61,7 +62,7 @@
         android:padding="4dp"
         android:paddingTop="8dp"
         android:textColor="@color/black"
-        android:textSize="16sp"
+        android:textSize="16dp"
         android:textStyle="bold"
         tools:text="Food" />
     <!--for debug-->
