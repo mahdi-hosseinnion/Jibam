@@ -31,6 +31,12 @@ public fun Fragment.convertDpToPx(dp: Int): Int {
     ).toInt()
 }
 
+/**
+ * remove ',' character that have been used for separate big number 3 by 3
+ * like 123,456,789 to 123456789
+ */
+fun String.removeSeparateSign() = this.replace( ",","")
+
 fun separate3By3(money1: Double, locale: Locale): String =
     separate3By3_(money1, locale).replace('٬', ',')
 

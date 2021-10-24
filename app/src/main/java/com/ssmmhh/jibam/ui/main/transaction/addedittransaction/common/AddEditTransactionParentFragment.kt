@@ -385,7 +385,7 @@ constructor(
     }
 
     override fun onEqualClicked() {
-        keyboard.preloadKeyboard(finalNUmber.text.toString())
+        keyboard.preloadKeyboard(finalNUmber.text.toString().removeSeparateSign())
     }
 
     private val onTextChangedListener = object : TextWatcher {
@@ -408,7 +408,8 @@ constructor(
                 } else {
                     finalNUmber.text =
                         if (finalNumberText == edt_money.text.toString().removeOperationSigns()) ""
-                        else finalNumberText
+                        else finalNumberText.toDoubleOrNull()?.let { separate3By3(it,currentLocale) }
+                            ?:finalNumberText
                 }
             } else {
                 finalNUmber.text = ""
