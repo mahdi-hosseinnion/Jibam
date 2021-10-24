@@ -435,7 +435,9 @@ constructor(
 
     fun String.removeOperationSigns(): String {
         var result = this
-        for (values in CalculatorKeyboard.listOfSigns) {
+        val operationSigns = (CalculatorKeyboard.listOfSigns).toMutableList()
+        operationSigns.remove(CalculatorKeyboard.PERIOD)
+        for (values in operationSigns) {
             result = result.replace(values, "")
         }
         return result
