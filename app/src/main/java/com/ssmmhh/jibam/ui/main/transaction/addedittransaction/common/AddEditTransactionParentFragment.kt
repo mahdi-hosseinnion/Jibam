@@ -408,7 +408,7 @@ constructor(
                 } else {
                     finalNUmber.text =
                         if (finalNumberText == edt_money.text.toString().removeOperationSigns()) ""
-                        else finalNumberText.toDoubleOrNull()?.let { separate3By3(it,currentLocale) }
+                        else finalNumberText.convertFarsiDigitsToEnglishDigits().toDoubleOrNull()?.let { separate3By3(it,currentLocale) }
                             ?:finalNumberText
                 }
             } else {

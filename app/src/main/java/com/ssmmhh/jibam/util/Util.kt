@@ -21,7 +21,6 @@ import kotlin.math.abs
     tempList.addAll(0, pinedList)
     return tempList
 }*/
-
 public fun Fragment.convertDpToPx(dp: Int): Int {
     val r = resources
     return TypedValue.applyDimension(
@@ -35,10 +34,19 @@ public fun Fragment.convertDpToPx(dp: Int): Int {
  * remove ',' character that have been used for separate big number 3 by 3
  * like 123,456,789 to 123456789
  */
-fun String.removeSeparateSign() = this.replace( ",","")
+fun String.removeSeparateSign() = this.replace(",", "")
 
+/**
+ * in farsi locale formatter replace '.' with '٫' and ',' with '٬'
+ */
+const val WRONG_FARSI_LOCALE_DOT = '٫'
+const val WRONG_FARSI_LOCALE_NUMBER_SEPARATOR = '٬'
+const val DOT = '.'
+const val NUMBER_SEPARATOR = ','
 fun separate3By3(money1: Double, locale: Locale): String =
-    separate3By3_(money1, locale).replace('٬', ',')
+    separate3By3_(money1, locale)
+        .replace(WRONG_FARSI_LOCALE_NUMBER_SEPARATOR, NUMBER_SEPARATOR)
+        .replace(WRONG_FARSI_LOCALE_DOT, DOT)
 
 private fun separate3By3_(money1: Double, locale: Locale): String {
     var money = money1
@@ -80,10 +88,11 @@ fun localizeDoubleNumber(money1: Double?, locale: Locale): String? {
     //we use formatter to apply local(farsi digits) and ,
     val formatter: DecimalFormat = NumberFormat.getInstance(locale) as DecimalFormat
     formatter.applyPattern("#.###")
-    if (money < 1000.0) {
-        return formatter.format(money)
-    }
-    return formatter.format(money)
+    /**
+     * for sum reasons when farsi locale applied to a 'DecimalFormat' it replace '.' with '٫'
+     * there's no way to prevent this from happening so i simply use replace to replace '٫' with '.'
+     */
+    return (formatter.format(money)).replace(WRONG_FARSI_LOCALE_DOT, DOT)
 }
 
 fun separate3By3AndRoundIt(money: Double, locale: Locale): String {
