@@ -285,4 +285,8 @@
     <string name="unable_to_recognize_category_type_pls_return_back">متاسفانه نوع دسته بندی یافت نشد</string>
     <string name="pls_select_image_for_category">برای این دسته بندی یک تصویر انتخاب کنید</string>
     <string name="etc">و غیره</string>
+
+    <string name="category_image">تصویر دسته بندی</string>
+    <string name="close_category_list">بستن لیست دسته بندی ها</string>
+    <string name="invalid_number_error">عدد اشتباه</string>
 </resources><!--source https://developer.android.com/training/basics/supporting-devices/languages-->

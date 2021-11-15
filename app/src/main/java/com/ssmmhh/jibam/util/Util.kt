@@ -226,3 +226,10 @@ fun SharedPreferences.isCalendarSolar(currentLocale: Locale): Boolean {
     )
     return calendarType == PreferenceKeys.CALENDAR_SOLAR
 }
+
+fun separateCalculatorText3By3(text: String): String {
+    //first remove any ',' from text
+    text.replace(NUMBER_SEPARATOR.toString(), "")
+    //
+    return text
+}

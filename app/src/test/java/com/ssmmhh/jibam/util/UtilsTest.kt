@@ -1,7 +1,7 @@
 package com.ssmmhh.jibam.util
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Assertions.*
 
 class UtilsTest {
 
@@ -25,5 +25,28 @@ class UtilsTest {
         assertEquals("۱۲۳۴۸۵۸*۶۷۸۹۰+", testCase2.convertEnglishDigitsToFarsiDigits())
         val testCase4 = "۱۲۳۴۵123۶۷۸۹۰"
         assertEquals("۱۲۳۴۵۱۲۳۶۷۸۹۰", testCase4.convertEnglishDigitsToFarsiDigits())
+    }
+
+    @Test
+    fun testSeparateCalculatorText3By3ForEnglishValues() {
+        //a map of manually separated calculator text
+        TextCalculator.Companion.operatorSymbols
+        val testData = mapOf<String, String>(
+            "123" to "123",
+            "0" to "0",
+            "123456789" to "123,456,789",
+            "123+25+1-50×1÷153" to "123+25+1-50×1÷153",
+            "123951+25+1000-50×1÷15003" to "123,951+25+1,000-50×1÷15,003",
+            "4500+123" to "4,500+123",
+            "451+1045623" to  "451+1,045,623",
+            "123456789-123" to "123,456,789-123",
+            "1200" to "",
+        )
+
+        for ((k, v) in testData) {
+            val functionResult = separateCalculatorText3By3(k)
+            assertEquals(v, functionResult)
+        }
+
     }
 }
