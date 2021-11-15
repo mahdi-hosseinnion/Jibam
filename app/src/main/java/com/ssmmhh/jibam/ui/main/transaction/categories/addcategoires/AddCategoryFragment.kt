@@ -2,7 +2,6 @@ package com.ssmmhh.jibam.ui.main.transaction.categories.addcategoires
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -16,18 +15,15 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.google.android.material.snackbar.Snackbar
 import com.ssmmhh.jibam.R
+import com.ssmmhh.jibam.databinding.FragmentAddCategoryBinding
 import com.ssmmhh.jibam.models.CategoryImages
 import com.ssmmhh.jibam.ui.main.transaction.categories.addcategoires.AddCategoryViewModel.Companion.INSERT_CATEGORY_SUCCESS_MARKER
 import com.ssmmhh.jibam.ui.main.transaction.common.BaseFragment
 import com.ssmmhh.jibam.util.*
 import com.ssmmhh.jibam.util.Constants.EXPENSES_TYPE_MARKER
 import com.ssmmhh.jibam.util.Constants.INCOME_TYPE_MARKER
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.fragment_add_category.*
-import kotlinx.android.synthetic.main.fragment_add_transaction.*
-import kotlinx.android.synthetic.main.layout_category_images_list_item.view.*
-import kotlinx.android.synthetic.main.layout_toolbar_with_back_btn.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
@@ -37,15 +33,32 @@ import kotlinx.coroutines.FlowPreview
 class AddCategoryFragment(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager
-) : BaseFragment(
-    R.layout.fragment_add_category
-), AddCategoryListAdapter.Interaction {
+) : BaseFragment(), AddCategoryListAdapter.Interaction {
 
     private val viewModel by viewModels<AddCategoryViewModel> { viewModelFactory }
 
     private val args: AddCategoryFragmentArgs by navArgs()
 
     private lateinit var recyclerAdapter: AddCategoryListAdapter
+
+    private var _binding: FragmentAddCategoryBinding? = null
+
+    private val binding get() = _binding!!
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentAddCategoryBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -73,25 +86,25 @@ class AddCategoryFragment(
     }
 
     private fun setupUI() {
-        forceKeyBoardToOpenForEditText(edt_categoryName)
+        forceKeyBoardToOpenForEditText(binding.edtCategoryName)
         //add on back pressed for if user insert something
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner
         ) {
             checkForInsertionBeforeNavigateBack()
         }
-        edt_categoryName.addTextChangedListener {
-            if (!add_category_fab.isShown) {
-                add_category_fab.show()
+        binding.edtCategoryName.addTextChangedListener {
+            if (!binding.addCategoryFab.isShown) {
+                binding.addCategoryFab.show()
             }
         }
         /**
          * on clicks
          */
-        topAppBar_normal.setNavigationOnClickListener {
+        binding.toolbar?.topAppBarNormal?.setNavigationOnClickListener {
             checkForInsertionBeforeNavigateBack()
         }
-        add_category_fab.setOnClickListener {
+        binding.addCategoryFab.setOnClickListener {
             insertNewCategory()
         }
     }
@@ -119,7 +132,7 @@ class AddCategoryFragment(
                 ) {
                     navigateBack()
                 }
-                add_category_fab.isEnabled = true
+                binding.addCategoryFab.isEnabled = true
             }
         }
     }
@@ -150,16 +163,16 @@ class AddCategoryFragment(
 
                 super.onScrolled(recyclerView, dx, dy)
                 if (dy > 0) {
-                    add_category_fab?.hide()
+                    binding.addCategoryFab?.hide()
                 } else {
-                    add_category_fab?.show()
+                    binding.addCategoryFab?.show()
                 }
 
             }
 
         }
 
-        insert_category_recyclerView.apply {
+        binding.insertCategoryRecyclerView.apply {
             val mLayoutManager =
                 GridLayoutManager(this@AddCategoryFragment.context, RECYCLER_VIEW_SPAN_SIZE)
             recyclerAdapter = AddCategoryListAdapter(
@@ -188,14 +201,14 @@ class AddCategoryFragment(
 
     override fun onItemSelected(position: Int, categoryImages: CategoryImages) {
         viewModel.setCategoryImage(categoryImages)
-        add_category_fab.show()
+        binding.addCategoryFab.show()
     }
 
     override fun restoreListPosition() {
     }
 
     private fun setCategoryTypeToolbar(categoryType: Int) {
-        topAppBar_normal.title =
+        binding.toolbar?.topAppBarNormal?.title =
             if (categoryType == EXPENSES_TYPE_MARKER)
                 getString(R.string.add_expenses_category)
             else if (categoryType == INCOME_TYPE_MARKER)
@@ -212,7 +225,7 @@ class AddCategoryFragment(
         )
 
         // set background
-        cardView.setCardBackgroundColor(
+        binding.cardView.setCardBackgroundColor(
             resources.getColor(
                 CategoriesImageBackgroundColors.getCategoryColorById(categoryImages.id)
             )
@@ -223,16 +236,17 @@ class AddCategoryFragment(
             .centerInside()
             .transition(DrawableTransitionOptions.withCrossFade())
             .error(R.drawable.ic_error)
-            .into(category_image)
+            .into(binding.categoryImage)
     }
 
     private fun insertNewCategory() {
         if (isValidForInsertion()) {
-            add_category_fab.isEnabled = false
-            val viewModelResponse = viewModel.insertCategory(edt_categoryName.text.toString())
+            binding.addCategoryFab.isEnabled = false
+            val viewModelResponse =
+                viewModel.insertCategory(binding.edtCategoryName.text.toString())
 
             if (viewModelResponse != INSERT_CATEGORY_SUCCESS_MARKER) {
-                add_category_fab.isEnabled = true
+                binding.addCategoryFab.isEnabled = true
                 showSnackBar(viewModelResponse)
             }
 
@@ -241,9 +255,9 @@ class AddCategoryFragment(
     }
 
     private fun isValidForInsertion(): Boolean {
-        if (edt_categoryName.text.toString().isBlank()) {
+        if (binding.edtCategoryName.text.toString().isBlank()) {
             showSnackBar(R.string.category_should_have_name)
-            forceKeyBoardToOpenForEditText(edt_categoryName)
+            forceKeyBoardToOpenForEditText(binding.edtCategoryName)
             return false
         }
         return true
@@ -259,14 +273,14 @@ class AddCategoryFragment(
 
     private fun showSnackBar(@StringRes resId: Int) {
         Snackbar.make(
-            add_category_fragment_root,
+            binding.addCategoryFragmentRoot,
             getString(resId),
             Snackbar.LENGTH_SHORT
-        ).setAnchorView(fab_submit).show()
+        ).show()
     }
 
     private fun checkForInsertionBeforeNavigateBack() {
-        if (edt_categoryName.text.toString().isNotBlank())
+        if (binding.edtCategoryName.text.toString().isNotBlank())
             showDiscardOrSaveDialog()
         else
             navigateBack()

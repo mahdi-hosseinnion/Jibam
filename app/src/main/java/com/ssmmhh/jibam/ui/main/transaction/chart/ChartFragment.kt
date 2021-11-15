@@ -3,7 +3,9 @@ package com.ssmmhh.jibam.ui.main.transaction.chart
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.text.TextUtilsCompat
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.viewModels
@@ -23,15 +25,12 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.utils.MPPointF
 import com.ssmmhh.jibam.R
+import com.ssmmhh.jibam.databinding.FragmentChartBinding
 import com.ssmmhh.jibam.models.PieChartData
 import com.ssmmhh.jibam.ui.main.transaction.chart.ChartFragment.ChartState.*
 import com.ssmmhh.jibam.ui.main.transaction.common.BaseFragment
 import com.ssmmhh.jibam.util.Constants.EXPENSES_TYPE_MARKER
 import com.ssmmhh.jibam.util.Constants.INCOME_TYPE_MARKER
-import kotlinx.android.synthetic.main.fragment_chart.*
-import kotlinx.android.synthetic.main.layout_toolbar_with_back_btn.*
-import kotlinx.android.synthetic.main.layout_toolbar_with_month_changer.*
-import kotlinx.android.synthetic.main.toolbar_month_changer.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.util.*
@@ -46,9 +45,7 @@ class ChartFragment(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager,
     private val currentLocale: Locale,
-) : BaseFragment(
-    R.layout.fragment_chart
-), OnChartValueSelectedListener, ChartListAdapter.Interaction {
+) : BaseFragment(), OnChartValueSelectedListener, ChartListAdapter.Interaction {
 
     private val TAG = "ChartFragment"
 
@@ -64,25 +61,44 @@ class ChartFragment(
 
     private var chartData: List<PieChartData> = ArrayList()
 
+    private var _binding: FragmentChartBinding? = null
+
+    private val binding get() = _binding!!
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentChartBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initPieChart()
         subscribeObservers()
 
-        topAppBar_month.setNavigationOnClickListener {
+        binding.toolbar.topAppBarMonth.setNavigationOnClickListener {
             navigateBack()
         }
-        toolbar_month.setOnClickListener {
+        binding.toolbar.toolbarMonthChanger.toolbarMonth.setOnClickListener {
             viewModel.showMonthPickerBottomSheet(parentFragmentManager)
         }
-        month_manager_previous.setOnClickListener {
+        binding.toolbar.toolbarMonthChanger.monthManagerPrevious.setOnClickListener {
             viewModel.navigateToPreviousMonth()
         }
-        month_manager_next.setOnClickListener {
+        binding.toolbar.toolbarMonthChanger.monthManagerNext.setOnClickListener {
             viewModel.navigateToNextMonth()
         }
-        fab_swap.setOnClickListener {
+        binding.fabSwap.setOnClickListener {
             swapChartCategory()
         }
     }
@@ -99,11 +115,11 @@ class ChartFragment(
 
     private fun refreshChart() {
         val category_type_marker = if (currentChartState == INCOMES_STATE) {
-            topAppBar_month.title = getString(R.string.income_chart_title)
+            binding.toolbar.topAppBarMonth.title = getString(R.string.income_chart_title)
 
             INCOME_TYPE_MARKER
         } else {
-            topAppBar_month.title = getString(R.string.expenses_chart_title)
+            binding.toolbar.topAppBarMonth.title = getString(R.string.expenses_chart_title)
 
             EXPENSES_TYPE_MARKER
         }
@@ -120,51 +136,56 @@ class ChartFragment(
     }
 
     private fun initPieChart() {
-        pie_chart.setUsePercentValues(false)
-        pie_chart.description.isEnabled = false
-        pie_chart.setExtraOffsets(2f, 2f, 2f, 2f)
+        binding.pieChart.setUsePercentValues(false)
+        binding.pieChart.description.isEnabled = false
+        binding.pieChart.setExtraOffsets(2f, 2f, 2f, 2f)
 
-        pie_chart.setNoDataText(getString(R.string.no_chart_data_available))
-        pie_chart.setNoDataTextColor(Color.RED)
-        pie_chart.dragDecelerationFrictionCoef = 0.50f
+        binding.pieChart.setNoDataText(getString(R.string.no_chart_data_available))
+        binding.pieChart.setNoDataTextColor(Color.RED)
+        binding.pieChart.dragDecelerationFrictionCoef = 0.50f
 
 //        pie_chart.setCenterTextTypeface(tfLight)
 //        pie_chart.setCenterText(generateCenterSpannableText())
 
-        pie_chart.isDrawHoleEnabled = true
-        pie_chart.setHoleColor(getThemeAttributeColor(this.requireContext(), R.attr.colorSurface))
-
-        pie_chart.setTransparentCircleColor(
+        binding.pieChart.isDrawHoleEnabled = true
+        binding.pieChart.setHoleColor(
             getThemeAttributeColor(
                 this.requireContext(),
                 R.attr.colorSurface
             )
         )
-        pie_chart.setTransparentCircleAlpha(50)
 
-        pie_chart.holeRadius = 42f
-        pie_chart.transparentCircleRadius = pie_chart.holeRadius.plus(3)
+        binding.pieChart.setTransparentCircleColor(
+            getThemeAttributeColor(
+                this.requireContext(),
+                R.attr.colorSurface
+            )
+        )
+        binding.pieChart.setTransparentCircleAlpha(50)
 
-        pie_chart.setDrawCenterText(true)
+        binding.pieChart.holeRadius = 42f
+        binding.pieChart.transparentCircleRadius = binding.pieChart.holeRadius.plus(3)
 
-        pie_chart.rotationAngle = 0f
+        binding.pieChart.setDrawCenterText(true)
+
+        binding.pieChart.rotationAngle = 0f
         // enable rotation of the chart by touch
-        pie_chart.isRotationEnabled = true
-        pie_chart.isHighlightPerTapEnabled = true
+        binding.pieChart.isRotationEnabled = true
+        binding.pieChart.isHighlightPerTapEnabled = true
 
         // pie_chart.setUnit(" €");
         // pie_chart.setDrawUnitsInChart(true);
 
         // add a selection listener
-        pie_chart.setOnChartValueSelectedListener(this)
+        binding.pieChart.setOnChartValueSelectedListener(this)
 
 
-        pie_chart.animateY(1400, Easing.EaseInOutQuad)
-//         pie_chart.spin(2000, 0, 360);
+        binding.pieChart.animateY(1400, Easing.EaseInOutQuad)
+//         binding.    pieChart.spin(2000, 0, 360);
         //legend: list next to chart
         val isLeftToRight =
             (TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == ViewCompat.LAYOUT_DIRECTION_LTR)
-        val l: Legend = pie_chart.legend
+        val l: Legend = binding.pieChart.legend
         l.verticalAlignment = Legend.LegendVerticalAlignment.CENTER
         if (isLeftToRight)
             l.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
@@ -181,14 +202,14 @@ class ChartFragment(
 
 
         // entry label styling
-        pie_chart.setEntryLabelColor(
+        binding.pieChart.setEntryLabelColor(
             getThemeAttributeColor(
                 this.requireContext(),
                 R.attr.colorOnSurface
             )
         )
 //        pie_chart.setEntryLabelTypeface(tfRegular)
-        pie_chart.setEntryLabelTextSize(12f)
+        binding.pieChart.setEntryLabelTextSize(12f)
 
     }
 
@@ -260,22 +281,22 @@ class ChartFragment(
         data.setValueTextSize(13f)
         data.setValueTextColor(resources.getColor(R.color.black))
 //        data.setValueTypeface(tfLight)
-        pie_chart.data = data
+        binding.pieChart.data = data
         try {
             if (values.isNullOrEmpty()) {
-                pie_chart.clear()
+                binding.pieChart.clear()
             }
         } catch (e: Exception) {
             Log.e(TAG, "setDataToChartAndRecyclerView: ${e.message}", e)
         }
         // undo all highlights
-        pie_chart.highlightValues(null)
-        pie_chart.invalidate()
+        binding.pieChart.highlightValues(null)
+        binding.pieChart.invalidate()
         initRecyclerView(values, colors)
     }
 
     private fun initRecyclerView(values: List<PieChartData>, colors: List<Int>) {
-        chart_recycler.apply {
+        binding.chartRecycler.apply {
             layoutManager = LinearLayoutManager(this@ChartFragment.context)
             val recyclerAdapter = ChartListAdapter(
                 this@ChartFragment,
@@ -311,7 +332,9 @@ class ChartFragment(
     private fun subscribeObservers() {
         viewModel.viewState.observe(viewLifecycleOwner) { vs ->
             vs?.let { viewState ->
-                viewState.currentMonth?.let { toolbar_month.text = it.nameOfMonth }
+                viewState.currentMonth?.let {
+                    binding.toolbar.toolbarMonthChanger.toolbarMonth.text = it.nameOfMonth
+                }
             }
         }
         viewModel.pieChartData.observe(viewLifecycleOwner) {

@@ -14,7 +14,9 @@
 
         android:orientation="vertical">
 
-        <include layout="@layout/layout_toolbar_with_back_btn" />
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/layout_toolbar_with_back_btn" />
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"

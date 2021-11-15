@@ -2,7 +2,9 @@ package com.ssmmhh.jibam.ui.main.transaction.chart
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -12,13 +14,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.ssmmhh.jibam.R
+import com.ssmmhh.jibam.databinding.FragmentDetailChartBinding
 import com.ssmmhh.jibam.models.Transaction
 import com.ssmmhh.jibam.repository.buildResponse
 import com.ssmmhh.jibam.ui.main.transaction.chart.ChartViewModel.Companion.FORCE_TO_NULL
 import com.ssmmhh.jibam.ui.main.transaction.common.BaseFragment
 import com.ssmmhh.jibam.util.*
-import kotlinx.android.synthetic.main.fragment_detail_chart.*
-import kotlinx.android.synthetic.main.layout_toolbar_with_back_btn.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.util.*
@@ -30,9 +31,7 @@ class DetailChartFragment(
     private val requestManager: RequestManager,
     private val currentLocale: Locale,
     private val sharedPreferences: SharedPreferences
-) : BaseFragment(
-    R.layout.fragment_detail_chart
-), DetailChartListAdapter.Interaction {
+) : BaseFragment(), DetailChartListAdapter.Interaction {
 
     val args: DetailChartFragmentArgs by navArgs()
 
@@ -40,6 +39,24 @@ class DetailChartFragment(
 
     private lateinit var recyclerAdapter: DetailChartListAdapter
 
+    private var _binding: FragmentDetailChartBinding? = null
+
+    private val binding get() = _binding!!
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentDetailChartBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -49,9 +66,9 @@ class DetailChartFragment(
     }
 
     private fun setupUi() {
-        topAppBar_normal.title = args.categoryName.replaceFirstChar { it.uppercase() }
+        binding.toolbar.topAppBarNormal.title = args.categoryName.replaceFirstChar { it.uppercase() }
 
-        topAppBar_normal.setNavigationOnClickListener {
+        binding.toolbar.topAppBarNormal.setNavigationOnClickListener {
             navigateBack()
         }
     }
@@ -85,7 +102,7 @@ class DetailChartFragment(
 
 
     private fun initRecyclerView() {
-        detail_chart_recycler.apply {
+        binding.    detailChartRecycler.apply {
 
             layoutManager = LinearLayoutManager(this@DetailChartFragment.context)
 
@@ -100,7 +117,7 @@ class DetailChartFragment(
             val swipeHandler =
                 object : SwipeToDeleteCallback(this@DetailChartFragment.requireContext()) {
                     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                        val adapter = detail_chart_recycler.adapter as DetailChartListAdapter
+                        val adapter =binding. detailChartRecycler.adapter as DetailChartListAdapter
                         val deletedTrans = adapter.getTransaction(viewHolder.adapterPosition)
                         swipeDeleteTransaction(deletedTrans)
                     }
@@ -150,7 +167,7 @@ class DetailChartFragment(
         uiCommunicationListener.onResponseReceived(
             buildResponse(
                 getString(R.string.transaction_successfully_deleted),
-                UIComponentType.UndoSnackBar(undoCallback, detail_chart_fragment_root),
+                UIComponentType.UndoSnackBar(undoCallback, binding.detailChartFragmentRoot),
                 MessageType.Info
             ), object : StateMessageCallback {
                 override fun removeMessageFromStack() {

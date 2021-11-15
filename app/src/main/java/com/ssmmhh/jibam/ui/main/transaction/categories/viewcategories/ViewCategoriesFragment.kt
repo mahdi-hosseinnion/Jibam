@@ -2,7 +2,9 @@ package com.ssmmhh.jibam.ui.main.transaction.categories.viewcategories
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -19,8 +21,7 @@ import com.ssmmhh.jibam.util.*
 import com.ssmmhh.jibam.util.Constants.EXPENSES_TYPE_MARKER
 import com.ssmmhh.jibam.util.Constants.INCOME_TYPE_MARKER
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.android.synthetic.main.fragment_view_categories.*
-import kotlinx.android.synthetic.main.layout_toolbar_with_back_btn.*
+import com.ssmmhh.jibam.databinding.FragmentViewCategoriesBinding
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
@@ -31,11 +32,28 @@ class ViewCategoriesFragment(
     private val requestManager: RequestManager,
     private val sharedPreferences: SharedPreferences,
     private val sharedPrefsEditor: SharedPreferences.Editor
-) : BaseFragment(
-    R.layout.fragment_view_categories
-), ViewCategoriesRecyclerAdapter.CategoryInteraction {
+) : BaseFragment(), ViewCategoriesRecyclerAdapter.CategoryInteraction {
 
     private val viewModel by viewModels<ViewCategoriesViewModel> { viewModelFactory }
+
+    private var _binding: FragmentViewCategoriesBinding? = null
+
+    private val binding get() = _binding!!
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding =  FragmentViewCategoriesBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     private val expensesItemTouchHelper by lazy {
         ItemTouchHelper(ViewCategoryItemTouchHelperCallback {
@@ -57,10 +75,10 @@ class ViewCategoriesFragment(
         setupViewPager()
         setupUi()
 
-        add_new_appbar.setOnClickListener {
+        binding.addNewAppbar.setOnClickListener {
             navigateToAddCategoryFragment()
         }
-        txt_addNewCategory.setOnClickListener {
+        binding.txtAddNewCategory.setOnClickListener {
             navigateToAddCategoryFragment()
         }
 
@@ -68,12 +86,12 @@ class ViewCategoriesFragment(
     }
 
     private fun setupUi() {
-        topAppBar_normal.title = getString(R.string.category_setting)
-        topAppBar_normal.setNavigationOnClickListener {
+        binding.  toolbar.topAppBarNormal.title = getString(R.string.category_setting)
+        binding.  toolbar. topAppBarNormal.setNavigationOnClickListener {
             navigateBack()
         }
         //set titles
-        val tabLayout = TabLayoutMediator(tab_layout, viewPager_viewCategories) { tab, position ->
+        val tabLayout = TabLayoutMediator(binding.tabLayout, binding.viewPagerViewCategories) { tab, position ->
             if (position == 0) {
                 tab.text = getString(R.string.expenses)
             } else {
@@ -99,7 +117,7 @@ class ViewCategoriesFragment(
             packageName = this.requireActivity().packageName
         )
 
-        viewPager_viewCategories.adapter = viewPagerAdapter
+        binding.   viewPagerViewCategories.adapter = viewPagerAdapter
     }
 
     override fun handleLoading() {
@@ -133,7 +151,7 @@ class ViewCategoriesFragment(
     }
 
     private fun navigateToAddCategoryFragment() {
-        val categoryType = when (viewPager_viewCategories.currentItem) {
+        val categoryType = when (binding.viewPagerViewCategories.currentItem) {
             0 -> EXPENSES
             1 -> INCOME
             else -> {

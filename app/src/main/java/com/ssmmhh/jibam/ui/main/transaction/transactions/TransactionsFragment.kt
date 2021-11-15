@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
@@ -27,6 +28,7 @@ import com.bumptech.glide.RequestManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.*
 import com.ssmmhh.jibam.R
+import com.ssmmhh.jibam.databinding.FragmentTransactionBinding
 import com.ssmmhh.jibam.models.Month
 import com.ssmmhh.jibam.models.Transaction
 import com.ssmmhh.jibam.models.TransactionEntity
@@ -40,11 +42,6 @@ import com.ssmmhh.jibam.util.PreferenceKeys.APP_CALENDAR_PREFERENCE
 import com.ssmmhh.jibam.util.PreferenceKeys.PROMOTE_FAB_TRANSACTION_FRAGMENT
 import com.ssmmhh.jibam.util.PreferenceKeys.PROMOTE_MONTH_MANGER
 import com.ssmmhh.jibam.util.PreferenceKeys.PROMOTE_SUMMERY_MONEY
-import kotlinx.android.synthetic.main.fragment_transaction.*
-import kotlinx.android.synthetic.main.fragment_transaction.view.*
-import kotlinx.android.synthetic.main.layout_toolbar_with_month_changer.*
-import kotlinx.android.synthetic.main.toolbar_month_changer.*
-import kotlinx.android.synthetic.main.toolbar_month_changer.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt
@@ -61,9 +58,7 @@ class TransactionsFragment(
     private val currentLocale: Locale,
     private val sharedPreferences: SharedPreferences,
     private val sharedPrefsEditor: SharedPreferences.Editor
-) : BaseFragment(
-    R.layout.fragment_transaction
-), TransactionsListAdapter.Interaction {
+) : BaseFragment(), TransactionsListAdapter.Interaction {
 
     private val TAG = "TransactionFragment"
 
@@ -80,6 +75,24 @@ class TransactionsFragment(
     private val bottomSheetRadios by lazy { convertDpToPx(16) }
     private val normalAppBarHeight by lazy { convertDpToPx(40) }
 
+    private var _binding: FragmentTransactionBinding? = null
+
+    private val binding get() = _binding!!
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentTransactionBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
 
@@ -97,7 +110,7 @@ class TransactionsFragment(
             if (viewModel.isSearchVisible()) {
                 disableSearchMode()
             } else {
-                transaction_recyclerView.scrollToPosition(0)
+                binding.transactionRecyclerView.scrollToPosition(0)
                 bottomSheetBehavior.state = STATE_COLLAPSED
                 this.isEnabled = false
             }
@@ -112,15 +125,19 @@ class TransactionsFragment(
             viewLifecycleOwner,
             backStackForBottomSheet
         )
-        topAppBar_month.navigationIcon =
-            ResourcesCompat.getDrawable(resources, R.drawable.ic_round_menu_24, requireContext().theme)
+        binding.transactionToolbar.topAppBarMonth.navigationIcon =
+            ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.ic_round_menu_24,
+                requireContext().theme
+            )
 
-        topAppBar_month.setNavigationOnClickListener {
-            drawer_layout.open()
+        binding.transactionToolbar.topAppBarMonth.setNavigationOnClickListener {
+            binding.drawerLayout.open()
 //            uiCommunicationListener.openDrawerMenu()
         }
 
-        bottomSheetBehavior = BottomSheetBehavior.from(main_standardBottomSheet)
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.mainStandardBottomSheet)
 
         bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
         onBottomSheetStateChanged(bottomSheetBehavior.state)
@@ -140,52 +157,52 @@ class TransactionsFragment(
             enableSearchMode()
         }
 
-        add_fab.setOnClickListener {
+        binding.addFab.setOnClickListener {
             navigateToAddTransactionFragment()
         }
         //TODO DELETE THIS LINE FOR FINAL PROJECT JUST OF TESTING
-        txt_balance.setOnClickListener {
+        binding.txtBalance.setOnClickListener {
 //            insertRandomTransaction()
         }
         //TODO DELETE THIS LINE FOR FINAL PROJECT JUST OF TESTING
-        txt_expenses.setOnClickListener {
+        binding.txtExpenses.setOnClickListener {
             //TODD JUST FOR TESTING
 //            resetPromoteState()
         }
         //TODO DELETE THIS LINE FOR FINAL PROJECT JUST OF TESTING
-        txt_income.setOnClickListener {
+        binding.txtIncome.setOnClickListener {
 //            showSummeryMoneyPromote()
         }
-        main_bottom_sheet_back_arrow.setOnClickListener {
+        binding.mainBottomSheetBackArrow.setOnClickListener {
             //check for search view
             if (viewModel.isSearchVisible()) {
                 disableSearchMode()
             } else {
-                transaction_recyclerView.scrollToPosition(0)
+                binding.transactionRecyclerView.scrollToPosition(0)
                 bottomSheetBehavior.state = STATE_COLLAPSED
             }
         }
         //search view stuff
-        main_bottom_sheet_search_btn.setOnClickListener {
+        binding.mainBottomSheetSearchBtn.setOnClickListener {
             enableSearchMode()
         }
-        bottom_sheet_search_clear.setOnClickListener {
-            bottom_sheet_search_edt.setText("")
+        binding.bottomSheetSearchClear.setOnClickListener {
+            binding.bottomSheetSearchEdt.setText("")
         }
-        toolbar_month.setOnClickListener {
+        binding.transactionToolbar.toolbarMonthChanger.toolbarMonth.setOnClickListener {
             viewModel.showMonthPickerBottomSheet(parentFragmentManager)
         }
-        month_manager_previous.setOnClickListener {
+        binding.transactionToolbar.toolbarMonthChanger.monthManagerPrevious.setOnClickListener {
             viewModel.navigateToPreviousMonth()
         }
-        month_manager_next.setOnClickListener {
+        binding.transactionToolbar.toolbarMonthChanger.monthManagerNext.setOnClickListener {
             viewModel.navigateToNextMonth()
         }
         checkForGuidePromote()
     }
 
     private fun setupNavigationView() {
-        navigation_view.setNavigationItemSelectedListener { menuItem ->
+        binding.navigationView.setNavigationItemSelectedListener { menuItem ->
 
             when (menuItem.itemId) {
                 R.id.chartFragment -> {
@@ -207,8 +224,8 @@ class TransactionsFragment(
     }
 
     private fun closeDrawer(animate: Boolean = true) {
-        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
-            drawer_layout.closeDrawer(GravityCompat.START, animate)
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            binding.drawerLayout.closeDrawer(GravityCompat.START, animate)
         }
     }
 
@@ -255,23 +272,23 @@ class TransactionsFragment(
         //user shouldn't be able to drag down when searchView is enable
         bottomSheetBehavior.isDraggable = false
         //disconnect recyclerView to bottomSheet
-        transaction_recyclerView.isNestedScrollingEnabled = false
+        binding.transactionRecyclerView.isNestedScrollingEnabled = false
 
-        bottom_sheet_search_clear.visibility = View.INVISIBLE
+        binding.bottomSheetSearchClear.visibility = View.INVISIBLE
 
-        bottom_sheet_search_edt.addTextChangedListener(onSearchViewTextChangeListener)
+        binding.bottomSheetSearchEdt.addTextChangedListener(onSearchViewTextChangeListener)
         //invisible search stuff
-        main_bottom_sheet_search_btn.visibility = View.GONE
-        bottom_sheet_title.visibility = View.GONE
+        binding.mainBottomSheetSearchBtn.visibility = View.GONE
+        binding.bottomSheetTitle.visibility = View.GONE
         //this should come after all
         viewModel.setSearchViewState(TransactionsViewState.SearchViewState.VISIBLE)
 
         query?.let {
-            bottom_sheet_search_edt.setText(it)
+            binding.bottomSheetSearchEdt.setText(it)
         }
         if (bottomSheetBehavior.state == STATE_EXPANDED) {
-            bottom_sheet_search_edt.visibility = View.VISIBLE
-            forceKeyBoardToOpenForMoneyEditText(bottom_sheet_search_edt)
+            binding.bottomSheetSearchEdt.visibility = View.VISIBLE
+            forceKeyBoardToOpenForMoneyEditText(binding.bottomSheetSearchEdt)
         }
     }
 
@@ -279,14 +296,14 @@ class TransactionsFragment(
 
         uiCommunicationListener.hideSoftKeyboard()
         //invisible search stuff
-        bottom_sheet_search_edt.visibility = View.GONE
-        bottom_sheet_search_clear.visibility = View.GONE
+        binding.bottomSheetSearchEdt.visibility = View.GONE
+        binding.bottomSheetSearchClear.visibility = View.GONE
 
-        bottom_sheet_search_edt.removeTextChangedListener(onSearchViewTextChangeListener)
-        bottom_sheet_search_edt.setText("")
+        binding.bottomSheetSearchEdt.removeTextChangedListener(onSearchViewTextChangeListener)
+        binding.bottomSheetSearchEdt.setText("")
         //visible search stuff
-        main_bottom_sheet_search_btn.visibility = View.VISIBLE
-        bottom_sheet_title.visibility = View.VISIBLE
+        binding.mainBottomSheetSearchBtn.visibility = View.VISIBLE
+        binding.bottomSheetTitle.visibility = View.VISIBLE
 
         //this should come after all
         viewModel.setSearchViewState(TransactionsViewState.SearchViewState.INVISIBLE)
@@ -294,7 +311,7 @@ class TransactionsFragment(
         //make bottom sheet draggable again after disabling searchView
         bottomSheetBehavior.isDraggable = true
         //connect recyclerView to bottomSheet
-        transaction_recyclerView.isNestedScrollingEnabled = true
+        binding.transactionRecyclerView.isNestedScrollingEnabled = true
 
         //submit that
         viewModel.setSearchQuery("")
@@ -307,9 +324,9 @@ class TransactionsFragment(
 
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             if (p0.isNullOrEmpty()) {
-                bottom_sheet_search_clear.visibility = View.INVISIBLE
+                binding.bottomSheetSearchClear.visibility = View.INVISIBLE
             } else {
-                bottom_sheet_search_clear.visibility = View.VISIBLE
+                binding.bottomSheetSearchClear.visibility = View.VISIBLE
             }
             //search for something
         }
@@ -407,20 +424,20 @@ class TransactionsFragment(
                 checkForSummeryMoneyPromote()
             }
             sm.balance = (sm.income.plus(sm.expenses))
-            txt_balance.text = separate3By3AndRoundIt(sm.balance, currentLocale)
+            binding.txtBalance.text = separate3By3AndRoundIt(sm.balance, currentLocale)
             if (sm.expenses != 0.0) {
-                txt_expenses.text =
+                binding.txtExpenses.text =
                     separate3By3AndRoundIt(sm.expenses.times(-1), currentLocale)
             } else {
-                txt_expenses.text = separate3By3AndRoundIt(0.0, currentLocale)
+                binding.txtExpenses.text = separate3By3AndRoundIt(0.0, currentLocale)
             }
-            txt_income.text = separate3By3AndRoundIt(sm.income, currentLocale)
+            binding.txtIncome.text = separate3By3AndRoundIt(sm.income, currentLocale)
         }
 
     }
 
     private fun setMonthFieldsValues(month: Month) {
-        toolbar_month.text = month.nameOfMonth
+        binding.transactionToolbar.toolbarMonthChanger.toolbarMonth.text = month.nameOfMonth
         startOfMonth = month.startOfMonth
         endOfMonth = month.endOfMonth
     }
@@ -433,9 +450,9 @@ class TransactionsFragment(
                 super.onScrolled(recyclerView, dx, dy)
                 if (bottomSheetBehavior.state == STATE_EXPANDED) {
                     if (dy > 0) {
-                        add_fab?.hide()
+                        binding.addFab?.hide()
                     } else {
-                        add_fab?.show()
+                        binding.addFab?.show()
                     }
 
                 }
@@ -461,7 +478,7 @@ class TransactionsFragment(
                 }
             }
         }
-        transaction_recyclerView.apply {
+        binding.transactionRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@TransactionsFragment.context)
             recyclerAdapter = TransactionsListAdapter(
                 requestManager,
@@ -480,7 +497,7 @@ class TransactionsFragment(
                     ) {
 
                         val adapter =
-                            transaction_recyclerView.adapter as TransactionsListAdapter
+                            binding.transactionRecyclerView.adapter as TransactionsListAdapter
                         val deletedTrans =
                             adapter.getTransaction(viewHolder.adapterPosition)
 //                        delete from list
@@ -509,9 +526,9 @@ class TransactionsFragment(
                 }
 
             val itemTouchHelper = ItemTouchHelper(swipeHandler)
-            itemTouchHelper.attachToRecyclerView(transaction_recyclerView)
+            itemTouchHelper.attachToRecyclerView(binding.transactionRecyclerView)
 
-            transaction_recyclerView.isNestedScrollingEnabled = true
+            binding.transactionRecyclerView.isNestedScrollingEnabled = true
             adapter = recyclerAdapter
         }
 
@@ -530,7 +547,7 @@ class TransactionsFragment(
         uiCommunicationListener.onResponseReceived(
             buildResponse(
                 getString(R.string.transaction_successfully_deleted),
-                UIComponentType.UndoSnackBar(undoCallback, fragment_transacion_root),
+                UIComponentType.UndoSnackBar(undoCallback, binding.fragmentTransacionRoot),
                 MessageType.Info
             ), object : StateMessageCallback {
                 override fun removeMessageFromStack() {
@@ -582,17 +599,17 @@ class TransactionsFragment(
             resetIt(0f)
         }
 
-        fragment_transacion_root.viewTreeObserver.addOnGlobalLayoutListener(object :
+        binding.fragmentTransacionRoot.viewTreeObserver.addOnGlobalLayoutListener(object :
             ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 //TODO BIG BUG HERE
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                    fragment_transacion_root.viewTreeObserver.removeOnGlobalLayoutListener(
+                    binding.fragmentTransacionRoot.viewTreeObserver.removeOnGlobalLayoutListener(
                         this
                     )
                 }
-                val rootHeight = fragment_transacion_root.height
-                val layoutHeight = transaction_fragment_view.height
+                val rootHeight = binding.fragmentTransacionRoot.height
+                val layoutHeight = binding.transactionFragmentView.height
                 Log.d(
                     TAG,
                     "onGlobalLayout: rootHeight:$rootHeight and layoutHeight $layoutHeight "
@@ -657,25 +674,25 @@ class TransactionsFragment(
                 // If theres bug with search bar this line is dangerous and bugkhiz
                 //we should use this here b/c when user click on search and bottom sheet is in collapse state
                 // edit text will crash the appbar
-                bottom_sheet_search_edt.visibility = View.VISIBLE
-                forceKeyBoardToOpenForMoneyEditText(bottom_sheet_search_edt)
+                binding.bottomSheetSearchEdt.visibility = View.VISIBLE
+                forceKeyBoardToOpenForMoneyEditText(binding.bottomSheetSearchEdt)
             }
-            last_transacion_app_bar.isLiftOnScroll = false
+            binding.lastTransacionAppBar.isLiftOnScroll = false
 //            last_transacion_app_bar.liftOnScrollTargetViewId = R.id.transaction_recyclerView
-            last_transacion_app_bar.setLiftable(false)
+            binding.lastTransacionAppBar.setLiftable(false)
             //enable backStack
             backStackForBottomSheet.isEnabled = true
         } else {
-            last_transacion_app_bar.isLiftOnScroll = true
-            last_transacion_app_bar.setLiftable(true)
+            binding.lastTransacionAppBar.isLiftOnScroll = true
+            binding.lastTransacionAppBar.setLiftable(true)
             //disable backStack
             backStackForBottomSheet.isEnabled = false
         }
 
         if (STATE_DRAGGING == newState) {
-            add_fab.hide()
+            binding.addFab.hide()
         } else {
-            add_fab.show()
+            binding.addFab.show()
         }
 
     }
@@ -683,7 +700,7 @@ class TransactionsFragment(
     private var bottomSheetBackGround: GradientDrawable? = null
 
     private fun onBottomSheetSlide(slideOffset: Float) {
-        main_bottom_sheet_back_arrow.alpha = slideOffset
+        binding.mainBottomSheetBackArrow.alpha = slideOffset
 
         bottomSheetBackGround =
             ResourcesCompat.getDrawable(
@@ -701,45 +718,45 @@ class TransactionsFragment(
         //change bottom sheet raidus
         bottomSheetBackGround?.cornerRadius = topHeight
         bottomSheetBackGround?.let {
-            main_standardBottomSheet.background = it
-            last_transacion_app_bar.background = it
+            binding.mainStandardBottomSheet.background = it
+            binding.lastTransacionAppBar.background = it
         }
         //change app bar
 
         //            last_transacion_app_bar.setPadding(topHeight.toInt(), 0, topHeight.toInt(), 0)
         //change app bar height
-        val appbarViewParams = last_transacion_app_bar.layoutParams
+        val appbarViewParams = binding.lastTransacionAppBar.layoutParams
         appbarViewParams.height =
             (normalAppBarHeight + (bottomSheetRadios - topHeight.toInt()))
-        last_transacion_app_bar.layoutParams = appbarViewParams
+        binding.lastTransacionAppBar.layoutParams = appbarViewParams
         //change buttons height
-        val buttonsViewParams = main_bottom_sheet_search_btn.layoutParams
+        val buttonsViewParams = binding.mainBottomSheetSearchBtn.layoutParams
         buttonsViewParams.width =
             (normalAppBarHeight + (bottomSheetRadios - topHeight.toInt()))
 
-        main_bottom_sheet_search_btn.layoutParams = buttonsViewParams
+        binding.mainBottomSheetSearchBtn.layoutParams = buttonsViewParams
 //            main_standardBottomSheet.setPadding(0, topHeight.toInt(), 0, 0)
         //change top of bottomSheet height
-        val viewParams = view_hastam.layoutParams
+        val viewParams = binding.viewHastam.layoutParams
         viewParams.height = topHeight.toInt()
-        view_hastam.layoutParams = viewParams
-        view_hastam2.alpha = (1f - slideOffset)
+        binding.viewHastam.layoutParams = viewParams
+        binding.viewHastam2.alpha = (1f - slideOffset)
 
         // make the toolbar close button animation
         val closeButtonParams =
-            main_bottom_sheet_back_arrow.layoutParams as ViewGroup.LayoutParams
+            binding.mainBottomSheetBackArrow.layoutParams as ViewGroup.LayoutParams
         closeButtonParams.width = (slideOffset * closeBottomWidth).toInt()
-        main_bottom_sheet_back_arrow.layoutParams = closeButtonParams
+        binding.mainBottomSheetBackArrow.layoutParams = closeButtonParams
     }
 
     private fun resetIt(slideOffset: Float) {
 
         if (slideOffset == 1f) {//if its full screen then set it to liftable
-            last_transacion_app_bar.isLiftOnScroll = false
-            last_transacion_app_bar.setLiftable(false)
+            binding.lastTransacionAppBar.isLiftOnScroll = false
+            binding.lastTransacionAppBar.setLiftable(false)
         }
 
-        main_bottom_sheet_back_arrow.alpha = slideOffset
+        binding.mainBottomSheetBackArrow.alpha = slideOffset
 
         bottomSheetBackGround =
             ResourcesCompat.getDrawable(
@@ -757,33 +774,33 @@ class TransactionsFragment(
         //change bottom sheet raidus
         bottomSheetBackGround?.cornerRadius = topHeight
         bottomSheetBackGround?.let {
-            main_standardBottomSheet.background = it
-            last_transacion_app_bar.background = it
+            binding.mainStandardBottomSheet.background = it
+            binding.lastTransacionAppBar.background = it
         }
         //            last_transacion_app_bar.setPadding(topHeight.toInt(), 0, topHeight.toInt(), 0)
         //change app bar height
-        val appbarViewParams = last_transacion_app_bar.layoutParams
+        val appbarViewParams = binding.lastTransacionAppBar.layoutParams
         appbarViewParams.height =
             (normalAppBarHeight + (bottomSheetRadios - topHeight.toInt()))
-        last_transacion_app_bar.layoutParams = appbarViewParams
+        binding.lastTransacionAppBar.layoutParams = appbarViewParams
         //change buttons height
-        val buttonsViewParams = main_bottom_sheet_search_btn.layoutParams
+        val buttonsViewParams = binding.mainBottomSheetSearchBtn.layoutParams
         buttonsViewParams.width =
             (normalAppBarHeight + (bottomSheetRadios - topHeight.toInt()))
 
-        main_bottom_sheet_search_btn.layoutParams = buttonsViewParams
+        binding.mainBottomSheetSearchBtn.layoutParams = buttonsViewParams
 //            main_standardBottomSheet.setPadding(0, topHeight.toInt(), 0, 0)
         //change top of bottomSheet height
-        val viewParams = view_hastam.layoutParams
+        val viewParams = binding.viewHastam.layoutParams
         viewParams.height = topHeight.toInt()
-        view_hastam.layoutParams = viewParams
-        view_hastam2.alpha = (1f - slideOffset)
+        binding.viewHastam.layoutParams = viewParams
+        binding.viewHastam2.alpha = (1f - slideOffset)
 
         // make the toolbar close button animation
         val closeButtonParams =
-            main_bottom_sheet_back_arrow.layoutParams as ViewGroup.LayoutParams
+            binding.mainBottomSheetBackArrow.layoutParams as ViewGroup.LayoutParams
         closeButtonParams.width = (slideOffset * closeBottomWidth).toInt()
-        main_bottom_sheet_back_arrow.layoutParams = closeButtonParams
+        binding.mainBottomSheetBackArrow.layoutParams = closeButtonParams
     }
 
     private fun forceKeyBoardToOpenForMoneyEditText(editText: EditText) {

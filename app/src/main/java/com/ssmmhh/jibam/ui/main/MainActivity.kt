@@ -12,10 +12,10 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import com.ssmmhh.jibam.BaseApplication
 import com.ssmmhh.jibam.R
+import com.ssmmhh.jibam.databinding.ActivityMainBinding
 import com.ssmmhh.jibam.ui.BaseActivity
 import com.ssmmhh.jibam.ui.app_intro.AppIntroActivity
 import com.ssmmhh.jibam.util.PreferenceKeys
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.Main
 import java.util.*
@@ -38,11 +38,14 @@ class MainActivity : BaseActivity() {
 
     lateinit var listener: NavController.OnDestinationChangedListener
 
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         inject()
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
         if (savedInstanceState == null) {
             firstSetup()
         }
@@ -98,12 +101,12 @@ class MainActivity : BaseActivity() {
             loadingJob = lifecycleScope.launch(Main) {
                 delay(transitionAnimTime.toLong())
                 ensureActive()
-                progressBar.visibility = View.VISIBLE
+                binding.progressBar.visibility = View.VISIBLE
             }
         } else {
             loadingJob?.cancel()
             loadingJob = null
-            progressBar.visibility = View.INVISIBLE
+            binding.progressBar.visibility = View.INVISIBLE
         }
     }
 

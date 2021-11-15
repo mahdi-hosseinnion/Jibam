@@ -12,7 +12,9 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include layout="@layout/layout_toolbar_with_back_btn" />
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/layout_toolbar_with_back_btn" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

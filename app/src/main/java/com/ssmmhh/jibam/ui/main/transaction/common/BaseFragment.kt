@@ -16,11 +16,7 @@ import kotlinx.coroutines.FlowPreview
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-abstract class BaseFragment
-constructor(
-    @LayoutRes
-    private val layoutRes: Int
-) : Fragment(layoutRes) {
+abstract class BaseFragment : Fragment() {
     private val TAG = "BaseTransactionFragment"
 
     lateinit var uiCommunicationListener: UICommunicationListener

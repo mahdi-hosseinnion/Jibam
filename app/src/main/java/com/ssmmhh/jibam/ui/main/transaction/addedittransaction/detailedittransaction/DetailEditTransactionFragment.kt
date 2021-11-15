@@ -3,7 +3,9 @@ package com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransa
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
@@ -14,6 +16,7 @@ import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.bumptech.glide.RequestManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.ssmmhh.jibam.R
+import com.ssmmhh.jibam.databinding.FragmentAddTransactionBinding
 import com.ssmmhh.jibam.models.Category
 import com.ssmmhh.jibam.models.Transaction
 import com.ssmmhh.jibam.models.TransactionEntity
@@ -21,8 +24,6 @@ import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.common.AddEditTra
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionPresenterState
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionPresenterState.*
 import com.ssmmhh.jibam.util.*
-import kotlinx.android.synthetic.main.fragment_add_transaction.*
-import kotlinx.android.synthetic.main.layout_toolbar_with_back_btn.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
@@ -52,6 +53,24 @@ constructor(
 
     private val args: DetailEditTransactionFragmentArgs by navArgs()
 
+    private var _binding: FragmentAddTransactionBinding? = null
+
+    private val binding get() = _binding!!
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentAddTransactionBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -61,19 +80,19 @@ constructor(
     }
 
     private fun setupUi() {
-        topAppBar_normal.title = getString(R.string.details)
+        binding.toolbar?.topAppBarNormal?.title = getString(R.string.details)
 
         //add backstack listener for discard dialog
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             backStackForDialog
         )
-        topAppBar_normal.setNavigationOnClickListener {
+        binding.toolbar?.topAppBarNormal?.setNavigationOnClickListener {
             backStackForDialog.handleOnBackPressed()
         }
-        topAppBar_img_btn.visibility = View.VISIBLE
+        binding.toolbar?.topAppBarImgBtn?.visibility = View.VISIBLE
 
-        topAppBar_img_btn.setOnClickListener {
+        binding.toolbar?.topAppBarImgBtn?.setOnClickListener {
             checkForDelete(viewModel.getDefaultTransaction()?.id)
 
         }
@@ -86,11 +105,11 @@ constructor(
                 .collect {
                     Log.d("DetailEditTransactionVi", "setupUi: $it ")
                     backStackForDialog.isEnabled = it
-                    topAppBar_normal.title = if (it) {
-                        fab_submit.show()
+                    binding.toolbar?.topAppBarNormal?.title = if (it) {
+                        binding.fabSubmit.show()
                         getString(R.string.edit_transaction)
                     } else {
-                        fab_submit.hide()
+                        binding.fabSubmit.hide()
                         getString(R.string.details)
                     }
                 }
@@ -99,23 +118,23 @@ constructor(
         /**
          * on clicks
          */
-        category_fab.setOnClickListener {
+        binding.categoryFab.setOnClickListener {
             viewModel.setPresenterState(SelectingCategoryState)
         }
-        bottom_sheet_close_btn.setOnClickListener {
+        binding.bottomSheetCloseBtn.setOnClickListener {
             viewModel.setPresenterState(NoneState)
         }
-        edt_memo.setOnClickListener {
+        binding.edtMemo.setOnClickListener {
             viewModel.setPresenterState(AddingNoteState)
         }
-        edt_memo.addTextChangedListener {
+        binding.edtMemo.addTextChangedListener {
             Log.d(TAG, "setupUi: edt_memo: ${it.toString()} ")
             viewModel.onMemoChanged(it.toString())
         }
-        edt_money.addTextChangedListener {
+        binding.edtMoney.addTextChangedListener {
             viewModel.onMoneyChanged(it.toString(), resources)
         }
-        fab_submit.setOnClickListener {
+        binding.fabSubmit.setOnClickListener {
             updateTransaction()
         }
     }
@@ -144,7 +163,7 @@ constructor(
                     navigateBack()
                 }
                 if (stateMessage.response.messageType == MessageType.Error) {
-                    fab_submit.isEnabled = true
+                    binding.fabSubmit.isEnabled = true
                 }
             }
         }
@@ -178,46 +197,46 @@ constructor(
             is SelectingCategoryState -> {
                 btmsheetViewPagerAdapter.submitSelectedItemId(viewModel.getTransactionCategoryId())
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-                category_fab.hide()
+                binding.categoryFab.hide()
                 viewModel.submitButtonState.forcedHidden(true)
                 uiCommunicationListener.hideSoftKeyboard()
-                disableContentInteraction(edt_memo)
+                disableContentInteraction(binding.edtMemo)
             }
 
             is EnteringAmountOfMoneyState -> {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                category_fab.show()
+                binding.categoryFab.show()
                 viewModel.submitButtonState.forcedHidden(false)
-                disableContentInteraction(edt_memo)
+                disableContentInteraction(binding.edtMemo)
 //                uiCommunicationListener.hideSoftKeyboard()
-                showCustomKeyboard(edt_money)
+                showCustomKeyboard(binding.edtMoney)
             }
             is AddingNoteState -> {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                category_fab.show()
+                binding.categoryFab.show()
                 viewModel.submitButtonState.forcedHidden(false)
                 hideCustomKeyboard()
-                enableContentInteraction(edt_memo)
-                forceKeyBoardToOpenForEditText(edt_memo)
+                enableContentInteraction(binding.edtMemo)
+                forceKeyBoardToOpenForEditText(binding.edtMemo)
             }
             is ChangingDateState -> {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                category_fab.show()
+                binding.categoryFab.show()
                 viewModel.submitButtonState.forcedHidden(false)
                 uiCommunicationListener.hideSoftKeyboard()
                 hideCustomKeyboard()
-                disableContentInteraction(edt_memo)
+                disableContentInteraction(binding.edtMemo)
                 //apply
                 showDatePickerDialog(viewModel.getCombineCalender())
             }
 
             is ChangingTimeState -> {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                category_fab.show()
+                binding.categoryFab.show()
                 viewModel.submitButtonState.forcedHidden(false)
                 uiCommunicationListener.hideSoftKeyboard()
                 hideCustomKeyboard()
-                disableContentInteraction(edt_memo)
+                disableContentInteraction(binding.edtMemo)
                 //apply
                 showTimePickerDialog(viewModel.getCombineCalender())
             }
@@ -225,11 +244,11 @@ constructor(
 
             is NoneState -> {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                category_fab.show()
+                binding.categoryFab.show()
                 viewModel.submitButtonState.forcedHidden(false)
                 uiCommunicationListener.hideSoftKeyboard()
                 hideCustomKeyboard()
-                disableContentInteraction(edt_memo)
+                disableContentInteraction(binding.edtMemo)
 
             }
         }
@@ -250,8 +269,8 @@ constructor(
         )
 
         //set memo
-        if (edt_memo.text.toString() != transaction.memo) {
-            edt_memo.setText(transaction.memo)
+        if (binding.edtMemo.text.toString() != transaction.memo) {
+            binding.edtMemo.setText(transaction.memo)
         }
 
         //set date to edit text
@@ -260,8 +279,8 @@ constructor(
     }
 
     private fun setMoneyFields(money: String) {
-        if (edt_money.text.toString() != money) {
-            keyboard.preloadKeyboard(money)
+        if (binding.edtMoney.text.toString() != money) {
+            binding.keyboard.preloadKeyboard(money)
         }
     }
 
@@ -270,15 +289,15 @@ constructor(
         categoryImage: String
     ) {
         //set name and icon
-        category_fab.text = name
-        category_fab.extend()
+        binding.categoryFab.text = name
+        binding.categoryFab.extend()
 
         val resourceId: Int = requireActivity().resources.getIdentifier(
             "ic_cat_${categoryImage}",
             "drawable",
             requireActivity().packageName
         )
-        category_fab.icon = VectorDrawableCompat.create(resources, resourceId, null)
+        binding.categoryFab.icon = VectorDrawableCompat.create(resources, resourceId, null)
     }
 
     private fun setCombineFields(calendar: GregorianCalendar) {
@@ -325,7 +344,7 @@ constructor(
     override fun onBottomSheetStateChanged(newState: Int) {
         if (newState == BottomSheetBehavior.STATE_HIDDEN && viewModel.getTransactionCategoryId() != null) {
             //bottomSheet slide animation stuff stuff
-            if (edt_money.text.toString().isBlank()) {
+            if (binding.edtMoney.text.toString().isBlank()) {
                 viewModel.setPresenterState(EnteringAmountOfMoneyState)
             } else {
                 viewModel.setPresenterState(NoneState)
@@ -368,11 +387,11 @@ constructor(
     }
 
     private fun updateTransaction() {
-        fab_submit.isEnabled = false
+        binding.fabSubmit.isEnabled = false
         getTransactionEntityFiled()?.let {
             viewModel.updateTransaction(it)
         } ?: run {
-            fab_submit.isEnabled = true
+            binding.fabSubmit.isEnabled = true
         }
     }
 
@@ -385,7 +404,7 @@ constructor(
             navigateBack()
             return null
         }
-        val moneyEditTextStr = edt_money.text.toString()
+        val moneyEditTextStr = binding.edtMoney.text.toString()
 
         if (moneyEditTextStr.isBlank()) {
             showSnackBar(R.string.pls_insert_some_money)
@@ -422,7 +441,7 @@ constructor(
         return TransactionEntity(
             id = transaction.id,
             money = money,
-            memo = edt_memo.text.toString(),
+            memo = binding.edtMemo.text.toString(),
             cat_id = transaction.categoryId,
             date = (calender.timeInMillis).div(1_000).toInt()
         )

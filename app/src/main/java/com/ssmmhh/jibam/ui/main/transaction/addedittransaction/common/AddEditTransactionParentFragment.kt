@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.*
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -31,7 +32,7 @@ import com.ssmmhh.jibam.util.*
 import com.ssmmhh.jibam.util.PreferenceKeys.CALENDAR_SOLAR
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.fragment_add_transaction.*
+import com.ssmmhh.jibam.databinding.FragmentAddTransactionBinding
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
@@ -48,9 +49,28 @@ constructor(
     private val sharedPreferences: SharedPreferences,
     private val sharedPrefsEditor: SharedPreferences.Editor,
     @StringRes private val fab_text: Int
-) : BaseFragment(
-    R.layout.fragment_add_transaction
-), CalculatorKeyboard.CalculatorInteraction, CategoryBottomSheetListAdapter.Interaction {
+) : BaseFragment()
+    , CalculatorKeyboard.CalculatorInteraction, CategoryBottomSheetListAdapter.Interaction
+{
+
+    private var _binding: FragmentAddTransactionBinding? = null
+
+    private val binding get() = _binding!!
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentAddTransactionBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     val textCalculator = TextCalculator()
 
@@ -66,7 +86,7 @@ constructor(
 
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
             //bottomSheet slide animation stuff stuff
-            transaction_detail_container.alpha = 1f.minus(slideOffset)
+            binding.transactionDetailContainer.alpha = 1f.minus(slideOffset)
         }
     }
 
@@ -77,53 +97,53 @@ constructor(
     }
 
     private fun initUi() {
-        fab_submit.text = getString(fab_text)
-        fab_submit.icon =
+        binding.fabSubmit.text = getString(fab_text)
+        binding.fabSubmit.icon =
             ResourcesCompat.getDrawable(
                 resources,
                 R.drawable.ic_check_green_24dp,
                 requireContext().theme
             )
 
-        edt_money.addTextChangedListener(onTextChangedListener)
+        binding.edtMoney.addTextChangedListener(onTextChangedListener)
 
         setupBottomSheet()
         // prevent system keyboard from appearing when EditText is tapped
-        edt_money.setRawInputType(InputType.TYPE_CLASS_TEXT)
-        edt_money.setTextIsSelectable(true)
+        binding.edtMoney.setRawInputType(InputType.TYPE_CLASS_TEXT)
+        binding.edtMoney.setTextIsSelectable(true)
 
         // pass the InputConnection from the EditText to the keyboard
-        val ic: InputConnection = edt_money.onCreateInputConnection(EditorInfo())
-        keyboard.inputConnection = ic
-        keyboard.calculatorInteraction = this
-        keyboard._resources = resources
-        keyboard.setTextToAllViews()
+        val ic: InputConnection = binding.edtMoney.onCreateInputConnection(EditorInfo())
+        binding.keyboard.inputConnection = ic
+        binding.keyboard.calculatorInteraction = this
+        binding.keyboard._resources = resources
+        binding.keyboard.setTextToAllViews()
         //controll visibity
 
         // Make the custom keyboard appear
-        edt_money.onFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
+        binding.edtMoney.onFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
             onMoneyEditTextFocusChanged(hasFocus)
         }
 
-        edt_money.setOnTouchListener { view, motionEvent ->
-            val inType: Int = edt_money.getInputType() // Backup the input type
-            edt_money.inputType = InputType.TYPE_NULL // Disable standard keyboard
-            edt_money.onTouchEvent(motionEvent)               // Call native handler
-            edt_money.inputType = inType // Restore input type
+        binding.edtMoney.setOnTouchListener { view, motionEvent ->
+            val inType: Int = binding.edtMoney.getInputType() // Backup the input type
+            binding.edtMoney.inputType = InputType.TYPE_NULL // Disable standard keyboard
+            binding.edtMoney.onTouchEvent(motionEvent)               // Call native handler
+            binding.edtMoney.inputType = inType // Restore input type
             view.performClick()
             return@setOnTouchListener true // Consume touch event
         }
-        edt_money.setOnClickListener {
+        binding.edtMoney.setOnClickListener {
             onClickedOnMoneyEditText()
 
         }
-        transaction_detail_container.setOnClickListener {
+        binding.transactionDetailContainer.setOnClickListener {
             onClickedOnEmptyOfDetailContainer()
         }
-        edt_date_sp.setOnClickListener {
+        binding.edtDateSp.setOnClickListener {
             onClickedOnDate()
         }
-        edt_time.setOnClickListener {
+        binding.edtTime.setOnClickListener {
             onClickedOnTime()
         }
         uiCommunicationListener.hideSoftKeyboard()
@@ -132,14 +152,14 @@ constructor(
 
     override fun onPause() {
         super.onPause()
-        if (edt_money.hasFocus()) {
-            edt_money.clearFocus()
+        if (binding.edtMoney.hasFocus()) {
+            binding.edtMoney.clearFocus()
         }
     }
 
     private fun setupBottomSheet() {
 
-        bottomSheetBehavior = BottomSheetBehavior.from(select_category_bottom_sheet)
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.selectCategoryBottomSheet)
         bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
         bottomSheetBehavior.isHideable = true
         bottomSheetBehavior.skipCollapsed = true
@@ -160,18 +180,18 @@ constructor(
             selectedCategoryId = null
         )
 
-        bottom_sheet_viewpager.adapter = btmsheetViewPagerAdapter
-        category_tab_layout.setupWithViewPager(bottom_sheet_viewpager)
+        binding.bottomSheetViewpager.adapter = btmsheetViewPagerAdapter
+        binding.categoryTabLayout.setupWithViewPager(binding.bottomSheetViewpager)
 
         if (!isLeftToRight) {
-            bottom_sheet_viewpager.currentItem = CategoryBottomSheetViewPagerAdapter.VIEW_PAGER_SIZE
+            binding.bottomSheetViewpager.currentItem = CategoryBottomSheetViewPagerAdapter.VIEW_PAGER_SIZE
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            category_tab_layout?.layoutDirection = View.LAYOUT_DIRECTION_LTR
+            binding.categoryTabLayout.layoutDirection = View.LAYOUT_DIRECTION_LTR
         } else {
             //TODO TEST THIS
-            category_tab_layout?.let {
+            binding.categoryTabLayout.let {
                 ViewCompat.setLayoutDirection(
                     it,
                     ViewCompat.LAYOUT_DIRECTION_LTR
@@ -182,14 +202,14 @@ constructor(
     }
 
     fun setDateToEditTexts(unixTimeInMillis: Long) {
-        disableContentInteraction(edt_date_sp)
-        disableContentInteraction(edt_time)
+        disableContentInteraction(binding.edtDateSp)
+        disableContentInteraction(binding.edtTime)
 
         val date = dateWithPattern(unixTimeInMillis)
         val time = timeWithPattern(unixTimeInMillis)
 
-        edt_date_sp.setText(date)
-        edt_time.setText(time)
+        binding.edtDateSp.setText(date)
+        binding.edtTime.setText(time)
 
     }
 
@@ -335,20 +355,20 @@ constructor(
         val imm: InputMethodManager =
             activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
-        keyboard.visibility = View.VISIBLE
+        binding.keyboard.visibility = View.VISIBLE
 
         //change bottom margin of fab
         val _16Dp = convertDpToPx(16)
 
-        changeFabBottomMargin(keyboard.height.plus(_16Dp))
+        changeFabBottomMargin(binding.keyboard.height.plus(_16Dp))
         //b/c when fragment is created keyboard is not visible and keyboard height is 0
         //so we check 10 times with 100 wait each time for keyboard to show up if it does'nt
         //show up we don't care b/c if focus change this method will be call again
         lifecycleScope.launch {
             for (i in 1..10) {
                 delay(100)
-                if (keyboard.height > 0) {
-                    changeFabBottomMargin(keyboard.height.plus(_16Dp))
+                if (binding.keyboard.height > 0) {
+                    changeFabBottomMargin(binding.keyboard.height.plus(_16Dp))
                     break
                 }
             }
@@ -358,7 +378,7 @@ constructor(
     }
 
     fun hideCustomKeyboard() {
-        keyboard.visibility = View.GONE
+        binding.keyboard.visibility = View.GONE
         val _16Dp = convertDpToPx(16)
         //change bottom margin of fab
         changeFabBottomMargin()
@@ -366,13 +386,13 @@ constructor(
 
     private fun changeFabBottomMargin(marginBottom: Int? = null) {
         val _16Dp = convertDpToPx(16)
-        if (fab_submit.isShown) {
+        if (binding.fabSubmit.isShown) {
             //TODO ADD SLIDE ANIMATION HERE
 //            fab_submit.hide()
-            fab_submit.setMargins(_16Dp, _16Dp, _16Dp, marginBottom ?: _16Dp)
+            binding.fabSubmit.setMargins(_16Dp, _16Dp, _16Dp, marginBottom ?: _16Dp)
 //            fab_submit.show()
         } else {
-            fab_submit.setMargins(_16Dp, _16Dp, _16Dp, marginBottom ?: _16Dp)
+            binding.fabSubmit.setMargins(_16Dp, _16Dp, _16Dp, marginBottom ?: _16Dp)
         }
     }
 
@@ -385,7 +405,7 @@ constructor(
     }
 
     override fun onEqualClicked() {
-        keyboard.preloadKeyboard(finalNUmber.text.toString().removeSeparateSign())
+        binding.keyboard.preloadKeyboard(binding.finalNUmber.text.toString().removeSeparateSign())
     }
 
     private val onTextChangedListener = object : TextWatcher {
@@ -394,7 +414,7 @@ constructor(
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
         override fun afterTextChanged(p0: Editable?) {
-            edt_money.removeTextChangedListener(this)
+            binding.edtMoney.removeTextChangedListener(this)
             //calculate result of main edittext
             val text = p0.toString()
 
@@ -404,19 +424,19 @@ constructor(
                     localizeDoubleNumber(calculatedResult.toDoubleOrNull(), currentLocale)
 
                 if (finalNumberText == null) {
-                    finalNUmber.text = getString(R.string.invalid_number_error)
+                    binding.finalNUmber.text = getString(R.string.invalid_number_error)
                 } else {
-                    finalNUmber.text =
-                        if (finalNumberText == edt_money.text.toString().removeOperationSigns()) ""
+                    binding.finalNUmber.text =
+                        if (finalNumberText == binding.edtMoney.text.toString().removeOperationSigns()) ""
                         else finalNumberText.convertFarsiDigitsToEnglishDigits().toDoubleOrNull()?.let { separate3By3(it,currentLocale) }
                             ?:finalNumberText
                 }
             } else {
-                finalNUmber.text = ""
+                binding.finalNUmber.text = ""
 
             }
 
-            edt_money.addTextChangedListener(this)
+            binding.edtMoney.addTextChangedListener(this)
         }
 
     }
@@ -447,10 +467,10 @@ constructor(
 
     fun showSnackBar(@StringRes resId: Int) {
         Snackbar.make(
-            bottomCoordinator,
+            binding.bottomCoordinator,
             getString(resId),
             Snackbar.LENGTH_SHORT
-        ).setAnchorView(fab_submit).show()
+        ).setAnchorView(binding.fabSubmit).show()
 
     }
 
