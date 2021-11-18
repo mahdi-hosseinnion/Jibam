@@ -5,6 +5,7 @@ buildscript {
 
     repositories {
         google()
+        mavenCentral()
         jcenter()
         maven { url "https://raw.github.com/laenger/maven-releases/master/releases" }
     }
@@ -24,7 +25,9 @@ buildscript {
 allprojects {
     repositories {
         google()
+        mavenCentral()
         jcenter()
+        maven { url "https://raw.github.com/laenger/maven-releases/master/releases" }
         maven { url "https://jitpack.io" }
     }
 }
