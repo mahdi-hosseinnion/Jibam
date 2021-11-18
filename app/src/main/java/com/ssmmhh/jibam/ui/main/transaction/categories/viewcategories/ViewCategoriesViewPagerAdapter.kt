@@ -2,17 +2,15 @@ package com.ssmmhh.jibam.ui.main.transaction.categories.viewcategories
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
-import com.ssmmhh.jibam.R
+import com.ssmmhh.jibam.databinding.LayoutViewpagerListItemBinding
 import com.ssmmhh.jibam.models.Category
 import com.ssmmhh.jibam.util.Constants.EXPENSES_TYPE_MARKER
 import com.ssmmhh.jibam.util.Constants.INCOME_TYPE_MARKER
-import kotlinx.android.synthetic.main.layout_viewpager_list_item.view.*
 import kotlinx.coroutines.FlowPreview
 
 @FlowPreview
@@ -46,8 +44,8 @@ class ViewCategoriesViewPagerAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewPagerViewHolder =
         ViewPagerViewHolder(
-            LayoutInflater.from(parent.context).inflate(
-                R.layout.layout_viewpager_list_item,
+            binding = LayoutViewpagerListItemBinding.inflate(
+                LayoutInflater.from(parent.context),
                 parent,
                 false
             )
@@ -57,19 +55,19 @@ class ViewCategoriesViewPagerAdapter(
         if (position == 0) {
             //expenses
             //init recycler
-            holder.itemView.recycler_viewCategories.layoutManager = LinearLayoutManager(context)
+            holder.binding.recyclerViewCategories.layoutManager = LinearLayoutManager(context)
 
-            holder.itemView.recycler_viewCategories.adapter = expensesRecyclerAdapter
+            holder.binding.recyclerViewCategories.adapter = expensesRecyclerAdapter
             //attach touch helper for drag and drop reorder
-            expensesItemTouchHelper.attachToRecyclerView(holder.itemView.recycler_viewCategories)
+            expensesItemTouchHelper.attachToRecyclerView(holder.binding.recyclerViewCategories)
         } else {
             //income
             //init recycler
-            holder.itemView.recycler_viewCategories.layoutManager = LinearLayoutManager(context)
+            holder.binding.recyclerViewCategories.layoutManager = LinearLayoutManager(context)
 
-            holder.itemView.recycler_viewCategories.adapter = incomeRecyclerAdapter
+            holder.binding.recyclerViewCategories.adapter = incomeRecyclerAdapter
             //attach touch helper for drag and drop reorder
-            incomeItemTouchHelper.attachToRecyclerView(holder.itemView.recycler_viewCategories)
+            incomeItemTouchHelper.attachToRecyclerView(holder.binding.recyclerViewCategories)
         }
 
     }
@@ -81,7 +79,8 @@ class ViewCategoriesViewPagerAdapter(
 
     override fun getItemCount(): Int = VIEWPAGER_SIZE
 
-    class ViewPagerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    class ViewPagerViewHolder(val binding: LayoutViewpagerListItemBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
     companion object {
         private const val VIEWPAGER_SIZE = 2

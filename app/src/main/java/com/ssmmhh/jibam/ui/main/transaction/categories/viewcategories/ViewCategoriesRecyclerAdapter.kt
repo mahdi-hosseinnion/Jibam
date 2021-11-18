@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.ssmmhh.jibam.R
+import com.ssmmhh.jibam.databinding.LayoutViewCategoriesListItemBinding
 import com.ssmmhh.jibam.models.Category
 import com.ssmmhh.jibam.util.CategoriesImageBackgroundColors
-import kotlinx.android.synthetic.main.layout_view_categories_list_item.view.*
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.List
@@ -29,8 +29,8 @@ class ViewCategoriesRecyclerAdapter(
         viewType: Int
     ): ViewPagerRecyclerViewHolder =
         ViewPagerRecyclerViewHolder(
-            itemView = LayoutInflater.from(parent.context).inflate(
-                R.layout.layout_view_categories_list_item,
+            binding = LayoutViewCategoriesListItemBinding.inflate(
+                LayoutInflater.from(parent.context),
                 parent,
                 false
             ),
@@ -79,11 +79,11 @@ class ViewCategoriesRecyclerAdapter(
     }
 
     class ViewPagerRecyclerViewHolder(
-        itemView: View,
+        val binding: LayoutViewCategoriesListItemBinding,
         private val categoryInteraction: CategoryInteraction,
         private val requestManager: RequestManager,
         private val packageName: String
-    ) : RecyclerView.ViewHolder(itemView) {
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(holder: RecyclerView.ViewHolder, item: Category?) {
             if (item != null) {
@@ -100,7 +100,7 @@ class ViewCategoriesRecyclerAdapter(
 //                }
                 itemView.apply {
 
-                    itemView.change_category_order_handle.setOnTouchListener { view, motionEvent ->
+                    binding.changeCategoryOrderHandle.setOnTouchListener { view, motionEvent ->
                         if (motionEvent.actionMasked == MotionEvent.ACTION_DOWN) {
                             categoryInteraction.onStartDrag(holder, item.type)
                         }
@@ -113,14 +113,14 @@ class ViewCategoriesRecyclerAdapter(
                     ) {
                         it.name
                     }
-                    itemView.nameOfCategory.text = categoryName
+                    binding.nameOfCategory.text = categoryName
                     //FOR DEBUG
 //                    itemView.ordering.text = item.ordering.toString()
 //                    itemView.category_id.text = item.id.toString()
 //                    val color = if (item.ordering == adapterPosition) Color.BLACK else Color.RED
 //                    itemView.ordering.setTextColor(color)
 
-                    cardView_view_category.setCardBackgroundColor(
+                    binding.cardViewViewCategory.setCardBackgroundColor(
                         resources.getColor(
                             CategoriesImageBackgroundColors.getCategoryColorById(item.id)
 
@@ -137,14 +137,14 @@ class ViewCategoriesRecyclerAdapter(
                         .centerInside()
                         .transition(DrawableTransitionOptions.withCrossFade())
                         .error(R.drawable.ic_error)
-                        .into(itemView.category_image)
+                        .into(binding.categoryImage)
 
-                    delete_category.setOnClickListener {
+                    binding.deleteCategory.setOnClickListener {
                         categoryInteraction.onDeleteClicked(adapterPosition, item)
                     }
                 }
             } else {
-                itemView.nameOfCategory.text =
+                binding.nameOfCategory.text =
                     itemView.resources.getString(R.string.UNKNOWN_CATEGORY)
             }
         }

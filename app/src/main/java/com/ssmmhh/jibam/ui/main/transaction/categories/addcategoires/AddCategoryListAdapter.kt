@@ -11,10 +11,10 @@ import androidx.recyclerview.widget.*
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.ssmmhh.jibam.R
+import com.ssmmhh.jibam.databinding.LayoutCategoryImagesHeaderBinding
+import com.ssmmhh.jibam.databinding.LayoutCategoryImagesListItemBinding
 import com.ssmmhh.jibam.models.CategoryImages
 import com.ssmmhh.jibam.util.CategoriesImageBackgroundColors
-import kotlinx.android.synthetic.main.layout_category_images_header.view.*
-import kotlinx.android.synthetic.main.layout_category_images_list_item.view.*
 
 
 class AddCategoryListAdapter(
@@ -73,8 +73,8 @@ class AddCategoryListAdapter(
 
             HEADER_ITEM -> {
                 return HeaderViewHolder(
-                    LayoutInflater.from(parent.context).inflate(
-                        R.layout.layout_category_images_header,
+                    LayoutCategoryImagesHeaderBinding.inflate(
+                        LayoutInflater.from(parent.context),
                         parent,
                         false
                     ),
@@ -84,8 +84,8 @@ class AddCategoryListAdapter(
             }
             else -> {
                 return ImageViewHolder(
-                    LayoutInflater.from(parent.context).inflate(
-                        R.layout.layout_category_images_list_item,
+                    LayoutCategoryImagesListItemBinding.inflate(
+                        LayoutInflater.from(parent.context),
                         parent,
                         false
                     ),
@@ -227,11 +227,11 @@ class AddCategoryListAdapter(
 
     inner class ImageViewHolder
     constructor(
-        itemView: View,
+        val binding: LayoutCategoryImagesListItemBinding,
         val requestManager: RequestManager?,
         private val interaction: Interaction?,
         val packageName: String
-    ) : RecyclerView.ViewHolder(itemView), OnOthersSelectedListener {
+    ) : RecyclerView.ViewHolder(binding.root), OnOthersSelectedListener {
 
         fun bind(item: CategoryImages) = with(itemView)
         {
@@ -258,7 +258,7 @@ class AddCategoryListAdapter(
                 ?.centerInside()
                 ?.transition(withCrossFade())
                 ?.error(R.drawable.ic_error)
-                ?.into(itemView.category_images)
+                ?.into(binding.categoryImages)
         }
 
         private fun onClickedOnItem(item: CategoryImages) {
@@ -280,10 +280,10 @@ class AddCategoryListAdapter(
                 R.drawable.shape_category_item_circle,
                 null
             )
-            itemView.category_images_frame.background = cricle_background
+            binding.categoryImagesFrame.background = cricle_background
 
             //change image tint to black
-            itemView.category_images.setColorFilter(
+            binding.categoryImages.setColorFilter(
                 itemView.resources.getColor(R.color.black),
                 android.graphics.PorterDuff.Mode.SRC_IN
             )
@@ -293,7 +293,7 @@ class AddCategoryListAdapter(
             try {
 
 
-                val circle_drawable = itemView.category_images_frame.background as Drawable
+                val circle_drawable = binding.categoryImagesFrame.background as Drawable
 
                 circle_drawable?.setColorFilter(
                     itemView.resources.getColor(
@@ -303,7 +303,7 @@ class AddCategoryListAdapter(
 
 
                 //change tint to white
-                itemView.category_images.setColorFilter(
+                binding.categoryImages.setColorFilter(
                     itemView.resources.getColor(R.color.white),
                     android.graphics.PorterDuff.Mode.SRC_IN
                 )
@@ -315,13 +315,13 @@ class AddCategoryListAdapter(
 
     class HeaderViewHolder
     constructor(
-        itemView: View,
+        val binding: LayoutCategoryImagesHeaderBinding,
         private val interaction: Interaction?,
         private val packageName: String
-    ) : RecyclerView.ViewHolder(itemView) {
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(headerName: CategoryImages) = with(itemView) {
-            itemView.header_name.text = headerName.getCategoryGroupNameFromStringFile(
+            binding.headerName.text = headerName.getCategoryGroupNameFromStringFile(
                 resources,
                 packageName = packageName
             ) {

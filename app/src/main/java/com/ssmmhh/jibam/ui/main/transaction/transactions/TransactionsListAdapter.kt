@@ -10,19 +10,13 @@ import androidx.recyclerview.widget.*
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.ssmmhh.jibam.R
+import com.ssmmhh.jibam.databinding.LayoutTransacionHeaderBinding
+import com.ssmmhh.jibam.databinding.LayoutTransactionListItemBinding
 import com.ssmmhh.jibam.models.Category
 import com.ssmmhh.jibam.models.Transaction
 import com.ssmmhh.jibam.util.CategoriesImageBackgroundColors
 import com.ssmmhh.jibam.util.GenericViewHolder
 import com.ssmmhh.jibam.util.separate3By3
-import kotlinx.android.synthetic.main.fragment_add_transaction.view.*
-import kotlinx.android.synthetic.main.fragment_transaction.*
-import kotlinx.android.synthetic.main.fragment_transaction.view.*
-import kotlinx.android.synthetic.main.layout_transacion_header.view.*
-import kotlinx.android.synthetic.main.layout_transacion_header.view.header_date
-import kotlinx.android.synthetic.main.layout_transacion_header.view.header_expenses_sum
-import kotlinx.android.synthetic.main.layout_transacion_header.view.header_income_sum
-import kotlinx.android.synthetic.main.layout_transaction_list_item.view.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -149,8 +143,8 @@ class TransactionsListAdapter(
             }
             TRANSACTION_ITEM -> {
                 return TransViewHolder(
-                    LayoutInflater.from(parent.context).inflate(
-                        R.layout.layout_transaction_list_item,
+                    binding = LayoutTransactionListItemBinding.inflate(
+                        LayoutInflater.from(parent.context),
                         parent,
                         false
                     ),
@@ -161,8 +155,8 @@ class TransactionsListAdapter(
             }
             HEADER_ITEM -> {
                 return HeaderViewHolder(
-                    LayoutInflater.from(parent.context).inflate(
-                        R.layout.layout_transacion_header,
+                    binding = LayoutTransacionHeaderBinding    .inflate(
+                        LayoutInflater.from(parent.context),
                         parent,
                         false
                     ),
@@ -172,8 +166,8 @@ class TransactionsListAdapter(
             }
             else -> {
                 return TransViewHolder(
-                    LayoutInflater.from(parent.context).inflate(
-                        R.layout.layout_transaction_list_item,
+                    binding = LayoutTransactionListItemBinding.inflate(
+                        LayoutInflater.from(parent.context),
                         parent,
                         false
                     ),
@@ -347,11 +341,11 @@ class TransactionsListAdapter(
 
     inner class TransViewHolder
     constructor(
-        itemView: View,
+        val binding: LayoutTransactionListItemBinding,
         val requestManager: RequestManager?,
         private val interaction: Interaction?,
         val packageName: String
-    ) : RecyclerView.ViewHolder(itemView) {
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Transaction, isNextItemHeader: Boolean = false) = with(itemView) {
 
@@ -360,31 +354,31 @@ class TransactionsListAdapter(
             }
 
             if (isNextItemHeader) {
-                itemView.transaction_divider.visibility = View.GONE
+                binding.transactionDivider.visibility = View.GONE
 //                itemView.root_transaction_item.setBackgroundResource(R.drawable.tranaction_bottom_header_bg)
             } else {
-                itemView.transaction_divider.visibility = View.VISIBLE
+                binding.transactionDivider.visibility = View.VISIBLE
 //                itemView.root_transaction_item.setBackgroundResource(R.color.backGround_white)
             }
 
             if (item.memo.isNullOrBlank()) {
-                itemView.main_text.text = item.getCategoryNameFromStringFile(
+                binding.mainText.text = item.getCategoryNameFromStringFile(
                     this.resources,
                     this@TransViewHolder.packageName
                 ) {
                     it.categoryName
                 }
             } else {
-                itemView.main_text.text = item.memo
+                binding.mainText.text = item.memo
             }
             if (item.money >= 0.0) {
                 //income
-                itemView.price.text = separate3By3(item.money, currentLocale)
-                itemView.price.setTextColor(resources.getColor(R.color.blue_500))
+                binding.price.text = separate3By3(item.money, currentLocale)
+                binding.price.setTextColor(resources.getColor(R.color.blue_500))
             } else {
                 //expenses
-                itemView.price.text = separate3By3(item.money, currentLocale)
-                itemView.price.setTextColor(resources.getColor(R.color.red_500))
+                binding.price.text = separate3By3(item.money, currentLocale)
+                binding.price.setTextColor(resources.getColor(R.color.red_500))
             }
             val categoryImageUrl = this.resources.getIdentifier(
                 "ic_cat_${item.categoryImage}",
@@ -393,7 +387,7 @@ class TransactionsListAdapter(
             )
             //TODO
 //            itemView.card
-            itemView.cardView.setCardBackgroundColor(
+            binding.cardView.setCardBackgroundColor(
                 resources.getColor(
                     CategoriesImageBackgroundColors.getCategoryColorById(item.categoryId)
                 )
@@ -404,7 +398,7 @@ class TransactionsListAdapter(
                 ?.centerInside()
                 ?.transition(withCrossFade())
                 ?.error(R.drawable.ic_error)
-                ?.into(itemView.category_image)
+                ?.into(binding.categoryImage)
         }
 
     }
@@ -412,10 +406,10 @@ class TransactionsListAdapter(
 
     class HeaderViewHolder
     constructor(
-        itemView: View,
+        val binding: LayoutTransacionHeaderBinding,
         private val interaction: Interaction?,
         private val currentLocale: Locale
-    ) : RecyclerView.ViewHolder(itemView) {
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Transaction) = with(itemView) {
 
@@ -429,44 +423,44 @@ class TransactionsListAdapter(
             //money for expenses
             Log.d(TAG, "bind: sum of all expenses = ${item.money}")
             if (item.money != 0.0) {
-                itemView.header_expenses_sum.text = "${resources.getString(R.string.expenses)}: ${
+                binding.headerExpensesSum.text = "${resources.getString(R.string.expenses)}: ${
                     separate3By3(
                         item.money,
                         currentLocale
                     )
                 }"
             } else {
-                itemView.header_expenses_sum.text = ""
+                binding.headerExpensesSum.text = ""
 
             }
             //cat_id for income
             if (item.incomeSum != null && item.incomeSum != 0.0) {
-                itemView.header_income_sum.text = "${resources.getString(R.string.income)}: ${
+                binding.headerIncomeSum.text = "${resources.getString(R.string.income)}: ${
                     separate3By3(
                         item.incomeSum,
                         currentLocale
                     )
                 }"
             } else {
-                itemView.header_income_sum.text = ""
+                binding.headerIncomeSum.text = ""
             }
-            itemView.header_date.text = ""
+            binding.headerDate.text = ""
 
             if (item.memo == TODAY) {
-                itemView.header_date_name.text = resources.getString(R.string.today)
+                binding.headerDateName.text = resources.getString(R.string.today)
             } else if (item.memo == YESTERDAY) {
-                itemView.header_date_name.text = resources.getString(R.string.yesterday)
+                binding.headerDateName.text = resources.getString(R.string.yesterday)
             } else {
                 try {
-                    itemView.header_date_name.text = item.memo?.substring(
+                    binding.headerDateName.text = item.memo?.substring(
                         0, item.memo.indexOf(
                             DAY_OF_WEEK_MARKER
                         )
                     )
-                    itemView.header_date.text =
+                    binding.headerDate.text =
                         item.memo?.substring(item.memo.indexOf(DAY_OF_WEEK_MARKER).plus(1))
                 } catch (e: Exception) {
-                    itemView.header_date.text = "${item.memo}"
+                    binding.headerDate.text = "${item.memo}"
                 }
             }
         }

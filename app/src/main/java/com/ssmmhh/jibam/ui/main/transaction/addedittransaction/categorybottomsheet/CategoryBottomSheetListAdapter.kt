@@ -10,20 +10,16 @@ import androidx.recyclerview.widget.*
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.ssmmhh.jibam.R
+import com.ssmmhh.jibam.databinding.LayoutCategoryListItemBinding
 import com.ssmmhh.jibam.models.Category
 import com.ssmmhh.jibam.util.CategoriesImageBackgroundColors
-import kotlinx.android.synthetic.main.layout_category_images_list_item.view.*
-import kotlinx.android.synthetic.main.layout_category_list_item.view.*
-import kotlinx.android.synthetic.main.layout_category_list_item.view.category_image
-import kotlinx.android.synthetic.main.layout_transaction_list_item.view.*
 
 class CategoryBottomSheetListAdapter(
     private val requestManager: RequestManager,
     private val interaction: Interaction? = null,
     private val packageName: String,
     private var selectedItemId: Int?
-) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val TAG: String = "AppDebug"
     private val BLOG_ITEM = 0
@@ -45,14 +41,14 @@ class CategoryBottomSheetListAdapter(
             AsyncDifferConfig.Builder(DIFF_CALLBACK).build()
         )
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val binding = LayoutCategoryListItemBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
         return CategoryViewHolder(
-            LayoutInflater.from(parent.context).inflate(
-                R.layout.layout_category_list_item,
-                parent,
-                false
-            ),
+            binding = binding,
             interaction = interaction,
             requestManager = requestManager,
             packageName = packageName
@@ -138,11 +134,11 @@ class CategoryBottomSheetListAdapter(
 
     class CategoryViewHolder
     constructor(
-        itemView: View,
+        val binding: LayoutCategoryListItemBinding,
         val requestManager: RequestManager,
         private val interaction: Interaction?,
         private val packageName: String
-    ) : RecyclerView.ViewHolder(itemView) {
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Category, selectedItemId: Int?) = with(itemView) {
             itemView.setOnClickListener {
@@ -156,7 +152,7 @@ class CategoryBottomSheetListAdapter(
                 setUnSelectedBackground()
             }
 
-            itemView.category_name.text =
+            binding.categoryName.text =
                 item.getCategoryNameFromStringFile(
                     resources,
                     this@CategoryViewHolder.packageName
@@ -176,7 +172,7 @@ class CategoryBottomSheetListAdapter(
                 .centerInside()
                 .transition(withCrossFade())
                 .error(R.drawable.ic_error)
-                .into(itemView.category_image)
+                .into(binding.categoryImage)
 
 
         }
@@ -186,7 +182,7 @@ class CategoryBottomSheetListAdapter(
             try {
 
 
-                val circle_drawable = itemView.category_image_frame.background as Drawable
+                val circle_drawable = binding.categoryImageFrame.background as Drawable
 
                 circle_drawable?.setColorFilter(
                     itemView.resources.getColor(
@@ -196,7 +192,7 @@ class CategoryBottomSheetListAdapter(
 
 
                 //change tint to white
-                itemView.category_image.setColorFilter(
+                binding.categoryImage.setColorFilter(
                     itemView.resources.getColor(R.color.white),
                     android.graphics.PorterDuff.Mode.SRC_IN
                 )

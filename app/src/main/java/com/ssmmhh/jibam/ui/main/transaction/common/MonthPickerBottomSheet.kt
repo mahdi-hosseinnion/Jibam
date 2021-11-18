@@ -5,11 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.ssmmhh.jibam.R
+import com.ssmmhh.jibam.databinding.BottomSheetMonthPickerBinding
 import com.ssmmhh.jibam.util.DateUtils
 import com.ssmmhh.jibam.util.SolarCalendar
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.android.synthetic.main.bottom_sheet_month_picker.*
 
 class MonthPickerBottomSheet
 constructor(
@@ -20,13 +20,26 @@ constructor(
     private val defaultYear: Int,
     private val isDefaultMonthTheCurrentMonth: Boolean
 ) : BottomSheetDialogFragment() {
+
+    private var _binding: BottomSheetMonthPickerBinding? = null
+
+    private val binding get() = _binding!!
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.bottom_sheet_month_picker, container, false)
+        _binding = BottomSheetMonthPickerBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -36,37 +49,41 @@ constructor(
     private fun initViews() {
 
         if (isDefaultMonthTheCurrentMonth) {
-            back_to_current_month_txt.visibility = View.GONE
+            binding.backToCurrentMonthTxt.visibility = View.GONE
         } else {
-            back_to_current_month_txt.visibility = View.VISIBLE
+            binding.backToCurrentMonthTxt.visibility = View.VISIBLE
         }
 
-        monthNumberPicker.minValue = 1
-        monthNumberPicker.maxValue = 12
+        binding.monthNumberPicker.minValue = 1
+        binding.monthNumberPicker.maxValue = 12
         if (isShamsi) {
-            yearNumberPicker.minValue = SolarCalendar.minShamsiYear
-            yearNumberPicker.maxValue = SolarCalendar.maxShamsiYear
-            monthNumberPicker.displayedValues = DateUtils.shamsiMonths
+            binding.yearNumberPicker.minValue = SolarCalendar.minShamsiYear
+            binding.yearNumberPicker.maxValue = SolarCalendar.maxShamsiYear
+            binding.monthNumberPicker.displayedValues = DateUtils.shamsiMonths
         } else {
-            yearNumberPicker.minValue = SolarCalendar.minGregorianYear
-            yearNumberPicker.maxValue = SolarCalendar.maxGregorianYear
-            monthNumberPicker.setDisplayedValues(DateUtils.gregorianMonths)
+            binding.yearNumberPicker.minValue = SolarCalendar.minGregorianYear
+            binding.yearNumberPicker.maxValue = SolarCalendar.maxGregorianYear
+            binding.monthNumberPicker.setDisplayedValues(DateUtils.gregorianMonths)
         }
-        monthNumberPicker.value = defaultMonth
-        yearNumberPicker.value = defaultYear
-        confirm_monthPicker.text = _resources.getString(R.string.confirm)
-        back_to_current_month_txt.text = _resources.getString(R.string.back_to_current_month)
-        confirm_monthPicker.setOnClickListener {
-            if (yearNumberPicker.value != defaultYear
+        binding.monthNumberPicker.value = defaultMonth
+        binding.yearNumberPicker.value = defaultYear
+        binding.confirmMonthPicker.text = _resources.getString(R.string.confirm)
+        binding.backToCurrentMonthTxt.text =
+            _resources.getString(R.string.back_to_current_month)
+        binding.confirmMonthPicker.setOnClickListener {
+            if (binding.yearNumberPicker.value != defaultYear
                 ||
-                monthNumberPicker.value != defaultMonth
+                binding.monthNumberPicker.value != defaultMonth
             ) {
-                interaction.onNewMonthSelected(monthNumberPicker.value, yearNumberPicker.value)
+                interaction.onNewMonthSelected(
+                    binding.monthNumberPicker.value,
+                    binding.yearNumberPicker.value
+                )
             }
             dismiss()
         }
         //on clicks
-        back_to_current_month_txt.setOnClickListener {
+        binding.backToCurrentMonthTxt.setOnClickListener {
             interaction.onNavigateToCurrentMonthClicked()
             dismiss()
         }

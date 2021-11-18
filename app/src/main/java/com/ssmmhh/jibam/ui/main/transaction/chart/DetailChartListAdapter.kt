@@ -7,10 +7,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.ssmmhh.jibam.R
+import com.ssmmhh.jibam.databinding.LayoutChartListItemBinding
 import com.ssmmhh.jibam.models.Transaction
 import com.ssmmhh.jibam.util.*
-import kotlinx.android.synthetic.main.layout_chart_list_item.view.*
-import kotlinx.android.synthetic.main.layout_transaction_list_item.view.cardView
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.abs
@@ -51,8 +50,11 @@ class DetailChartListAdapter(
             )
         } else {
             DetailChartViewHolder(
-                LayoutInflater.from(parent.context)
-                    .inflate(R.layout.layout_chart_list_item, parent, false),
+                binding = LayoutChartListItemBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                ),
                 interaction,
                 isCalendarSolar,
                 packageName,
@@ -86,13 +88,13 @@ class DetailChartListAdapter(
 
 
     class DetailChartViewHolder(
-        itemView: View,
+        val binding: LayoutChartListItemBinding,
         private val interaction: Interaction?,
         private val isCalendarSolar: Boolean,
         private var packageName: String,
         private var requestManager: RequestManager,
         private var currentLocale: Locale
-    ) : RecyclerView.ViewHolder(itemView) {
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
             item: Transaction,
@@ -103,18 +105,18 @@ class DetailChartListAdapter(
             showPercentage(item.money, totalAmount, biggestAmount)
             //set text
             if (item.memo.isNullOrBlank()) {
-                itemView.category_name.text = item.getCategoryNameFromStringFile(
+                binding.categoryName.text = item.getCategoryNameFromStringFile(
                     itemView.resources,
                     packageName
                 ) {
                     it.categoryName
                 }
             } else {
-                itemView.category_name.text = item.memo
+                binding.categoryName.text = item.memo
             }
-            sumOfMoney.text = abs(item.money).toString().localizeNumber(resources)
-            txt_date.visibility = View.VISIBLE
-            txt_date.text = dateWithPattern(item.date)
+            binding.sumOfMoney.text = abs(item.money).toString().localizeNumber(resources)
+            binding.txtDate.visibility = View.VISIBLE
+            binding.txtDate.text = dateWithPattern(item.date)
 
             setOnClickListener {
                 interaction?.onItemSelected(adapterPosition, item)
@@ -124,7 +126,7 @@ class DetailChartListAdapter(
 
         private fun loadImage(categoryId: Int, categoryImage: String) {
 
-            itemView.cardView.setCardBackgroundColor(
+            binding.cardView.setCardBackgroundColor(
                 itemView.resources.getColor(
                     CategoriesImageBackgroundColors.getCategoryColorById(categoryId)
 
@@ -141,7 +143,7 @@ class DetailChartListAdapter(
                 .centerInside()
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .error(R.drawable.ic_error)
-                .into(itemView.category_img)
+                .into(binding.categoryImg)
         }
 
         private fun showPercentage(
@@ -154,12 +156,12 @@ class DetailChartListAdapter(
                 totalAmount
             )
 
-            itemView.txt_percentage.text =
+            binding.txtPercentage.text =
                 ("${percentage}%").localizeNumber(
                     itemView.resources
                 )
-            itemView.prg_percentage.progress = percentage.toInt()
-            itemView.prg_percentage.max = calculatePercentage(biggestAmount, totalAmount).toInt()
+            binding.prgPercentage.progress = percentage.toInt()
+            binding.prgPercentage.max = calculatePercentage(biggestAmount, totalAmount).toInt()
         }
 
         private fun dateWithPattern(date: Int): String {

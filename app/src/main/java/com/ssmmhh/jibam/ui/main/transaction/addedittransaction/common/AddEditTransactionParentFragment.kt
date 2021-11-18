@@ -55,7 +55,7 @@ constructor(
 
     private var _binding: FragmentAddTransactionBinding? = null
 
-    private val binding get() = _binding!!
+    val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
