@@ -189,6 +189,12 @@ class CalculatorKeyboard(
             PLUS,
             PERIOD
         )
+        val listOfOperationsSigns = listOf(
+            DIVISION,
+            TIMES,
+            MINES,
+            PLUS,
+        )
     }
 
     //TODO BUG CANNOT RESULV WHEN CORSUR MOVE

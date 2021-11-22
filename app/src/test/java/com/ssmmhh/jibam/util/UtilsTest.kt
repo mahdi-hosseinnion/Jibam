@@ -1,9 +1,12 @@
 package com.ssmmhh.jibam.util
 
-import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+import java.util.*
+
 
 class UtilsTest {
+    val testLocale = Locale("us")
 
     @Test
     fun convertFarsiDigitsToEnglishDigits() {
@@ -38,13 +41,17 @@ class UtilsTest {
             "123+25+1-50×1÷153" to "123+25+1-50×1÷153",
             "123951+25+1000-50×1÷15003" to "123,951+25+1,000-50×1÷15,003",
             "4500+123" to "4,500+123",
-            "451+1045623" to  "451+1,045,623",
+            "451+1045623" to "451+1,045,623",
             "123456789-123" to "123,456,789-123",
-            "1200" to "",
-        )
+            "1200" to "1,200",
+            "112,125,354" to "112,125,354",
+            "123,456+" to "123,456+",
+            "123456+" to "123,456+",
+
+            )
 
         for ((k, v) in testData) {
-            val functionResult = separateCalculatorText3By3(k)
+            val functionResult = separateCalculatorText3By3(k, testLocale)
             assertEquals(v, functionResult)
         }
 

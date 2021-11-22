@@ -20,11 +20,8 @@ import com.ssmmhh.jibam.models.TransactionEntity
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.common.AddEditTransactionParentFragment
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionPresenterState
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionPresenterState.*
+import com.ssmmhh.jibam.util.*
 import com.ssmmhh.jibam.util.Constants.EXPENSES_TYPE_MARKER
-import com.ssmmhh.jibam.util.DiscardOrSaveCallback
-import com.ssmmhh.jibam.util.MessageType
-import com.ssmmhh.jibam.util.StateMessageCallback
-import com.ssmmhh.jibam.util.UIComponentType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.util.*
@@ -330,7 +327,7 @@ constructor(
             viewModel.setPresenterState(SelectingCategoryState)
             return null
         }
-        val moneyEditTextStr = binding.edtMoney.text.toString()
+        val moneyEditTextStr = binding.edtMoney.text.toString().remove3By3Separators()
 
         if (moneyEditTextStr.isBlank()) {
             showSnackBar(R.string.pls_insert_some_money)

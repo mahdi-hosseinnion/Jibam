@@ -227,9 +227,56 @@ fun SharedPreferences.isCalendarSolar(currentLocale: Locale): Boolean {
     return calendarType == PreferenceKeys.CALENDAR_SOLAR
 }
 
-fun separateCalculatorText3By3(text: String): String {
-    //first remove any ',' from text
-    text.replace(NUMBER_SEPARATOR.toString(), "")
-    //
-    return text
+/**
+ * Use case: this function is used to receive a text that contains a mix of number and math operation
+ * sign like(-, +, ×, ÷) and return the same text but with numbers separated 3 by 3
+ * ex: convert 123456+561-123987 to 123,456+561-123,987
+ */
+fun separateCalculatorText3By3(text: String, locale: Locale): String {
+    //remove any , from text
+    var value = text.remove3By3Separators()
+    //create a simple string builder to hold the result of function
+    val result = StringBuilder("")
+    //this two variables are used to indicate position of last and current operation sign position
+    var lastOperationPosition = 0
+    var currentOperationPosition: Int
+    //this loop will run untill there is any operation sign(-, +, ×, ÷) left in value
+    while (value.indexOfAny(CalculatorKeyboard.listOfOperationsSigns) >= 0) {
+        //get first index of any sign in the text
+        currentOperationPosition = value.indexOfAny(CalculatorKeyboard.listOfOperationsSigns)
+        //extract the number between last and current operation
+        var selectedNumber = value.substring(lastOperationPosition, currentOperationPosition)
+        //if selectedNumber size is grater then 3 we will separate it
+        if (selectedNumber.length > 3) {
+            selectedNumber = selectedNumber.toDoubleOrNull()?.let { separate3By3(it, locale) }
+                ?: selectedNumber
+        }
+        //append the number to result
+        result.append(selectedNumber)
+        //append the sign to result
+        result.append(value.substring(currentOperationPosition, currentOperationPosition.plus(1)))
+        //remove sign from value (for while loop condition)
+        value = value.removeRange(currentOperationPosition, currentOperationPosition.plus(1))
+
+        lastOperationPosition = currentOperationPosition
+    }
+    //if there is not any sign in the text (ex: 123456) or there is a number after
+    //an operation (ex: 134+123456) we want to separate number 3 by 3
+    //extract the number from last sign position till end of text
+    var lastSectionNumber = value.substring(lastOperationPosition)
+    //if selectedNumber size is grater then 3 it will be separate
+    if (lastSectionNumber.length > 3) {
+        lastSectionNumber = lastSectionNumber.toDoubleOrNull()?.let { separate3By3(it, locale) }
+                ?: lastSectionNumber
+    }
+    //append the number to result
+    result.append(lastSectionNumber)
+    return result.toString()
 }
+
+/**
+ * this function remove ',' from string
+ * it will convert 3 by 3 separated number to a normal number
+ * ex: converts 123,456,789 to 123456789
+ */
+fun String.remove3By3Separators(): String = this.replace(NUMBER_SEPARATOR.toString(), "")

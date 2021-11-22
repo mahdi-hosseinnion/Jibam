@@ -49,9 +49,8 @@ constructor(
     private val sharedPreferences: SharedPreferences,
     private val sharedPrefsEditor: SharedPreferences.Editor,
     @StringRes private val fab_text: Int
-) : BaseFragment()
-    , CalculatorKeyboard.CalculatorInteraction, CategoryBottomSheetListAdapter.Interaction
-{
+) : BaseFragment(), CalculatorKeyboard.CalculatorInteraction,
+    CategoryBottomSheetListAdapter.Interaction {
 
     private var _binding: FragmentAddTransactionBinding? = null
 
@@ -184,7 +183,8 @@ constructor(
         binding.categoryTabLayout.setupWithViewPager(binding.bottomSheetViewpager)
 
         if (!isLeftToRight) {
-            binding.bottomSheetViewpager.currentItem = CategoryBottomSheetViewPagerAdapter.VIEW_PAGER_SIZE
+            binding.bottomSheetViewpager.currentItem =
+                CategoryBottomSheetViewPagerAdapter.VIEW_PAGER_SIZE
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
@@ -416,7 +416,7 @@ constructor(
         override fun afterTextChanged(p0: Editable?) {
             binding.edtMoney.removeTextChangedListener(this)
             //calculate result of main edittext
-            val text = p0.toString()
+            val text = p0.toString().remove3By3Separators()
 
             if (text.indexOfAny(chars = listOfNumbers()) >= 0) {
                 val calculatedResult = textCalculator.calculateResult(text)
@@ -427,14 +427,22 @@ constructor(
                     binding.finalNUmber.text = getString(R.string.invalid_number_error)
                 } else {
                     binding.finalNUmber.text =
-                        if (finalNumberText == binding.edtMoney.text.toString().removeOperationSigns()) ""
-                        else finalNumberText.convertFarsiDigitsToEnglishDigits().toDoubleOrNull()?.let { separate3By3(it,currentLocale) }
-                            ?:finalNumberText
+                        if (finalNumberText == binding.edtMoney.text.toString()
+                                .removeOperationSigns()
+                        ) ""
+                        else finalNumberText.convertFarsiDigitsToEnglishDigits().toDoubleOrNull()
+                            ?.let { separate3By3(it, currentLocale) }
+                            ?: finalNumberText
                 }
             } else {
                 binding.finalNUmber.text = ""
 
             }
+            //separate text in edtMoney 3by 3 and set it back
+            val separated3By3Text = separateCalculatorText3By3(p0.toString(), currentLocale)
+            binding.edtMoney.setText(separated3By3Text)
+            binding.edtMoney.setSelection(binding.edtMoney.text.length)
+
 
             binding.edtMoney.addTextChangedListener(this)
         }

@@ -113,7 +113,7 @@ constructor(
             viewModel.onMemoChanged(it.toString())
         }
         binding.edtMoney.addTextChangedListener {
-            viewModel.onMoneyChanged(it.toString(), resources)
+            viewModel.onMoneyChanged(it.toString().remove3By3Separators(), resources)
         }
         binding.fabSubmit.setOnClickListener {
             updateTransaction()
@@ -260,7 +260,7 @@ constructor(
     }
 
     private fun setMoneyFields(money: String) {
-        if (binding.edtMoney.text.toString() != money) {
+        if (binding.edtMoney.text.toString().remove3By3Separators() != money) {
             binding.keyboard.preloadKeyboard(money)
         }
     }
@@ -385,7 +385,7 @@ constructor(
             navigateBack()
             return null
         }
-        val moneyEditTextStr = binding.edtMoney.text.toString()
+        val moneyEditTextStr = binding.edtMoney.text.toString().remove3By3Separators()
 
         if (moneyEditTextStr.isBlank()) {
             showSnackBar(R.string.pls_insert_some_money)
@@ -394,7 +394,7 @@ constructor(
         }
 
         val calculatedMoney = textCalculator.calculateResult(moneyEditTextStr)
-            .replace(",".toRegex(), "")
+
 
         if (calculatedMoney.isBlank() || calculatedMoney.toDouble() <= 0) {
             showSnackBar(R.string.pls_insert_valid_amount_of_money)
