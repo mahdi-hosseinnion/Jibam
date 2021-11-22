@@ -248,7 +248,8 @@ fun separateCalculatorText3By3(text: String, locale: Locale): String {
         var selectedNumber = value.substring(lastOperationPosition, currentOperationPosition)
         //if selectedNumber size is grater then 3 we will separate it
         if (selectedNumber.length > 3) {
-            selectedNumber = selectedNumber.toDoubleOrNull()?.let { separate3By3(it, locale) }
+            selectedNumber = selectedNumber.convertFarsiDigitsToEnglishDigits().toDoubleOrNull()
+                ?.let { separate3By3(it, locale) }
                 ?: selectedNumber
         }
         //append the number to result
@@ -266,8 +267,9 @@ fun separateCalculatorText3By3(text: String, locale: Locale): String {
     var lastSectionNumber = value.substring(lastOperationPosition)
     //if selectedNumber size is grater then 3 it will be separate
     if (lastSectionNumber.length > 3) {
-        lastSectionNumber = lastSectionNumber.toDoubleOrNull()?.let { separate3By3(it, locale) }
-                ?: lastSectionNumber
+        lastSectionNumber = lastSectionNumber.convertFarsiDigitsToEnglishDigits().toDoubleOrNull()
+            ?.let { separate3By3(it, locale) }
+            ?: lastSectionNumber
     }
     //append the number to result
     result.append(lastSectionNumber)

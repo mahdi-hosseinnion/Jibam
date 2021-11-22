@@ -6,7 +6,7 @@ import java.util.*
 
 
 class UtilsTest {
-    val testLocale = Locale("us")
+    val testLocale = Locale("en", "US")
 
     @Test
     fun convertFarsiDigitsToEnglishDigits() {
@@ -52,6 +52,34 @@ class UtilsTest {
 
         for ((k, v) in testData) {
             val functionResult = separateCalculatorText3By3(k, testLocale)
+            assertEquals(v, functionResult)
+        }
+
+    }
+
+    @Test
+    fun testSeparateCalculatorText3By3ForEnglishValuesPersianLang() {
+        //a map of manually separated calculator text
+        TextCalculator.Companion.operatorSymbols
+        val testData = mapOf<String, String>(
+            "۱۲۳" to "۱۲۳",
+            "1234" to "۱,۲۳۴",
+            "۰" to "۰",
+            "۱۲۳۴۵۶۷۸۹" to "۱۲۳,۴۵۶,۷۸۹",
+            "۱۲۳+۲۵+۱-۵۰×۱÷۱۵۳" to "۱۲۳+۲۵+۱-۵۰×۱÷۱۵۳",
+            "۱۲۳۹۵۱+۲۵+۱۰۰۰-۵۰×۱÷۱۵۰۰۳" to "۱۲۳,۹۵۱+۲۵+۱,۰۰۰-۵۰×۱÷۱۵,۰۰۳",
+            "۴۵۰۰+۱۲۳" to "۴,۵۰۰+۱۲۳",
+            "۴۵۱+۱۰۴۵۶۲۳" to "۴۵۱+۱,۰۴۵,۶۲۳",
+            "۱۲۳۴۵۶۷۸۹-۱۲۳" to "۱۲۳,۴۵۶,۷۸۹-۱۲۳",
+            "۱۲۰۰" to "۱,۲۰۰",
+            "۱۱۲,۱۲۵,۳۵۴" to "۱۱۲,۱۲۵,۳۵۴",
+            "۱۲۳,۴۵۶+" to "۱۲۳,۴۵۶+",
+            "۱۲۳۴۵۶+" to "۱۲۳,۴۵۶+",
+
+            )
+
+        for ((k, v) in testData) {
+            val functionResult = separateCalculatorText3By3(k, Locale("fa"))
             assertEquals(v, functionResult)
         }
 
