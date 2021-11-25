@@ -59,11 +59,13 @@ constructor(
         if (isShamsi) {
             binding.yearNumberPicker.minValue = SolarCalendar.minShamsiYear
             binding.yearNumberPicker.maxValue = SolarCalendar.maxShamsiYear
-            binding.monthNumberPicker.displayedValues = DateUtils.shamsiMonths
+            binding.monthNumberPicker.displayedValues =
+                DateUtils.shamsiMonths.map { strId -> getString(strId) }.toTypedArray()
         } else {
             binding.yearNumberPicker.minValue = SolarCalendar.minGregorianYear
             binding.yearNumberPicker.maxValue = SolarCalendar.maxGregorianYear
-            binding.monthNumberPicker.setDisplayedValues(DateUtils.gregorianMonths)
+            binding.monthNumberPicker.displayedValues =
+                DateUtils.gregorianMonths.map { strId -> getString(strId) }.toTypedArray()
         }
         binding.monthNumberPicker.value = defaultMonth
         binding.yearNumberPicker.value = defaultYear

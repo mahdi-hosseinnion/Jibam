@@ -263,7 +263,22 @@
     <string name="Dey">دي</string>
     <string name="Bahman">بهمن</string>
     <string name="Esfand">اسفند</string>
-<!--    days of week-->
+
+    <!--   Georgian calendar-->
+    <string name="January">ژانویه</string>
+    <string name="February">فوریه</string>
+    <string name="March">مارس</string>
+    <string name="April">آوریل</string>
+    <string name="May">مه</string>
+    <string name="June">ژوئن</string>
+    <string name="July">ژوئیه</string>
+    <string name="August">اوت</string>
+    <string name="September">سپتامبر</string>
+    <string name="October">اکتبر</string>
+    <string name="November">نوامبر</string>
+    <string name="December">دسامبر</string>
+
+    <!--    days of week-->
     <string name="saturday">شنبه</string>
     <string name="sunday">يکشنبه</string>
     <string name="monday">دوشنبه</string>

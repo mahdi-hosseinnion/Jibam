@@ -1,5 +1,6 @@
 package com.ssmmhh.jibam.util
 
+import com.ssmmhh.jibam.R
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -121,32 +122,32 @@ object DateUtils {
 
 
     val shamsiMonths = arrayOf(
-        "فروردين",
-        "ارديبهشت",
-        "خرداد",
-        "تير",
-        "مرداد",
-        "شهريور",
-        "مهر",
-        "آبان",
-        "آذر",
-        "دي",
-        "بهمن",
-        "اسفند"
+        R.string.Farvardin,
+        R.string.Ordibehesht,
+        R.string.Khordad,
+        R.string.Tir,
+        R.string.Mordad,
+        R.string.Shahrivar,
+        R.string.Mehr,
+        R.string.Aban,
+        R.string.Azar,
+        R.string.Dey,
+        R.string.Bahman,
+        R.string.Esfand
     )
     val gregorianMonths = arrayOf(
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December"
+        R.string.January,
+        R.string.February,
+        R.string.March,
+        R.string.April,
+        R.string.May,
+        R.string.June,
+        R.string.July,
+        R.string.August,
+        R.string.September,
+        R.string.October,
+        R.string.November,
+        R.string.December
     )
 
 }
