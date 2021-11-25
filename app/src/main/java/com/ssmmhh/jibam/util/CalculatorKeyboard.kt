@@ -218,8 +218,16 @@ class CalculatorKeyboard(
             val selectedText = inputConnection!!.getSelectedText(0)
             if (selectedText.isNullOrBlank()) {
                 // no selection, so delete previous character
-                inputConnection!!.deleteSurroundingText(1, 0)
+                if (inputConnection!!.getTextBeforeCursor(1, 0)[0] == NUMBER_SEPARATOR) {
+                    //get text before Cursor if it's  'NUMBER_SEPARATOR' remove 2
+                    //(remove NUMBER_SEPARATOR and text before number separator)
+                    inputConnection!!.deleteSurroundingText(2, 0)
+                } else {
+                    inputConnection!!.deleteSurroundingText(1, 0)
+                }
+                //TODO REMOVE THIS IT BASICLY MAKE NO SENSE AND IT's pretty buggy
                 text = text.removeLastIndex()
+
                 printText()
             } else {
                 // delete the selection
