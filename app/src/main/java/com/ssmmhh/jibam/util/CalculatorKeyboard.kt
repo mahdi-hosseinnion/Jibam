@@ -228,7 +228,7 @@ class CalculatorKeyboard(
 
                 inputConnection!!.commitText("", 1)
 
-                text = text.deleteString(selectedText.toString())
+                text = text.deleteString(selectedText.toString().remove3By3Separators())
                 printText()
             }
         } else if (v.id == R.id.btn_clearAll) {
