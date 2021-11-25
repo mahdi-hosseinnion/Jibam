@@ -440,8 +440,21 @@ constructor(
             }
             //separate text in edtMoney 3by 3 and set it back
             val separated3By3Text = separateCalculatorText3By3(p0.toString(), currentLocale)
+            val selectionPositionBeforeChangeText = binding.edtMoney.selectionStart
             binding.edtMoney.setText(separated3By3Text)
-            binding.edtMoney.setSelection(binding.edtMoney.text.length)
+            val countOfSeparatorBeforeChange = (p0.toString()).count { NUMBER_SEPARATOR == it }
+            val countOfSeparatorAfterChange = separated3By3Text.count { NUMBER_SEPARATOR == it }
+            try {
+                //we use this code to determine 'newSelectionPosition' according to the count of
+                    // 'NUMBER_SEPARATOR' added to text
+                val newSelectionPosition = selectionPositionBeforeChangeText.plus(
+                    countOfSeparatorAfterChange.minus(countOfSeparatorBeforeChange)
+                )
+                binding.edtMoney.setSelection(newSelectionPosition)
+            } catch (e: Exception) {
+                Log.e(TAG, "afterTextChanged: ${e.message}", e)
+                binding.edtMoney.setSelection(binding.edtMoney.text.length)
+            }
 
 
             binding.edtMoney.addTextChangedListener(this)
