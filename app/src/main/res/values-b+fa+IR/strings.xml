@@ -48,7 +48,7 @@
     <string name="add_expenses_category">اضافه کردن دسته جدید برای هزینه ها</string>
     <string name="add_income_category">اضافه کردن دسته جدید برای درآمد ها</string>
     <string name="unable_to_recognize_category_type">خطایی در هنگام شناسایی نوع دسته بندی رخ داده است</string>
-    <string name="jibi">جیبی</string>
+    <string name="jibam">جیبم</string>
 
     <!--    ERRORS-->
     <string name="pls_select_category">لطفا یک دسته انتخاب کنید!</string>
@@ -129,9 +129,9 @@
     <string name="_0">۰</string>
     <string name="_00">۰۰</string>
 
-    <string name="developement_title">جیبی توسعه داده شده توسط</string>
+    <string name="developement_title">جیبم توسعه داده شده توسط</string>
     <string name="about_app">
-        جیبی یک اپیکیشن اندروید است که به شما کمک میکند فعالیت های مالی خود را به راحتی رصد کنید.
+        جیبم یک اپیکیشن اندروید است که به شما کمک میکند فعالیت های مالی خود را به راحتی رصد کنید.
         به کمک این اپیکیشن شما پول بیشتری پس انداز خواهید کرد.
     </string>
     <string name="version">نسخه</string>
@@ -211,7 +211,7 @@
     <string name="system_default">پیشفرض سیستم (پیشنهادی)</string>
     <string name="english">English</string>
     <string name="changelanugaealart">تغییر دادن زبان اپیکیشن باعث راه اندازی مجدد اپیکیشن خواهد شد</string>
-    <string name="jibi_capital">جیبی</string>
+    <string name="jibam_capital">جیبم</string>
 
     <string name="no_transaction_found_with_this_category">هیچ تراکنشی با این دسته بندی یافت نشد!</string>
     <string name="no_chart_data_available">هیچ داده ای برای نمایش وجود ندارد.</string>
@@ -228,7 +228,7 @@
     <string name="done">باشه</string>
 
 
-    <string name="app_intro_slide_0_title">جیبی دستیار مالی جدید تو</string>
+    <string name="app_intro_slide_0_title">جیبم دستیار مالی جدید تو</string>
     <string name="app_intro_slide_0_description">به راحتی فعالیت های مالی خود را تحت نظر بگیر و ببین چه چیزهایی دارن یواشکی جیبتو خالی می کنند :)</string>
 
     <string name="app_intro_slide_1_title">پایش راحت</string>

@@ -46,7 +46,8 @@
     <string name="add_expenses_category">Add expenses category</string>
     <string name="add_income_category">Add income category</string>
     <string name="unable_to_recognize_category_type">Unable to recognize category type</string>
-    <string name="jibi">Jibi</string>
+    <string name="jibam">Jibam</string>
+    <string name="jibam_capital">JIBAM</string>
 
     <!--    ERRORS-->
     <string name="pls_select_category">Please select category</string>
@@ -133,7 +134,7 @@
     <string name="_00">00</string>
 
 
-    <string name="developement_title">Jibi is Developed By</string>
+    <string name="developement_title">Jibam is Developed By</string>
     <string name="developement_members">
     Developer
     \n Seyed mahdi hosseinnion
@@ -142,7 +143,7 @@
     \n Amir hossein taherain
     </string>
     <string name="about_app">
-        Jibi is an android application that helps you track your financial activity efficiently
+        Jibam is an android application that helps you track your financial activity efficiently
         . With this application you will save more money
     </string>
     <string name="version">Version</string>
@@ -208,7 +209,6 @@
     <string name="farsi">فارسی</string>
     <string name="english">English</string>
     <string name="changelanugaealart">Change app language cause app to restart</string>
-    <string name="jibi_capital">JIBI</string>
     <string name="no_transaction_found_with_this_category">There is no transaction with this category!</string>
 
     <string name="no_chart_data_available">No chart data available.</string>
@@ -225,7 +225,7 @@
     <string name="skip">SKIP</string>
     <string name="done">DONE</string>
 
-    <string name="app_intro_slide_0_title">Jibi is your new Financial Assistant</string>
+    <string name="app_intro_slide_0_title">Jibam is your new Financial Assistant</string>
     <string name="app_intro_slide_0_description">Track your financial activity and save more money</string>
 
 

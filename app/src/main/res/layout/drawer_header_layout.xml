@@ -14,7 +14,7 @@
         android:gravity="center|start"
         android:paddingStart="16dp"
         android:paddingLeft="16dp"
-        android:text="@string/jibi"
+        android:text="@string/jibam"
         android:textColor="?attr/colorOnPrimary"
         android:textSize="24sp" />
 

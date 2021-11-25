@@ -114,7 +114,7 @@ class TransactionsListAdapter(
                         false
                     ),
                     R.id.big_JIBI,
-                    R.string.jibi_capital
+                    R.string.jibam_capital
                 )
             }
             NO_RESULT_FOUND -> {
