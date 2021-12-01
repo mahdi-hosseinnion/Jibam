@@ -22,7 +22,7 @@ android {
 
         vectorDrawables.useSupportLibrary = true // for support .svg file api < 21
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.ssmmhh.jibam.MockTestRunner"
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments += [
@@ -151,6 +151,8 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_jupiter_version"
     testImplementation "org.junit.jupiter:junit-jupiter-params:$junit_jupiter_version"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_jupiter_version"
+    //dagger for test
+    kaptAndroidTest "com.google.dagger:dagger-compiler:$dagger_version"
 
     //mockk for unit testing
     testImplementation "io.mockk:mockk:1.10.2"

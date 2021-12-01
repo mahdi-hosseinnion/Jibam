@@ -10,7 +10,7 @@ import kotlinx.coroutines.FlowPreview
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-class BaseApplication : MultiDexApplication() {
+open class BaseApplication : MultiDexApplication() {
 
     lateinit var appComponent: AppComponent
 
@@ -46,7 +46,7 @@ class BaseApplication : MultiDexApplication() {
 //        return authComponent as AuthComponent
 //    }
 
-    fun initAppComponent() {
+    open fun initAppComponent() {
         appComponent = DaggerAppComponent.builder()
             .application(this)
             .build()

@@ -1,26 +1,24 @@
 package com.ssmmhh.jibam.di
 
 import android.app.Application
-import com.ssmmhh.jibam.di.main.MainComponent
-import com.ssmmhh.jibam.ui.BaseActivity
+import com.ssmmhh.jibam.di.main.TestMainComponent
 import dagger.BindsInstance
 import dagger.Component
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import javax.inject.Singleton
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 @Singleton
 @Component(
     modules = [
         AppModule::class,
-        SubComponentsModule::class
+        SubComponentsModule::class,
+        TestModule::class
     ]
 )
-@FlowPreview
-@ExperimentalCoroutinesApi
-interface AppComponent {
-
-//    val sessionManager: SessionManager
+interface TestAppComponent : AppComponent {
 
     @Component.Builder
     interface Builder {
@@ -31,10 +29,6 @@ interface AppComponent {
         fun build(): AppComponent
     }
 
-    fun inject(baseActivity: BaseActivity)
-
-//    fun authComponent(): AuthComponent.Factory
-
-    fun mainComponent(): MainComponent.Factory
+    fun testMainComponent(): TestMainComponent.Factory
 
 }
