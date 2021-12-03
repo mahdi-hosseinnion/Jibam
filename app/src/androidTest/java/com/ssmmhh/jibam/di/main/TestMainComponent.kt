@@ -1,6 +1,6 @@
 package com.ssmmhh.jibam.di.main
 
-import com.ssmmhh.jibam.ui.main.MainActivityTest
+import com.ssmmhh.jibam.endToEndTests.BasicTests
 import dagger.Subcomponent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -23,6 +23,6 @@ interface TestMainComponent : MainComponent {
         fun create(): TestMainComponent
     }
 
-    fun inject(mainActivityTest: MainActivityTest)
+    fun inject(basicTests: BasicTests)
 
 }
