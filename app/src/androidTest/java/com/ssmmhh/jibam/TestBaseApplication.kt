@@ -19,7 +19,7 @@ class TestBaseApplication : BaseApplication() {
             .build()
     }
 
-    fun testMainComponent(): TestMainComponent {
+    override fun mainComponent(): TestMainComponent {
         if (testMainComponent == null) {
             testMainComponent = (appComponent as TestAppComponent).testMainComponent().create()
         }

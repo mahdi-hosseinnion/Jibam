@@ -28,7 +28,7 @@ open class BaseApplication : MultiDexApplication() {
         mainComponent = null
     }
 
-    fun mainComponent(): MainComponent {
+    open fun mainComponent(): MainComponent {
         if (mainComponent == null) {
             mainComponent = appComponent.mainComponent().create()
         }
