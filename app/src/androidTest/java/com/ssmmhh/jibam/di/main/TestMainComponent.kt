@@ -1,6 +1,7 @@
 package com.ssmmhh.jibam.di.main
 
-import com.ssmmhh.jibam.endToEndTests.BasicTests
+import com.ssmmhh.jibam.endToEndTests.InsertTransactionTest
+import com.ssmmhh.jibam.endToEndTests.BasicTest
 import dagger.Subcomponent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -23,6 +24,7 @@ interface TestMainComponent : MainComponent {
         fun create(): TestMainComponent
     }
 
-    fun inject(basicTests: BasicTests)
+    fun inject(basicTest: BasicTest)
+    fun inject(insertTransactionTest: InsertTransactionTest)
 
 }

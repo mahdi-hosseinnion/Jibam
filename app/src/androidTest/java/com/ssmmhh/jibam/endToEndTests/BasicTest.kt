@@ -27,7 +27,7 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 @FlowPreview
 @RunWith(AndroidJUnit4ClassRunner::class)
-class BasicTests {
+class BasicTest {
 
     @Inject
     lateinit var sharedPrefEditor: SharedPreferences.Editor

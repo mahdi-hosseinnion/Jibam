@@ -2,9 +2,7 @@ package com.ssmmhh.jibam.ui.main.transaction.addedittransaction.inserttransactio
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -14,7 +12,6 @@ import com.bumptech.glide.RequestManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.databinding.FragmentAddTransactionBinding
 import com.ssmmhh.jibam.models.Category
 import com.ssmmhh.jibam.models.TransactionEntity
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.common.AddEditTransactionParentFragment
@@ -134,7 +131,9 @@ constructor(
 
             is SelectingCategoryState -> {
                 btmsheetViewPagerAdapter.submitSelectedItemId(viewModel.getTransactionCategory()?.id)
-                bottomSheetBehavior.state = STATE_EXPANDED
+                if (bottomSheetBehavior.state != STATE_EXPANDED)
+                    bottomSheetBehavior.state = STATE_EXPANDED
+
                 binding.categoryFab.hide()
                 binding.fabSubmit.hide()
                 uiCommunicationListener.hideSoftKeyboard()
@@ -142,7 +141,9 @@ constructor(
             }
 
             is EnteringAmountOfMoneyState -> {
-                bottomSheetBehavior.state = STATE_HIDDEN
+                if (bottomSheetBehavior.state != STATE_HIDDEN)
+                    bottomSheetBehavior.state = STATE_HIDDEN
+
                 binding.categoryFab.show()
                 binding.fabSubmit.show()
                 disableContentInteraction(binding.edtMemo)
@@ -150,7 +151,9 @@ constructor(
                 showCustomKeyboard(binding.edtMoney)
             }
             is AddingNoteState -> {
-                bottomSheetBehavior.state = STATE_HIDDEN
+                if (bottomSheetBehavior.state != STATE_HIDDEN)
+                    bottomSheetBehavior.state = STATE_HIDDEN
+
                 binding.categoryFab.show()
                 binding.fabSubmit.show()
                 hideCustomKeyboard()
@@ -158,7 +161,9 @@ constructor(
                 forceKeyBoardToOpenForEditText(binding.edtMemo)
             }
             is ChangingDateState -> {
-                bottomSheetBehavior.state = STATE_HIDDEN
+                if (bottomSheetBehavior.state != STATE_HIDDEN)
+                    bottomSheetBehavior.state = STATE_HIDDEN
+
                 binding.categoryFab.show()
                 binding.fabSubmit.show()
                 uiCommunicationListener.hideSoftKeyboard()
@@ -169,7 +174,9 @@ constructor(
             }
 
             is ChangingTimeState -> {
-                bottomSheetBehavior.state = STATE_HIDDEN
+                if (bottomSheetBehavior.state != STATE_HIDDEN)
+                    bottomSheetBehavior.state = STATE_HIDDEN
+
                 binding.categoryFab.show()
                 binding.fabSubmit.show()
                 uiCommunicationListener.hideSoftKeyboard()
@@ -181,7 +188,9 @@ constructor(
 
 
             is NoneState -> {
-                bottomSheetBehavior.state = STATE_HIDDEN
+                if (bottomSheetBehavior.state != STATE_HIDDEN)
+                    bottomSheetBehavior.state = STATE_HIDDEN
+
                 binding.categoryFab.show()
                 binding.fabSubmit.show()
                 uiCommunicationListener.hideSoftKeyboard()
@@ -189,6 +198,7 @@ constructor(
                 disableContentInteraction(binding.edtMemo)
 
             }
+
         }
 
     private fun handleBottomSheetDrag(category: Category?) {
@@ -288,8 +298,6 @@ constructor(
             //bottomSheet slide animation stuff stuff
             if (binding.edtMoney.text.toString().isBlank()) {
                 viewModel.setPresenterState(EnteringAmountOfMoneyState)
-            } else {
-                viewModel.setPresenterState(NoneState)
             }
         }
     }
