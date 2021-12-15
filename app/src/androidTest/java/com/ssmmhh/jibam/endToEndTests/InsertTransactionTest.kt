@@ -12,6 +12,7 @@ import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.ui.main.MainActivity
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.categorybottomsheet.CategoryBottomSheetListAdapter.CategoryViewHolder
 import com.ssmmhh.jibam.util.PreferenceKeys
+import com.ssmmhh.jibam.utils.atPositionOnView
 import com.ssmmhh.jibam.utils.getTestBaseApplication
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -85,8 +86,17 @@ class InsertTransactionTest {
         //click save
         onView(withId(R.id.fab_submit)).perform(click())
 
-        //check if transaction is being inserted and matches number
-        //TODO: check if there is transaction with money = 123
+        //check if transaction is being inserted and matches number '123'
+        //TODO add support for other languages
+        onView(withId(R.id.transaction_recyclerView)).check(
+            matches(
+                atPositionOnView(
+                    1,//b/c first position is the header
+                    withText("-123"),//negative b/c its expenses transaction
+                    R.id.price//id of price textView
+                )
+            )
+        )
 
     }
 
