@@ -52,17 +52,6 @@ object AppModule {
     @JvmStatic
     @Singleton
     @Provides
-    fun provideAppDb(app: Application): AppDatabase {
-        return Room
-            .databaseBuilder(app, AppDatabase::class.java, DATABASE_NAME)
-            .createFromAsset("databases/categories.db")
-//            .createFromAsset("databases\\categories.db")
-            .build()
-    }
-
-    @JvmStatic
-    @Singleton
-    @Provides
     fun provideCategoriesDao(db: AppDatabase): CategoriesDao {
         return db.getCategoriesDao()
     }

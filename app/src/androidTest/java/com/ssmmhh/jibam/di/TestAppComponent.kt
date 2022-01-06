@@ -13,6 +13,7 @@ import javax.inject.Singleton
 @Singleton
 @Component(
     modules = [
+        AppModule::class,
         SubComponentsModule::class,
         TestModule::class
     ]
