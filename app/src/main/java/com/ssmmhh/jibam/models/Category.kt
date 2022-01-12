@@ -29,7 +29,7 @@ data class Category(
     fun getCategoryNameFromStringFile(
         resources: Resources,
         packageName: String,
-        onUnableToFindName: (Category) -> String
+        onUnableToFindName: (Category) -> String = { it.name }
     ): String {
         val nameId: Int = resources.getIdentifier(
             this.name,
