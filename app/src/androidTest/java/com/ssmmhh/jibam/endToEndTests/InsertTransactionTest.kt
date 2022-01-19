@@ -16,10 +16,12 @@ import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.categorybottomshe
 import com.ssmmhh.jibam.util.PreferenceKeys
 import com.ssmmhh.jibam.utils.atPositionOnView
 import com.ssmmhh.jibam.utils.getTestBaseApplication
-import com.ssmmhh.jibam.utils.isVisible
+import com.ssmmhh.jibam.utils.waitTillViewIsDisplayed
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import org.hamcrest.Matchers.*
+import kotlinx.coroutines.runBlocking
+import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -124,65 +126,62 @@ class InsertTransactionTest {
     }
 
     @Test
-    fun insertNewIncomeTransaction_justInsertMoney_checkIfTransactionBeenInserted() {
-
-        //click on 'add_fab' to navigate to insertTransactionFragment
-        onView(withId(R.id.add_fab)).perform(click())
-        //check if toolbar has add transaction value
-        onView(withId(R.id.topAppBar_normal)).check(
-            matches(
-                hasDescendant(
-                    withText(
-                        resources.getString(
-                            R.string.add_transaction
+    fun insertNewIncomeTransaction_justInsertMoney_checkIfTransactionBeenInserted(): Unit =
+        runBlocking {
+            //click on 'add_fab' to navigate to insertTransactionFragment
+            onView(withId(R.id.add_fab)).perform(click())
+            //check if toolbar has add transaction value
+            onView(withId(R.id.topAppBar_normal)).check(
+                matches(
+                    hasDescendant(
+                        withText(
+                            resources.getString(
+                                R.string.add_transaction
+                            )
                         )
                     )
                 )
             )
-        )
-        //check if edit text is in view(we are in addTransactionFragment)
-        onView(withId(R.id.edt_money)).check(matches(isDisplayed()))
-        //swap to left (to income page in viewPager)
-        onView(withId(R.id.bottom_sheet_viewpager)).perform(swipeLeft())
-        //click on first item of categories recyclerView
-        val interaction = onView(
-            allOf(
-                withId(R.id.main_recycler),
-                withParent(withId(R.id.bottom_sheet_viewpager)),//not necessary
-                withParentIndex(1),//second position of viewPager
-                isDisplayed(),
-            )
-        )
-        //check if swipe is actually complete and new page is visible
-        val objectIsVisible: Boolean? = isVisible(interaction)
-        assertThat(objectIsVisible, `is`(true))
-        interaction.perform(
-            RecyclerViewActions.actionOnItemAtPosition<CategoryViewHolder>(
-                0,
-                click()
-            )
-        )
-        //insert 123 using calculator buttons
-        onView(withId(R.id.btn_1)).perform(click())
-        onView(withId(R.id.btn_2)).perform(click())
-        onView(withId(R.id.btn_3)).perform(click())
-
-        //click save
-        onView(withId(R.id.fab_submit)).perform(click())
-
-        //check if transaction is being inserted and matches number '123'
-        //TODO add support for other languages
-        //TODO check for category icon
-        onView(withId(R.id.transaction_recyclerView)).check(
-            matches(
-                atPositionOnView(
-                    1,//b/c first position is the header
-                    withText("123"),//positive b/c its income transaction
-                    R.id.price//id of price textView
+            //check if edit text is in view(we are in addTransactionFragment)
+            onView(withId(R.id.edt_money)).check(matches(isDisplayed()))
+            //swap to left (to income page in viewPager)
+            onView(withId(R.id.bottom_sheet_viewpager)).perform(swipeLeft())
+            //click on first item of categories recyclerView
+//            it turns out that espresso does not wait for 'swipeLeft' to complete
+//            -stackOverFlow issue: https://stackoverflow.com/q/37294132/10362460
+            onView(
+                allOf(
+                    withId(R.id.main_recycler),
+                    withParent(withId(R.id.bottom_sheet_viewpager)),//not necessary
+                    withParentIndex(1),//second position of viewPager
+                )
+            ).waitTillViewIsDisplayed().perform(
+                RecyclerViewActions.actionOnItemAtPosition<CategoryViewHolder>(
+                    0,
+                    click()
                 )
             )
-        )
-    }
+            //insert 123 using calculator buttons
+            onView(withId(R.id.btn_1)).perform(click())
+            onView(withId(R.id.btn_2)).perform(click())
+            onView(withId(R.id.btn_3)).perform(click())
+
+            //click save
+            onView(withId(R.id.fab_submit)).perform(click())
+
+            //check if transaction is being inserted and matches number '123'
+            //TODO add support for other languages
+            //TODO check for category icon
+            onView(withId(R.id.transaction_recyclerView)).check(
+                matches(
+                    atPositionOnView(
+                        1,//b/c first position is the header
+                        withText("123"),//positive b/c its income transaction
+                        R.id.price//id of price textView
+                    )
+                )
+            )
+        }
 
     @Test
     fun insertNewExpensesTransaction_insertMoneyAndMemo_checkIfTransactionBeenInserted() {
@@ -258,84 +257,82 @@ class InsertTransactionTest {
     }
 
     @Test
-    fun insertNewIncomeTransaction_insertMoneyAndMemo_checkIfTransactionBeenInserted() {
-        //Arrange
-        val testMemo = "Test Memo!2"
-        //Act
-        //click on 'add_fab' to navigate to insertTransactionFragment
-        onView(withId(R.id.add_fab)).perform(click())
-        //check if toolbar has add transaction value
-        onView(withId(R.id.topAppBar_normal)).check(
-            matches(
-                hasDescendant(
-                    withText(
-                        resources.getString(
-                            R.string.add_transaction
+    fun insertNewIncomeTransaction_insertMoneyAndMemo_checkIfTransactionBeenInserted(): Unit =
+        runBlocking {
+            //Arrange
+            val testMemo = "Test Memo!2"
+            //Act
+            //click on 'add_fab' to navigate to insertTransactionFragment
+            onView(withId(R.id.add_fab)).perform(click())
+            //check if toolbar has add transaction value
+            onView(withId(R.id.topAppBar_normal)).check(
+                matches(
+                    hasDescendant(
+                        withText(
+                            resources.getString(
+                                R.string.add_transaction
+                            )
                         )
                     )
                 )
             )
-        )
-        //check if edit text is in view(we are in addTransactionFragment)
-        onView(withId(R.id.edt_money)).check(matches(isDisplayed()))
-        //swap to left (to income page in viewPager)
-        onView(withId(R.id.bottom_sheet_viewpager)).perform(swipeLeft())
-        //click on first item of categories recyclerView
-        val interaction = onView(
-            allOf(
-                withId(R.id.main_recycler),
-                withParent(withId(R.id.bottom_sheet_viewpager)),//not necessary
-                withParentIndex(1),//second position of viewPager
-                isDisplayed(),
-            )
-        )
-        //check if swipe is actually complete and new page is visible
-        val objectIsVisible: Boolean? = isVisible(interaction)
-        assertThat(objectIsVisible, `is`(true))
-        interaction.perform(
-            RecyclerViewActions.actionOnItemAtPosition<CategoryViewHolder>(
-                0,
-                click()
-            )
-        )
-
-        //insert 123 using calculator buttons
-        onView(withId(R.id.btn_1)).perform(click())
-        onView(withId(R.id.btn_2)).perform(click())
-        onView(withId(R.id.btn_3)).perform(click())
-
-        //click on memo editText (get ready for inserting memo)
-        onView(withId(R.id.edt_memo)).perform(click())
-        //check if calculator keyboard is not displayed
-        onView(withId(R.id.keyboard)).check(matches(not(isDisplayed())));
-        //insert text into edt_memo
-        onView(withId(R.id.edt_memo)).perform(typeText(testMemo))
-
-        //click save
-        onView(withId(R.id.fab_submit)).perform(click())
-        //Assertions
-        //check if transaction is being inserted and matches number '123'
-        //TODO add support for other languages
-        onView(withId(R.id.transaction_recyclerView)).check(
-            matches(
-                atPositionOnView(
-                    1,//b/c first position is the header
-                    withText("123"),//positive b/c its income transaction
-                    R.id.price//id of price textView
+            //check if edit text is in view(we are in addTransactionFragment)
+            onView(withId(R.id.edt_money)).check(matches(isDisplayed()))
+            //swap to left (to income page in viewPager)
+            onView(withId(R.id.bottom_sheet_viewpager)).perform(swipeLeft())
+            //click on first item of categories recyclerView
+            //it turns out that espresso does not wait for 'swipeLeft' to complete
+            //-stackOverFlow issue: https://stackoverflow.com/q/37294132/10362460
+            onView(
+                allOf(
+                    withId(R.id.main_recycler),
+                    withParent(withId(R.id.bottom_sheet_viewpager)),//not necessary
+                    withParentIndex(1),//second position of viewPager
+                )
+            ).waitTillViewIsDisplayed().perform(
+                RecyclerViewActions.actionOnItemAtPosition<CategoryViewHolder>(
+                    0,
+                    click()
                 )
             )
-        )
-        //check if memo title in recyclerView is Inserted Memo
-        onView(withId(R.id.transaction_recyclerView)).check(
-            matches(
-                atPositionOnView(
-                    1,//b/c first position is the header
-                    withText(testMemo),
-                    R.id.main_text
+
+            //insert 123 using calculator buttons
+            onView(withId(R.id.btn_1)).perform(click())
+            onView(withId(R.id.btn_2)).perform(click())
+            onView(withId(R.id.btn_3)).perform(click())
+
+            //click on memo editText (get ready for inserting memo)
+            onView(withId(R.id.edt_memo)).perform(click())
+            //check if calculator keyboard is not displayed
+            onView(withId(R.id.keyboard)).check(matches(not(isDisplayed())));
+            //insert text into edt_memo
+            onView(withId(R.id.edt_memo)).perform(typeText(testMemo))
+
+            //click save
+            onView(withId(R.id.fab_submit)).perform(click())
+            //Assertions
+            //check if transaction is being inserted and matches number '123'
+            //TODO add support for other languages
+            onView(withId(R.id.transaction_recyclerView)).check(
+                matches(
+                    atPositionOnView(
+                        1,//b/c first position is the header
+                        withText("123"),//positive b/c its income transaction
+                        R.id.price//id of price textView
+                    )
                 )
             )
-        )
-        //TODO check for category icon
-    }
+            //check if memo title in recyclerView is Inserted Memo
+            onView(withId(R.id.transaction_recyclerView)).check(
+                matches(
+                    atPositionOnView(
+                        1,//b/c first position is the header
+                        withText(testMemo),
+                        R.id.main_text
+                    )
+                )
+            )
+            //TODO check for category icon
+        }
 
 }

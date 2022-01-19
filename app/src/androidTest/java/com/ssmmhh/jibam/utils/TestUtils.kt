@@ -4,18 +4,16 @@ import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.FailureHandler
+import androidx.test.espresso.ViewInteraction
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.BoundedMatcher
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import com.ssmmhh.jibam.TestBaseApplication
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.delay
 import org.hamcrest.Description
 import org.hamcrest.Matcher
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-
-import androidx.test.espresso.ViewInteraction
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers
 
 
 @FlowPreview
@@ -41,39 +39,36 @@ fun atPositionOnView(
 
 }
 /*
-    it turns out that espresso does not waits for 'swipeLeft' to complete
-    so it tries to access non visible view
-    so we freeze the thread till view is displayed
-    -stackOverFlow issue: https://stackoverflow.com/q/37294132/10362460
+    this function freeze the thread till view is displayed
  */
-val TIMEOUT_MILLISECONDS = 5_000
-val SLEEP_MILLISECONDS = 100
-var time = 0
-var wasDisplayed = false
-
-@Throws(InterruptedException::class)
-fun isVisible(interaction: ViewInteraction): Boolean? {
-
-
-    interaction.withFailureHandler { _: Throwable?, _: Matcher<View?>? ->
-        wasDisplayed = false
+suspend fun ViewInteraction.waitTillViewIsDisplayed(
+    timeout: Int = 3_000,
+    suspensionPeriod: Int = 100
+): ViewInteraction {
+    var time = 0
+    var wasDisplayed = false
+    while (time < timeout) {
+        this.withFailureHandler { _: Throwable?, _: Matcher<View?>? ->
+            wasDisplayed = false
+        }
+        this.check(matches(isDisplayed()))
+        if (wasDisplayed) {
+            return this
+        }
+        //set it to true if failing handle should set it to false again.
+        wasDisplayed = true
+        delay(suspensionPeriod.toLong())
+        time += suspensionPeriod
+        Log.i("isVisible: ViewChecker", "Thread slept for $time milliseconds")
     }
-    if (wasDisplayed) {
-        time = 0
-        wasDisplayed = false
-        return true
+    //after timeOut this will throw isDisplayed exception if view is not still visible
+    val additionalErrorInfo = "ViewInteraction.waitTillViewIsDisplayed: We just wait for $this " +
+            "to display for $timeout milliseconds but it did not \n moreInfo: "
+    this.withFailureHandler { error: Throwable?, _: Matcher<View?>? ->
+        throw Throwable(message = additionalErrorInfo + error?.message, error)
     }
-    if (time >= TIMEOUT_MILLISECONDS) {
-        time = 0
-        wasDisplayed = false
-        return false
-    }
+    this.check(matches(isDisplayed()))
+    return this
 
-    //set it to true if failing handle should set it to false again.
-    wasDisplayed = true
-    Thread.sleep(SLEEP_MILLISECONDS.toLong())
-    time += SLEEP_MILLISECONDS
-    interaction.check(matches(isDisplayed()))
-    Log.i("ViewChecker", "sleeping")
-    return isVisible(interaction)
 }
+
