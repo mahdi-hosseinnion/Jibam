@@ -16,10 +16,10 @@ import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.categorybottomshe
 import com.ssmmhh.jibam.util.PreferenceKeys
 import com.ssmmhh.jibam.utils.atPositionOnView
 import com.ssmmhh.jibam.utils.getTestBaseApplication
+import com.ssmmhh.jibam.utils.isVisible
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import org.hamcrest.Matchers.allOf
-import org.hamcrest.Matchers.not
+import org.hamcrest.Matchers.*
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -145,15 +145,23 @@ class InsertTransactionTest {
         //swap to left (to income page in viewPager)
         onView(withId(R.id.bottom_sheet_viewpager)).perform(swipeLeft())
         //click on first item of categories recyclerView
-        //TODO fix this
-        onView(
+        val interaction = onView(
             allOf(
                 withId(R.id.main_recycler),
                 withParent(withId(R.id.bottom_sheet_viewpager)),//not necessary
-                withParentIndex(1)//second position of viewPager
+                withParentIndex(1),//second position of viewPager
+                isDisplayed(),
             )
-        ).perform(RecyclerViewActions.actionOnItemAtPosition<CategoryViewHolder>(0, click()))
-
+        )
+        //check if swipe is actually complete and new page is visible
+        val objectIsVisible: Boolean? = isVisible(interaction)
+        assertThat(objectIsVisible, `is`(true))
+        interaction.perform(
+            RecyclerViewActions.actionOnItemAtPosition<CategoryViewHolder>(
+                0,
+                click()
+            )
+        )
         //insert 123 using calculator buttons
         onView(withId(R.id.btn_1)).perform(click())
         onView(withId(R.id.btn_2)).perform(click())
@@ -273,14 +281,23 @@ class InsertTransactionTest {
         //swap to left (to income page in viewPager)
         onView(withId(R.id.bottom_sheet_viewpager)).perform(swipeLeft())
         //click on first item of categories recyclerView
-        //TODO fix this
-        onView(
+        val interaction = onView(
             allOf(
                 withId(R.id.main_recycler),
                 withParent(withId(R.id.bottom_sheet_viewpager)),//not necessary
-                withParentIndex(0)//first position of viewPager
+                withParentIndex(1),//second position of viewPager
+                isDisplayed(),
             )
-        ).perform(RecyclerViewActions.actionOnItemAtPosition<CategoryViewHolder>(0, click()))
+        )
+        //check if swipe is actually complete and new page is visible
+        val objectIsVisible: Boolean? = isVisible(interaction)
+        assertThat(objectIsVisible, `is`(true))
+        interaction.perform(
+            RecyclerViewActions.actionOnItemAtPosition<CategoryViewHolder>(
+                0,
+                click()
+            )
+        )
 
         //insert 123 using calculator buttons
         onView(withId(R.id.btn_1)).perform(click())
@@ -320,6 +337,5 @@ class InsertTransactionTest {
         )
         //TODO check for category icon
     }
-
 
 }
