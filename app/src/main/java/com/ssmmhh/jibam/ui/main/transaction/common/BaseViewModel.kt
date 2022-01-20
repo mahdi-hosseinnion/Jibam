@@ -38,7 +38,7 @@ abstract class BaseViewModel<_ViewState, _StateEvent : StateEvent>() : ViewModel
             //if already job is active
             return
         }
-
+        EspressoIdlingResources.increment()
         val job = viewModelScope.launch(Dispatchers.IO + handler) {
 
             ensureActive()
@@ -51,6 +51,7 @@ abstract class BaseViewModel<_ViewState, _StateEvent : StateEvent>() : ViewModel
         _activeJobStack.add(stateEvent.getId())
 
         job.invokeOnCompletion { throwable ->
+            EspressoIdlingResources.decrement()
             _activeJobStack.remove(stateEvent.getId())
             //handle nonCancelable jobs
 
@@ -146,15 +147,15 @@ abstract class BaseViewModel<_ViewState, _StateEvent : StateEvent>() : ViewModel
     }
 
     fun getCurrentViewStateOrNew(): _ViewState {
-        return  _viewState.value ?:  initNewViewState()
+        return _viewState.value ?: initNewViewState()
     }
 
     fun setViewState(viewState: _ViewState) {
         //TODO FIX THIS PRBLE WITH getCurrentViewStateOrNew
         //when we try to set data to viewState with launch(Main) app will lag if we try to call  getCurrentViewStateOrNew
 //        viewModelScope.launch(Main) {
-            //other viewState data should maintain
-            _viewState.value = updateViewState(viewState)
+        //other viewState data should maintain
+        _viewState.value = updateViewState(viewState)
 //        }
     }
 

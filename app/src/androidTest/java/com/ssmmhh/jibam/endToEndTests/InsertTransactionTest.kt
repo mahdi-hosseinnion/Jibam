@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import android.content.res.Resources
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
@@ -13,6 +14,7 @@ import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.persistence.RecordsDao
 import com.ssmmhh.jibam.ui.main.MainActivity
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.categorybottomsheet.CategoryBottomSheetListAdapter.CategoryViewHolder
+import com.ssmmhh.jibam.util.EspressoIdlingResources
 import com.ssmmhh.jibam.util.PreferenceKeys
 import com.ssmmhh.jibam.utils.atPositionOnView
 import com.ssmmhh.jibam.utils.getTestBaseApplication
@@ -24,8 +26,10 @@ import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before
+import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.junit.runners.MethodSorters
 import javax.inject.Inject
 
 /**
@@ -60,6 +64,8 @@ class InsertTransactionTest {
 
     @Before
     fun beforeEach() {
+        //register idling resources
+        IdlingRegistry.getInstance().register(EspressoIdlingResources.countingIdlingResource)
         //set APP_INTRO_PREFERENCE to false, so it means user has seen the appIntro and click done
         //therefore mainActivity does not switch to AppIntroActivity
         sharedPrefEditor.putBoolean(PreferenceKeys.APP_INTRO_PREFERENCE, false).commit()
@@ -70,6 +76,8 @@ class InsertTransactionTest {
 
     @After
     fun afterEach() {
+        //unregister idling resources
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResources.countingIdlingResource)
         mainActivityScenario?.close()
         mainActivityScenario = null
     }
