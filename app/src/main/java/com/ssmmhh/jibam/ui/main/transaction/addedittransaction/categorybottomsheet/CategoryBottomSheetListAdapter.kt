@@ -4,7 +4,6 @@ import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.*
 import com.bumptech.glide.RequestManager
@@ -13,7 +12,9 @@ import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.LayoutCategoryListItemBinding
 import com.ssmmhh.jibam.models.Category
 import com.ssmmhh.jibam.util.CategoriesImageBackgroundColors
+import com.ssmmhh.jibam.util.EspressoIdlingResources
 
+//TODO REMOVE DIFF FROM THIS ADAPTER
 class CategoryBottomSheetListAdapter(
     private val requestManager: RequestManager,
     private val interaction: Interaction? = null,
@@ -21,7 +22,7 @@ class CategoryBottomSheetListAdapter(
     private var selectedItemId: Int?
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val TAG: String = "AppDebug"
+    private val TAG: String = "CategoryBottomSheetListAdapter"
     private val BLOG_ITEM = 0
 
     val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Category>() {
@@ -123,8 +124,12 @@ class CategoryBottomSheetListAdapter(
     fun submitList(
         blogList: List<Category>?,
     ) {
-        val sortedList = blogList
-        differ.submitList(sortedList)
+        EspressoIdlingResources.increment(TAG)
+        //after diffUtil library do its calculation then this runnable will run
+        val commitCallback = Runnable {
+            EspressoIdlingResources.decrement(TAG)
+        }
+        differ.submitList(blogList, commitCallback)
     }
 
     fun submitSelectedId(id: Int?) {

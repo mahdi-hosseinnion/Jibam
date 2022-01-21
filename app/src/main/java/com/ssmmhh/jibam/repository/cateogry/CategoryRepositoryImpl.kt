@@ -53,7 +53,7 @@ constructor(
                             messageType = MessageType.Success
                         ),
                         data = DetailEditTransactionViewState(
-                            allOfCategories = resultObj
+                            allOfCategories = Event(resultObj)
                         ),
                         stateEvent = stateEvent
                     )
@@ -134,7 +134,7 @@ constructor(
                             messageType = MessageType.Success
                         ),
                         data = InsertTransactionViewState(
-                            allOfCategories = resultObj
+                            allOfCategories = Event(resultObj)
                         ),
                         stateEvent = stateEvent
                     )

@@ -3,9 +3,7 @@ package com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransa
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
@@ -16,7 +14,6 @@ import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.bumptech.glide.RequestManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.databinding.FragmentAddTransactionBinding
 import com.ssmmhh.jibam.models.Category
 import com.ssmmhh.jibam.models.Transaction
 import com.ssmmhh.jibam.models.TransactionEntity
@@ -166,7 +163,8 @@ constructor(
                 viewState.combineCalender?.let { setCombineFields(it) }
                 viewState.presenterState?.getContentIfNotHandled()
                     ?.let { handlePresenterStateChange(it) }
-                viewState.allOfCategories?.let { setAllOfCategoriesFields(it) }
+                viewState.allOfCategories?.getContentIfNotHandled()
+                    ?.let { setAllOfCategoriesFields(it) }
 
             }
         }

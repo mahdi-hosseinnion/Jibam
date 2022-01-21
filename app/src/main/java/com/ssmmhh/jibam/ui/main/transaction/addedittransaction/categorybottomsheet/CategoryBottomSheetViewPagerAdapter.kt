@@ -46,21 +46,25 @@ class CategoryBottomSheetViewPagerAdapter(
             if (position == 0) {
                 //expenses type ==1
                 initRecycler(view.findViewById(R.id.main_recycler), expensesRecyclerViewAdapter)
-                expensesRecyclerViewAdapter.submitList(categoryList?.filter { it.type == EXPENSES_TYPE_MARKER })
+                if (categoryList != null)
+                    expensesRecyclerViewAdapter.submitList(categoryList.filter { it.type == EXPENSES_TYPE_MARKER })
             } else {
                 //income type ==2
                 initRecycler(view.findViewById(R.id.main_recycler), incomeRecyclerViewAdapter)
-                incomeRecyclerViewAdapter.submitList(categoryList?.filter { it.type == INCOME_TYPE_MARKER })
+                if (categoryList != null)
+                    incomeRecyclerViewAdapter.submitList(categoryList.filter { it.type == INCOME_TYPE_MARKER })
             }
         } else {
             if (position == 0) {
                 //income type ==2
                 initRecycler(view.findViewById(R.id.main_recycler), incomeRecyclerViewAdapter)
-                incomeRecyclerViewAdapter.submitList(categoryList?.filter { it.type == INCOME_TYPE_MARKER })
+                if (categoryList != null)
+                    incomeRecyclerViewAdapter.submitList(categoryList.filter { it.type == INCOME_TYPE_MARKER })
             } else {
                 //expenses type ==1
                 initRecycler(view.findViewById(R.id.main_recycler), expensesRecyclerViewAdapter)
-                expensesRecyclerViewAdapter.submitList(categoryList?.filter { it.type == EXPENSES_TYPE_MARKER })
+                if (categoryList != null)
+                    expensesRecyclerViewAdapter.submitList(categoryList.filter { it.type == EXPENSES_TYPE_MARKER })
             }
         }
         container.addView(view)

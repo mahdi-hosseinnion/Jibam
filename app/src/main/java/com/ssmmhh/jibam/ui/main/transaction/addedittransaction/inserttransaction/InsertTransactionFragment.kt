@@ -117,7 +117,8 @@ constructor(
                 viewState.finalMoney?.let { setFinalMoneyFields(it) }
                 viewState.memo?.let { setMemoFields(it) }
                 viewState.combineCalender?.let { setDateFields(it) }
-                viewState.allOfCategories?.let { setAllOfCategoriesFields(it) }
+                viewState.allOfCategories?.getContentIfNotHandled()
+                    ?.let { setAllOfCategoriesFields(it) }
                 viewState.presenterState?.getContentIfNotHandled()
                     ?.let { handlePresenterStateChange(it) }
             }

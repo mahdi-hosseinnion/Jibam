@@ -10,7 +10,7 @@ data class InsertTransactionViewState(
     val finalMoney: Double? = null,
     val memo: String? = null,
     val combineCalender: GregorianCalendar? = null,
-    val allOfCategories: List<Category>? = null,
+    val allOfCategories: Event<List<Category>?>? = null,
     val insertedTransactionRawId: Long? = null,
     val presenterState: Event<InsertTransactionPresenterState>? = null
 

@@ -36,6 +36,7 @@ import javax.inject.Inject
  * test inserting/adding a new transaction from scratch
  */
 //TODO This test don't run mutiple time (i think bug is: espresso does not wait for receiving category list
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @ExperimentalCoroutinesApi
 @FlowPreview
 @RunWith(AndroidJUnit4ClassRunner::class)
@@ -84,7 +85,6 @@ class InsertTransactionTest {
 
     @Test
     fun insertNewExpensesTransaction_justInsertMoney_checkIfTransactionBeenInserted() {
-
         //click on 'add_fab' to navigate to insertTransactionFragment
         onView(withId(R.id.add_fab)).perform(click())
         //check if toolbar has add transaction value
@@ -157,6 +157,11 @@ class InsertTransactionTest {
             //click on first item of categories recyclerView
 //            it turns out that espresso does not wait for 'swipeLeft' to complete
 //            -stackOverFlow issue: https://stackoverflow.com/q/37294132/10362460
+            /**
+             * TODO FIX THIS RANDOM BUG
+             * if you set 'suspensionPeriod' to 1000 or apply delay before click on recyclerview
+             * it will work, so there is bug in swipeLeft
+             */
             onView(
                 allOf(
                     withId(R.id.main_recycler),
@@ -291,6 +296,11 @@ class InsertTransactionTest {
             //click on first item of categories recyclerView
             //it turns out that espresso does not wait for 'swipeLeft' to complete
             //-stackOverFlow issue: https://stackoverflow.com/q/37294132/10362460
+            /**
+             * TODO FIX THIS RANDOM BUG
+             * if you set 'suspensionPeriod' to 1000 or apply delay before click on recyclerview
+             * it will work, so there is bug in swipeLeft
+             */
             onView(
                 allOf(
                     withId(R.id.main_recycler),

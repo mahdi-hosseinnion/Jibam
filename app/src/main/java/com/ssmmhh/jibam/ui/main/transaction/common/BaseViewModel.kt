@@ -38,7 +38,7 @@ abstract class BaseViewModel<_ViewState, _StateEvent : StateEvent>() : ViewModel
             //if already job is active
             return
         }
-        EspressoIdlingResources.increment()
+        EspressoIdlingResources.increment(stateEvent.getId())
         val job = viewModelScope.launch(Dispatchers.IO + handler) {
 
             ensureActive()
@@ -51,7 +51,7 @@ abstract class BaseViewModel<_ViewState, _StateEvent : StateEvent>() : ViewModel
         _activeJobStack.add(stateEvent.getId())
 
         job.invokeOnCompletion { throwable ->
-            EspressoIdlingResources.decrement()
+            EspressoIdlingResources.decrement(stateEvent.getId())
             _activeJobStack.remove(stateEvent.getId())
             //handle nonCancelable jobs
 

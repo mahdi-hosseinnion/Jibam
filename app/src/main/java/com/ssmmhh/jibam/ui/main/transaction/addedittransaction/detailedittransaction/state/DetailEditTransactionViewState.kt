@@ -17,7 +17,7 @@ data class DetailEditTransactionViewState(
     val moneyStr: String? = null,
     val transactionCategoryType: Int? = null,
     val combineCalender: GregorianCalendar? = null,
-    val allOfCategories: List<Category>? = null,
+    val allOfCategories: Event<List<Category>?>? = null,
     val successfullyDeletedTransactionIndicator: Int? = null,
     val presenterState: Event<DetailEditTransactionPresenterState>? = null
 
