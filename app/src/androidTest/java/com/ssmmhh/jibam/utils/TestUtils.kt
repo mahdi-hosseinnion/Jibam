@@ -8,6 +8,7 @@ import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import com.ssmmhh.jibam.TestBaseApplication
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -43,7 +44,8 @@ fun atPositionOnView(
  */
 suspend fun ViewInteraction.waitTillViewIsDisplayed(
     timeout: Int = 3_000,
-    suspensionPeriod: Int = 100
+    suspensionPeriod: Int = 100,
+    visibleAreaPercentage: Int = 100
 ): ViewInteraction {
     var time = 0
     var wasDisplayed = false
@@ -52,7 +54,10 @@ suspend fun ViewInteraction.waitTillViewIsDisplayed(
             wasDisplayed = false
         }
         this.check(matches(isDisplayed()))
+        this.check(matches(isDisplayingAtLeast(visibleAreaPercentage)))
         if (wasDisplayed) {
+            //set it back to default
+            this.withFailureHandler { error, _ -> throw error }
             return this
         }
         //set it to true if failing handle should set it to false again.
@@ -62,13 +67,17 @@ suspend fun ViewInteraction.waitTillViewIsDisplayed(
         Log.i("isVisible: ViewChecker", "Thread slept for $time milliseconds")
     }
     //after timeOut this will throw isDisplayed exception if view is not still visible
-    val additionalErrorInfo = "ViewInteraction.waitTillViewIsDisplayed: We just wait for $this " +
-            "to display for $timeout milliseconds but it did not \n moreInfo: "
+
+    var finalError = Throwable(
+        message = "ViewInteraction.waitTillViewIsDisplayed: We just wait for $this " +
+                "to display for $timeout milliseconds but it did not \n moreInfo: "
+    )
     this.withFailureHandler { error: Throwable?, _: Matcher<View?>? ->
-        throw Throwable(message = additionalErrorInfo + error?.message, error)
+        //catch next checks error
+        finalError = Throwable(message = finalError.message + error?.message, error)
     }
     this.check(matches(isDisplayed()))
-    return this
-
+    this.check(matches(isDisplayingAtLeast(visibleAreaPercentage)))
+    throw finalError
 }
 

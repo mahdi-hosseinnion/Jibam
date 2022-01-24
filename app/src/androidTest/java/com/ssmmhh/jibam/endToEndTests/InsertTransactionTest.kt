@@ -18,7 +18,6 @@ import com.ssmmhh.jibam.util.EspressoIdlingResources
 import com.ssmmhh.jibam.util.PreferenceKeys
 import com.ssmmhh.jibam.utils.atPositionOnView
 import com.ssmmhh.jibam.utils.getTestBaseApplication
-import com.ssmmhh.jibam.utils.repeatTests.Repeat
 import com.ssmmhh.jibam.utils.repeatTests.RepeatRule
 import com.ssmmhh.jibam.utils.waitTillViewIsDisplayed
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -271,7 +270,6 @@ class InsertTransactionTest {
     }
 
     @Test
-    @Repeat(10)
     fun insertNewIncomeTransaction_insertMoneyAndMemo_checkIfTransactionBeenInserted(): Unit =
         runBlocking {
             //Arrange
