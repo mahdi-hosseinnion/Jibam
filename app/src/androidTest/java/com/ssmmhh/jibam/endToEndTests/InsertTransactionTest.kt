@@ -18,16 +18,15 @@ import com.ssmmhh.jibam.util.EspressoIdlingResources
 import com.ssmmhh.jibam.util.PreferenceKeys
 import com.ssmmhh.jibam.utils.atPositionOnView
 import com.ssmmhh.jibam.utils.getTestBaseApplication
+import com.ssmmhh.jibam.utils.repeatTests.Repeat
+import com.ssmmhh.jibam.utils.repeatTests.RepeatRule
 import com.ssmmhh.jibam.utils.waitTillViewIsDisplayed
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
-import org.junit.After
-import org.junit.Before
-import org.junit.FixMethodOrder
-import org.junit.Test
+import org.junit.*
 import org.junit.runner.RunWith
 import org.junit.runners.MethodSorters
 import javax.inject.Inject
@@ -42,6 +41,8 @@ import javax.inject.Inject
 @RunWith(AndroidJUnit4ClassRunner::class)
 class InsertTransactionTest {
 
+    @get:Rule
+    val repeatRule: RepeatRule = RepeatRule()
 
     @Inject
     lateinit var sharedPrefEditor: SharedPreferences.Editor
@@ -270,6 +271,7 @@ class InsertTransactionTest {
     }
 
     @Test
+    @Repeat(10)
     fun insertNewIncomeTransaction_insertMoneyAndMemo_checkIfTransactionBeenInserted(): Unit =
         runBlocking {
             //Arrange
