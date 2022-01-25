@@ -26,7 +26,7 @@ interface RecordsDao {
             WHERE rId = :id
         """
     )
-    suspend fun getTransactionById(id: Int): Transaction
+    suspend fun getTransactionById(id: Int): Transaction?
 
 
     /**

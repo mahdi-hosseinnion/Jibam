@@ -47,10 +47,6 @@ class InsertTransactionTest {
     lateinit var sharedPrefEditor: SharedPreferences.Editor
 
     @Inject
-    lateinit var recordsDao: RecordsDao
-
-
-    @Inject
     lateinit var resources: Resources
 
     init {
