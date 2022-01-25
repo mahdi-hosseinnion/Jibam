@@ -19,6 +19,7 @@ import com.ssmmhh.jibam.ui.main.MainActivity
 import com.ssmmhh.jibam.util.DateUtils
 import com.ssmmhh.jibam.util.PreferenceKeys
 import com.ssmmhh.jibam.utils.getTestBaseApplication
+import com.ssmmhh.jibam.utils.withDrawable
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.runBlocking
@@ -228,9 +229,9 @@ class ViewDetailTransactionTest {
             .perform(click())
         //ViewAssertions
         //check if toolbar has remove button
-        onView(withId(R.id.topAppBar_img_btn)).check(
-            matches(isDisplayed())
-        )
+        onView(withId(R.id.topAppBar_img_btn))
+            .check(matches(isDisplayed()))
+            .check(matches(withDrawable(R.drawable.ic_round_delete_24)))
         //TODO check for icon of imageButton
         //click on delete image button
         onView(withId(R.id.topAppBar_img_btn)).perform(click())
