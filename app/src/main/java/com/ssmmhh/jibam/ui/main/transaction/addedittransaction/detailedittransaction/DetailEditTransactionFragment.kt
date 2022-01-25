@@ -271,11 +271,8 @@ constructor(
         binding.categoryFab.text = name
         binding.categoryFab.extend()
 
-        val resourceId: Int = requireActivity().resources.getIdentifier(
-            "ic_cat_${categoryImage}",
-            "drawable",
-            requireActivity().packageName
-        )
+        val resourceId: Int =
+            getCategoryDrawableResourceIdByCategoryImageName(requireContext(), categoryImage)
         binding.categoryFab.icon = VectorDrawableCompat.create(resources, resourceId, null)
     }
 

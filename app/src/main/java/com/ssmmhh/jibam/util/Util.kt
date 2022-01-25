@@ -1,5 +1,6 @@
 package com.ssmmhh.jibam.util
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.util.Log
@@ -282,3 +283,13 @@ fun separateCalculatorText3By3(text: String, locale: Locale): String {
  * ex: converts 123,456,789 to 123456789
  */
 fun String.remove3By3Separators(): String = this.replace(NUMBER_SEPARATOR.toString(), "")
+
+fun getCategoryDrawableResourceIdByCategoryImageName(
+    context: Context,
+    CategoryImageName: String
+): Int =
+    context.resources.getIdentifier(
+        "ic_cat_${CategoryImageName}",
+        "drawable",
+        context.packageName
+    )

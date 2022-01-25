@@ -18,8 +18,9 @@ import com.ssmmhh.jibam.persistence.RecordsDao
 import com.ssmmhh.jibam.ui.main.MainActivity
 import com.ssmmhh.jibam.util.DateUtils
 import com.ssmmhh.jibam.util.PreferenceKeys
+import com.ssmmhh.jibam.utils.extendedFAB_withIcon
 import com.ssmmhh.jibam.utils.getTestBaseApplication
-import com.ssmmhh.jibam.utils.withDrawable
+import com.ssmmhh.jibam.utils.imageViewWithDrawable
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.runBlocking
@@ -81,7 +82,7 @@ class ViewDetailTransactionTest {
     @Test
     fun viewDetailOfTransaction_transactionWithOutMemo(): Unit = runBlocking {
         //insert a transaction into the database
-        val transactionCategory = categoriesDao.getCategoryById(8)!!
+        val transactionCategory = categoriesDao.getCategoryById(9)!!
         val transactionMoney = 876.5
         val tempTransaction = TransactionEntity(
             id = 0,
@@ -133,7 +134,9 @@ class ViewDetailTransactionTest {
                 )
             )
         )
-        //TODO check for category icon
+        //check for category_fab icon
+        //note: i already know that icon of category with id '9' is ic_cat_baby
+        onView(withId(R.id.category_fab)).check(matches(extendedFAB_withIcon(R.drawable.ic_cat_baby)))
         //TODO check for date and time
         //check memo
         onView(withId(R.id.edt_memo))
@@ -192,7 +195,9 @@ class ViewDetailTransactionTest {
                 )
             )
         )
-        //TODO check for category icon
+        //check for category_fab icon
+        //note: i already know that icon of category with id '5' is ic_cat_transportation
+        onView(withId(R.id.category_fab)).check(matches(extendedFAB_withIcon(R.drawable.ic_cat_transportation)))
         //TODO check for date and time
         //check memo
         onView(withId(R.id.edt_memo))
@@ -231,8 +236,7 @@ class ViewDetailTransactionTest {
         //check if toolbar has remove button
         onView(withId(R.id.topAppBar_img_btn))
             .check(matches(isDisplayed()))
-            .check(matches(withDrawable(R.drawable.ic_round_delete_24)))
-        //TODO check for icon of imageButton
+            .check(matches(imageViewWithDrawable(R.drawable.ic_round_delete_24)))
         //click on delete image button
         onView(withId(R.id.topAppBar_img_btn)).perform(click())
         //click on dialog yes

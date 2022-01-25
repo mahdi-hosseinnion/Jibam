@@ -11,12 +11,12 @@ import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.persistence.RecordsDao
 import com.ssmmhh.jibam.ui.main.MainActivity
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.categorybottomsheet.CategoryBottomSheetListAdapter.CategoryViewHolder
 import com.ssmmhh.jibam.util.EspressoIdlingResources
 import com.ssmmhh.jibam.util.PreferenceKeys
 import com.ssmmhh.jibam.utils.atPositionOnView
+import com.ssmmhh.jibam.utils.extendedFAB_withIcon
 import com.ssmmhh.jibam.utils.getTestBaseApplication
 import com.ssmmhh.jibam.utils.repeatTests.RepeatRule
 import com.ssmmhh.jibam.utils.waitTillViewIsDisplayed
@@ -25,16 +25,16 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
-import org.junit.*
+import org.junit.After
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.runners.MethodSorters
 import javax.inject.Inject
 
 /**
  * test inserting/adding a new transaction from scratch
  */
-//TODO This test don't run mutiple time (i think bug is: espresso does not wait for receiving category list
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @ExperimentalCoroutinesApi
 @FlowPreview
 @RunWith(AndroidJUnit4ClassRunner::class)
@@ -106,7 +106,9 @@ class InsertTransactionTest {
                 withParentIndex(0)//first position of viewPager
             )
         ).perform(RecyclerViewActions.actionOnItemAtPosition<CategoryViewHolder>(0, click()))
-
+        //check for category_fab icon
+        //note: I already know that expenses category with ordering 0 is: ic_cat_food
+        onView(withId(R.id.category_fab)).check(matches(extendedFAB_withIcon(R.drawable.ic_cat_food)))
         //insert 123 using calculator buttons
         onView(withId(R.id.btn_1)).perform(click())
         onView(withId(R.id.btn_2)).perform(click())
@@ -117,6 +119,7 @@ class InsertTransactionTest {
 
         //check if transaction is being inserted and matches number '123'
         //TODO add support for other languages
+        //TODO Add glide image matcher to test transaction category image
         onView(withId(R.id.transaction_recyclerView)).check(
             matches(
                 atPositionOnView(
@@ -153,11 +156,6 @@ class InsertTransactionTest {
             //click on first item of categories recyclerView
 //            it turns out that espresso does not wait for 'swipeLeft' to complete
 //            -stackOverFlow issue: https://stackoverflow.com/q/37294132/10362460
-            /**
-             * TODO FIX THIS RANDOM BUG
-             * if you set 'suspensionPeriod' to 1000 or apply delay before click on recyclerview
-             * it will work, so there is bug in swipeLeft
-             */
             onView(
                 allOf(
                     withId(R.id.main_recycler),
@@ -170,6 +168,9 @@ class InsertTransactionTest {
                     click()
                 )
             )
+            //check for category_fab icon
+            //note: I already know that income category with ordering 0 is: ic_cat_food
+            onView(withId(R.id.category_fab)).check(matches(extendedFAB_withIcon(R.drawable.ic_cat_salary)))
             //insert 123 using calculator buttons
             onView(withId(R.id.btn_1)).perform(click())
             onView(withId(R.id.btn_2)).perform(click())
@@ -180,7 +181,7 @@ class InsertTransactionTest {
 
             //check if transaction is being inserted and matches number '123'
             //TODO add support for other languages
-            //TODO check for category icon
+            //TODO Add glide image matcher to test transaction category image
             onView(withId(R.id.transaction_recyclerView)).check(
                 matches(
                     atPositionOnView(
@@ -224,7 +225,9 @@ class InsertTransactionTest {
                 withParentIndex(0)//first position of viewPager
             )
         ).perform(RecyclerViewActions.actionOnItemAtPosition<CategoryViewHolder>(0, click()))
-
+        //check for category_fab icon
+        //note: I already know that expenses category with ordering 0 is: ic_cat_food
+        onView(withId(R.id.category_fab)).check(matches(extendedFAB_withIcon(R.drawable.ic_cat_food)))
         //insert 123 using calculator buttons
         onView(withId(R.id.btn_1)).perform(click())
         onView(withId(R.id.btn_2)).perform(click())
@@ -253,6 +256,7 @@ class InsertTransactionTest {
             )
         )
         //check if memo title in recyclerView is Inserted Memo
+        //TODO Add glide image matcher to test transaction category image
         onView(withId(R.id.transaction_recyclerView)).check(
             matches(
                 atPositionOnView(
@@ -292,11 +296,6 @@ class InsertTransactionTest {
             //click on first item of categories recyclerView
             //it turns out that espresso does not wait for 'swipeLeft' to complete
             //-stackOverFlow issue: https://stackoverflow.com/q/37294132/10362460
-            /**
-             * TODO FIX THIS RANDOM BUG
-             * if you set 'suspensionPeriod' to 1000 or apply delay before click on recyclerview
-             * it will work, so there is bug in swipeLeft
-             */
             onView(
                 allOf(
                     withId(R.id.main_recycler),
@@ -309,7 +308,9 @@ class InsertTransactionTest {
                     click()
                 )
             )
-
+            //check for category_fab icon
+            //note: I already know that income category with ordering 0 is: ic_cat_food
+            onView(withId(R.id.category_fab)).check(matches(extendedFAB_withIcon(R.drawable.ic_cat_salary)))
             //insert 123 using calculator buttons
             onView(withId(R.id.btn_1)).perform(click())
             onView(withId(R.id.btn_2)).perform(click())
@@ -337,6 +338,7 @@ class InsertTransactionTest {
                 )
             )
             //check if memo title in recyclerView is Inserted Memo
+            //TODO Add glide image matcher to test transaction category image
             onView(withId(R.id.transaction_recyclerView)).check(
                 matches(
                     atPositionOnView(
@@ -346,7 +348,6 @@ class InsertTransactionTest {
                     )
                 )
             )
-            //TODO check for category icon
         }
 
 }

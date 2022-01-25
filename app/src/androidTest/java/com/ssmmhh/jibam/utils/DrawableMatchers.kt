@@ -12,11 +12,13 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
+import androidx.test.espresso.matcher.BoundedMatcher
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import org.hamcrest.Description
 import org.hamcrest.TypeSafeMatcher
 
 
-fun withDrawable(
+fun imageViewWithDrawable(
     @DrawableRes id: Int,
     @ColorRes tint: Int? = null,
     tintMode: PorterDuff.Mode = SRC_IN
@@ -43,3 +45,18 @@ private fun Drawable.tinted(@ColorInt tintColor: Int? = null, tintMode: PorterDu
 
 private fun Int.toColorStateList() = ColorStateList.valueOf(this)
 private fun Int.toColor(context: Context) = ContextCompat.getColor(context, this)
+
+fun extendedFAB_withIcon(
+    @DrawableRes resId: Int
+): BoundedMatcher<View, ExtendedFloatingActionButton> = object :
+    BoundedMatcher<View, ExtendedFloatingActionButton>(ExtendedFloatingActionButton::class.java) {
+    override fun describeTo(description: Description?) {
+        description?.appendText("ExtendedFloatingActionButton with drawable same as drawable with resId: $resId ")
+    }
+
+    override fun matchesSafely(item: ExtendedFloatingActionButton?): Boolean {
+        val expectedBitmap = item!!.context.resources.getDrawable(resId).toBitmap()
+        return item.icon.toBitmap().sameAs(expectedBitmap)
+    }
+
+}
