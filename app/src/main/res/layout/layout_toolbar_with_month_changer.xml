@@ -16,7 +16,8 @@
             style="@style/Widget.MaterialComponents.Toolbar.Primary"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/ic_round_arrow_back_24" >
+            app:navigationIcon="@drawable/ic_round_arrow_back_24"
+            app:navigationContentDescription="@string/navigate_back_cd">
             <include
                 android:id="@+id/toolbar_month_changer"
                 layout="@layout/toolbar_month_changer"

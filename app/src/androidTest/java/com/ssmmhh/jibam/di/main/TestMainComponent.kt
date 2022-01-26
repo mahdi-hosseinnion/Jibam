@@ -1,5 +1,6 @@
 package com.ssmmhh.jibam.di.main
 
+import com.ssmmhh.jibam.endToEndTests.AboutUsTest
 import com.ssmmhh.jibam.endToEndTests.InsertTransactionTest
 import com.ssmmhh.jibam.endToEndTests.BasicTest
 import com.ssmmhh.jibam.endToEndTests.ViewDetailTransactionTest
@@ -28,5 +29,6 @@ interface TestMainComponent : MainComponent {
     fun inject(basicTest: BasicTest)
     fun inject(insertTransactionTest: InsertTransactionTest)
     fun inject(viewDetailTransactionTest: ViewDetailTransactionTest)
+    fun inject(aboutUsTest: AboutUsTest)
 
 }

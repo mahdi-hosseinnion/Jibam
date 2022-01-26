@@ -301,4 +301,7 @@
     <string name="category_image">Category image</string>
     <string name="close_category_list">Close category list</string>
     <string name="invalid_number_error">Invalid number</string>
+<!--    content descriptions-->
+    <string name="navigate_back_cd">Navigate back</string>
+    <string name="navigation_drawer_cd">Navigation drawer</string>
 </resources>

@@ -131,7 +131,8 @@ class TransactionsFragment(
                 R.drawable.ic_round_menu_24,
                 requireContext().theme
             )
-
+        binding.transactionToolbar.topAppBarMonth.navigationContentDescription =
+            getString(R.string.navigation_drawer_cd)
         binding.transactionToolbar.topAppBarMonth.setNavigationOnClickListener {
             binding.drawerLayout.open()
 //            uiCommunicationListener.openDrawerMenu()
