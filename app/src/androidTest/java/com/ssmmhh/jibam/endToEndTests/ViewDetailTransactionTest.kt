@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.util.Log
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.RootMatchers.isDialog
@@ -17,6 +18,7 @@ import com.ssmmhh.jibam.persistence.CategoriesDao
 import com.ssmmhh.jibam.persistence.RecordsDao
 import com.ssmmhh.jibam.ui.main.MainActivity
 import com.ssmmhh.jibam.util.DateUtils
+import com.ssmmhh.jibam.util.EspressoIdlingResources
 import com.ssmmhh.jibam.util.PreferenceKeys
 import com.ssmmhh.jibam.utils.extendedFAB_withIcon
 import com.ssmmhh.jibam.utils.getTestBaseApplication
@@ -37,7 +39,6 @@ import javax.inject.Inject
 @FlowPreview
 @RunWith(AndroidJUnit4ClassRunner::class)
 class ViewDetailTransactionTest {
-    val appContext = InstrumentationRegistry.getInstrumentation().targetContext
 
     @Inject
     lateinit var categoriesDao: CategoriesDao
@@ -51,7 +52,13 @@ class ViewDetailTransactionTest {
     @Inject
     lateinit var recordsDao: RecordsDao
 
+    private val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+
     private val packageName = appContext.packageName
+
+    //a global variable to store mainActivity scenario instance to run before each test and close
+    //after each test
+    private var mainActivityScenario: ActivityScenario<MainActivity>? = null
 
     init {
         //inject this class using dagger
@@ -59,12 +66,10 @@ class ViewDetailTransactionTest {
             .inject(this)
     }
 
-    //a global variable to store mainActivity scenario instance to run before each test and close
-    //after each test
-    var mainActivityScenario: ActivityScenario<MainActivity>? = null
-
     @Before
     fun beforeEach() {
+        //register idling resources
+        IdlingRegistry.getInstance().register(EspressoIdlingResources.countingIdlingResource)
         //set APP_INTRO_PREFERENCE to false, so it means user has seen the appIntro and click done
         //therefore mainActivity does not switch to AppIntroActivity
         sharedPrefEditor.putBoolean(PreferenceKeys.APP_INTRO_PREFERENCE, false).commit()
@@ -75,6 +80,8 @@ class ViewDetailTransactionTest {
 
     @After
     fun afterEach() {
+        //unregister idling resources
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResources.countingIdlingResource)
         mainActivityScenario?.close()
         mainActivityScenario = null
     }
