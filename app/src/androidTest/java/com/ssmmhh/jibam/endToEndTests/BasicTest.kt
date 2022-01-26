@@ -1,7 +1,6 @@
 package com.ssmmhh.jibam.endToEndTests
 
 import android.content.SharedPreferences
-import android.view.View
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -46,6 +45,12 @@ class BasicTest {
         //init the intents to track activities came to screen
         //necessary for intended(hasComponent())
         Intents.init()
+    }
+
+    @Test
+    fun justRunTheApp_emptyTest_makeSureAppDoesNotCrash() {
+        //launch mainActivity
+        ActivityScenario.launch(MainActivity::class.java)
     }
 
     @Test
