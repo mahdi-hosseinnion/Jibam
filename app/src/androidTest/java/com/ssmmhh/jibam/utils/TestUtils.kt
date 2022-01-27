@@ -2,13 +2,15 @@ package com.ssmmhh.jibam.utils
 
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.UiController
+import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.BoundedMatcher
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
+import androidx.test.espresso.matcher.ViewMatchers.*
 import com.ssmmhh.jibam.TestBaseApplication
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -39,6 +41,7 @@ fun atPositionOnView(
 
 
 }
+
 /*
     this function freeze the thread till view is displayed
  */
@@ -81,3 +84,21 @@ suspend fun ViewInteraction.waitTillViewIsDisplayed(
     throw finalError
 }
 
+fun ViewInteraction.getTextFromTextView(): String? {
+    var stringHolder: String? = null
+    this.perform(object : ViewAction {
+        override fun getConstraints(): Matcher<View> {
+            return isAssignableFrom(TextView::class.java)
+        }
+
+        override fun getDescription(): String {
+            return "getting text from a TextView"
+        }
+
+        override fun perform(uiController: UiController?, view: View) {
+            val tv = view as TextView //Save, because of check in getConstraints()
+            stringHolder = tv.text.toString()
+        }
+    })
+    return stringHolder
+}
