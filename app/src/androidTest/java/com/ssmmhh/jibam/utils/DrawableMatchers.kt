@@ -7,15 +7,21 @@ import android.graphics.PorterDuff.Mode.SRC_IN
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageView
+import com.google.android.material.tabs.TabLayout
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.view.get
 import androidx.test.espresso.matcher.BoundedMatcher
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import org.hamcrest.Description
 import org.hamcrest.TypeSafeMatcher
+import android.widget.LinearLayout
+
+import android.widget.TextView
+import org.w3c.dom.Text
 
 
 fun imageViewWithDrawable(
@@ -60,3 +66,21 @@ fun extendedFAB_withIcon(
     }
 
 }
+
+fun tabLayoutWithTextAtPosition(
+    tabIndex: Int,
+    text: String
+): BoundedMatcher<View, TabLayout> =
+    object : BoundedMatcher<View, TabLayout>(TabLayout::class.java) {
+        override fun describeTo(description: Description?) {
+            description?.appendText("TabLayout with text: $text at tabIndex: $tabIndex")
+        }
+
+        override fun matchesSafely(item: TabLayout?): Boolean {
+            val tv: TextView =
+                ((item!!.getChildAt(0) as LinearLayout)
+                    .getChildAt(tabIndex) as LinearLayout)
+                    .getChildAt(1) as TextView
+            return tv.text == text
+        }
+    }

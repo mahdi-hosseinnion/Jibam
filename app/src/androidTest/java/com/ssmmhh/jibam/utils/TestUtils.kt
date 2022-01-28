@@ -8,6 +8,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewInteraction
+import androidx.test.espresso.action.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -44,6 +45,7 @@ fun atPositionOnView(
 
 /*
     this function freeze the thread till view is displayed
+    useCase: after swipe using espresso b/c espresso does not wait for swipe to complete
  */
 suspend fun ViewInteraction.waitTillViewIsDisplayed(
     timeout: Int = 3_000,
@@ -102,3 +104,20 @@ fun ViewInteraction.getTextFromTextView(): String? {
     })
     return stringHolder
 }
+
+/**
+ * sometimes ViewActions.swipeLeft does not work on viewPagers so we create a custom one
+ */
+fun customSwipeLeft(
+    swiper: Swiper = Swipe.FAST,
+    startCoordinatesProvider: CoordinatesProvider = GeneralLocation.CENTER_RIGHT,
+    endCoordinatesProvider: CoordinatesProvider = GeneralLocation.CENTER_LEFT,
+    precisionDescriber: PrecisionDescriber = Press.FINGER
+): ViewAction? = ViewActions.actionWithAssertions(
+    GeneralSwipeAction(
+        swiper,
+        startCoordinatesProvider,
+        endCoordinatesProvider,
+        precisionDescriber
+    )
+)

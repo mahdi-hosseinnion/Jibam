@@ -28,5 +28,6 @@ interface TestMainComponent : MainComponent {
     fun inject(viewDetailTransactionTest: ViewDetailTransactionTest)
     fun inject(aboutUsTest: AboutUsTest)
     fun inject(settingTest: SettingTest)
+    fun inject(categorySettingTest: CategorySettingTest)
 
 }
