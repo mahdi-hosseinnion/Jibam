@@ -5,8 +5,8 @@ import android.content.res.Resources
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -14,6 +14,7 @@ import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.persistence.CategoriesDao
 import com.ssmmhh.jibam.ui.main.MainActivity
+import com.ssmmhh.jibam.util.Constants
 import com.ssmmhh.jibam.util.EspressoIdlingResources
 import com.ssmmhh.jibam.util.PreferenceKeys
 import com.ssmmhh.jibam.utils.*
@@ -39,6 +40,9 @@ class CategorySettingTest {
 
     @Inject
     lateinit var resources: Resources
+
+    @Inject
+    lateinit var categoriesDao: CategoriesDao
 
     init {
         //inject this class using dagger
@@ -157,9 +161,15 @@ class CategorySettingTest {
         }
 
     @Test
-    fun shouldInsertNewExpensesCategory_whenNavigateToAddCategoryFragment() {
+    fun shouldInsertNewExpensesCategory_whenNavigateToAddCategoryFragment() = runBlocking {
         val categoryName = "Test1Category!"
-
+        //confirm there is not any category with 'categoryName' and expenses type
+        assert(
+            categoryByNameAndOrder(
+                categoryName = categoryName,
+                categoryType = Constants.EXPENSES_TYPE_MARKER
+            ) == null
+        )
         //navigate to category setting fragment
         //open up the drawer menu
         onView(withContentDescription(R.string.navigation_drawer_cd))
@@ -190,12 +200,25 @@ class CategorySettingTest {
                 )
             )
         )
+        //confirm category actually inserted into database
+        assert(
+            categoryByNameAndOrder(
+                categoryName = categoryName,
+                categoryType = Constants.EXPENSES_TYPE_MARKER
+            ) != null
+        )
     }
 
     @Test
     fun shouldInsertNewIncomeCategory_whenNavigateToAddCategoryFragment(): Unit = runBlocking {
         val categoryName = "Test2Category@"
-
+        //confirm there is not any category with 'categoryName' and income type
+        assert(
+            categoryByNameAndOrder(
+                categoryName = categoryName,
+                categoryType = Constants.INCOME_TYPE_MARKER
+            ) == null
+        )
         //navigate to category setting fragment
         //open up the drawer menu
         onView(withContentDescription(R.string.navigation_drawer_cd))
@@ -227,6 +250,28 @@ class CategorySettingTest {
                 )
             )
         )
+        //confirm category actually inserted into database
+        assert(
+            categoryByNameAndOrder(
+                categoryName = categoryName,
+                categoryType = Constants.INCOME_TYPE_MARKER
+            ) != null
+        )
     }
 
+    private suspend fun categoryByNameAndOrder(
+        categoryName: String,
+        categoryType: Int
+    ): com.ssmmhh.jibam.models.Category? {
+        val allOfCategories = categoriesDao.getAllOfCategories()
+        for (item in allOfCategories) {
+            if (
+                item.name == categoryName &&
+                item.type == categoryType
+            ) {
+                return item
+            }
+        }
+        return null
+    }
 }

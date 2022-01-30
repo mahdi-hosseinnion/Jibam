@@ -11,10 +11,10 @@ interface CategoriesDao {
     fun getCategories(): Flow<List<Category>>
 
     @Query("SELECT * FROM categories $CATEGORY_ORDER")
-    fun getAllOfCategories(): List<Category>
+    suspend fun getAllOfCategories(): List<Category>
 
     @Query("SELECT * FROM categories WHERE type = :type $CATEGORY_ORDER")
-    fun getAllOfCategoriesWithType(type: Int): List<Category>
+    suspend  fun getAllOfCategoriesWithType(type: Int): List<Category>
 
     @Query("SELECT * FROM category_images")
     fun getCategoriesImages(): Flow<List<CategoryImages>>
