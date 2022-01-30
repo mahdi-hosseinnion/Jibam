@@ -5,12 +5,14 @@ import android.content.res.Resources
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.ssmmhh.jibam.R
+import com.ssmmhh.jibam.persistence.CategoriesDao
 import com.ssmmhh.jibam.ui.main.MainActivity
 import com.ssmmhh.jibam.util.EspressoIdlingResources
 import com.ssmmhh.jibam.util.PreferenceKeys
@@ -154,5 +156,77 @@ class CategorySettingTest {
 
         }
 
+    @Test
+    fun shouldInsertNewExpensesCategory_whenNavigateToAddCategoryFragment() {
+        val categoryName = "Test1Category!"
+
+        //navigate to category setting fragment
+        //open up the drawer menu
+        onView(withContentDescription(R.string.navigation_drawer_cd))
+            .perform(click())
+        //click on about us item in menu
+        onView(withId(R.id.viewCategoriesFragment)).perform(click())
+
+        //click on add new button to navigate to addCategoryFragment
+        onView(withId(R.id.add_new_appbar)).perform(click())
+
+        //Assertions
+
+        //TODO check if keyboard is displayed
+        //insert the name of category
+        onView(withId(R.id.edt_categoryName)).perform(typeText(categoryName))
+        //click on submit button
+        onView(withId(R.id.add_category_fab)).perform(click())
+
+        //check if category is actually inserted and showed in list of categories
+        onView(
+            withId(R.id.recycler_viewCategories),
+        ).check(
+            matches(
+                atPositionOnView(
+                    0,
+                    withText(categoryName),//hardcoded name of category with order 0
+                    R.id.nameOfCategory
+                )
+            )
+        )
+    }
+
+    @Test
+    fun shouldInsertNewIncomeCategory_whenNavigateToAddCategoryFragment(): Unit = runBlocking {
+        val categoryName = "Test2Category@"
+
+        //navigate to category setting fragment
+        //open up the drawer menu
+        onView(withContentDescription(R.string.navigation_drawer_cd))
+            .perform(click())
+        //click on about us item in menu
+        onView(withId(R.id.viewCategoriesFragment)).perform(click())
+
+        //swipe to income page of viewPager
+        onView(withId(R.id.viewPager_viewCategories)).perform(customSwipeLeft())
+        //click on add new button to navigate to addCategoryFragment
+        onView(withId(R.id.add_new_appbar)).waitTillViewIsDisplayed().perform(click())
+
+        //Assertions
+        //TODO check if keyboard is displayed
+        //insert the name of category
+        onView(withId(R.id.edt_categoryName)).perform(typeText(categoryName))
+        //click on submit button
+        onView(withId(R.id.add_category_fab)).perform(click())
+
+        //check if category is actually inserted and showed in list of categories
+        onView(
+            withId(R.id.recycler_viewCategories),
+        ).check(
+            matches(
+                atPositionOnView(
+                    0,
+                    withText(categoryName),//hardcoded name of category with order 0
+                    R.id.nameOfCategory
+                )
+            )
+        )
+    }
 
 }
