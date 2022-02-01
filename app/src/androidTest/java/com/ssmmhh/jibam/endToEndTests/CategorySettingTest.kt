@@ -7,11 +7,11 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.ssmmhh.jibam.R
+import com.ssmmhh.jibam.models.Category
 import com.ssmmhh.jibam.persistence.CategoriesDao
 import com.ssmmhh.jibam.ui.main.MainActivity
 import com.ssmmhh.jibam.util.Constants
@@ -28,7 +28,7 @@ import org.junit.runner.RunWith
 import javax.inject.Inject
 
 /**
- * test category setting test
+ * test category setting page
  */
 @ExperimentalCoroutinesApi
 @FlowPreview
@@ -74,7 +74,6 @@ class CategorySettingTest {
         mainActivityScenario?.close()
         mainActivityScenario = null
     }
-//    shouldOpenAppIntroActivity_whenLaunchMainActivity_IsFirstRunSetToTrue
 
     @Test
     fun navigateToCategorySettingFragment_justCheckForTextValues() {
@@ -90,7 +89,7 @@ class CategorySettingTest {
 
         //confirm toolbar title text
         onView(withId(R.id.topAppBar_normal)).check(
-            ViewAssertions.matches(
+            matches(
                 hasDescendant(
                     withText(
                         resources.getString(
@@ -123,7 +122,7 @@ class CategorySettingTest {
     }
 
     @Test
-    fun categorySetting_swipeLeftAndRightOnViewPager_confrimCategoryTypesChanges(): Unit =
+    fun categorySetting_swipeLeftAndRightOnViewPager_confirmCategoryTypesChanges(): Unit =
         runBlocking {
             //navigate to category setting fragment
             //open up the drawer menu
@@ -161,7 +160,68 @@ class CategorySettingTest {
         }
 
     @Test
-    fun shouldInsertNewExpensesCategory_whenNavigateToAddCategoryFragment() = runBlocking {
+    fun shouldContainRightTextValues_whenNavigateToAddExpensesCategory() {
+        //navigate to category setting fragment
+        //open up the drawer menu
+        onView(withContentDescription(R.string.navigation_drawer_cd))
+            .perform(click())
+        //click on about us item in menu
+        onView(withId(R.id.viewCategoriesFragment)).perform(click())
+
+        //click on add new button to navigate to addCategoryFragment
+        onView(withId(R.id.add_new_appbar)).perform(click())
+        //Assertions
+        //confirm toolbar title text
+        onView(withId(R.id.topAppBar_normal)).check(
+            matches(
+                hasDescendant(
+                    withText(
+                        resources.getString(
+                            R.string.add_expenses_category
+                        )
+                    )
+                )
+            )
+        )
+        //make sure editText is empty
+        onView(withId(R.id.edt_categoryName)).check(matches(isDisplayed()))
+            .check(matches(withText("")))
+    }
+
+    @Test
+    fun shouldContainRightTextValues_whenNavigateToAddIncomeCategory(): Unit = runBlocking {
+        //navigate to category setting fragment
+        //open up the drawer menu
+        onView(withContentDescription(R.string.navigation_drawer_cd))
+            .perform(click())
+        //click on about us item in menu
+        onView(withId(R.id.viewCategoriesFragment)).perform(click())
+
+        //swipe to income page of viewPager
+        onView(withId(R.id.viewPager_viewCategories)).perform(customSwipeLeft())
+        //click on add new button to navigate to addCategoryFragment
+        onView(withId(R.id.add_new_appbar)).waitTillViewIsDisplayed().perform(click())
+
+        //Assertions
+        //confirm toolbar title text
+        onView(withId(R.id.topAppBar_normal)).check(
+            matches(
+                hasDescendant(
+                    withText(
+                        resources.getString(
+                            R.string.add_income_category
+                        )
+                    )
+                )
+            )
+        )
+        //make sure editText is empty
+        onView(withId(R.id.edt_categoryName)).check(matches(isDisplayed()))
+            .check(matches(withText("")))
+    }
+
+    @Test
+    fun shouldInsertNewExpensesCategory_whenNavigateToAddCategoryFragment(): Unit = runBlocking {
         val categoryName = "Test1Category!"
         //confirm there is not any category with 'categoryName' and expenses type
         assert(
@@ -259,10 +319,11 @@ class CategorySettingTest {
         )
     }
 
+
     private suspend fun categoryByNameAndOrder(
         categoryName: String,
         categoryType: Int
-    ): com.ssmmhh.jibam.models.Category? {
+    ): Category? {
         val allOfCategories = categoriesDao.getAllOfCategories()
         for (item in allOfCategories) {
             if (
