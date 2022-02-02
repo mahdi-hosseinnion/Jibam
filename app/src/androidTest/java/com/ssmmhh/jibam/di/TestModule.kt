@@ -24,6 +24,7 @@ object TestModule {
          * createFromAsset or createFromFile and RoomDatabase.build() method
          * will throw an IllegalArgumentException if you try to ...
          * so we create a normal database then delete it every time that app runs
+         * note: b/c tests runs with android orchestrator database will be clear for each test
          */
         //delete old database
         app.deleteDatabase(TEST_DATABASE_NAME)

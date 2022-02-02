@@ -14,6 +14,7 @@ import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.ui.main.MainActivity
 import com.ssmmhh.jibam.util.EspressoIdlingResources
 import com.ssmmhh.jibam.util.PreferenceKeys
+import com.ssmmhh.jibam.utils.disableAllPromoteBanners
 import com.ssmmhh.jibam.utils.getTestBaseApplication
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -53,6 +54,7 @@ class AboutUsTest {
     fun beforeEach() {
         //register idling resources
         IdlingRegistry.getInstance().register(EspressoIdlingResources.countingIdlingResource)
+        disableAllPromoteBanners(sharedPrefEditor)
         //set APP_INTRO_PREFERENCE to false, so it means user has seen the appIntro and click done
         //therefore mainActivity does not switch to AppIntroActivity
         sharedPrefEditor.putBoolean(PreferenceKeys.APP_INTRO_PREFERENCE, false).commit()

@@ -17,6 +17,7 @@ import com.ssmmhh.jibam.util.PreferenceKeys
 import com.ssmmhh.jibam.util.PreferenceKeys.APP_CALENDAR_PREFERENCE
 import com.ssmmhh.jibam.util.PreferenceKeys.CALENDAR_GREGORIAN
 import com.ssmmhh.jibam.util.PreferenceKeys.CALENDAR_SOLAR
+import com.ssmmhh.jibam.utils.disableAllPromoteBanners
 import com.ssmmhh.jibam.utils.getTestBaseApplication
 import com.ssmmhh.jibam.utils.getTextFromTextView
 import com.ssmmhh.jibam.utils.repeatTests.Repeat
@@ -69,6 +70,7 @@ class SettingTest {
     fun beforeEach() {
         //register idling resources
         IdlingRegistry.getInstance().register(EspressoIdlingResources.countingIdlingResource)
+        disableAllPromoteBanners(sharedPrefEditor)
         //set APP_INTRO_PREFERENCE to false, so it means user has seen the appIntro and click done
         //therefore mainActivity does not switch to AppIntroActivity
         sharedPrefEditor.putBoolean(PreferenceKeys.APP_INTRO_PREFERENCE, false).commit()

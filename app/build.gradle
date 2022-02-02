@@ -23,6 +23,9 @@ android {
         vectorDrawables.useSupportLibrary = true // for support .svg file api < 21
 
         testInstrumentationRunner "com.ssmmhh.jibam.MockTestRunner"
+        //Android Test Orchestrator options
+        testInstrumentationRunnerArguments clearPackageData: 'true'
+
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments += [
@@ -67,6 +70,8 @@ android {
         viewBinding true
     }
     testOptions {
+        //for android test orchestrator
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
         unitTests.all {
             useJUnitPlatform()
         }
@@ -133,6 +138,8 @@ dependencies {
     androidTestImplementation "androidx.test:runner:$androidx_test"
     androidTestImplementation "androidx.test:core:$androidx_test"
     androidTestImplementation "androidx.test.ext:junit-ktx:$androidx_test"
+    //Android test orchestrator
+    androidTestUtil "androidx.test:orchestrator:1.1.0"
 
     //mockk.io
     androidTestImplementation "io.mockk:mockk-android:1.10.2"

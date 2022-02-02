@@ -1,5 +1,6 @@
 package com.ssmmhh.jibam.utils
 
+import android.content.SharedPreferences
 import android.util.Log
 import android.view.View
 import android.widget.TextView
@@ -13,6 +14,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.ssmmhh.jibam.TestBaseApplication
+import com.ssmmhh.jibam.util.PreferenceKeys
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
@@ -121,3 +123,20 @@ fun customSwipeLeft(
         precisionDescriber
     )
 )
+
+/**
+ * disable all of promotion banner uses to guide user by set all of them to 'false'
+ */
+fun disableAllPromoteBanners(sharedPrefEditor: SharedPreferences.Editor) {
+    sharedPrefEditor.apply {
+        putBoolean(PreferenceKeys.PROMOTE_FAB_TRANSACTION_FRAGMENT, false)
+        putBoolean(PreferenceKeys.PROMOTE_ADD_TRANSACTION, false)
+        putBoolean(PreferenceKeys.PROMOTE_CATEGORY_LIST, false)
+        putBoolean(PreferenceKeys.PROMOTE_VIEW_CATEGORY_LIST, false)
+        putBoolean(PreferenceKeys.PROMOTE_ADD_CATEGORY_NAME, false)
+        putBoolean(PreferenceKeys.PROMOTE_SUMMERY_MONEY, false)
+        putBoolean(PreferenceKeys.PROMOTE_MONTH_MANGER, false)
+        commit()
+    }
+
+}

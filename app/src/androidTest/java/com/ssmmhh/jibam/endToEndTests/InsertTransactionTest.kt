@@ -15,11 +15,8 @@ import com.ssmmhh.jibam.ui.main.MainActivity
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.categorybottomsheet.CategoryBottomSheetListAdapter.CategoryViewHolder
 import com.ssmmhh.jibam.util.EspressoIdlingResources
 import com.ssmmhh.jibam.util.PreferenceKeys
-import com.ssmmhh.jibam.utils.atPositionOnView
-import com.ssmmhh.jibam.utils.extendedFAB_withIcon
-import com.ssmmhh.jibam.utils.getTestBaseApplication
+import com.ssmmhh.jibam.utils.*
 import com.ssmmhh.jibam.utils.repeatTests.RepeatRule
-import com.ssmmhh.jibam.utils.waitTillViewIsDisplayed
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.runBlocking
@@ -63,6 +60,7 @@ class InsertTransactionTest {
     fun beforeEach() {
         //register idling resources
         IdlingRegistry.getInstance().register(EspressoIdlingResources.countingIdlingResource)
+        disableAllPromoteBanners(sharedPrefEditor)
         //set APP_INTRO_PREFERENCE to false, so it means user has seen the appIntro and click done
         //therefore mainActivity does not switch to AppIntroActivity
         sharedPrefEditor.putBoolean(PreferenceKeys.APP_INTRO_PREFERENCE, false).commit()

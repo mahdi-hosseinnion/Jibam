@@ -59,6 +59,7 @@ class CategorySettingTest {
     fun beforeEach() {
         //register idling resources
         IdlingRegistry.getInstance().register(EspressoIdlingResources.countingIdlingResource)
+        disableAllPromoteBanners(sharedPrefEditor)
         //set APP_INTRO_PREFERENCE to false, so it means user has seen the appIntro and click done
         //therefore mainActivity does not switch to AppIntroActivity
         sharedPrefEditor.putBoolean(PreferenceKeys.APP_INTRO_PREFERENCE, false).commit()
