@@ -238,6 +238,110 @@ class ChartTest {
         }
     }
 
+    @Test
+    fun navigateThroughIncomeChartFlow_shouldHaveRightTextValues(): Unit = runBlocking {
+        //Arrange
+        //insert ten random transaction
+        //transactions date should be in this
+        val dateRange = 100_000
+        val transactionsToInsert = TestData.RandomTransactions.entities.map {
+            val currentTime = DateUtils.getCurrentTime()
+            it.copy(
+                date = Random.nextInt(currentTime.minus(dateRange), currentTime.plus(dateRange))
+            )
+        }
+
+        val largestIncomeCategoryName = TestData.RandomTransactions.largestIncomeCategoryName(
+            categoriesDao = categoriesDao,
+            resources = resources,
+            packageName = packageName
+        )
+        for (item in transactionsToInsert) {
+            recordsDao.insertOrReplace(item)
+        }
+
+        //Act
+        //click on menu icon
+        onView(withContentDescription(R.string.navigation_drawer_cd))
+            .perform(click())
+
+        //click on about us item in menu
+        onView(withId(R.id.chartFragment)).perform(click())
+
+        onView(withId(R.id.fab_swap)).check(matches(isDisplayed()))
+            .check(matches(withText(R.string.swap_chart)))
+            .perform(click())
+
+        //confirm recyclerView text
+        onView(
+            withId(R.id.chart_recycler)
+        ).check(
+            matches(
+                atPositionOnView(
+                    0,
+                    withText(TestData.RandomTransactions.largestIncomeCategoryMoney),
+                    R.id.sumOfMoney
+                )
+            )
+        ).check(
+            matches(
+                atPositionOnView(
+                    0,
+                    withText(largestIncomeCategoryName),
+                    R.id.category_name
+                )
+            )
+        )
+
+        //click on recyclerView item
+        onView(
+            withId(R.id.chart_recycler)
+        ).perform(
+            RecyclerViewActions.actionOnItemAtPosition<ChartListAdapter.ChartViewHolder>(
+                0,
+                click()
+            )
+        )
+
+        //confirm detail chart fragment title
+        onView(withId(R.id.topAppBar_normal)).check(
+            matches(
+                hasDescendant(
+                    withText(
+                        largestIncomeCategoryName.titleCaseFirstCharIfItIsLowercase()
+                    )
+                )
+            )
+        )
+        //confirm detail chart recycler items
+        val transactionsThatHaveSameCategoryAsLargestOne =
+            transactionsToInsert.filter { it.cat_id == TestData.RandomTransactions.largestIncomeCategoryId }
+                .sortedByDescending { it.money }
+        for (item in transactionsThatHaveSameCategoryAsLargestOne) {
+            onView(
+                withId(R.id.detail_chart_recycler)
+            ).check(
+                matches(
+                    atPositionOnView(
+                        transactionsThatHaveSameCategoryAsLargestOne.indexOf(item),
+                        withText(item.money.absoluteValue.toString()),
+                        R.id.sumOfMoney
+                    )
+                )
+            ).check(
+                matches(
+                    atPositionOnView(
+                        transactionsThatHaveSameCategoryAsLargestOne.indexOf(item),
+                        withText(item.memo ?: largestIncomeCategoryName),
+                        R.id.category_name
+                    )
+                )
+            )
+
+        }
+    }
+
+
     /**
      * Replacement for Kotlin's deprecated `capitalize()` function.
      */

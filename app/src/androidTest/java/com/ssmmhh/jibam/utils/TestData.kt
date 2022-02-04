@@ -20,6 +20,8 @@ object TestData {
             TransactionEntity(11, 1.0, "what sup", 36, 1609401076),
 
             )
+        //EXPENSES
+
         val largestExpensesCategoryMoney = "292.7"
         val largestExpensesCategoryId = 15
         suspend fun largestExpensesCategoryName(
@@ -28,6 +30,21 @@ object TestData {
             categoriesDao: CategoriesDao,
         ): String = categoriesDao.getCategoryById(
             largestExpensesCategoryId
+        )!!.getCategoryNameFromStringFile(
+            resources = resources,
+            packageName = packageName
+        )
+
+        //INCOME
+        //separate numbers 3 by 3 convert '1030' to '1,030'
+        val largestIncomeCategoryMoney = "1${NUMBER_SEPARATOR}030"
+        val largestIncomeCategoryId = 37
+        suspend fun largestIncomeCategoryName(
+            resources: Resources,
+            packageName: String,
+            categoriesDao: CategoriesDao,
+        ): String = categoriesDao.getCategoryById(
+            largestIncomeCategoryId
         )!!.getCategoryNameFromStringFile(
             resources = resources,
             packageName = packageName
