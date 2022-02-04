@@ -7,12 +7,15 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
+import androidx.test.platform.app.InstrumentationRegistry
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.persistence.CategoriesDao
 import com.ssmmhh.jibam.persistence.RecordsDao
 import com.ssmmhh.jibam.ui.main.MainActivity
+import com.ssmmhh.jibam.ui.main.transaction.chart.ChartListAdapter
 import com.ssmmhh.jibam.util.DateUtils
 import com.ssmmhh.jibam.util.EspressoIdlingResources
 import com.ssmmhh.jibam.util.PreferenceKeys
@@ -27,6 +30,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.*
 import javax.inject.Inject
 import kotlin.math.absoluteValue
 import kotlin.random.Random
@@ -46,6 +50,9 @@ class ChartTest {
     lateinit var resources: Resources
 
     @Inject
+    lateinit var currentLocale: Locale
+
+    @Inject
     lateinit var categoriesDao: CategoriesDao
 
     @Inject
@@ -56,6 +63,10 @@ class ChartTest {
         getTestBaseApplication().mainComponent()
             .inject(this)
     }
+
+    private val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+
+    private val packageName = appContext.packageName
 
     //a global variable to store mainActivity scenario instance to run before each test and close
     //after each test, did not use activityRule b/c APP_INTRO_PREFERENCE should set to false before
@@ -110,7 +121,9 @@ class ChartTest {
         onView(withId(R.id.toolbar_month_changer)).check(matches(isDisplayed()))
 
         //click on swap chart
-        onView(withId(R.id.fab_swap)).check(matches(isDisplayed())).perform(click())
+        onView(withId(R.id.fab_swap)).check(matches(isDisplayed()))
+            .check(matches(withText(R.string.swap_chart)))
+            .perform(click())
 
         //confirm that toolbar value has changed to income
         onView(withId(R.id.topAppBar_month)).check(
@@ -132,17 +145,18 @@ class ChartTest {
         //insert ten random transaction
         //transactions date should be in this
         val dateRange = 100_000
-        val transactionsToInsert = TestData.randomTransactionEntities.map {
+        val transactionsToInsert = TestData.RandomTransactions.entities.map {
             val currentTime = DateUtils.getCurrentTime()
             it.copy(
                 date = Random.nextInt(currentTime.minus(dateRange), currentTime.plus(dateRange))
             )
         }
-        val largestExpensesTransactionMoney =
-            transactionsToInsert
-                .filter { it.money < 0 }
-                .minOf { it.money }//b/c money is negative
 
+        val largestExpensesCategoryName = TestData.RandomTransactions.largestExpensesCategoryName(
+            categoriesDao = categoriesDao,
+            resources = resources,
+            packageName = packageName
+        )
         for (item in transactionsToInsert) {
             recordsDao.insertOrReplace(item)
         }
@@ -154,6 +168,7 @@ class ChartTest {
 
         //click on about us item in menu
         onView(withId(R.id.chartFragment)).perform(click())
+
         //confirm recyclerView text
         onView(
             withId(R.id.chart_recycler)
@@ -161,12 +176,72 @@ class ChartTest {
             matches(
                 atPositionOnView(
                     0,
-                    withText(largestExpensesTransactionMoney.absoluteValue.toString()),
+                    withText(TestData.RandomTransactions.largestExpensesCategoryMoney),
                     R.id.sumOfMoney
+                )
+            )
+        ).check(
+            matches(
+                atPositionOnView(
+                    0,
+                    withText(largestExpensesCategoryName),
+                    R.id.category_name
                 )
             )
         )
 
+        //click on recyclerView item
+        onView(
+            withId(R.id.chart_recycler)
+        ).perform(
+            RecyclerViewActions.actionOnItemAtPosition<ChartListAdapter.ChartViewHolder>(
+                0,
+                click()
+            )
+        )
+
+        //confirm detail chart fragment title
+        onView(withId(R.id.topAppBar_normal)).check(
+            matches(
+                hasDescendant(
+                    withText(
+                        largestExpensesCategoryName.titleCaseFirstCharIfItIsLowercase()
+                    )
+                )
+            )
+        )
+        //confirm detail chart recycler items
+        val transactionsThatHaveSameCategoryAsLargestOne =
+            transactionsToInsert.filter { it.cat_id == TestData.RandomTransactions.largestExpensesCategoryId }
+                .sortedBy { it.money }
+        for (item in transactionsThatHaveSameCategoryAsLargestOne) {
+            onView(
+                withId(R.id.detail_chart_recycler)
+            ).check(
+                matches(
+                    atPositionOnView(
+                        transactionsThatHaveSameCategoryAsLargestOne.indexOf(item),
+                        withText(item.money.absoluteValue.toString()),
+                        R.id.sumOfMoney
+                    )
+                )
+            ).check(
+                matches(
+                    atPositionOnView(
+                        transactionsThatHaveSameCategoryAsLargestOne.indexOf(item),
+                        withText(item.memo ?: largestExpensesCategoryName),
+                        R.id.category_name
+                    )
+                )
+            )
+
+        }
     }
 
+    /**
+     * Replacement for Kotlin's deprecated `capitalize()` function.
+     */
+    private fun String.titleCaseFirstCharIfItIsLowercase() = replaceFirstChar {
+        if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+    }
 }
