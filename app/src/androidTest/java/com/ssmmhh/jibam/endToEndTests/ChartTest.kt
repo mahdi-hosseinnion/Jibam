@@ -16,6 +16,7 @@ import com.ssmmhh.jibam.persistence.CategoriesDao
 import com.ssmmhh.jibam.persistence.RecordsDao
 import com.ssmmhh.jibam.ui.main.MainActivity
 import com.ssmmhh.jibam.ui.main.transaction.chart.ChartListAdapter
+import com.ssmmhh.jibam.ui.main.transaction.chart.DetailChartListAdapter
 import com.ssmmhh.jibam.util.DateUtils
 import com.ssmmhh.jibam.util.EspressoIdlingResources
 import com.ssmmhh.jibam.util.PreferenceKeys
@@ -145,14 +146,14 @@ class ChartTest {
         //insert ten random transaction
         //transactions date should be in this
         val dateRange = 100_000
-        val transactionsToInsert = TestData.RandomTransactions.entities.map {
+        val transactionsToInsert = TestData.ChartPageTestData.entities.map {
             val currentTime = DateUtils.getCurrentTime()
             it.copy(
                 date = Random.nextInt(currentTime.minus(dateRange), currentTime.plus(dateRange))
             )
         }
 
-        val largestExpensesCategoryName = TestData.RandomTransactions.largestExpensesCategoryName(
+        val largestExpensesCategoryName = TestData.ChartPageTestData.largestExpensesCategoryName(
             categoriesDao = categoriesDao,
             resources = resources,
             packageName = packageName
@@ -176,7 +177,7 @@ class ChartTest {
             matches(
                 atPositionOnView(
                     0,
-                    withText(TestData.RandomTransactions.largestExpensesCategoryMoney),
+                    withText(TestData.ChartPageTestData.largestExpensesCategoryMoney),
                     R.id.sumOfMoney
                 )
             )
@@ -212,7 +213,7 @@ class ChartTest {
         )
         //confirm detail chart recycler items
         val transactionsThatHaveSameCategoryAsLargestOne =
-            transactionsToInsert.filter { it.cat_id == TestData.RandomTransactions.largestExpensesCategoryId }
+            transactionsToInsert.filter { it.cat_id == TestData.ChartPageTestData.largestExpensesCategoryId }
                 .sortedBy { it.money }
         for (item in transactionsThatHaveSameCategoryAsLargestOne) {
             onView(
@@ -236,6 +237,22 @@ class ChartTest {
             )
 
         }
+
+        //navigate to DetailEditTransactionFragment by clicking on recyclerView items
+        onView(
+            withId(R.id.detail_chart_recycler)
+        ).perform(
+            RecyclerViewActions.actionOnItemAtPosition<DetailChartListAdapter.DetailChartViewHolder>(
+                0,
+                click()
+            )
+        )
+        //check money amount in detail
+        onView(withId(R.id.edt_money))
+            .check(matches(withText(transactionsThatHaveSameCategoryAsLargestOne[0].money.absoluteValue.toString())))
+        //check memo
+        onView(withId(R.id.edt_memo))
+            .check(matches(withText(transactionsThatHaveSameCategoryAsLargestOne[0].memo ?: "")))
     }
 
     @Test
@@ -244,14 +261,14 @@ class ChartTest {
         //insert ten random transaction
         //transactions date should be in this
         val dateRange = 100_000
-        val transactionsToInsert = TestData.RandomTransactions.entities.map {
+        val transactionsToInsert = TestData.ChartPageTestData.entities.map {
             val currentTime = DateUtils.getCurrentTime()
             it.copy(
                 date = Random.nextInt(currentTime.minus(dateRange), currentTime.plus(dateRange))
             )
         }
 
-        val largestIncomeCategoryName = TestData.RandomTransactions.largestIncomeCategoryName(
+        val largestIncomeCategoryName = TestData.ChartPageTestData.largestIncomeCategoryName(
             categoriesDao = categoriesDao,
             resources = resources,
             packageName = packageName
@@ -279,7 +296,7 @@ class ChartTest {
             matches(
                 atPositionOnView(
                     0,
-                    withText(TestData.RandomTransactions.largestIncomeCategoryMoney),
+                    withText(TestData.ChartPageTestData.largestIncomeCategoryMoney),
                     R.id.sumOfMoney
                 )
             )
@@ -315,7 +332,7 @@ class ChartTest {
         )
         //confirm detail chart recycler items
         val transactionsThatHaveSameCategoryAsLargestOne =
-            transactionsToInsert.filter { it.cat_id == TestData.RandomTransactions.largestIncomeCategoryId }
+            transactionsToInsert.filter { it.cat_id == TestData.ChartPageTestData.largestIncomeCategoryId }
                 .sortedByDescending { it.money }
         for (item in transactionsThatHaveSameCategoryAsLargestOne) {
             onView(

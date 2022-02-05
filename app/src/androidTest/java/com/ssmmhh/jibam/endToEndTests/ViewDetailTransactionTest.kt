@@ -262,4 +262,5 @@ class ViewDetailTransactionTest {
             "viewDetailOfTransaction_ThenRemoveIt: ${recordsDao.getTransactionById(transactionId)}"
         )
     }
+    //TODO add tests to test edit transaction functionality
 }

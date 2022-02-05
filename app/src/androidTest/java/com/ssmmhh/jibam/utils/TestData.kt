@@ -6,7 +6,8 @@ import com.ssmmhh.jibam.persistence.CategoriesDao
 import com.ssmmhh.jibam.util.NUMBER_SEPARATOR
 
 object TestData {
-    object RandomTransactions {
+
+    object ChartPageTestData {
         val entities = listOf(
             TransactionEntity(1, -240.4, "hey im memo", 15, 1627070114),
             TransactionEntity(6, -123.4, "", 17, 1688648079),
