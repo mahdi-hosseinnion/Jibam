@@ -356,6 +356,28 @@ class ChartTest {
             )
 
         }
+        //navigate to DetailEditTransactionFragment by clicking on recyclerView items
+        onView(
+            withId(R.id.detail_chart_recycler)
+        ).perform(
+            RecyclerViewActions.actionOnItemAtPosition<DetailChartListAdapter.DetailChartViewHolder>(
+                0,
+                click()
+            )
+        )
+        //check money amount in detail
+        onView(withId(R.id.edt_money))
+            .check(
+                matches(
+                    withText(
+                        //we call toInt() to remove .0
+                        transactionsThatHaveSameCategoryAsLargestOne[0].money.toInt().toString()
+                    )
+                )
+            )
+        //check memo
+        onView(withId(R.id.edt_memo))
+            .check(matches(withText(transactionsThatHaveSameCategoryAsLargestOne[0].memo ?: "")))
     }
 
 
