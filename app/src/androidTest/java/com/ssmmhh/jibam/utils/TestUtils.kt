@@ -14,12 +14,17 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.ssmmhh.jibam.TestBaseApplication
+import com.ssmmhh.jibam.models.TransactionEntity
+import com.ssmmhh.jibam.util.DateUtils
 import com.ssmmhh.jibam.util.PreferenceKeys
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 import org.hamcrest.Description
 import org.hamcrest.Matcher
+import java.util.*
+import kotlin.math.round
+import kotlin.random.Random
 
 
 @FlowPreview
@@ -139,4 +144,35 @@ fun disableAllPromoteBanners(sharedPrefEditor: SharedPreferences.Editor) {
         commit()
     }
 
+}
+
+//Extracted from 'categories.db' located at assets/databases
+const val lastExpenseCategoryId = 30
+const val lastIncomeCategoryId = 41
+fun createRandomTransaction(
+    id: Int = 0,
+    date: Int = DateUtils.getCurrentTime()
+): TransactionEntity {
+    val isExpenseTransaction = Random.nextBoolean()
+
+    val randomMoneyAmount = Random.nextDouble(1.0, 1234.0).roundTo(2)
+    val randomString = UUID.randomUUID().toString()
+        .substring(0, Random.nextInt(20))
+
+    return TransactionEntity(
+        id = id,
+        money = randomMoneyAmount * (if (isExpenseTransaction) -1 else 1),
+        memo = if (Random.nextBoolean()) null else randomString,
+        cat_id = if (isExpenseTransaction)
+            Random.nextInt(1, lastExpenseCategoryId.plus(1))
+        else
+            Random.nextInt(lastExpenseCategoryId.plus(1), lastIncomeCategoryId.plus(1)),
+        date = date
+    )
+}
+
+fun Double.roundTo(decimals: Int): Double {
+    var multiplier = 1.0
+    repeat(decimals) { multiplier *= 10 }
+    return round(this * multiplier) / multiplier
 }

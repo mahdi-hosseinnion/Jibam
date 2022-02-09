@@ -54,7 +54,7 @@ constructor(
         _fromDate.value = from
     }
 
-    private fun getStartOfCurrentMonth(
+    fun getStartOfCurrentMonth(
         timeStamp: Long
     ): Long = if (sharedPreferences.isCalendarSolar(currentLocale)) {
         getStartOfCurrentMonthShamsi(timeStamp)
@@ -63,7 +63,7 @@ constructor(
     }
 
 
-    private fun getEndOfCurrentMonth(
+    fun getEndOfCurrentMonth(
         timeStamp: Long
     ): Long = if (sharedPreferences.isCalendarSolar(currentLocale)) {
         getEndOfCurrentMonthShamsi(timeStamp)
