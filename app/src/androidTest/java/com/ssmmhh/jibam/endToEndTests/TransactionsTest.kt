@@ -5,6 +5,7 @@ import android.content.res.Resources
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
+import com.ssmmhh.jibam.models.Transaction
 import com.ssmmhh.jibam.persistence.RecordsDao
 import com.ssmmhh.jibam.ui.main.MainActivity
 import com.ssmmhh.jibam.ui.main.transaction.common.MonthManger
@@ -81,18 +82,19 @@ class TransactionsTest {
 
     @Test
     fun shouldShowRightDataOnTextViews_afterInsertingFakeTransactions(): Unit = runBlocking {
+        insertNRandomTransactionsToDbThenReturnAllOfTransactionsInDb(20)
+    }
+
+    private suspend fun insertNRandomTransactionsToDbThenReturnAllOfTransactionsInDb(n: Int): List<Transaction> {
         //insert 20 random transactions
-        repeat(20) {
+        repeat(n) {
             val date = Random.nextLong(
                 monthManger.getStartOfCurrentMonth(DateUtils.getCurrentUnixTimeInMilliSeconds()),
                 monthManger.getEndOfCurrentMonth(DateUtils.getCurrentUnixTimeInMilliSeconds()),
-//                DateUtils.getCurrentTime().minus(1_000),
-//                DateUtils.getCurrentTime().plus(1_000)
             )
             val transaction = createRandomTransaction(date = date.div(1_000).toInt())
             recordsDao.insertOrReplace(transaction)
         }
-        val allOfTransactions = recordsDao.getAllRecords("").first()
-        assert(allOfTransactions.size == 20)
+        return recordsDao.getAllRecords("").first()
     }
 }
