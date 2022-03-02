@@ -18,6 +18,9 @@ TODO ADD SCREEN SHOTS here
 * Programming language: [Kotlin](https://kotlinlang.org/)
 * Architecture: Android MVI architecture
 * Dependency injection: [Dagger 2](https://dagger.dev/)
+* Unit test framework: JUnit5 (Jupiter)
+* Android instrumentation test framework: Junit4
+* Android ui test framework: Espresso
 * Concurrency: Kotlin coroutines
 * Navigation framework: Navigation component
 * Persistence library: Room
