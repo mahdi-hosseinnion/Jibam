@@ -1,40 +1,59 @@
-# جیبم
+#Jibam
 
-جیبم یک اپیکیشن ساده برای رصد و مدیریت هزینه ها و درآمد های روزانه است. <br />
+Jibam is a simple money management app that helps you manage your money and track your daily expenses and incomes.  
+By inserting your daily expenses and incomes (AKA daily transactions) you can track your financial activities throughout the month and analyze your financial life with interactive charts.
+
+######Key features:
+
+- Support Gregorian and Solar Hijri calendar
 
 
 </br>
 
+
 <p float="left" align="middle">
-  <img src="https://github.com/mahdi-hosseinnion/jibam/blob/assets/doc/screenshots/transaction_page_screenshot.jpg" width="22%" height="20%" />
-  <img src="https://github.com/mahdi-hosseinnion/jibam/blob/assets/doc/screenshots/add_transaction_page_screenshot.jpg" width="22%" height="20%" />
-  <img src="https://github.com/mahdi-hosseinnion/jibam/blob/assets/doc/screenshots/category_setting_page_screenshot.jpg" width="22%" height="20%"/> 
-  <img src="https://github.com/mahdi-hosseinnion/jibam/blob/assets/doc/screenshots/chart_page_screenshot.jpg" width="22%" height="20%"/> 
+  <img
+  src="https://raw.githubusercontent.com/mahdi-hosseinnion/jibam/assets/doc/screenshots/transaction_page_screenshot.jpg"
+  width="23%" height="25%"
+  />
+  <img
+  src="https://raw.githubusercontent.com/mahdi-hosseinnion/jibam/assets/doc/screenshots/add_transaction_page_screenshot.jpg" width="23%" height="25%"
+   />
+  <img
+  src="https://raw.githubusercontent.com/mahdi-hosseinnion/jibam/assets/doc/screenshots/category_setting_page_screenshot.jpg" width="23%" height="25%"
+  />
+  <img
+  src="https://raw.githubusercontent.com/mahdi-hosseinnion/jibam/assets/doc/screenshots/chart_page_screenshot.jpg"
+  width="23%" height="25%"
+  />
 </p>
 
 </br>
 
-### پیشنیاز ها
-* اندروید ۴.۲ (api 17) به بالا
 
-## تکنولوژی ها و ابزارهای استفاده شده در توسعه این اپیکیشن
-* Programming language: [Kotlin](https://kotlinlang.org/)
-* Architecture: Android MVI architecture
-* Dependency injection: [Dagger 2](https://dagger.dev/)
-* Unit test framework: JUnit5 (Jupiter)
-* Android instrumentation test framework: Junit4
-* Android ui test framework: Espresso
-* Concurrency: Kotlin coroutines
-* Navigation framework: Navigation component
-* Persistence library: Room
+## Built with
+* [Kotlin](https://kotlinlang.org/) - The programming language used
+* Android MVI architecture - Architecture
+* [Dagger 2](https://dagger.dev/) - Dependency injection
+* JUnit5 (Jupiter) - Unit test framework
+* Junit4 - Android instrumentation test framework:
+* Espresso - Android ui test framework
+* Kotlin coroutines - Concurrency
+* Navigation component -  Navigation framework
+* Room - Persistence library
 
-## توسعه دهنده
-* **مهدی حسینیون**
+### Prerequisites
 
+Android 4.2 (API 17) or higher.
 
-## License
+### Download
+
+You can simply download the latest version of the app [here](https://github.com/mahdi-hosseinnion/jibam/releases)
+
+### Contact
+
+-   **Mahdi hosseinnion** - iammahdi6724@gmail.com
+
+### License
 
 This project is licensed under the 'GNU-version 3' License - see the [LICENSE.md](LICENSE.md) file for details
-
-
-
