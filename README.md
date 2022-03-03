@@ -4,11 +4,14 @@
 
 
 </br>
-</br>
-</br>
-TODO ADD SCREEN SHOTS here
-</br>
-</br>
+
+<p float="left" align="middle">
+  <img src="https://github.com/mahdi-hosseinnion/jibam/blob/assets/doc/screenshots/transaction_page_screenshot.jpg" width="22%" height="20%" />
+  <img src="https://github.com/mahdi-hosseinnion/jibam/blob/assets/doc/screenshots/add_transaction_page_screenshot.jpg" width="22%" height="20%" />
+  <img src="https://github.com/mahdi-hosseinnion/jibam/blob/assets/doc/screenshots/category_setting_page_screenshot.jpg" width="22%" height="20%"/> 
+  <img src="https://github.com/mahdi-hosseinnion/jibam/blob/assets/doc/screenshots/chart_page_screenshot.jpg" width="22%" height="20%"/> 
+</p>
+
 </br>
 
 ### پیشنیاز ها
