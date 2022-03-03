@@ -1,9 +1,9 @@
-#Jibam
+# Jibam
 
 Jibam is a simple money management app that helps you manage your money and track your daily expenses and incomes.  
 By inserting your daily expenses and incomes (AKA daily transactions) you can track your financial activities throughout the month and analyze your financial life with interactive charts.
 
-######Key features:
+###### Key features:
 
 - Support Gregorian and Solar Hijri calendar
 
