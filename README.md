@@ -48,7 +48,8 @@ Android 4.2 (API 17) or higher.
 
 ### Download
 
-You can simply download the latest version of the app [here](https://github.com/mahdi-hosseinnion/jibam/releases)
+You can download the app directly from the  [*releases*](https://github.com/mahdi-hosseinnion/jibam/releases) page  
+Or get it on the [*cafe bazaar*](https://cafebazaar.ir/app/com.ssmmhh.jibam)
 
 ### Contact
 
