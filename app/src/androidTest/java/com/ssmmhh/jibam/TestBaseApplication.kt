@@ -1,9 +1,8 @@
 package com.ssmmhh.jibam
 
+import com.ssmmhh.jibam.di.AppComponent
 import com.ssmmhh.jibam.di.DaggerTestAppComponent
 import com.ssmmhh.jibam.di.TestAppComponent
-import com.ssmmhh.jibam.di.main.MainComponent
-import com.ssmmhh.jibam.di.main.TestMainComponent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
@@ -11,18 +10,12 @@ import kotlinx.coroutines.FlowPreview
 @FlowPreview
 class TestBaseApplication : BaseApplication() {
 
-    private var testMainComponent: TestMainComponent? = null
+    override val appComponent: TestAppComponent
+        get() = super.appComponent as TestAppComponent
 
-    override fun initAppComponent() {
-        appComponent = DaggerTestAppComponent.builder()
+    override fun initAppComponent(): AppComponent =
+        DaggerTestAppComponent.builder()
             .application(this)
             .build()
-    }
 
-    override fun mainComponent(): TestMainComponent {
-        if (testMainComponent == null) {
-            testMainComponent = (appComponent as TestAppComponent).testMainComponent().create()
-        }
-        return testMainComponent as TestMainComponent
-    }
 }

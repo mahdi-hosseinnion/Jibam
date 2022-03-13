@@ -1,24 +1,24 @@
-package com.ssmmhh.jibam.di.main
+package com.ssmmhh.jibam.di
 
 import android.content.SharedPreferences
-import android.content.res.Resources
 import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
-import com.ssmmhh.jibam.fragments.main.MainFragmentFactory
+import com.ssmmhh.jibam.di.factories.MainFragmentFactory
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.util.*
+import javax.inject.Singleton
 
 @Module
-object MainFragmentsModule {
+object MainFragmentFactoryModule {
 
     @FlowPreview
     @ExperimentalCoroutinesApi
     @JvmStatic
-    @MainScope
+    @Singleton
     @Provides
     fun provideMainFragmentFactory(
         viewModelFactory: ViewModelProvider.Factory,
@@ -26,7 +26,6 @@ object MainFragmentsModule {
         currentLocal: Locale,
         sharedPreferences: SharedPreferences,
         sharedPrefEditor: SharedPreferences.Editor,
-        resources: Resources
     ): FragmentFactory {
         return MainFragmentFactory(
             viewModelFactory,
@@ -34,7 +33,6 @@ object MainFragmentsModule {
             currentLocal,
             sharedPreferences,
             sharedPrefEditor
-
         )
     }
 

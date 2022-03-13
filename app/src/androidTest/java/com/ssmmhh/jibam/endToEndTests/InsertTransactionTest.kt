@@ -48,7 +48,7 @@ class InsertTransactionTest {
 
     init {
         //inject this class using dagger
-        getTestBaseApplication().mainComponent()
+        getTestBaseApplication().appComponent
             .inject(this)
     }
 

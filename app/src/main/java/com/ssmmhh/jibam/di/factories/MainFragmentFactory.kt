@@ -1,10 +1,9 @@
-package com.ssmmhh.jibam.fragments.main
+package com.ssmmhh.jibam.di.factories
 
 import android.content.SharedPreferences
 import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
-import com.ssmmhh.jibam.di.main.MainScope
 import com.ssmmhh.jibam.ui.main.transaction.aboutus.AboutUsFragment
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransaction.DetailEditTransactionFragment
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.inserttransaction.InsertTransactionFragment
@@ -21,7 +20,6 @@ import javax.inject.Inject
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-@MainScope
 class MainFragmentFactory
 @Inject
 constructor(

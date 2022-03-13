@@ -46,7 +46,7 @@ class CategorySettingTest {
 
     init {
         //inject this class using dagger
-        getTestBaseApplication().mainComponent()
+        getTestBaseApplication().appComponent
             .inject(this)
     }
 

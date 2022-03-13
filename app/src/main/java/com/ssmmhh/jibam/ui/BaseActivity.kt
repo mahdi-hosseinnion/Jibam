@@ -9,7 +9,6 @@ import android.view.inputmethod.InputMethodManager
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.ssmmhh.jibam.BaseApplication
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.util.*
 import com.google.android.material.snackbar.Snackbar
@@ -30,13 +29,6 @@ abstract class BaseActivity : AppCompatActivity(),
 
     @Inject
     lateinit var _resources: Resources
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        (application as BaseApplication).appComponent
-            .inject(this)
-        super.onCreate(savedInstanceState)
-
-    }
 
     private fun _getString(@StringRes resId: Int): String {
         return _resources.getString(resId)
