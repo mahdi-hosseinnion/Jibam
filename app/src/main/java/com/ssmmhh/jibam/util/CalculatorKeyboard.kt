@@ -218,7 +218,7 @@ class CalculatorKeyboard(
             val selectedText = inputConnection!!.getSelectedText(0)
             if (selectedText.isNullOrBlank()) {
                 // no selection, so delete previous character
-                if (inputConnection!!.getTextBeforeCursor(1, 0)[0] == NUMBER_SEPARATOR) {
+                if (inputConnection!!.getTextBeforeCursor(1, 0)!![0] == NUMBER_SEPARATOR) {
                     //get text before Cursor if it's  'NUMBER_SEPARATOR' remove 2
                     //(remove NUMBER_SEPARATOR and text before number separator)
                     inputConnection!!.deleteSurroundingText(2, 0)
@@ -324,7 +324,7 @@ class CalculatorKeyboard(
         val currentText = getExtractedText(ExtractedTextRequest(), 0).text;
         val beforeCursorText = getTextBeforeCursor(currentText.length, 0)
         val afterCursorText = getTextAfterCursor(currentText.length, 0)
-        deleteSurroundingText(beforeCursorText.length, afterCursorText.length)
+        deleteSurroundingText(beforeCursorText!!.length, afterCursorText!!.length)
 //        CharSequence currentText = inputConnection.getExtractedText(new ExtractedTextRequest(), 0).text;
 //        CharSequence beforCursorText = inputConnection.getTextBeforeCursor(currentText.length(), 0);
 //        CharSequence afterCursorText = inputConnection.getTextAfterCursor(currentText.length(), 0);
