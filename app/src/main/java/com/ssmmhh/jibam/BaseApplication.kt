@@ -12,19 +12,17 @@ import kotlinx.coroutines.FlowPreview
 open class BaseApplication : MultiDexApplication() {
 
     private lateinit var _appComponent: AppComponent
-    val appComponent get() = _appComponent
+    open val appComponent get() = _appComponent
 
     override fun onCreate() {
         super.onCreate()
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
-        initAppComponent()
+        _appComponent = initAppComponent()
     }
 
-    open fun initAppComponent() {
-        _appComponent = DaggerAppComponent.builder()
-            .application(this)
-            .build()
-    }
+    open fun initAppComponent(): AppComponent = DaggerAppComponent.builder()
+        .application(this)
+        .build()
 
 
 }
