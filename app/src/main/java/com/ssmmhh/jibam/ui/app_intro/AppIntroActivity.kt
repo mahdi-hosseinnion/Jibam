@@ -66,8 +66,7 @@ class AppIntroActivity : AppIntro() {
     }
 
     private fun inject() {
-        (application as BaseApplication).mainComponent()
-            .inject(this)
+        (application as BaseApplication).appComponent.inject(this)
     }
 
     override fun onSkipPressed(currentFragment: Fragment?) {

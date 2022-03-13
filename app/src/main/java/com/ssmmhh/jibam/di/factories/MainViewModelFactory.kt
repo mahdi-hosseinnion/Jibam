@@ -1,12 +1,10 @@
-package com.ssmmhh.jibam.viewmodels
+package com.ssmmhh.jibam.di.factories
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.ssmmhh.jibam.di.main.MainScope
 import javax.inject.Inject
 import javax.inject.Provider
 
-@MainScope
 class MainViewModelFactory
 @Inject
 constructor(

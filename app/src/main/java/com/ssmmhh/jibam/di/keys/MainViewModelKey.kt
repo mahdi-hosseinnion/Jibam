@@ -1,4 +1,4 @@
-package com.ssmmhh.jibam.di.main.keys
+package com.ssmmhh.jibam.di.keys
 
 import androidx.lifecycle.ViewModel
 import dagger.MapKey

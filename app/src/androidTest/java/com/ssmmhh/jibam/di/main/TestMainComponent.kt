@@ -1,5 +1,8 @@
 package com.ssmmhh.jibam.di.main
 
+import com.ssmmhh.jibam.di.MainFragmentFactoryModule
+import com.ssmmhh.jibam.di.MainModule
+import com.ssmmhh.jibam.di.MainViewModelModule
 import com.ssmmhh.jibam.endToEndTests.*
 import dagger.Subcomponent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -11,7 +14,7 @@ import kotlinx.coroutines.FlowPreview
     modules = [
         MainModule::class,
         MainViewModelModule::class,
-        MainFragmentsModule::class
+        MainFragmentFactoryModule::class
     ]
 )
 @ExperimentalCoroutinesApi

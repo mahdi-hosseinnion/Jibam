@@ -1,21 +1,24 @@
-package com.ssmmhh.jibam.di.main
+package com.ssmmhh.jibam.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.ssmmhh.jibam.di.main.keys.MainViewModelKey
+import com.ssmmhh.jibam.di.keys.MainViewModelKey
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransaction.DetailEditTransactionViewModel
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.inserttransaction.InsertTransactionViewModel
 import com.ssmmhh.jibam.ui.main.transaction.categories.addcategoires.AddCategoryViewModel
 import com.ssmmhh.jibam.ui.main.transaction.categories.viewcategories.ViewCategoriesViewModel
 import com.ssmmhh.jibam.ui.main.transaction.chart.ChartViewModel
 import com.ssmmhh.jibam.ui.main.transaction.transactions.TransactionsViewModel
-import com.ssmmhh.jibam.viewmodels.MainViewModelFactory
+import com.ssmmhh.jibam.di.factories.MainViewModelFactory
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
+/**
+ * Bind view models with view model factory
+ */
 @Module
 abstract class MainViewModelModule {
 

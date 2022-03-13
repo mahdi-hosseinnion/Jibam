@@ -70,8 +70,7 @@ class MainActivity : BaseActivity() {
 
 
     override fun inject() {
-        (application as BaseApplication).mainComponent()
-            .inject(this)
+        (application as BaseApplication).appComponent.inject(this)
     }
 
     private fun firstSetup() {

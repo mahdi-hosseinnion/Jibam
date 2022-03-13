@@ -1,8 +1,9 @@
 package com.ssmmhh.jibam.di
 
 import android.app.Application
-import com.ssmmhh.jibam.di.main.MainComponent
-import com.ssmmhh.jibam.ui.BaseActivity
+import com.ssmmhh.jibam.ui.app_intro.AppIntroActivity
+import com.ssmmhh.jibam.ui.main.MainActivity
+import com.ssmmhh.jibam.ui.main.transaction.common.MonthManger
 import dagger.BindsInstance
 import dagger.Component
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -14,14 +15,15 @@ import javax.inject.Singleton
     modules = [
         AppModule::class,
         ProductionModule::class,
-        SubComponentsModule::class
+        MainViewModelModule::class,
+        MainFragmentFactoryModule::class
     ]
 )
 @FlowPreview
 @ExperimentalCoroutinesApi
 interface AppComponent {
 
-//    val sessionManager: SessionManager
+    val monthManger: MonthManger
 
     @Component.Builder
     interface Builder {
@@ -32,10 +34,9 @@ interface AppComponent {
         fun build(): AppComponent
     }
 
-    fun inject(baseActivity: BaseActivity)
+    fun inject(mainActivity: MainActivity)
 
-//    fun authComponent(): AuthComponent.Factory
+    fun inject(appIntroActivity: AppIntroActivity)
 
-    fun mainComponent(): MainComponent.Factory
 
 }
