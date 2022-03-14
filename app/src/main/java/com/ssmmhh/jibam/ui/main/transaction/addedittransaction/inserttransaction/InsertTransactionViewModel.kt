@@ -1,7 +1,7 @@
 package com.ssmmhh.jibam.ui.main.transaction.addedittransaction.inserttransaction
 
-import com.ssmmhh.jibam.models.Category
-import com.ssmmhh.jibam.models.TransactionEntity
+import com.ssmmhh.jibam.persistence.entities.CategoryEntity
+import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 import com.ssmmhh.jibam.repository.cateogry.CategoryRepository
 import com.ssmmhh.jibam.repository.tranasction.TransactionRepository
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionPresenterState
@@ -48,8 +48,8 @@ constructor(
     override fun updateViewState(newViewState: InsertTransactionViewState): InsertTransactionViewState {
         val outDated = getCurrentViewStateOrNew()
         return InsertTransactionViewState(
-            category = newViewState.category
-                ?: outDated.category,
+            categoryEntity = newViewState.categoryEntity
+                ?: outDated.categoryEntity,
 
             moneyStr = newViewState.moneyStr
                 ?: outDated.moneyStr,
@@ -127,15 +127,15 @@ constructor(
         return new
     }
 
-    fun setTransactionCategory(item: Category) {
+    fun setTransactionCategory(item: CategoryEntity) {
         setViewState(
             InsertTransactionViewState(
-                category = item
+                categoryEntity = item
             )
         )
     }
 
-    fun getTransactionCategory(): Category? = getCurrentViewStateOrNew().category
+    fun getTransactionCategory(): CategoryEntity? = getCurrentViewStateOrNew().categoryEntity
 
     fun insertTransaction(entity: TransactionEntity) {
         launchNewJob(

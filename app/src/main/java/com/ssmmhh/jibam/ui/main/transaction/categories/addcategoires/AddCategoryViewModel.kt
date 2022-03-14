@@ -3,8 +3,8 @@ package com.ssmmhh.jibam.ui.main.transaction.categories.addcategoires
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.models.Category
-import com.ssmmhh.jibam.models.CategoryImages
+import com.ssmmhh.jibam.persistence.entities.CategoryEntity
+import com.ssmmhh.jibam.persistence.entities.CategoryImageEntity
 import com.ssmmhh.jibam.repository.cateogry.CategoryRepository
 import com.ssmmhh.jibam.ui.main.transaction.categories.addcategoires.state.AddCategoryStateEvent
 import com.ssmmhh.jibam.ui.main.transaction.categories.addcategoires.state.AddCategoryViewState
@@ -34,14 +34,14 @@ constructor(
         )
     }
 
-    private val _categoriesImages: LiveData<List<CategoryImages>> =
+    private val _categoriesImageEntity: LiveData<List<CategoryImageEntity>> =
         categoryRepository.getCategoryImages()
             .asLiveData()
 
-    val categoriesImages: LiveData<List<CategoryImages>> = _categoriesImages
+    val categoriesImageEntity: LiveData<List<CategoryImageEntity>> = _categoriesImageEntity
 
     fun insertCategory(categoryName: String): Int {
-        val category = Category(
+        val category = CategoryEntity(
             id = 0,
             ordering = 0,
             name = categoryName,
@@ -54,7 +54,7 @@ constructor(
         )
         launchNewJob(
             AddCategoryStateEvent.InsertCategory(
-                category = category
+                categoryEntity = category
             )
         )
 
@@ -69,10 +69,10 @@ constructor(
         )
     }
 
-    fun setCategoryImage(categoryImages: CategoryImages) {
+    fun setCategoryImage(categoryImageEntity: CategoryImageEntity) {
         setViewState(
             AddCategoryViewState(
-                categoryImage = categoryImages
+                categoryImage = categoryImageEntity
             )
         )
     }

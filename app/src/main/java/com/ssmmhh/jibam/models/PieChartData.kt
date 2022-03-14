@@ -4,6 +4,7 @@ import android.content.res.Resources
 import android.util.Log
 import androidx.room.ColumnInfo
 import androidx.room.Ignore
+import com.ssmmhh.jibam.persistence.entities.CategoryEntity
 
 data class PieChartData(
     @ColumnInfo(name = "categoryId")
@@ -47,4 +48,9 @@ data class PieChartData(
             onUnableToFindName(this)
         }
     }
+    val isExpensesCategory: Boolean
+        get() = categoryType == CategoryEntity.EXPENSES_TYPE_MARKER
+
+    val isIncomeCategory: Boolean
+        get() = categoryType == CategoryEntity.INCOME_TYPE_MARKER
 }

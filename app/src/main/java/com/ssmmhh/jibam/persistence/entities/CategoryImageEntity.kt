@@ -1,4 +1,4 @@
-package com.ssmmhh.jibam.models
+package com.ssmmhh.jibam.persistence.entities
 
 import android.content.res.Resources
 import android.util.Log
@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 
 
 @Entity(tableName = "category_images")
-data class CategoryImages(
+data class CategoryImageEntity(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
@@ -22,7 +22,7 @@ data class CategoryImages(
     fun getCategoryGroupNameFromStringFile(
         resources: Resources,
         packageName: String,
-        onUnableToFindName: (CategoryImages) -> String
+        onUnableToFindName: (CategoryImageEntity) -> String
     ): String {
         val nameId: Int = resources.getIdentifier(
             this.group_name,

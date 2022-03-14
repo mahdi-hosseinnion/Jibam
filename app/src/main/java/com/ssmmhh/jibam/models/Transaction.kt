@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import android.content.res.Resources
 import android.util.Log
 import androidx.room.Ignore
+import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 
 data class Transaction(
     @ColumnInfo(name = "rId")
@@ -69,4 +70,11 @@ data class Transaction(
         }
     }
 
+    fun toTransactionEntity(): TransactionEntity = TransactionEntity(
+        id = this.id,
+        money = this.money,
+        memo = this.memo,
+        cat_id = this.categoryId,
+        date = this.date
+    )
 }

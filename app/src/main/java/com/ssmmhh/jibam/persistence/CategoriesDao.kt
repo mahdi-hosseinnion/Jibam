@@ -1,32 +1,32 @@
 package com.ssmmhh.jibam.persistence
 
 import androidx.room.*
-import com.ssmmhh.jibam.models.Category
-import com.ssmmhh.jibam.models.CategoryImages
+import com.ssmmhh.jibam.persistence.entities.CategoryEntity
+import com.ssmmhh.jibam.persistence.entities.CategoryImageEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CategoriesDao {
     @Query("SELECT * FROM categories $CATEGORY_ORDER")
-    fun getCategories(): Flow<List<Category>>
+    fun getCategories(): Flow<List<CategoryEntity>>
 
     @Query("SELECT * FROM categories $CATEGORY_ORDER")
-    suspend fun getAllOfCategories(): List<Category>
+    suspend fun getAllOfCategories(): List<CategoryEntity>
 
     @Query("SELECT * FROM categories WHERE type = :type $CATEGORY_ORDER")
-    suspend  fun getAllOfCategoriesWithType(type: Int): List<Category>
+    suspend  fun getAllOfCategoriesWithType(type: Int): List<CategoryEntity>
 
     @Query("SELECT * FROM category_images")
-    fun getCategoriesImages(): Flow<List<CategoryImages>>
+    fun getCategoriesImages(): Flow<List<CategoryImageEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrReplace(category: Category): Long
+    suspend fun insertOrReplace(categoryEntity: CategoryEntity): Long
 
     @Update
-    suspend fun updateCategory(category: Category): Int
+    suspend fun updateCategory(categoryEntity: CategoryEntity): Int
 
     @Delete
-    suspend fun deleteCategory(category: Category): Int
+    suspend fun deleteCategory(categoryEntity: CategoryEntity): Int
 
     @Query("DELETE FROM categories WHERE cId = :categoryId")
     suspend fun deleteCategory(categoryId: Int): Int
@@ -38,7 +38,7 @@ interface CategoriesDao {
     suspend fun getMaxOfOrdering(): Int
 
     @Query("SELECT * FROM categories WHERE cId = :id")
-    suspend fun getCategoryById(id: Int): Category?
+    suspend fun getCategoryById(id: Int): CategoryEntity?
 
     @Query(
         """
@@ -62,7 +62,7 @@ interface CategoriesDao {
         type: Int,
         fromOrder: Int,
         toOrder: Int
-    ): List<Category>
+    ): List<CategoryEntity>
 
     @Query("""UPDATE categories SET ordering = (ordering + 1) WHERE type = :type""")
     fun increaseAllOfOrdersByOne(type: Int)

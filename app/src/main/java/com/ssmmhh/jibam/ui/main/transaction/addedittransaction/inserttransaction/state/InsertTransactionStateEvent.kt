@@ -1,6 +1,6 @@
 package com.ssmmhh.jibam.ui.main.transaction.addedittransaction.inserttransaction.state
 
-import com.ssmmhh.jibam.models.TransactionEntity
+import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 import com.ssmmhh.jibam.util.StateEvent
 
 sealed class InsertTransactionStateEvent : StateEvent {

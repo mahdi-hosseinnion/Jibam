@@ -13,7 +13,7 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.platform.app.InstrumentationRegistry
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.models.TransactionEntity
+import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 import com.ssmmhh.jibam.persistence.CategoriesDao
 import com.ssmmhh.jibam.persistence.RecordsDao
 import com.ssmmhh.jibam.ui.main.MainActivity

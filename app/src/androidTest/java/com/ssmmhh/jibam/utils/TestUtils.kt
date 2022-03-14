@@ -14,7 +14,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.ssmmhh.jibam.TestBaseApplication
-import com.ssmmhh.jibam.models.TransactionEntity
+import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 import com.ssmmhh.jibam.util.DateUtils
 import com.ssmmhh.jibam.util.PreferenceKeys
 import kotlinx.coroutines.ExperimentalCoroutinesApi

@@ -1,7 +1,7 @@
 package com.ssmmhh.jibam.utils
 
 import android.content.res.Resources
-import com.ssmmhh.jibam.models.TransactionEntity
+import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 import com.ssmmhh.jibam.persistence.CategoriesDao
 import com.ssmmhh.jibam.util.NUMBER_SEPARATOR
 

@@ -12,7 +12,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withC
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.LayoutTransacionHeaderBinding
 import com.ssmmhh.jibam.databinding.LayoutTransactionListItemBinding
-import com.ssmmhh.jibam.models.Category
+import com.ssmmhh.jibam.persistence.entities.CategoryEntity
 import com.ssmmhh.jibam.models.Transaction
 import com.ssmmhh.jibam.util.CategoriesImageBackgroundColors
 import com.ssmmhh.jibam.util.GenericViewHolder
@@ -30,7 +30,7 @@ class TransactionsListAdapter(
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var categoryList = ArrayList<Category>()
+    private var categoryList = ArrayList<CategoryEntity>()
 
     companion object {
         private const val TAG: String = "AppDebug"

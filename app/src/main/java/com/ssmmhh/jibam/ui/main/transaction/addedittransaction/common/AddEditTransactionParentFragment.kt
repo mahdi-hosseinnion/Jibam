@@ -171,7 +171,7 @@ constructor(
         //viewpager
         btmsheetViewPagerAdapter = CategoryBottomSheetViewPagerAdapter(
             context = this.requireContext(),
-            categoryList = null,
+            categoryEntityList = null,
             interaction = this,
             requestManager = requestManager,
             isLeftToRight = isLeftToRight,

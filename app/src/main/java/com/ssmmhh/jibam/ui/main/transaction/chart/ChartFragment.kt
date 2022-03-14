@@ -29,8 +29,8 @@ import com.ssmmhh.jibam.databinding.FragmentChartBinding
 import com.ssmmhh.jibam.models.PieChartData
 import com.ssmmhh.jibam.ui.main.transaction.chart.ChartFragment.ChartState.*
 import com.ssmmhh.jibam.ui.main.transaction.common.BaseFragment
-import com.ssmmhh.jibam.util.Constants.EXPENSES_TYPE_MARKER
-import com.ssmmhh.jibam.util.Constants.INCOME_TYPE_MARKER
+import com.ssmmhh.jibam.persistence.entities.CategoryEntity.Companion.EXPENSES_TYPE_MARKER
+import com.ssmmhh.jibam.persistence.entities.CategoryEntity.Companion.INCOME_TYPE_MARKER
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.util.*

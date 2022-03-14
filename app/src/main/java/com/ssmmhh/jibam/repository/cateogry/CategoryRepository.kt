@@ -1,7 +1,7 @@
 package com.ssmmhh.jibam.repository.cateogry
 
-import com.ssmmhh.jibam.models.Category
-import com.ssmmhh.jibam.models.CategoryImages
+import com.ssmmhh.jibam.persistence.entities.CategoryEntity
+import com.ssmmhh.jibam.persistence.entities.CategoryImageEntity
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionStateEvent
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionViewState
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionStateEvent
@@ -16,10 +16,10 @@ import kotlinx.coroutines.flow.Flow
 interface CategoryRepository {
 
     fun getCategoryList(
-    ): Flow<List<Category>>
+    ): Flow<List<CategoryEntity>>
 
     fun getCategoryImages(
-    ): Flow<List<CategoryImages>>
+    ): Flow<List<CategoryImageEntity>>
 
     suspend fun getAllOfCategories(
         stateEvent: DetailEditTransactionStateEvent.GetAllOfCategories

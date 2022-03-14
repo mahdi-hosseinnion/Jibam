@@ -1,4 +1,4 @@
-package com.ssmmhh.jibam.models
+package com.ssmmhh.jibam.persistence.entities
 
 import android.content.res.Resources
 import android.util.Log
@@ -7,7 +7,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "categories")
-data class Category(
+data class CategoryEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "cId")
     val id: Int,
@@ -29,7 +29,7 @@ data class Category(
     fun getCategoryNameFromStringFile(
         resources: Resources,
         packageName: String,
-        onUnableToFindName: (Category) -> String = { it.name }
+        onUnableToFindName: (CategoryEntity) -> String = { it.name }
     ): String {
         val nameId: Int = resources.getIdentifier(
             this.name,
@@ -46,5 +46,16 @@ data class Category(
             Log.e("Category", "getCategoryNameFromStringFile: add >${this.name}< to strings file")
             onUnableToFindName(this)
         }
+    }
+
+    val isExpensesCategory: Boolean
+        get() = type == EXPENSES_TYPE_MARKER
+
+    val isIncomeCategory: Boolean
+        get() = type == INCOME_TYPE_MARKER
+
+    companion object {
+         const val EXPENSES_TYPE_MARKER = 1
+         const val INCOME_TYPE_MARKER = 2
     }
 }

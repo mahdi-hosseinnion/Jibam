@@ -1,9 +1,9 @@
 package com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransaction.state
 
 import android.util.Log
-import com.ssmmhh.jibam.models.Category
+import com.ssmmhh.jibam.persistence.entities.CategoryEntity
 import com.ssmmhh.jibam.models.Transaction
-import com.ssmmhh.jibam.models.TransactionEntity
+import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 import com.ssmmhh.jibam.util.Event
 import kotlinx.coroutines.flow.*
 import java.util.*
@@ -17,7 +17,7 @@ data class DetailEditTransactionViewState(
     val moneyStr: String? = null,
     val transactionCategoryType: Int? = null,
     val combineCalender: GregorianCalendar? = null,
-    val allOfCategories: Event<List<Category>?>? = null,
+    val allOfCategories: Event<List<CategoryEntity>?>? = null,
     val successfullyDeletedTransactionIndicator: Int? = null,
     val presenterState: Event<DetailEditTransactionPresenterState>? = null
 
