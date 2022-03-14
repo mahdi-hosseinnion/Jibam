@@ -17,7 +17,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 @FlowPreview
 @ExperimentalCoroutinesApi
 class MainFragmentFactory

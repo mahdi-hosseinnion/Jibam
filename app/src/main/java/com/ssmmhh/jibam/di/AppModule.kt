@@ -90,7 +90,7 @@ object AppModule {
         return Glide.with(application)
             .setDefaultRequestOptions(requestOptions)
     }
-
+    //TODO remove resources from dependencies
     @JvmStatic
     @Singleton
     @Provides

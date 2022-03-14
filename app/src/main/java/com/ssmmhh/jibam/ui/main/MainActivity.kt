@@ -13,6 +13,7 @@ import androidx.navigation.ui.navigateUp
 import com.ssmmhh.jibam.BaseApplication
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.ActivityMainBinding
+import com.ssmmhh.jibam.di.factories.MainFragmentFactory
 import com.ssmmhh.jibam.ui.BaseActivity
 import com.ssmmhh.jibam.ui.app_intro.AppIntroActivity
 import com.ssmmhh.jibam.util.PreferenceKeys
@@ -27,7 +28,7 @@ class MainActivity : BaseActivity() {
     private val TAG = "MainActivity"
 
     @Inject
-    lateinit var fragmentFactory: FragmentFactory
+    lateinit var fragmentFactory: MainFragmentFactory
 
     @Inject
     lateinit var currentLocale: Locale
