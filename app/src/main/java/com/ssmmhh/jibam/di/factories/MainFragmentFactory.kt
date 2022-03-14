@@ -106,10 +106,7 @@ constructor(
             }
 
             else -> {
-                TransactionsFragment(
-                    viewModelFactory, requestManager, currentLocale, sharedPreferences,
-                    sharedPrefsEditor
-                )
+                super.instantiate(classLoader, className)
             }
         }
 

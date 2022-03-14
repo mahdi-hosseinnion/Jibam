@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -43,6 +42,7 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         inject()
+        setFragmentFactory()
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
@@ -72,6 +72,10 @@ class MainActivity : BaseActivity() {
 
     override fun inject() {
         (application as BaseApplication).appComponent.inject(this)
+    }
+
+    private fun setFragmentFactory() {
+        supportFragmentManager.fragmentFactory = fragmentFactory
     }
 
     private fun firstSetup() {
