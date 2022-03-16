@@ -32,6 +32,7 @@ object SolarCalendar {
         calcSolarCalendar(Date(unixTimeStamp), pattern, resources, loc)
 
     //    = Locale("en_US")
+    //TODO SHOULD RETURN HASHMAP or data class
     fun calcSolarCalendar(
         gregorianDate: Date,
         pattern: ShamsiPatterns,
@@ -198,7 +199,7 @@ object SolarCalendar {
         //TODO REFACTOR THIS
         return when (pattern) {
             ShamsiPatterns.RECYCLER_VIEW -> {
-                "$strWeekDay، ${TransactionsListAdapter.DAY_OF_WEEK_MARKER}" +
+                "$strWeekDay, ${TransactionsListAdapter.DAY_OF_WEEK_MARKER}" +
                         java.lang.String.format(loc, "%d", date) +
                         " " +
                         strMonth +
