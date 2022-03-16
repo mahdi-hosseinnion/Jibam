@@ -6,6 +6,7 @@ import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.models.PieChartData
 import com.ssmmhh.jibam.models.Transaction
 import com.ssmmhh.jibam.persistence.RecordsDao
+import com.ssmmhh.jibam.persistence.entities.CategoryEntity
 import com.ssmmhh.jibam.persistence.getRecords
 import com.ssmmhh.jibam.persistence.getSumOfExpenses
 import com.ssmmhh.jibam.persistence.getSumOfIncome
@@ -60,22 +61,18 @@ constructor(
     }
 
     private fun calculatePercentage(values: List<PieChartData>): List<PieChartData> {
-        val sumOfAllExpenses =
-            values.filter { it.categoryType == Constants.EXPENSES_TYPE_MARKER }
-                .sumOf { it.sumOfMoney }
+        val sumOfAllExpenses = values.filter { it.isExpensesCategory }.sumOf { it.sumOfMoney }
 
-        val sumOfAllIncome =
-            values.filter { it.categoryType == Constants.INCOME_TYPE_MARKER }
-                .sumOf { it.sumOfMoney }
+        val sumOfAllIncome = values.filter { it.isIncomeCategory }.sumOf { it.sumOfMoney }
 
         val newList = ArrayList<PieChartData>()
 
         for (item in values) {
             val percentage: Double = when (item.categoryType) {
-                Constants.EXPENSES_TYPE_MARKER -> {
+                CategoryEntity.EXPENSES_TYPE_MARKER -> {
                     (item.sumOfMoney.div(sumOfAllExpenses)).times(100)
                 }
-                Constants.INCOME_TYPE_MARKER -> {
+                CategoryEntity.INCOME_TYPE_MARKER -> {
                     (item.sumOfMoney.div(sumOfAllIncome)).times(100)
                 }
                 else -> {

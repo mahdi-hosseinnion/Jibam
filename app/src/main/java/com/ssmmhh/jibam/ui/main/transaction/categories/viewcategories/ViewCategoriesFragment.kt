@@ -12,14 +12,14 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.models.Category
+import com.ssmmhh.jibam.persistence.entities.CategoryEntity
 import com.ssmmhh.jibam.ui.main.transaction.categories.addcategoires.AddCategoryFragment.Companion.EXPENSES
 import com.ssmmhh.jibam.ui.main.transaction.categories.addcategoires.AddCategoryFragment.Companion.INCOME
 import com.ssmmhh.jibam.ui.main.transaction.categories.viewcategories.state.ViewCategoriesStateEvent
 import com.ssmmhh.jibam.ui.main.transaction.common.BaseFragment
 import com.ssmmhh.jibam.util.*
-import com.ssmmhh.jibam.util.Constants.EXPENSES_TYPE_MARKER
-import com.ssmmhh.jibam.util.Constants.INCOME_TYPE_MARKER
+import com.ssmmhh.jibam.persistence.entities.CategoryEntity.Companion.EXPENSES_TYPE_MARKER
+import com.ssmmhh.jibam.persistence.entities.CategoryEntity.Companion.INCOME_TYPE_MARKER
 import com.google.android.material.tabs.TabLayoutMediator
 import com.ssmmhh.jibam.databinding.FragmentViewCategoriesBinding
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -109,7 +109,7 @@ class ViewCategoriesFragment(
     private fun setupViewPager() {
         viewPagerAdapter = ViewCategoriesViewPagerAdapter(
             this.requireContext(),
-            listOfCategories = null,
+            listOfCategoryEntities = null,
             expensesItemTouchHelper = expensesItemTouchHelper,
             incomeItemTouchHelper = incomeItemTouchHelper,
             categoryInteraction = this,
@@ -143,7 +143,7 @@ class ViewCategoriesFragment(
     private fun subscribeObservers() {
         viewModel.viewState.observe(viewLifecycleOwner) { vs ->
             vs?.let { viewState ->
-                viewState.categoryList?.let {
+                viewState.categoryEntityList?.let {
                     viewPagerAdapter.submitList(it)
                 }
             }
@@ -168,10 +168,10 @@ class ViewCategoriesFragment(
     }
 
 
-    override fun onDeleteClicked(position: Int, category: Category) {
+    override fun onDeleteClicked(position: Int, categoryEntity: CategoryEntity) {
         val callback = object : AreYouSureCallback {
             override fun proceed() {
-                deleteCategory(category)
+                deleteCategory(categoryEntity)
             }
 
             override fun cancel() {}
@@ -201,10 +201,10 @@ class ViewCategoriesFragment(
     }
 
 
-    fun deleteCategory(category: Category) {
+    fun deleteCategory(categoryEntity: CategoryEntity) {
         viewModel.launchNewJob(
             ViewCategoriesStateEvent.DeleteCategory(
-                category.id
+                categoryEntity.id
             )
         )
     }

@@ -41,7 +41,7 @@ constructor(
     override fun updateViewState(newViewStateView: ViewCategoriesViewState): ViewCategoriesViewState {
         val outDate = getCurrentViewStateOrNew()
         return ViewCategoriesViewState(
-            newViewStateView.categoryList ?: outDate.categoryList,
+            newViewStateView.categoryEntityList ?: outDate.categoryEntityList,
             newViewStateView.insertedCategoryRow ?: outDate.insertedCategoryRow
         )
     }

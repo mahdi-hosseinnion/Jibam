@@ -6,7 +6,6 @@ import androidx.lifecycle.asLiveData
 import com.ssmmhh.jibam.models.Month
 import com.ssmmhh.jibam.models.PieChartData
 import com.ssmmhh.jibam.models.Transaction
-import com.ssmmhh.jibam.models.mappers.toTransactionEntity
 import com.ssmmhh.jibam.repository.tranasction.TransactionRepository
 import com.ssmmhh.jibam.ui.main.transaction.chart.state.ChartStateEvent
 import com.ssmmhh.jibam.ui.main.transaction.chart.state.ChartViewState

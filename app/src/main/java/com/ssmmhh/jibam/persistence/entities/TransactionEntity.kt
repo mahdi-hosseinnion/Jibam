@@ -1,4 +1,4 @@
-package com.ssmmhh.jibam.models
+package com.ssmmhh.jibam.persistence.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

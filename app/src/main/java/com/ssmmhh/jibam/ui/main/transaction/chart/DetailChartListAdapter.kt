@@ -35,7 +35,10 @@ class DetailChartListAdapter(
             id = EMPTY_LIST_MARKER,
             0.0,
             "",
-            0.0
+            0,
+            "",
+            "",
+            0
         )
 
     }

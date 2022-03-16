@@ -16,7 +16,6 @@ import javax.inject.Singleton
         AppModule::class,
         ProductionModule::class,
         MainViewModelModule::class,
-        MainFragmentFactoryModule::class
     ]
 )
 @FlowPreview

@@ -3,8 +3,8 @@ package com.ssmmhh.jibam.repository.cateogry
 import android.content.res.Resources
 import androidx.annotation.StringRes
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.models.Category
-import com.ssmmhh.jibam.models.CategoryImages
+import com.ssmmhh.jibam.persistence.entities.CategoryEntity
+import com.ssmmhh.jibam.persistence.entities.CategoryImageEntity
 import com.ssmmhh.jibam.persistence.CategoriesDao
 import com.ssmmhh.jibam.repository.safeCacheCall
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionStateEvent
@@ -26,10 +26,10 @@ constructor(
     private val _resources: Resources
 ) : CategoryRepository {
 
-    override fun getCategoryList(): Flow<List<Category>> =
+    override fun getCategoryList(): Flow<List<CategoryEntity>> =
         categoriesDao.getCategories()
 
-    override fun getCategoryImages(): Flow<List<CategoryImages>> =
+    override fun getCategoryImages(): Flow<List<CategoryImageEntity>> =
         categoriesDao.getCategoriesImages()
 
     override suspend fun getAllOfCategories(
@@ -40,11 +40,11 @@ constructor(
             categoriesDao.getAllOfCategories()
         }
         return object :
-            CacheResponseHandler<DetailEditTransactionViewState, List<Category>>(
+            CacheResponseHandler<DetailEditTransactionViewState, List<CategoryEntity>>(
                 response = cacheResult,
                 stateEvent = stateEvent
             ) {
-            override suspend fun handleSuccess(resultObj: List<Category>): DataState<DetailEditTransactionViewState> {
+            override suspend fun handleSuccess(resultObj: List<CategoryEntity>): DataState<DetailEditTransactionViewState> {
                 return if (resultObj.isNotEmpty()) {
                     DataState.data(
                         Response(
@@ -80,11 +80,11 @@ constructor(
             categoriesDao.getAllOfCategories()
         }
         return object :
-            CacheResponseHandler<ViewCategoriesViewState, List<Category>>(
+            CacheResponseHandler<ViewCategoriesViewState, List<CategoryEntity>>(
                 response = cacheResult,
                 stateEvent = stateEvent
             ) {
-            override suspend fun handleSuccess(resultObj: List<Category>): DataState<ViewCategoriesViewState> {
+            override suspend fun handleSuccess(resultObj: List<CategoryEntity>): DataState<ViewCategoriesViewState> {
                 return if (resultObj.isNotEmpty()) {
                     DataState.data(
                         Response(
@@ -93,7 +93,7 @@ constructor(
                             messageType = MessageType.Success
                         ),
                         data = ViewCategoriesViewState(
-                            categoryList = resultObj
+                            categoryEntityList = resultObj
                         ),
                         stateEvent = stateEvent
                     )
@@ -121,11 +121,11 @@ constructor(
             categoriesDao.getAllOfCategories()
         }
         return object :
-            CacheResponseHandler<InsertTransactionViewState, List<Category>>(
+            CacheResponseHandler<InsertTransactionViewState, List<CategoryEntity>>(
                 response = cacheResult,
                 stateEvent = stateEvent
             ) {
-            override suspend fun handleSuccess(resultObj: List<Category>): DataState<InsertTransactionViewState> {
+            override suspend fun handleSuccess(resultObj: List<CategoryEntity>): DataState<InsertTransactionViewState> {
                 return if (resultObj.isNotEmpty()) {
                     DataState.data(
                         Response(
@@ -159,10 +159,10 @@ constructor(
 
         //we don't care if we were able to increase all of categories order in same type
         //b/c use can reorder it manually later
-        increaseAllOfOrdersByOne(stateEvent.category.type)
+        increaseAllOfOrdersByOne(stateEvent.categoryEntity.type)
 
         val cacheResult = safeCacheCall {
-            categoriesDao.insertOrReplace(stateEvent.category.copy(ordering = 0))
+            categoriesDao.insertOrReplace(stateEvent.categoryEntity.copy(ordering = 0))
         }
         return object : CacheResponseHandler<AddCategoryViewState, Long>(
             response = cacheResult,

@@ -6,6 +6,7 @@ import android.content.res.Resources
 import android.util.Log
 import android.util.TypedValue
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import com.ssmmhh.jibam.R
 import java.text.DecimalFormat
 import java.text.NumberFormat
@@ -293,3 +294,37 @@ fun getCategoryDrawableResourceIdByCategoryImageName(
         "drawable",
         context.packageName
     )
+
+fun getResourcesStringValueByName(
+    stringName: String,
+    resources: Resources,
+    packageName: String,
+): String? {
+    val nameId: Int = resources.getIdentifier(
+        stringName,
+        "string",
+        packageName
+    )
+    return try {
+        resources.getString(nameId)
+    } catch (e: Exception) {
+        Log.e(
+            "App",
+            "getResourcesStringValueByName: unable to find string with name: '$stringName' in string resources ",
+        )
+        null
+    }
+}
+
+fun getCategoryImageResourceIdFromDrawable(
+    categoryImageName: String,
+    resources: Resources,
+    packageName: String,
+): Int =
+    resources.getIdentifier(
+        "ic_cat_$categoryImageName",
+        "drawable",
+        packageName
+    )
+
+fun RecyclerView.ViewHolder.getStringFromItemView(id: Int) = itemView.resources.getString(id)

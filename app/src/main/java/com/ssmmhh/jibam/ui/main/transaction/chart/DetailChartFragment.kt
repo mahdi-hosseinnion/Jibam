@@ -66,7 +66,8 @@ class DetailChartFragment(
     }
 
     private fun setupUi() {
-        binding.toolbar.topAppBarNormal.title = args.categoryName.replaceFirstChar { it.uppercase() }
+        binding.toolbar.topAppBarNormal.title =
+            args.categoryName.replaceFirstChar { it.uppercase() }
 
         binding.toolbar.topAppBarNormal.setNavigationOnClickListener {
             navigateBack()
@@ -102,7 +103,7 @@ class DetailChartFragment(
 
 
     private fun initRecyclerView() {
-        binding.    detailChartRecycler.apply {
+        binding.detailChartRecycler.apply {
 
             layoutManager = LinearLayoutManager(this@DetailChartFragment.context)
 
@@ -117,7 +118,7 @@ class DetailChartFragment(
             val swipeHandler =
                 object : SwipeToDeleteCallback(this@DetailChartFragment.requireContext()) {
                     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                        val adapter =binding. detailChartRecycler.adapter as DetailChartListAdapter
+                        val adapter = binding.detailChartRecycler.adapter as DetailChartListAdapter
                         val deletedTrans = adapter.getTransaction(viewHolder.adapterPosition)
                         swipeDeleteTransaction(deletedTrans)
                     }
@@ -161,7 +162,19 @@ class DetailChartFragment(
             }
 
             override fun onDismiss() {
-                viewModel.setRecentlyDeletedTrans(Transaction(0, 0.0, memo = FORCE_TO_NULL, 0.0))
+                //TODO remove this
+                viewModel.setRecentlyDeletedTrans(
+                    // an empty transaction with force to null memo to remove transaction in viewmodel
+                    Transaction(
+                        0,
+                        0.0,
+                        memo = FORCE_TO_NULL,
+                        0,
+                        "",
+                        "",
+                        0
+                    )
+                )
             }
         }
         uiCommunicationListener.onResponseReceived(

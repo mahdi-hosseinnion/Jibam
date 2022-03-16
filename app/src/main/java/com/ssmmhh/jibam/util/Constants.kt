@@ -25,7 +25,5 @@ object Constants {
     const val SYSTEM_DEFAULT_LANG_CODE = "SYSTEM_DEFAULT_LANG_CODE"
     const val APP_DEFAULT_LANGUAGE = SYSTEM_DEFAULT_LANG_CODE
 
-    const val EXPENSES_TYPE_MARKER = 1
-    const val INCOME_TYPE_MARKER = 2
     const val EXPENSES_OTHER_CATEGORY_ID = 28
 }

@@ -4,7 +4,6 @@ import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.*
@@ -13,7 +12,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withC
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.LayoutCategoryImagesHeaderBinding
 import com.ssmmhh.jibam.databinding.LayoutCategoryImagesListItemBinding
-import com.ssmmhh.jibam.models.CategoryImages
+import com.ssmmhh.jibam.persistence.entities.CategoryImageEntity
 import com.ssmmhh.jibam.util.CategoriesImageBackgroundColors
 
 
@@ -39,7 +38,7 @@ class AddCategoryListAdapter(
 
         private const val IMAGE_ITEM = 0
 
-        private val HEADER_MARKER = CategoryImages(
+        private val HEADER_MARKER = CategoryImageEntity(
             HEADER_ITEM,
             "",
             "",
@@ -49,13 +48,13 @@ class AddCategoryListAdapter(
 
     }
 
-    val DIFF_CALLBACK = object : DiffUtil.ItemCallback<CategoryImages>() {
+    val DIFF_CALLBACK = object : DiffUtil.ItemCallback<CategoryImageEntity>() {
 
-        override fun areItemsTheSame(oldItem: CategoryImages, newItem: CategoryImages): Boolean {
+        override fun areItemsTheSame(oldItem: CategoryImageEntity, newItem: CategoryImageEntity): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: CategoryImages, newItem: CategoryImages): Boolean {
+        override fun areContentsTheSame(oldItem: CategoryImageEntity, newItem: CategoryImageEntity): Boolean {
             return oldItem == newItem
         }
 
@@ -148,16 +147,16 @@ class AddCategoryListAdapter(
         return differ.currentList.size
     }
 
-    fun getCategoryImages(position: Int): CategoryImages? = try {
+    fun getCategoryImages(position: Int): CategoryImageEntity? = try {
         differ.currentList[position]
     } catch (e: Exception) {
         null
     }
 
     fun insertCategoryImagesAt(
-        transaction: CategoryImages,
+        transaction: CategoryImageEntity,
         position: Int?,
-        header: CategoryImages?
+        header: CategoryImageEntity?
     ) {
         val newList = differ.currentList.toMutableList()
         if (position != null) {
@@ -174,12 +173,12 @@ class AddCategoryListAdapter(
         differ.submitList(newList)
     }
 
-    fun removeAt(position: Int): CategoryImages? {
+    fun removeAt(position: Int): CategoryImageEntity? {
         val newList = differ.currentList.toMutableList()
         val beforeCategoryImages = differ.currentList[position.minus(1)]
         val afterCategoryImages = differ.currentList[position.plus(1)]
 
-        var removedHeader: CategoryImages? = null
+        var removedHeader: CategoryImageEntity? = null
 
         if (beforeCategoryImages.id == HEADER_ITEM &&
             afterCategoryImages.id == HEADER_ITEM
@@ -204,11 +203,11 @@ class AddCategoryListAdapter(
 //    }
 
     fun submitList(
-        categoryImagesList: List<CategoryImages>?
+        categoryImageEntityList: List<CategoryImageEntity>?
     ) {
 
-        val finalList = ArrayList<CategoryImages>()
-        categoryImagesList?.sortedBy { it.group_name }?.let {
+        val finalList = ArrayList<CategoryImageEntity>()
+        categoryImageEntityList?.sortedBy { it.group_name }?.let {
             var tempName = ""
             //add category with maker for showing
             for (item in it) {
@@ -233,7 +232,7 @@ class AddCategoryListAdapter(
         val packageName: String
     ) : RecyclerView.ViewHolder(binding.root), OnOthersSelectedListener {
 
-        fun bind(item: CategoryImages) = with(itemView)
+        fun bind(item: CategoryImageEntity) = with(itemView)
         {
             restoreToDefaultBackground()
 
@@ -261,7 +260,7 @@ class AddCategoryListAdapter(
                 ?.into(binding.categoryImages)
         }
 
-        private fun onClickedOnItem(item: CategoryImages) {
+        private fun onClickedOnItem(item: CategoryImageEntity) {
             Log.d(TAG, "onClickedOnItem: $item ")
             interaction?.onItemSelected(adapterPosition, item)
             //set last selected item to
@@ -320,7 +319,7 @@ class AddCategoryListAdapter(
         private val packageName: String
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(headerName: CategoryImages) = with(itemView) {
+        fun bind(headerName: CategoryImageEntity) = with(itemView) {
             binding.headerName.text = headerName.getCategoryGroupNameFromStringFile(
                 resources,
                 packageName = packageName
@@ -333,7 +332,7 @@ class AddCategoryListAdapter(
 
     interface Interaction {
 
-        fun onItemSelected(position: Int, categoryImages: CategoryImages)
+        fun onItemSelected(position: Int, categoryImageEntity: CategoryImageEntity)
 
         fun restoreListPosition()
     }

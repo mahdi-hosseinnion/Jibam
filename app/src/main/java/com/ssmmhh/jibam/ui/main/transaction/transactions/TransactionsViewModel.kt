@@ -8,6 +8,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.ssmmhh.jibam.models.Month
 import com.ssmmhh.jibam.models.Transaction
+import com.ssmmhh.jibam.models.TransactionsRecyclerViewItem
 import com.ssmmhh.jibam.repository.tranasction.TransactionRepository
 import com.ssmmhh.jibam.ui.main.transaction.common.BaseViewModel
 import com.ssmmhh.jibam.ui.main.transaction.common.MonthManger
@@ -49,7 +50,7 @@ constructor(
     private var _calendarType = MutableStateFlow("")
 
 
-    private val _transactions: LiveData<List<Transaction>> =
+    private val _transactions: LiveData<List<TransactionsRecyclerViewItem>> =
         combine(
             _queryChannel,
             monthManger.currentMonth,
@@ -60,13 +61,13 @@ constructor(
             getTransactionList(it.month.startOfMonth, it.month.endOfMonth, it.query)
         }.asLiveData()
 
-    val transactions: LiveData<List<Transaction>> = _transactions
+    val transactions: LiveData<List<TransactionsRecyclerViewItem>> = _transactions
 
     private fun getTransactionList(
         minData: Int,
         maxDate: Int,
         query: String
-    ): Flow<List<Transaction>> =
+    ): Flow<List<TransactionsRecyclerViewItem>> =
         transactionRepository.getTransactionList(
             minDate = minData,
             maxDate = maxDate,

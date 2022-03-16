@@ -8,9 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.ssmmhh.jibam.databinding.LayoutViewpagerListItemBinding
-import com.ssmmhh.jibam.models.Category
-import com.ssmmhh.jibam.util.Constants.EXPENSES_TYPE_MARKER
-import com.ssmmhh.jibam.util.Constants.INCOME_TYPE_MARKER
+import com.ssmmhh.jibam.persistence.entities.CategoryEntity
 import kotlinx.coroutines.FlowPreview
 
 @FlowPreview
@@ -18,7 +16,7 @@ class ViewCategoriesViewPagerAdapter(
     private val context: Context,
     private var expensesItemTouchHelper: ItemTouchHelper,
     private var incomeItemTouchHelper: ItemTouchHelper,
-    listOfCategories: List<Category>? = null,
+    listOfCategoryEntities: List<CategoryEntity>? = null,
     categoryInteraction: ViewCategoriesRecyclerAdapter.CategoryInteraction,
     requestManager: RequestManager,
     packageName: String
@@ -26,7 +24,7 @@ class ViewCategoriesViewPagerAdapter(
 
     private val expensesRecyclerAdapter: ViewCategoriesRecyclerAdapter =
         ViewCategoriesRecyclerAdapter(
-            listOfCategories = listOfCategories?.filter { it.type == EXPENSES_TYPE_MARKER },
+            listOfCategoryEntities = listOfCategoryEntities?.filter { it.isExpensesCategory },
             interaction = categoryInteraction,
             requestManager = requestManager,
             packageName = packageName
@@ -35,7 +33,7 @@ class ViewCategoriesViewPagerAdapter(
 
     private val incomeRecyclerAdapter: ViewCategoriesRecyclerAdapter =
         ViewCategoriesRecyclerAdapter(
-            listOfCategories = listOfCategories?.filter { it.type == INCOME_TYPE_MARKER },
+            listOfCategoryEntities = listOfCategoryEntities?.filter { it.isIncomeCategory },
             interaction = categoryInteraction,
             requestManager = requestManager,
             packageName = packageName
@@ -72,9 +70,9 @@ class ViewCategoriesViewPagerAdapter(
 
     }
 
-    fun submitList(newData: List<Category>) {
-        expensesRecyclerAdapter.submitData(newData.filter { it.type == EXPENSES_TYPE_MARKER })
-        incomeRecyclerAdapter.submitData(newData.filter { it.type == INCOME_TYPE_MARKER })
+    fun submitList(newData: List<CategoryEntity>) {
+        expensesRecyclerAdapter.submitData(newData.filter { it.isExpensesCategory })
+        incomeRecyclerAdapter.submitData(newData.filter { it.isIncomeCategory })
     }
 
     override fun getItemCount(): Int = VIEWPAGER_SIZE

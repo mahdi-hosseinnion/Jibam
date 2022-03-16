@@ -2,7 +2,7 @@ package com.ssmmhh.jibam.ui.main.transaction.transactions
 
 import android.content.res.Resources
 import com.ssmmhh.jibam.models.Transaction
-import com.ssmmhh.jibam.ui.main.transaction.transactions.TransactionsListAdapter.Companion.NO_RESULT_FOUND_IN_DATABASE
+import com.ssmmhh.jibam.models.TransactionsRecyclerViewItem
 import com.ssmmhh.jibam.util.SolarCalendar
 import java.text.SimpleDateFormat
 import java.util.*
@@ -18,19 +18,19 @@ class AddHeaderToTransactions(
         getFormattedDate(System.currentTimeMillis())
     val yesterday: String = getFormattedDate(System.currentTimeMillis().minus(86_400_000L))
 
-    fun addHeaderToTransactions(currentList: List<Transaction>): List<Transaction> {
+    fun addHeaderToTransactions(currentList: List<Transaction>): List<TransactionsRecyclerViewItem> {
         if (currentList.isEmpty()) {
-            return listOf(NO_RESULT_FOUND_IN_DATABASE)
+            return listOf(TransactionsRecyclerViewItem.DatabaseIsEmpty)
         }
-        val resultList = ArrayList<Transaction>()
+        val resultList = ArrayList<TransactionsRecyclerViewItem>()
         var headerDate = currentDateInString(currentList[0].date)
         var incomeSum = 0.0
         var expensesSum = 0.0
-        var tempList = ArrayList<Transaction>()
+        var tempList = ArrayList<TransactionsRecyclerViewItem>()
         for (item in currentList) {
             if (currentDateInString(item.date) == headerDate) {
                 //make new header and items
-                tempList.add(item)
+                tempList.add(item.toTransactionsRecyclerViewItem())
                 if (item.money >= 0) { //income
                     incomeSum += item.money
                 } else { //expenses
@@ -46,7 +46,7 @@ class AddHeaderToTransactions(
                 incomeSum = 0.0
                 expensesSum = 0.0
                 //make new header and items
-                tempList.add(item)
+                tempList.add(item.toTransactionsRecyclerViewItem())
                 if (item.money >= 0) { //income
                     incomeSum += item.money
                 } else { //expenses
@@ -80,20 +80,18 @@ class AddHeaderToTransactions(
         income: Double,
         expenses: Double,
         length: Int
-    ): Transaction {
+    ): TransactionsRecyclerViewItem.Header {
         return if (length > 1) {
-            Transaction(
-                id = TransactionsListAdapter.HEADER_ITEM,
-                money = expenses,
+            TransactionsRecyclerViewItem.Header(
+                expensesSum = expenses,
                 incomeSum = income,
-                memo = date
+                date = date
             )
         } else {
-            Transaction(
-                id = TransactionsListAdapter.HEADER_ITEM,
-                money = 0.0,
-                incomeSum = 0.0,
-                memo = date,
+            TransactionsRecyclerViewItem.Header(
+                expensesSum =null,
+                incomeSum = null,
+                date = date
             )
         }
     }

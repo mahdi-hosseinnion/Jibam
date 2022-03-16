@@ -12,13 +12,12 @@ import com.bumptech.glide.RequestManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.models.Category
-import com.ssmmhh.jibam.models.TransactionEntity
+import com.ssmmhh.jibam.persistence.entities.CategoryEntity
+import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.common.AddEditTransactionParentFragment
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionPresenterState
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionPresenterState.*
 import com.ssmmhh.jibam.util.*
-import com.ssmmhh.jibam.util.Constants.EXPENSES_TYPE_MARKER
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.util.*
@@ -111,8 +110,8 @@ constructor(
     private fun subscribeObservers() {
         viewModel.viewState.observe(viewLifecycleOwner) { vs ->
             vs?.let { viewState ->
-                handleBottomSheetDrag(viewState.category)
-                viewState.category?.let { setCategoryFields(it) }
+                handleBottomSheetDrag(viewState.categoryEntity)
+                viewState.categoryEntity?.let { setCategoryFields(it) }
                 viewState.moneyStr?.let { setMoneyStringFields(it) }
                 viewState.finalMoney?.let { setFinalMoneyFields(it) }
                 viewState.memo?.let { setMemoFields(it) }
@@ -202,19 +201,19 @@ constructor(
 
         }
 
-    private fun handleBottomSheetDrag(category: Category?) {
-        val didUserSelectCategory = category != null
+    private fun handleBottomSheetDrag(categoryEntity: CategoryEntity?) {
+        val didUserSelectCategory = categoryEntity != null
         //user should not be able to drag down bottom sheet when no category has been selected
         bottomSheetBehavior.isDraggable = didUserSelectCategory
         binding.edtMoney.isEnabled = didUserSelectCategory
         binding.finalNUmber.isEnabled = didUserSelectCategory
-        binding.bottomSheetCloseBtn.visibility = if (category == null)
+        binding.bottomSheetCloseBtn.visibility = if (categoryEntity == null)
             View.GONE
         else
             View.VISIBLE
     }
 
-    private fun setAllOfCategoriesFields(list: List<Category>) {
+    private fun setAllOfCategoriesFields(list: List<CategoryEntity>) {
         btmsheetViewPagerAdapter.submitData(list)
     }
 
@@ -240,16 +239,16 @@ constructor(
         }
     }
 
-    private fun setCategoryFields(category: Category) {
+    private fun setCategoryFields(categoryEntity: CategoryEntity) {
         //set name and icon
         binding.categoryFab.text =
-            category.getCategoryNameFromStringFile(resources, requireActivity().packageName) {
+            categoryEntity.getCategoryNameFromStringFile(resources, requireActivity().packageName) {
                 it.name
             }
         binding.categoryFab.extend()
 
         val resourceId: Int =
-            getCategoryDrawableResourceIdByCategoryImageName(requireContext(), category.name)
+            getCategoryDrawableResourceIdByCategoryImageName(requireContext(), categoryEntity.name)
         binding.categoryFab.icon = VectorDrawableCompat.create(resources, resourceId, null)
     }
 
@@ -309,7 +308,7 @@ constructor(
     }
 
 
-    override fun onItemSelected(position: Int, item: Category) {
+    override fun onItemSelected(position: Int, item: CategoryEntity) {
         //on category changed
         viewModel.setTransactionCategory(item)
         viewModel.setPresenterState(EnteringAmountOfMoneyState)
@@ -354,7 +353,7 @@ constructor(
 
         //add marker to money if its expenses
         var money: Double = calculatedMoney.toDouble()
-        if (category.type == EXPENSES_TYPE_MARKER) {
+        if (category.isExpensesCategory) {
             money = money.times(-1)
         }
 

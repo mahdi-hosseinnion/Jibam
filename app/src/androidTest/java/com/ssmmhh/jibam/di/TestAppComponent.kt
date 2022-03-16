@@ -16,7 +16,6 @@ import javax.inject.Singleton
         AppModule::class,
         TestModule::class,
         MainViewModelModule::class,
-        MainFragmentFactoryModule::class
     ]
 )
 interface TestAppComponent : AppComponent {

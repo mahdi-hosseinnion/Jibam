@@ -3,7 +3,7 @@ package com.ssmmhh.jibam.persistence
 import androidx.room.*
 import com.ssmmhh.jibam.models.PieChartData
 import com.ssmmhh.jibam.models.Transaction
-import com.ssmmhh.jibam.models.TransactionEntity
+import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

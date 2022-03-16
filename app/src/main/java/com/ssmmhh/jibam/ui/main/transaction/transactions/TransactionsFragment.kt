@@ -31,8 +31,7 @@ import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.FragmentTransactionBinding
 import com.ssmmhh.jibam.models.Month
 import com.ssmmhh.jibam.models.Transaction
-import com.ssmmhh.jibam.models.TransactionEntity
-import com.ssmmhh.jibam.models.mappers.toTransactionEntity
+import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 import com.ssmmhh.jibam.repository.buildResponse
 import com.ssmmhh.jibam.ui.main.transaction.common.BaseFragment
 import com.ssmmhh.jibam.ui.main.transaction.transactions.state.TransactionsStateEvent
@@ -418,7 +417,7 @@ class TransactionsFragment(
             }
         }
         viewModel.transactions.observe(viewLifecycleOwner) { transactionList ->
-            recyclerAdapter.submitList(transactionList, true)
+            recyclerAdapter.submitList(transactionList)
         }
         viewModel.summeryMoney.observe(viewLifecycleOwner) { sm ->
             if (sm.inNotNull()) {
@@ -500,8 +499,8 @@ class TransactionsFragment(
                         val adapter =
                             binding.transactionRecyclerView.adapter as TransactionsListAdapter
                         val deletedTrans =
-                            adapter.getTransaction(viewHolder.adapterPosition)
-//                        delete from list
+                            adapter.getTransaction(viewHolder.adapterPosition) ?: return
+                        //delete from list
                         val removedHeader = adapter.removeAt(viewHolder.adapterPosition)
                         //add to recently deleted
                         val recentlyDeletedHeader =
@@ -562,7 +561,7 @@ class TransactionsFragment(
             viewModel.getCurrentViewStateOrNew().recentlyDeletedFields
         recentlyDeletedFields?.recentlyDeletedTrans?.let {
             //insert to list
-            recyclerAdapter.insertTransactionAt(
+            recyclerAdapter.insertRemovedTransactionAt(
                 it,
                 recentlyDeletedFields.recentlyDeletedTransPosition,
                 recentlyDeletedFields.recentlyDeletedHeader
@@ -654,7 +653,7 @@ class TransactionsFragment(
 
     }
 
-    override fun onItemSelected(position: Int, item: Transaction) {
+    override fun onClickedOnTransaction(position: Int, item: Transaction) {
         navigateToDetailTransactionFragment(item.id)
     }
 

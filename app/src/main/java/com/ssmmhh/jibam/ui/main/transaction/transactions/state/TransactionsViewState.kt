@@ -2,6 +2,7 @@ package com.ssmmhh.jibam.ui.main.transaction.transactions.state
 
 import com.ssmmhh.jibam.models.Month
 import com.ssmmhh.jibam.models.Transaction
+import com.ssmmhh.jibam.models.TransactionsRecyclerViewItem
 
 data class TransactionsViewState(
     var recentlyDeletedFields: RecentlyDeletedTransaction? = null,
@@ -27,7 +28,7 @@ data class TransactionsViewState(
     data class RecentlyDeletedTransaction(
         var recentlyDeletedTrans: Transaction,
         var recentlyDeletedTransPosition: Int,
-        var recentlyDeletedHeader: Transaction?
+        var recentlyDeletedHeader: TransactionsRecyclerViewItem.Header?
     )
 
     data class TransactionsQueryRequirement(

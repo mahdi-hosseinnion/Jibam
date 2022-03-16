@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import android.content.res.Resources
 import android.util.Log
 import androidx.room.Ignore
+import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 
 data class Transaction(
     @ColumnInfo(name = "rId")
@@ -13,36 +14,15 @@ data class Transaction(
     @ColumnInfo(name = "memo")
     val memo: String?,
     @ColumnInfo(name = "cat_id")
-    //category id exactly id
     val categoryId: Int,
     @ColumnInfo(name = "category_name")
     val categoryName: String,
     @ColumnInfo(name = "category_image")
     val categoryImage: String,
-
     //int can handle the time till 1/19/2038, 6:44:07 AM in millisecond
     @ColumnInfo(name = "date")
     val date: Int,
-    //handle the income for repository
-    @Ignore val incomeSum: Double?
 ) {
-    constructor(
-//for transaction show in transaction list
-        id: Int,
-        money: Double,
-        memo: String?,
-        categoryId: Int,
-        categoryName: String,
-        categoryImage: String,
-        date: Int,
-    ) : this(id, money, memo, categoryId, categoryName, categoryImage, date, null)
-
-    constructor(//for header
-        id: Int,
-        money: Double,
-        memo: String,
-        incomeSum: Double
-    ) : this(id, money, memo, 0, "", "", 0, incomeSum)
 
     fun getCategoryNameFromStringFile(
         resources: Resources,
@@ -69,4 +49,22 @@ data class Transaction(
         }
     }
 
+    fun toTransactionEntity(): TransactionEntity = TransactionEntity(
+        id = this.id,
+        money = this.money,
+        memo = this.memo,
+        cat_id = this.categoryId,
+        date = this.date
+    )
+
+    fun toTransactionsRecyclerViewItem(): TransactionsRecyclerViewItem.Transaction =
+        TransactionsRecyclerViewItem.Transaction(
+            id = this.id,
+            money = this.money,
+            memo = this.memo,
+            categoryId = this.categoryId,
+            categoryName = this.categoryName,
+            categoryImage = this.categoryImage,
+            date = this.date
+        )
 }

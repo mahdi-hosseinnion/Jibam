@@ -2,10 +2,9 @@ package com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransa
 
 import android.content.res.Resources
 import android.util.Log
-import com.ssmmhh.jibam.models.Category
+import com.ssmmhh.jibam.persistence.entities.CategoryEntity
 import com.ssmmhh.jibam.models.Transaction
-import com.ssmmhh.jibam.models.TransactionEntity
-import com.ssmmhh.jibam.models.mappers.toTransactionEntity
+import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 import com.ssmmhh.jibam.repository.cateogry.CategoryRepository
 import com.ssmmhh.jibam.repository.tranasction.TransactionRepository
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionPresenterState
@@ -14,8 +13,8 @@ import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransac
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransaction.state.SubmitButtonState
 import com.ssmmhh.jibam.ui.main.transaction.common.BaseViewModel
 import com.ssmmhh.jibam.util.*
-import com.ssmmhh.jibam.util.Constants.EXPENSES_TYPE_MARKER
-import com.ssmmhh.jibam.util.Constants.INCOME_TYPE_MARKER
+import com.ssmmhh.jibam.persistence.entities.CategoryEntity.Companion.EXPENSES_TYPE_MARKER
+import com.ssmmhh.jibam.persistence.entities.CategoryEntity.Companion.INCOME_TYPE_MARKER
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.util.*
@@ -199,19 +198,19 @@ constructor(
         submitButtonState.onDateChange(newDate)
     }
 
-    fun setTransactionCategory(category: Category) {
+    fun setTransactionCategory(categoryEntity: CategoryEntity) {
         val transaction = getTransaction()
         setViewState(
             DetailEditTransactionViewState(
                 transaction = transaction?.copy(
-                    categoryId = category.id,
-                    categoryImage = category.img_res,
-                    categoryName = category.name
+                    categoryId = categoryEntity.id,
+                    categoryImage = categoryEntity.img_res,
+                    categoryName = categoryEntity.name
                 ),
-                transactionCategoryType = category.type
+                transactionCategoryType = categoryEntity.type
             )
         )
-        submitButtonState.onCategoryChange(categoryId = category.id)
+        submitButtonState.onCategoryChange(categoryId = categoryEntity.id)
 
     }
 

@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -13,6 +12,7 @@ import androidx.navigation.ui.navigateUp
 import com.ssmmhh.jibam.BaseApplication
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.ActivityMainBinding
+import com.ssmmhh.jibam.di.factories.MainFragmentFactory
 import com.ssmmhh.jibam.ui.BaseActivity
 import com.ssmmhh.jibam.ui.app_intro.AppIntroActivity
 import com.ssmmhh.jibam.util.PreferenceKeys
@@ -27,7 +27,7 @@ class MainActivity : BaseActivity() {
     private val TAG = "MainActivity"
 
     @Inject
-    lateinit var fragmentFactory: FragmentFactory
+    lateinit var fragmentFactory: MainFragmentFactory
 
     @Inject
     lateinit var currentLocale: Locale
@@ -42,6 +42,7 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         inject()
+        setFragmentFactory()
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
@@ -71,6 +72,10 @@ class MainActivity : BaseActivity() {
 
     override fun inject() {
         (application as BaseApplication).appComponent.inject(this)
+    }
+
+    private fun setFragmentFactory() {
+        supportFragmentManager.fragmentFactory = fragmentFactory
     }
 
     private fun firstSetup() {

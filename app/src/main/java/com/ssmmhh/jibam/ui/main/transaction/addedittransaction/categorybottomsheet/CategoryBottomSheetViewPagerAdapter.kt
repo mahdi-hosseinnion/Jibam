@@ -9,14 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import com.bumptech.glide.RequestManager
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.models.Category
-import com.ssmmhh.jibam.util.Constants.EXPENSES_TYPE_MARKER
-import com.ssmmhh.jibam.util.Constants.INCOME_TYPE_MARKER
-
+import com.ssmmhh.jibam.persistence.entities.CategoryEntity
 
 class CategoryBottomSheetViewPagerAdapter(
     private val context: Context,
-    private val categoryList: List<Category>?,
+    private val categoryEntityList: List<CategoryEntity>?,
     private var isLeftToRight: Boolean,
     interaction: CategoryBottomSheetListAdapter.Interaction? = null,
     requestManager: RequestManager,
@@ -46,25 +43,25 @@ class CategoryBottomSheetViewPagerAdapter(
             if (position == 0) {
                 //expenses type ==1
                 initRecycler(view.findViewById(R.id.main_recycler), expensesRecyclerViewAdapter)
-                if (categoryList != null)
-                    expensesRecyclerViewAdapter.submitList(categoryList.filter { it.type == EXPENSES_TYPE_MARKER })
+                if (categoryEntityList != null)
+                    expensesRecyclerViewAdapter.submitList(categoryEntityList.filter { it.isExpensesCategory })
             } else {
                 //income type ==2
                 initRecycler(view.findViewById(R.id.main_recycler), incomeRecyclerViewAdapter)
-                if (categoryList != null)
-                    incomeRecyclerViewAdapter.submitList(categoryList.filter { it.type == INCOME_TYPE_MARKER })
+                if (categoryEntityList != null)
+                    incomeRecyclerViewAdapter.submitList(categoryEntityList.filter { it.isIncomeCategory })
             }
         } else {
             if (position == 0) {
                 //income type ==2
                 initRecycler(view.findViewById(R.id.main_recycler), incomeRecyclerViewAdapter)
-                if (categoryList != null)
-                    incomeRecyclerViewAdapter.submitList(categoryList.filter { it.type == INCOME_TYPE_MARKER })
+                if (categoryEntityList != null)
+                    incomeRecyclerViewAdapter.submitList(categoryEntityList.filter { it.isIncomeCategory })
             } else {
                 //expenses type ==1
                 initRecycler(view.findViewById(R.id.main_recycler), expensesRecyclerViewAdapter)
-                if (categoryList != null)
-                    expensesRecyclerViewAdapter.submitList(categoryList.filter { it.type == EXPENSES_TYPE_MARKER })
+                if (categoryEntityList != null)
+                    expensesRecyclerViewAdapter.submitList(categoryEntityList.filter { it.isExpensesCategory })
             }
         }
         container.addView(view)
@@ -100,10 +97,10 @@ class CategoryBottomSheetViewPagerAdapter(
             if (position == 0) income else expenses
     }
 
-    fun submitData(categoryList: List<Category>?) {
+    fun submitData(categoryEntityList: List<CategoryEntity>?) {
 
-        expensesRecyclerViewAdapter.submitList(categoryList?.filter { it.type == EXPENSES_TYPE_MARKER })
-        incomeRecyclerViewAdapter.submitList(categoryList?.filter { it.type == INCOME_TYPE_MARKER })
+        expensesRecyclerViewAdapter.submitList(categoryEntityList?.filter { it.isExpensesCategory })
+        incomeRecyclerViewAdapter.submitList(categoryEntityList?.filter { it.isIncomeCategory })
     }
 
     fun submitSelectedItemId(id: Int?) {

@@ -18,12 +18,12 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.snackbar.Snackbar
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.FragmentAddCategoryBinding
-import com.ssmmhh.jibam.models.CategoryImages
+import com.ssmmhh.jibam.persistence.entities.CategoryImageEntity
 import com.ssmmhh.jibam.ui.main.transaction.categories.addcategoires.AddCategoryViewModel.Companion.INSERT_CATEGORY_SUCCESS_MARKER
 import com.ssmmhh.jibam.ui.main.transaction.common.BaseFragment
 import com.ssmmhh.jibam.util.*
-import com.ssmmhh.jibam.util.Constants.EXPENSES_TYPE_MARKER
-import com.ssmmhh.jibam.util.Constants.INCOME_TYPE_MARKER
+import com.ssmmhh.jibam.persistence.entities.CategoryEntity.Companion.EXPENSES_TYPE_MARKER
+import com.ssmmhh.jibam.persistence.entities.CategoryEntity.Companion.INCOME_TYPE_MARKER
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
@@ -138,7 +138,7 @@ class AddCategoryFragment(
     }
 
     private fun subscribeObservers() {
-        viewModel.categoriesImages.observe(viewLifecycleOwner) {
+        viewModel.categoriesImageEntity.observe(viewLifecycleOwner) {
             recyclerAdapter.submitList(it)
         }
         viewModel.viewState.observe(viewLifecycleOwner) { vs ->
@@ -199,8 +199,8 @@ class AddCategoryFragment(
     }
 
 
-    override fun onItemSelected(position: Int, categoryImages: CategoryImages) {
-        viewModel.setCategoryImage(categoryImages)
+    override fun onItemSelected(position: Int, categoryImageEntity: CategoryImageEntity) {
+        viewModel.setCategoryImage(categoryImageEntity)
         binding.addCategoryFab.show()
     }
 
@@ -217,9 +217,9 @@ class AddCategoryFragment(
                 ""
     }
 
-    private fun setCategoryImageToImageView(categoryImages: CategoryImages) {
+    private fun setCategoryImageToImageView(categoryImageEntity: CategoryImageEntity) {
         val categoryImageUrl = this.resources.getIdentifier(
-            "ic_cat_${categoryImages.image_res}",
+            "ic_cat_${categoryImageEntity.image_res}",
             "drawable",
             this@AddCategoryFragment.requireActivity().packageName
         )
@@ -227,7 +227,7 @@ class AddCategoryFragment(
         // set background
         binding.cardView.setCardBackgroundColor(
             resources.getColor(
-                CategoriesImageBackgroundColors.getCategoryColorById(categoryImages.id)
+                CategoriesImageBackgroundColors.getCategoryColorById(categoryImageEntity.id)
             )
         )
         //load image

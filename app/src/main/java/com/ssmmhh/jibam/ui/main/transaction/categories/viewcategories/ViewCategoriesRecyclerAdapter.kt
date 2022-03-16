@@ -2,14 +2,13 @@ package com.ssmmhh.jibam.ui.main.transaction.categories.viewcategories
 
 import android.view.LayoutInflater
 import android.view.MotionEvent
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.LayoutViewCategoriesListItemBinding
-import com.ssmmhh.jibam.models.Category
+import com.ssmmhh.jibam.persistence.entities.CategoryEntity
 import com.ssmmhh.jibam.util.CategoriesImageBackgroundColors
 import java.util.*
 import kotlin.collections.ArrayList
@@ -18,7 +17,7 @@ import kotlin.collections.indices
 import kotlin.collections.set
 
 class ViewCategoriesRecyclerAdapter(
-    private var listOfCategories: List<Category>?,
+    private var listOfCategoryEntities: List<CategoryEntity>?,
     private val interaction: CategoryInteraction,
     private val requestManager: RequestManager,
     private val packageName: String
@@ -40,15 +39,15 @@ class ViewCategoriesRecyclerAdapter(
         )
 
     override fun onBindViewHolder(holder: ViewPagerRecyclerViewHolder, position: Int) {
-        holder.bind(holder, listOfCategories?.get(position))
+        holder.bind(holder, listOfCategoryEntities?.get(position))
     }
 
-    override fun getItemCount(): Int = listOfCategories?.size ?: 0
+    override fun getItemCount(): Int = listOfCategoryEntities?.size ?: 0
 
-    fun getItemAtPosition(position: Int): Category? = listOfCategories?.get(position)
+    fun getItemAtPosition(position: Int): CategoryEntity? = listOfCategoryEntities?.get(position)
 
     fun onItemMoved(from: Int, to: Int) {
-        listOfCategories?.let { list ->
+        listOfCategoryEntities?.let { list ->
             if (from == to) {
                 return
             }
@@ -58,13 +57,13 @@ class ViewCategoriesRecyclerAdapter(
             //change position of main object(moved object)
             categories.removeAt(from)
             categories.add(to, fromObj)
-            listOfCategories = categories
+            listOfCategoryEntities = categories
         }
     }
 
     fun getOrder(): HashMap<Int, Int> {
         val result = HashMap<Int, Int>()
-        listOfCategories?.let { categories ->
+        listOfCategoryEntities?.let { categories ->
             for (i in categories.indices) {
                 result[categories[i].id] = i
             }
@@ -73,8 +72,8 @@ class ViewCategoriesRecyclerAdapter(
         return result
     }
 
-    fun submitData(data: List<Category>?) {
-        listOfCategories = data
+    fun submitData(data: List<CategoryEntity>?) {
+        listOfCategoryEntities = data
         notifyDataSetChanged()
     }
 
@@ -85,7 +84,7 @@ class ViewCategoriesRecyclerAdapter(
         private val packageName: String
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(holder: RecyclerView.ViewHolder, item: Category?) {
+        fun bind(holder: RecyclerView.ViewHolder, item: CategoryEntity?) {
             if (item != null) {
                 //todo fix show promote
 //                Check that the view exists for the item
@@ -170,7 +169,7 @@ class ViewCategoriesRecyclerAdapter(
     }
 
     interface CategoryInteraction {
-        fun onDeleteClicked(position: Int, category: Category)
+        fun onDeleteClicked(position: Int, categoryEntity: CategoryEntity)
 
         //called when ad view request a start of drag
         fun onStartDrag(viewHolder: RecyclerView.ViewHolder, itemType: Int)
