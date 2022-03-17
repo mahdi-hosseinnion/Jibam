@@ -19,12 +19,7 @@ import com.ssmmhh.jibam.util.CategoriesImageBackgroundColors
 class AddCategoryListAdapter(
     private val requestManager: RequestManager?,
     private val interaction: Interaction? = null,
-    private val packageName: String
-) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-//    private var headersList: MutableSet<String> = emptySet<String>() as MutableSet<String>
-//    private var currentHeaderName: String? = null
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var currentSelectedItem: OnOthersSelectedListener? = null
 
@@ -50,11 +45,17 @@ class AddCategoryListAdapter(
 
     val DIFF_CALLBACK = object : DiffUtil.ItemCallback<CategoryImageEntity>() {
 
-        override fun areItemsTheSame(oldItem: CategoryImageEntity, newItem: CategoryImageEntity): Boolean {
+        override fun areItemsTheSame(
+            oldItem: CategoryImageEntity,
+            newItem: CategoryImageEntity
+        ): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: CategoryImageEntity, newItem: CategoryImageEntity): Boolean {
+        override fun areContentsTheSame(
+            oldItem: CategoryImageEntity,
+            newItem: CategoryImageEntity
+        ): Boolean {
             return oldItem == newItem
         }
 
@@ -78,7 +79,6 @@ class AddCategoryListAdapter(
                         false
                     ),
                     interaction = interaction,
-                    packageName = packageName
                 )
             }
             else -> {
@@ -90,7 +90,6 @@ class AddCategoryListAdapter(
                     ),
                     interaction = interaction,
                     requestManager = requestManager,
-                    packageName = packageName
                 )
             }
 
@@ -229,7 +228,6 @@ class AddCategoryListAdapter(
         val binding: LayoutCategoryImagesListItemBinding,
         val requestManager: RequestManager?,
         private val interaction: Interaction?,
-        val packageName: String
     ) : RecyclerView.ViewHolder(binding.root), OnOthersSelectedListener {
 
         fun bind(item: CategoryImageEntity) = with(itemView)
@@ -245,15 +243,11 @@ class AddCategoryListAdapter(
                 onClickedOnItem(item)
             }
 
-            val categoryImageUrl = this.resources.getIdentifier(
-                "ic_cat_${item.image_res}",
-                "drawable",
-                packageName
-            )
+            val categoryImageResourceId = item.getCategoryImageResourceId(context)
 
             //load image
             requestManager
-                ?.load(categoryImageUrl)
+                ?.load(categoryImageResourceId)
                 ?.centerInside()
                 ?.transition(withCrossFade())
                 ?.error(R.drawable.ic_error)
@@ -316,16 +310,10 @@ class AddCategoryListAdapter(
     constructor(
         val binding: LayoutCategoryImagesHeaderBinding,
         private val interaction: Interaction?,
-        private val packageName: String
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(headerName: CategoryImageEntity) = with(itemView) {
-            binding.headerName.text = headerName.getCategoryGroupNameFromStringFile(
-                resources,
-                packageName = packageName
-            ) {
-                it.group_name
-            }
+            binding.headerName.text = headerName.getCategoryGroupNameFromStringFile(context)
         }
     }
 

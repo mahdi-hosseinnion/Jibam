@@ -1,10 +1,13 @@
 package com.ssmmhh.jibam.models
 
+import android.content.Context
 import androidx.room.ColumnInfo
 import android.content.res.Resources
 import android.util.Log
 import androidx.room.Ignore
 import com.ssmmhh.jibam.persistence.entities.TransactionEntity
+import com.ssmmhh.jibam.util.getCategoryImageResourceIdFromDrawableByCategoryImage
+import com.ssmmhh.jibam.util.getResourcesStringValueByName
 
 data class Transaction(
     @ColumnInfo(name = "rId")
@@ -25,29 +28,14 @@ data class Transaction(
 ) {
 
     fun getCategoryNameFromStringFile(
-        resources: Resources,
-        packageName: String,
-        onUnableToFindName: (Transaction) -> String
-    ): String {
-        val nameId: Int = resources.getIdentifier(
-            this.categoryName,
-            "string",
-            packageName
-        )
-        return try {
-            resources.getString(nameId)
-        } catch (e: Exception) {
-            Log.e(
-                "Category",
-                "getCategoryNameFromStringFile: UNABLE TO FIND $this name in strings ",
-            )
-            Log.e(
-                "Category",
-                "getCategoryNameFromStringFile: add >${this.categoryName}< to strings file"
-            )
-            onUnableToFindName(this)
-        }
-    }
+        context: Context,
+        defaultName: String = this.categoryName
+    ): String =
+        getResourcesStringValueByName(context, this.categoryName) ?: defaultName
+
+    fun getCategoryImageResourceId(
+        context: Context,
+    ): Int = getCategoryImageResourceIdFromDrawableByCategoryImage(context, this.categoryImage)
 
     fun toTransactionEntity(): TransactionEntity = TransactionEntity(
         id = this.id,

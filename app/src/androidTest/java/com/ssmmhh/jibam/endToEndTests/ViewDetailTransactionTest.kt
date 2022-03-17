@@ -20,10 +20,7 @@ import com.ssmmhh.jibam.ui.main.MainActivity
 import com.ssmmhh.jibam.util.DateUtils
 import com.ssmmhh.jibam.util.EspressoIdlingResources
 import com.ssmmhh.jibam.util.PreferenceKeys
-import com.ssmmhh.jibam.utils.disableAllPromoteBanners
-import com.ssmmhh.jibam.utils.extendedFAB_withIcon
-import com.ssmmhh.jibam.utils.getTestBaseApplication
-import com.ssmmhh.jibam.utils.imageViewWithDrawable
+import com.ssmmhh.jibam.utils.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.runBlocking
@@ -106,8 +103,7 @@ class ViewDetailTransactionTest {
         onView(
             withText(
                 transactionCategory.getCategoryNameFromStringFile(
-                    resources,
-                    packageName
+                    appContext
                 )
             )
         ).perform(click())
@@ -137,8 +133,7 @@ class ViewDetailTransactionTest {
             matches(
                 withText(
                     transactionCategory.getCategoryNameFromStringFile(
-                        resources,
-                        appContext.packageName
+                        instrumentationContext
                     )
                 )
             )
@@ -198,8 +193,7 @@ class ViewDetailTransactionTest {
             matches(
                 withText(
                     transactionCategory.getCategoryNameFromStringFile(
-                        resources,
-                        appContext.packageName
+                        instrumentationContext
                     )
                 )
             )
@@ -235,8 +229,7 @@ class ViewDetailTransactionTest {
         onView(
             withText(
                 transactionCategory.getCategoryNameFromStringFile(
-                    resources,
-                    packageName
+                    instrumentationContext
                 )
             )
         ).check(matches(isDisplayed()))

@@ -16,7 +16,6 @@ import kotlin.math.abs
 
 class DetailChartListAdapter(
     private val interaction: Interaction? = null,
-    private var packageName: String,
     private val isCalendarSolar: Boolean,
     private var requestManager: RequestManager,
     private var currentLocale: Locale,
@@ -60,7 +59,6 @@ class DetailChartListAdapter(
                 ),
                 interaction,
                 isCalendarSolar,
-                packageName,
                 requestManager,
                 currentLocale
             )
@@ -94,7 +92,6 @@ class DetailChartListAdapter(
         val binding: LayoutChartListItemBinding,
         private val interaction: Interaction?,
         private val isCalendarSolar: Boolean,
-        private var packageName: String,
         private var requestManager: RequestManager,
         private var currentLocale: Locale
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -104,16 +101,11 @@ class DetailChartListAdapter(
             totalAmount: Double,
             biggestAmount: Double
         ) = with(itemView) {
-            loadImage(item.categoryId, item.categoryImage)
+            loadImage(item)
             showPercentage(item.money, totalAmount, biggestAmount)
             //set text
             if (item.memo.isNullOrBlank()) {
-                binding.categoryName.text = item.getCategoryNameFromStringFile(
-                    itemView.resources,
-                    packageName
-                ) {
-                    it.categoryName
-                }
+                binding.categoryName.text = item.getCategoryNameFromStringFile(context)
             } else {
                 binding.categoryName.text = item.memo
             }
@@ -127,22 +119,18 @@ class DetailChartListAdapter(
         }
 
 
-        private fun loadImage(categoryId: Int, categoryImage: String) {
+        private fun loadImage(item: Transaction) {
 
             binding.cardView.setCardBackgroundColor(
                 itemView.resources.getColor(
-                    CategoriesImageBackgroundColors.getCategoryColorById(categoryId)
+                    CategoriesImageBackgroundColors.getCategoryColorById(item.categoryId)
 
                 )
             )
 
-            val categoryImageUrl = itemView.resources.getIdentifier(
-                "ic_cat_${categoryImage}",
-                "drawable",
-                packageName
-            )
+            val categoryImageResourceId = item.getCategoryImageResourceId(itemView.context)
             requestManager
-                .load(categoryImageUrl)
+                .load(categoryImageResourceId)
                 .centerInside()
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .error(R.drawable.ic_error)

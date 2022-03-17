@@ -175,7 +175,6 @@ constructor(
             interaction = this,
             requestManager = requestManager,
             isLeftToRight = isLeftToRight,
-            packageName = this.requireActivity().packageName,
             selectedCategoryId = null
         )
 

@@ -1,5 +1,6 @@
 package com.ssmmhh.jibam.repository.tranasction
 
+import com.ssmmhh.jibam.models.ChartData
 import com.ssmmhh.jibam.models.PieChartData
 import com.ssmmhh.jibam.models.Transaction
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionStateEvent
@@ -35,7 +36,7 @@ interface TransactionRepository {
     fun getPieChartData(
         minDate: Int,
         maxDate: Int
-    ): Flow<List<PieChartData>>
+    ): Flow<List<ChartData>>
 
     fun getAllTransactionByCategoryId(
         categoryId: Int,

@@ -13,7 +13,6 @@ import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.LayoutTransacionHeaderBinding
 import com.ssmmhh.jibam.databinding.LayoutTransactionListItemBinding
 import com.ssmmhh.jibam.models.*
-import com.ssmmhh.jibam.persistence.entities.CategoryEntity
 import com.ssmmhh.jibam.models.TransactionsRecyclerViewItem.Companion.TRANSACTION_VIEW_TYPE
 import com.ssmmhh.jibam.models.TransactionsRecyclerViewItem.Companion.HEADER_VIEW_TYPE
 import com.ssmmhh.jibam.models.TransactionsRecyclerViewItem.Companion.NO_MORE_RESULT_VIEW_TYPE
@@ -21,13 +20,11 @@ import com.ssmmhh.jibam.models.TransactionsRecyclerViewItem.Companion.NO_RESULT_
 import com.ssmmhh.jibam.models.TransactionsRecyclerViewItem.Companion.DATABASE_IS_EMPTY_VIEW_TYPE
 import com.ssmmhh.jibam.util.*
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class TransactionsListAdapter(
     private val requestManager: RequestManager?,
     private val interaction: Interaction? = null,
-    private val packageName: String,
     private val currentLocale: Locale,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -129,7 +126,6 @@ class TransactionsListAdapter(
                     ),
                     interaction = interaction,
                     requestManager = requestManager,
-                    packageName = packageName
                 )
             }
             HEADER_VIEW_TYPE -> {
@@ -152,7 +148,6 @@ class TransactionsListAdapter(
                     ),
                     interaction = interaction,
                     requestManager = requestManager,
-                    packageName = packageName
                 )
             }
         }
@@ -301,7 +296,6 @@ class TransactionsListAdapter(
         val binding: LayoutTransactionListItemBinding,
         val requestManager: RequestManager?,
         private val interaction: Interaction?,
-        val packageName: String
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
@@ -320,10 +314,7 @@ class TransactionsListAdapter(
             }
 
             if (item.memo.isNullOrBlank()) {
-                mainText.text = item.getCategoryNameFromStringFile(
-                    itemView.resources,
-                    this@TransViewHolder.packageName
-                )
+                mainText.text = item.getCategoryNameFromStringFile(itemView.context)
             } else {
                 mainText.text = item.memo
             }
@@ -336,22 +327,13 @@ class TransactionsListAdapter(
                 price.text = separate3By3(item.money, currentLocale)
                 price.setTextColor(itemView.resources.getColor(R.color.red_500))
             }
-            val categoryImageUrl = itemView.resources.getIdentifier(
-                "ic_cat_${item.categoryImage}",
-                "drawable",
-                packageName
-            )
 
             cardView.setCardBackgroundColor(
                 itemView.resources.getColor(
                     CategoriesImageBackgroundColors.getCategoryColorById(item.categoryId)
                 )
             )
-            val categoryImageResourceId = getCategoryImageResourceIdFromDrawable(
-                item.categoryImage,
-                itemView.resources,
-                packageName
-            )
+            val categoryImageResourceId = item.getCategoryImageResourceId(itemView.context)
             requestManager
                 ?.load(categoryImageResourceId)
                 ?.centerInside()

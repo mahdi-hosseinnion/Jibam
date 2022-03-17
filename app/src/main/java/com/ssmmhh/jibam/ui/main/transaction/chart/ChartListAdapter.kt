@@ -11,7 +11,7 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.LayoutChartListItemBinding
-import com.ssmmhh.jibam.models.PieChartData
+import com.ssmmhh.jibam.models.ChartData
 import com.ssmmhh.jibam.util.localizeNumber
 import com.ssmmhh.jibam.util.separate3By3
 import java.util.*
@@ -23,19 +23,18 @@ class ChartListAdapter(
     private val interaction: Interaction? = null,
     private val requestManager: RequestManager?,
     private val currentLocale: Locale,
-    private val packageName: String,
     private val _resources: Resources,
     private val colors: List<Int>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var biggestPercentage: Double = 100.0
 
-    val DIFF_CALLBACK = object : DiffUtil.ItemCallback<PieChartData>() {
+    val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ChartData>() {
 
-        override fun areItemsTheSame(oldItem: PieChartData, newItem: PieChartData): Boolean =
+        override fun areItemsTheSame(oldItem: ChartData, newItem: ChartData): Boolean =
             oldItem.categoryId == newItem.categoryId
 
-        override fun areContentsTheSame(oldItem: PieChartData, newItem: PieChartData): Boolean =
+        override fun areContentsTheSame(oldItem: ChartData, newItem: ChartData): Boolean =
             oldItem == newItem
 
 
@@ -51,7 +50,7 @@ class ChartListAdapter(
                 parent,
                 false
             ),
-            interaction, requestManager, packageName, currentLocale, _resources, colors
+            interaction, requestManager, currentLocale, _resources, colors
         )
     }
 
@@ -67,7 +66,7 @@ class ChartListAdapter(
         return differ.currentList.size
     }
 
-    fun submitList(list: List<PieChartData>) {
+    fun submitList(list: List<ChartData>) {
         if (!list.isNullOrEmpty()) {
             biggestPercentage = list.maxOf { abs(it.percentage) }
         }
@@ -79,36 +78,27 @@ class ChartListAdapter(
         val binding: LayoutChartListItemBinding,
         private val interaction: Interaction?,
         val requestManager: RequestManager?,
-        val packageName: String,
         val currentLocale: Locale,
         val _resources: Resources,
         val colors: List<Int>
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: PieChartData, biggestPercentage: Double) = with(itemView) {
+        fun bind(item: ChartData, biggestPercentage: Double) = with(itemView) {
             itemView.setOnClickListener {
                 interaction?.onItemSelected(adapterPosition, item)
             }
             binding.txtDate.visibility = View.GONE
 
-            binding.categoryName.text = item.getCategoryNameFromStringFile(
-                _resources,
-                this@ChartViewHolder.packageName
-            ) {
-                it.categoryName
-            }
+            binding.categoryName.text = item.getCategoryNameFromStringFile(context)
             binding.sumOfMoney.text = separate3By3(item.sumOfMoney.absoluteValue, currentLocale)
 
             binding.txtPercentage.text =
                 ("${item.percentage.toString()}%").localizeNumber(_resources)
-            binding.prgPercentage.progress = item.percentage?.toInt() ?: 0
+
+            binding.prgPercentage.progress = item.percentage.toInt()
             binding.prgPercentage.max = biggestPercentage.toInt()
 
-            val categoryImageUrl = this.resources.getIdentifier(
-                "ic_cat_${item.categoryImage}",
-                "drawable",
-                packageName
-            )
+            val categoryImageResourceId = item.getCategoryImageResourceId(context)
             try {
                 binding.cardView.setCardBackgroundColor((colors[adapterPosition]))
             } catch (e: Exception) {
@@ -116,7 +106,7 @@ class ChartListAdapter(
             }
 
             requestManager
-                ?.load(categoryImageUrl)
+                ?.load(categoryImageResourceId)
                 ?.centerInside()
                 ?.transition(DrawableTransitionOptions.withCrossFade())
                 ?.error(R.drawable.ic_error)
@@ -126,6 +116,6 @@ class ChartListAdapter(
     }
 
     interface Interaction {
-        fun onItemSelected(position: Int, item: PieChartData)
+        fun onItemSelected(position: Int, item: ChartData)
     }
 }

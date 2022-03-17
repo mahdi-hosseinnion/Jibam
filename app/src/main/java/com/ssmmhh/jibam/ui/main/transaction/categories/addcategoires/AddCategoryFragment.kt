@@ -178,7 +178,6 @@ class AddCategoryFragment(
             recyclerAdapter = AddCategoryListAdapter(
                 requestManager,
                 this@AddCategoryFragment,
-                this@AddCategoryFragment.requireActivity().packageName
             )
             //control span size for full size item
             mLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {

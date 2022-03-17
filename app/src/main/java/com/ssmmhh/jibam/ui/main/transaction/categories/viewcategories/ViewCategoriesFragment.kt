@@ -114,7 +114,6 @@ class ViewCategoriesFragment(
             incomeItemTouchHelper = incomeItemTouchHelper,
             categoryInteraction = this,
             requestManager = requestManager,
-            packageName = this.requireActivity().packageName
         )
 
         binding.   viewPagerViewCategories.adapter = viewPagerAdapter
