@@ -32,8 +32,7 @@ object TestData {
         ): String = categoriesDao.getCategoryById(
             largestExpensesCategoryId
         )!!.getCategoryNameFromStringFile(
-            resources = resources,
-            packageName = packageName
+            instrumentationContext
         )
 
         //INCOME
@@ -47,8 +46,7 @@ object TestData {
         ): String = categoriesDao.getCategoryById(
             largestIncomeCategoryId
         )!!.getCategoryNameFromStringFile(
-            resources = resources,
-            packageName = packageName
+            instrumentationContext
         )
     }
 

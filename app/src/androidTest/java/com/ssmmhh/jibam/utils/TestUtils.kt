@@ -1,5 +1,6 @@
 package com.ssmmhh.jibam.utils
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import android.view.View
@@ -13,6 +14,7 @@ import androidx.test.espresso.action.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.platform.app.InstrumentationRegistry
 import com.ssmmhh.jibam.TestBaseApplication
 import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 import com.ssmmhh.jibam.util.DateUtils
@@ -30,6 +32,8 @@ import kotlin.random.Random
 @FlowPreview
 @ExperimentalCoroutinesApi
 fun getTestBaseApplication(): TestBaseApplication = ApplicationProvider.getApplicationContext()
+
+val instrumentationContext : Context get() = InstrumentationRegistry.getInstrumentation().context
 
 fun atPositionOnView(
     position: Int,
