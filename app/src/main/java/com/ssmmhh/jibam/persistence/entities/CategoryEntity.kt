@@ -1,19 +1,20 @@
 package com.ssmmhh.jibam.persistence.entities
 
-import android.content.res.Resources
-import android.util.Log
+import android.content.Context
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.ssmmhh.jibam.util.getCategoryImageResourceIdFromDrawableByCategoryImage
+import com.ssmmhh.jibam.util.getResourcesStringValueByName
 
 @Entity(tableName = "categories")
 data class CategoryEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "cId")
     val id: Int,
-    /*
-    1 => expenses
-    2 => income
+    /**
+     * 1 => expenses
+     * 2 => income
      */
     @ColumnInfo(name = "type")
     val type: Int,
@@ -27,26 +28,13 @@ data class CategoryEntity(
 
 
     fun getCategoryNameFromStringFile(
-        resources: Resources,
-        packageName: String,
-        onUnableToFindName: (CategoryEntity) -> String = { it.name }
-    ): String {
-        val nameId: Int = resources.getIdentifier(
-            this.name,
-            "string",
-            packageName
-        )
-        return try {
-            resources.getString(nameId)
-        } catch (e: Exception) {
-            Log.e(
-                "Category",
-                "getCategoryNameFromStringFile: UNABLE TO FIND $this name in strings ",
-            )
-            Log.e("Category", "getCategoryNameFromStringFile: add >${this.name}< to strings file")
-            onUnableToFindName(this)
-        }
-    }
+        context: Context,
+        defaultName: String = name
+    ): String = getResourcesStringValueByName(context, this.name) ?: defaultName
+
+    fun getCategoryImageResourceId(
+        context: Context,
+    ): Int = getCategoryImageResourceIdFromDrawableByCategoryImage(context, this.img_res)
 
     val isExpensesCategory: Boolean
         get() = type == EXPENSES_TYPE_MARKER
@@ -55,7 +43,7 @@ data class CategoryEntity(
         get() = type == INCOME_TYPE_MARKER
 
     companion object {
-         const val EXPENSES_TYPE_MARKER = 1
-         const val INCOME_TYPE_MARKER = 2
+        const val EXPENSES_TYPE_MARKER = 1
+        const val INCOME_TYPE_MARKER = 2
     }
 }

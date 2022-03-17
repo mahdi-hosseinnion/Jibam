@@ -109,7 +109,6 @@ class DetailChartFragment(
 
             recyclerAdapter = DetailChartListAdapter(
                 interaction = this@DetailChartFragment,
-                this@DetailChartFragment.requireActivity().packageName,
                 sharedPreferences.isCalendarSolar(currentLocale),
                 requestManager,
                 currentLocale

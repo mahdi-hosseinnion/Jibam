@@ -216,12 +216,7 @@ class ChartFragment(
     private fun List<PieChartData>.convertPieChartDataToPieEntry(): List<PieEntry> = this.map {
         PieEntry(
             it.percentage?.toFloat() ?: 0f,
-            it.getCategoryNameFromStringFile(
-                resources,
-                this@ChartFragment.requireActivity().packageName
-            ) { pi ->
-                pi.categoryName
-            }
+            it.getCategoryNameFromStringFile(requireContext())
         )
     }
 
@@ -301,9 +296,7 @@ class ChartFragment(
             val recyclerAdapter = ChartListAdapter(
                 this@ChartFragment,
                 requestManager,
-
                 currentLocale,
-                this@ChartFragment.requireActivity().packageName,
                 resources,
                 colors
             )
@@ -356,10 +349,7 @@ class ChartFragment(
         val action =
             ChartFragmentDirections.actionChartFragmentToDetailChartFragment(
                 categoryId = item.categoryId,
-                categoryName = item.getCategoryNameFromStringFile(
-                    resources,
-                    requireActivity().packageName,
-                ) { it.categoryName }
+                categoryName = item.getCategoryNameFromStringFile(requireContext())
             )
         findNavController().navigate(action)
     }

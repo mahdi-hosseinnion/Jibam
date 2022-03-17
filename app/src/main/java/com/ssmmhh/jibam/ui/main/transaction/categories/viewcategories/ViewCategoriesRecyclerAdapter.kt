@@ -20,7 +20,6 @@ class ViewCategoriesRecyclerAdapter(
     private var listOfCategoryEntities: List<CategoryEntity>?,
     private val interaction: CategoryInteraction,
     private val requestManager: RequestManager,
-    private val packageName: String
 ) : RecyclerView.Adapter<ViewCategoriesRecyclerAdapter.ViewPagerRecyclerViewHolder>() {
 
     override fun onCreateViewHolder(
@@ -35,7 +34,6 @@ class ViewCategoriesRecyclerAdapter(
             ),
             categoryInteraction = interaction,
             requestManager = requestManager,
-            packageName = packageName
         )
 
     override fun onBindViewHolder(holder: ViewPagerRecyclerViewHolder, position: Int) {
@@ -81,7 +79,6 @@ class ViewCategoriesRecyclerAdapter(
         val binding: LayoutViewCategoriesListItemBinding,
         private val categoryInteraction: CategoryInteraction,
         private val requestManager: RequestManager,
-        private val packageName: String
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(holder: RecyclerView.ViewHolder, item: CategoryEntity?) {
@@ -106,12 +103,7 @@ class ViewCategoriesRecyclerAdapter(
                         performClick()
                         return@setOnTouchListener false
                     }
-                    val categoryName = item.getCategoryNameFromStringFile(
-                        resources,
-                        packageName
-                    ) {
-                        it.name
-                    }
+                    val categoryName = item.getCategoryNameFromStringFile(context)
                     binding.nameOfCategory.text = categoryName
                     //FOR DEBUG
 //                    itemView.ordering.text = item.ordering.toString()
@@ -126,13 +118,9 @@ class ViewCategoriesRecyclerAdapter(
                         )
                     )
 
-                    val categoryImageUrl = this.resources.getIdentifier(
-                        "ic_cat_${item.img_res}",
-                        "drawable",
-                        packageName
-                    )
+                    val categoryImageResourceId = item.getCategoryImageResourceId(context)
                     requestManager
-                        .load(categoryImageUrl)
+                        .load(categoryImageResourceId)
                         .centerInside()
                         .transition(DrawableTransitionOptions.withCrossFade())
                         .error(R.drawable.ic_error)

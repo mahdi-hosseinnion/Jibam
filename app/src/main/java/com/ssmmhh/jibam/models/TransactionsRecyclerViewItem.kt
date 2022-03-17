@@ -1,8 +1,10 @@
 package com.ssmmhh.jibam.models
 
+import android.content.Context
 import android.content.res.Resources
 import android.util.Log
 import androidx.room.ColumnInfo
+import com.ssmmhh.jibam.util.getCategoryImageResourceIdFromDrawableByCategoryImage
 import com.ssmmhh.jibam.util.getResourcesStringValueByName
 import java.time.DayOfWeek
 
@@ -44,13 +46,17 @@ sealed class TransactionsRecyclerViewItem(
 }
 
 val TransactionsRecyclerViewItem.isTransaction get() = this is TransactionsRecyclerViewItem.Transaction
+
 val TransactionsRecyclerViewItem.isHeader get() = this is TransactionsRecyclerViewItem.Header
 
 fun TransactionsRecyclerViewItem.Transaction.getCategoryNameFromStringFile(
-    resources: Resources,
-    packageName: String,
+    context: Context,
     defaultName: String = categoryName
-): String = getResourcesStringValueByName(this.categoryName, resources, packageName) ?: defaultName
+): String = getResourcesStringValueByName(context, this.categoryName) ?: defaultName
+
+fun TransactionsRecyclerViewItem.Transaction.getCategoryImageResourceId(
+    context: Context,
+): Int = getCategoryImageResourceIdFromDrawableByCategoryImage(context, this.categoryImage)
 
 fun TransactionsRecyclerViewItem.Transaction.toTransaction(): Transaction = Transaction(
     id = this.id,

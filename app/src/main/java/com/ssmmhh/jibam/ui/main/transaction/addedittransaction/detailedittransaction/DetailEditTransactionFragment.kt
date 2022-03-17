@@ -240,10 +240,7 @@ constructor(
     private fun setTransactionFields(transaction: Transaction) {
         //set category name and image to fab
         setCategoryFields(
-            transaction.getCategoryNameFromStringFile(
-                resources,
-                requireActivity().packageName
-            ) { it.categoryName },
+            transaction.getCategoryNameFromStringFile(requireContext()),
             transaction.categoryImage
         )
 
@@ -272,7 +269,7 @@ constructor(
         binding.categoryFab.extend()
 
         val resourceId: Int =
-            getCategoryDrawableResourceIdByCategoryImageName(requireContext(), categoryImage)
+            getCategoryImageResourceIdFromDrawableByCategoryImage(requireContext(), categoryImage)
         binding.categoryFab.icon = VectorDrawableCompat.create(resources, resourceId, null)
     }
 

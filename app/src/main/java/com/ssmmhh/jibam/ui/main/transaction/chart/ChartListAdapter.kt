@@ -23,7 +23,6 @@ class ChartListAdapter(
     private val interaction: Interaction? = null,
     private val requestManager: RequestManager?,
     private val currentLocale: Locale,
-    private val packageName: String,
     private val _resources: Resources,
     private val colors: List<Int>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -51,7 +50,7 @@ class ChartListAdapter(
                 parent,
                 false
             ),
-            interaction, requestManager, packageName, currentLocale, _resources, colors
+            interaction, requestManager, currentLocale, _resources, colors
         )
     }
 
@@ -79,7 +78,6 @@ class ChartListAdapter(
         val binding: LayoutChartListItemBinding,
         private val interaction: Interaction?,
         val requestManager: RequestManager?,
-        val packageName: String,
         val currentLocale: Locale,
         val _resources: Resources,
         val colors: List<Int>
@@ -91,24 +89,16 @@ class ChartListAdapter(
             }
             binding.txtDate.visibility = View.GONE
 
-            binding.categoryName.text = item.getCategoryNameFromStringFile(
-                _resources,
-                this@ChartViewHolder.packageName
-            ) {
-                it.categoryName
-            }
+            binding.categoryName.text = item.getCategoryNameFromStringFile(context)
             binding.sumOfMoney.text = separate3By3(item.sumOfMoney.absoluteValue, currentLocale)
 
             binding.txtPercentage.text =
                 ("${item.percentage.toString()}%").localizeNumber(_resources)
+
             binding.prgPercentage.progress = item.percentage?.toInt() ?: 0
             binding.prgPercentage.max = biggestPercentage.toInt()
 
-            val categoryImageUrl = this.resources.getIdentifier(
-                "ic_cat_${item.categoryImage}",
-                "drawable",
-                packageName
-            )
+            val categoryImageResourceId = item.getCategoryImageResourceId(context)
             try {
                 binding.cardView.setCardBackgroundColor((colors[adapterPosition]))
             } catch (e: Exception) {
@@ -116,7 +106,7 @@ class ChartListAdapter(
             }
 
             requestManager
-                ?.load(categoryImageUrl)
+                ?.load(categoryImageResourceId)
                 ?.centerInside()
                 ?.transition(DrawableTransitionOptions.withCrossFade())
                 ?.error(R.drawable.ic_error)

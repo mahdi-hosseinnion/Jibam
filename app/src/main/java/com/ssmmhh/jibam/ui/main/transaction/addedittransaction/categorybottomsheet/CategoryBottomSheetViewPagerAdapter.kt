@@ -17,20 +17,17 @@ class CategoryBottomSheetViewPagerAdapter(
     private var isLeftToRight: Boolean,
     interaction: CategoryBottomSheetListAdapter.Interaction? = null,
     requestManager: RequestManager,
-    packageName: String,
     selectedCategoryId: Int?
 ) : PagerAdapter() {
     private val expensesRecyclerViewAdapter = CategoryBottomSheetListAdapter(
         requestManager,
         interaction,
-        packageName,
         selectedItemId = selectedCategoryId
 
     )
     private val incomeRecyclerViewAdapter = CategoryBottomSheetListAdapter(
         requestManager,
         interaction,
-        packageName,
         selectedItemId = selectedCategoryId
 
     )

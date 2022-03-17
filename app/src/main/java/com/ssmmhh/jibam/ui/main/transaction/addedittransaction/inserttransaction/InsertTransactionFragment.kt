@@ -241,14 +241,10 @@ constructor(
 
     private fun setCategoryFields(categoryEntity: CategoryEntity) {
         //set name and icon
-        binding.categoryFab.text =
-            categoryEntity.getCategoryNameFromStringFile(resources, requireActivity().packageName) {
-                it.name
-            }
+        binding.categoryFab.text = categoryEntity.getCategoryNameFromStringFile(requireContext())
         binding.categoryFab.extend()
 
-        val resourceId: Int =
-            getCategoryDrawableResourceIdByCategoryImageName(requireContext(), categoryEntity.name)
+        val resourceId: Int = categoryEntity.getCategoryImageResourceId(requireContext())
         binding.categoryFab.icon = VectorDrawableCompat.create(resources, resourceId, null)
     }
 

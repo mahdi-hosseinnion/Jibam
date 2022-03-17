@@ -483,7 +483,6 @@ class TransactionsFragment(
             recyclerAdapter = TransactionsListAdapter(
                 requestManager,
                 this@TransactionsFragment,
-                this@TransactionsFragment.requireActivity().packageName,
                 currentLocale
             )
             addOnScrollListener(onScrollListener)

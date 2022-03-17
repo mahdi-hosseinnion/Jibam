@@ -8,6 +8,7 @@ import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.ssmmhh.jibam.R
+import kotlinx.coroutines.withContext
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
@@ -285,27 +286,17 @@ fun separateCalculatorText3By3(text: String, locale: Locale): String {
  */
 fun String.remove3By3Separators(): String = this.replace(NUMBER_SEPARATOR.toString(), "")
 
-fun getCategoryDrawableResourceIdByCategoryImageName(
-    context: Context,
-    CategoryImageName: String
-): Int =
-    context.resources.getIdentifier(
-        "ic_cat_${CategoryImageName}",
-        "drawable",
-        context.packageName
-    )
-
+//TODO test what happens if resource does not exitst
 fun getResourcesStringValueByName(
+    context: Context,
     stringName: String,
-    resources: Resources,
-    packageName: String,
-): String? {
+): String? = context.run {
     val nameId: Int = resources.getIdentifier(
         stringName,
         "string",
         packageName
     )
-    return try {
+    try {
         resources.getString(nameId)
     } catch (e: Exception) {
         Log.e(
@@ -316,15 +307,16 @@ fun getResourcesStringValueByName(
     }
 }
 
-fun getCategoryImageResourceIdFromDrawable(
+//TODO test what happens if resource does not exitst
+fun getCategoryImageResourceIdFromDrawableByCategoryImage(
+    context: Context,
     categoryImageName: String,
-    resources: Resources,
-    packageName: String,
-): Int =
+): Int = context.run {
     resources.getIdentifier(
         "ic_cat_$categoryImageName",
         "drawable",
         packageName
     )
+}
 
 fun RecyclerView.ViewHolder.getStringFromItemView(id: Int) = itemView.resources.getString(id)

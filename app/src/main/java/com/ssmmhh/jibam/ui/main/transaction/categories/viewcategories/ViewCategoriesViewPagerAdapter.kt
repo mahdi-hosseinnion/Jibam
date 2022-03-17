@@ -19,7 +19,6 @@ class ViewCategoriesViewPagerAdapter(
     listOfCategoryEntities: List<CategoryEntity>? = null,
     categoryInteraction: ViewCategoriesRecyclerAdapter.CategoryInteraction,
     requestManager: RequestManager,
-    packageName: String
 ) : RecyclerView.Adapter<ViewCategoriesViewPagerAdapter.ViewPagerViewHolder>() {
 
     private val expensesRecyclerAdapter: ViewCategoriesRecyclerAdapter =
@@ -27,8 +26,6 @@ class ViewCategoriesViewPagerAdapter(
             listOfCategoryEntities = listOfCategoryEntities?.filter { it.isExpensesCategory },
             interaction = categoryInteraction,
             requestManager = requestManager,
-            packageName = packageName
-
         )
 
     private val incomeRecyclerAdapter: ViewCategoriesRecyclerAdapter =
@@ -36,8 +33,6 @@ class ViewCategoriesViewPagerAdapter(
             listOfCategoryEntities = listOfCategoryEntities?.filter { it.isIncomeCategory },
             interaction = categoryInteraction,
             requestManager = requestManager,
-            packageName = packageName
-
         )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewPagerViewHolder =

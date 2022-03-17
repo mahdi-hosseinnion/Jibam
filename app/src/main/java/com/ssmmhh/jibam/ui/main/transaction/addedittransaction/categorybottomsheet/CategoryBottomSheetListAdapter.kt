@@ -18,7 +18,6 @@ import com.ssmmhh.jibam.util.EspressoIdlingResources
 class CategoryBottomSheetListAdapter(
     private val requestManager: RequestManager,
     private val interaction: Interaction? = null,
-    private val packageName: String,
     private var selectedItemId: Int?
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -52,7 +51,6 @@ class CategoryBottomSheetListAdapter(
             binding = binding,
             interaction = interaction,
             requestManager = requestManager,
-            packageName = packageName
         )
     }
 
@@ -142,7 +140,6 @@ class CategoryBottomSheetListAdapter(
         val binding: LayoutCategoryListItemBinding,
         val requestManager: RequestManager,
         private val interaction: Interaction?,
-        private val packageName: String
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: CategoryEntity, selectedItemId: Int?) = with(itemView) {
@@ -157,23 +154,11 @@ class CategoryBottomSheetListAdapter(
                 setUnSelectedBackground()
             }
 
-            binding.categoryName.text =
-                item.getCategoryNameFromStringFile(
-                    resources,
-                    this@CategoryViewHolder.packageName
-                ) {
-                    it.name
-                }
-//            itemView.blog_update_date.text = DateUtils.convertLongToStringDate(item.date_updated)
-            val categoryImageUrl = this.resources.getIdentifier(
-                "ic_cat_${item.img_res}",
-                "drawable",
-                packageName
-            )
-            //TODO
-//            itemView.card
+            binding.categoryName.text = item.getCategoryNameFromStringFile(context)
+
+            val categoryImageResourceId = item.getCategoryImageResourceId(context)
             requestManager
-                .load(categoryImageUrl)
+                .load(categoryImageResourceId)
                 .centerInside()
                 .transition(withCrossFade())
                 .error(R.drawable.ic_error)
