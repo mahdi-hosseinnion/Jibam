@@ -26,7 +26,7 @@ import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.utils.MPPointF
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.FragmentChartBinding
-import com.ssmmhh.jibam.models.PieChartData
+import com.ssmmhh.jibam.models.ChartData
 import com.ssmmhh.jibam.ui.main.transaction.chart.ChartFragment.ChartState.*
 import com.ssmmhh.jibam.ui.main.transaction.common.BaseFragment
 import com.ssmmhh.jibam.persistence.entities.CategoryEntity.Companion.EXPENSES_TYPE_MARKER
@@ -59,7 +59,7 @@ class ChartFragment(
 
     private var currentChartState = EXPENSES_STATE
 
-    private var chartData: List<PieChartData> = ArrayList()
+    private var chartData: List<ChartData> = ArrayList()
 
     private var _binding: FragmentChartBinding? = null
 
@@ -213,14 +213,14 @@ class ChartFragment(
 
     }
 
-    private fun List<PieChartData>.convertPieChartDataToPieEntry(): List<PieEntry> = this.map {
+    private fun List<ChartData>.convertPieChartDataToPieEntry(): List<PieEntry> = this.map {
         PieEntry(
-            it.percentage?.toFloat() ?: 0f,
+            it.percentage.toFloat() ?: 0f,
             it.getCategoryNameFromStringFile(requireContext())
         )
     }
 
-    private fun setDataToChartAndRecyclerView(values: List<PieChartData>) {
+    private fun setDataToChartAndRecyclerView(values: List<ChartData>) {
         val entries = ArrayList(values.convertPieChartDataToPieEntry())
         /**
          * we don't want ot show many entries of pie chart b/c the pie portion would be small
@@ -290,7 +290,7 @@ class ChartFragment(
         initRecyclerView(values, colors)
     }
 
-    private fun initRecyclerView(values: List<PieChartData>, colors: List<Int>) {
+    private fun initRecyclerView(values: List<ChartData>, colors: List<Int>) {
         binding.chartRecycler.apply {
             layoutManager = LinearLayoutManager(this@ChartFragment.context)
             val recyclerAdapter = ChartListAdapter(
@@ -345,7 +345,7 @@ class ChartFragment(
     override fun onNothingSelected() {
     }
 
-    override fun onItemSelected(position: Int, item: PieChartData) {
+    override fun onItemSelected(position: Int, item: ChartData) {
         val action =
             ChartFragmentDirections.actionChartFragmentToDetailChartFragment(
                 categoryId = item.categoryId,

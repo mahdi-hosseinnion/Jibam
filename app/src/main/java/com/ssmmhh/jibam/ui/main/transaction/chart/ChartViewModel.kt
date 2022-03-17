@@ -3,8 +3,8 @@ package com.ssmmhh.jibam.ui.main.transaction.chart
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
+import com.ssmmhh.jibam.models.ChartData
 import com.ssmmhh.jibam.models.Month
-import com.ssmmhh.jibam.models.PieChartData
 import com.ssmmhh.jibam.models.Transaction
 import com.ssmmhh.jibam.repository.tranasction.TransactionRepository
 import com.ssmmhh.jibam.ui.main.transaction.chart.state.ChartStateEvent
@@ -28,7 +28,7 @@ constructor(
 ) : BaseViewModel<ChartViewState, ChartStateEvent>() {
 
 
-    private val _pieChartData: LiveData<List<PieChartData>> =
+    private val _pieChartData: LiveData<List<ChartData>> =
         monthManger.currentMonth.flatMapLatest {
             setCurrentMonth(it)
             transactionRepository.getPieChartData(
@@ -37,7 +37,7 @@ constructor(
             )
         }.asLiveData()
 
-    val pieChartData: LiveData<List<PieChartData>> = _pieChartData
+    val pieChartData: LiveData<List<ChartData>> = _pieChartData
 
     fun getAllTransactionByCategoryId(categoryId: Int): LiveData<List<Transaction>> =
         monthManger.currentMonth.flatMapLatest {

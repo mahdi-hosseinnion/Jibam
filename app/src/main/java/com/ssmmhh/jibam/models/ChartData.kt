@@ -1,26 +1,19 @@
 package com.ssmmhh.jibam.models
 
 import android.content.Context
-import android.content.res.Resources
-import androidx.room.ColumnInfo
-import androidx.room.Ignore
 import com.ssmmhh.jibam.persistence.entities.CategoryEntity
 import com.ssmmhh.jibam.util.getCategoryImageResourceIdFromDrawableByCategoryImage
 import com.ssmmhh.jibam.util.getResourcesStringValueByName
 
-data class PieChartData(
-    @ColumnInfo(name = "categoryId")
-    val categoryId: Int,
-    @ColumnInfo(name = "sumOfMoney")
-    val sumOfMoney: Double,
-    @ColumnInfo(name = "category_name")
-    val categoryName: String,
-    @ColumnInfo(name = "categoryType")
-    val categoryType: Int,
-    @ColumnInfo(name = "category_image")
-    val categoryImage: String,
-) {
 
+data class ChartData(
+    val categoryId: Int,
+    val sumOfMoney: Double,
+    val categoryName: String,
+    val categoryType: Int,
+    val categoryImage: String,
+    val percentage: Double
+) {
     fun getCategoryNameFromStringFile(
         context: Context,
         defaultName: String = this.categoryName

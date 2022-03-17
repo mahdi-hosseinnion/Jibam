@@ -3,6 +3,7 @@ package com.ssmmhh.jibam.repository.tranasction
 import android.content.res.Resources
 import androidx.annotation.StringRes
 import com.ssmmhh.jibam.R
+import com.ssmmhh.jibam.models.ChartData
 import com.ssmmhh.jibam.models.PieChartData
 import com.ssmmhh.jibam.models.Transaction
 import com.ssmmhh.jibam.persistence.RecordsDao
@@ -49,7 +50,7 @@ constructor(
     override fun getSumOfExpenses(minDate: Int?, maxDate: Int?): Flow<Double?> =
         recordsDao.getSumOfExpenses(minDate, maxDate)
 
-    override fun getPieChartData(minDate: Int, maxDate: Int): Flow<List<PieChartData>> = flow {
+    override fun getPieChartData(minDate: Int, maxDate: Int): Flow<List<ChartData>> = flow {
         emit(
             calculatePercentage(
                 recordsDao.sumOfMoneyGroupByCategory(
@@ -60,12 +61,12 @@ constructor(
         )
     }
 
-    private fun calculatePercentage(values: List<PieChartData>): List<PieChartData> {
+    private fun calculatePercentage(values: List<PieChartData>): List<ChartData> {
         val sumOfAllExpenses = values.filter { it.isExpensesCategory }.sumOf { it.sumOfMoney }
 
         val sumOfAllIncome = values.filter { it.isIncomeCategory }.sumOf { it.sumOfMoney }
 
-        val newList = ArrayList<PieChartData>()
+        val newList = ArrayList<ChartData>()
 
         for (item in values) {
             val percentage: Double = when (item.categoryType) {
@@ -80,7 +81,7 @@ constructor(
                 }
             }
             newList.add(
-                PieChartData(
+                ChartData(
                     categoryId = item.categoryId,
                     percentage = percentage.roundToOneDigit(),
                     sumOfMoney = item.sumOfMoney,

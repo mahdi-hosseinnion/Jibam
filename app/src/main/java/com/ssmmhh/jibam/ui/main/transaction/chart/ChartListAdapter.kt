@@ -11,7 +11,7 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.LayoutChartListItemBinding
-import com.ssmmhh.jibam.models.PieChartData
+import com.ssmmhh.jibam.models.ChartData
 import com.ssmmhh.jibam.util.localizeNumber
 import com.ssmmhh.jibam.util.separate3By3
 import java.util.*
@@ -29,12 +29,12 @@ class ChartListAdapter(
 
     private var biggestPercentage: Double = 100.0
 
-    val DIFF_CALLBACK = object : DiffUtil.ItemCallback<PieChartData>() {
+    val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ChartData>() {
 
-        override fun areItemsTheSame(oldItem: PieChartData, newItem: PieChartData): Boolean =
+        override fun areItemsTheSame(oldItem: ChartData, newItem: ChartData): Boolean =
             oldItem.categoryId == newItem.categoryId
 
-        override fun areContentsTheSame(oldItem: PieChartData, newItem: PieChartData): Boolean =
+        override fun areContentsTheSame(oldItem: ChartData, newItem: ChartData): Boolean =
             oldItem == newItem
 
 
@@ -66,7 +66,7 @@ class ChartListAdapter(
         return differ.currentList.size
     }
 
-    fun submitList(list: List<PieChartData>) {
+    fun submitList(list: List<ChartData>) {
         if (!list.isNullOrEmpty()) {
             biggestPercentage = list.maxOf { abs(it.percentage) }
         }
@@ -83,7 +83,7 @@ class ChartListAdapter(
         val colors: List<Int>
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: PieChartData, biggestPercentage: Double) = with(itemView) {
+        fun bind(item: ChartData, biggestPercentage: Double) = with(itemView) {
             itemView.setOnClickListener {
                 interaction?.onItemSelected(adapterPosition, item)
             }
@@ -95,7 +95,7 @@ class ChartListAdapter(
             binding.txtPercentage.text =
                 ("${item.percentage.toString()}%").localizeNumber(_resources)
 
-            binding.prgPercentage.progress = item.percentage?.toInt() ?: 0
+            binding.prgPercentage.progress = item.percentage.toInt()
             binding.prgPercentage.max = biggestPercentage.toInt()
 
             val categoryImageResourceId = item.getCategoryImageResourceId(context)
@@ -116,6 +116,6 @@ class ChartListAdapter(
     }
 
     interface Interaction {
-        fun onItemSelected(position: Int, item: PieChartData)
+        fun onItemSelected(position: Int, item: ChartData)
     }
 }
