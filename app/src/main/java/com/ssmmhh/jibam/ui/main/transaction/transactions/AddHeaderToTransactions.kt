@@ -1,7 +1,7 @@
 package com.ssmmhh.jibam.ui.main.transaction.transactions
 
 import android.content.res.Resources
-import com.ssmmhh.jibam.models.Transaction
+import com.ssmmhh.jibam.persistence.dtos.TransactionDto
 import com.ssmmhh.jibam.models.TransactionsRecyclerViewItem
 import com.ssmmhh.jibam.util.SolarCalendar
 import java.text.SimpleDateFormat
@@ -18,7 +18,7 @@ class AddHeaderToTransactions(
         getFormattedDate(System.currentTimeMillis())
     val yesterday: String = getFormattedDate(System.currentTimeMillis().minus(86_400_000L))
 
-    fun addHeaderToTransactions(currentList: List<Transaction>): List<TransactionsRecyclerViewItem> {
+    fun addHeaderToTransactions(currentList: List<TransactionDto>): List<TransactionsRecyclerViewItem> {
         if (currentList.isEmpty()) {
             return listOf(TransactionsRecyclerViewItem.DatabaseIsEmpty)
         }

@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import com.ssmmhh.jibam.models.ChartData
 import com.ssmmhh.jibam.models.Month
-import com.ssmmhh.jibam.models.Transaction
+import com.ssmmhh.jibam.persistence.dtos.TransactionDto
 import com.ssmmhh.jibam.repository.tranasction.TransactionRepository
 import com.ssmmhh.jibam.ui.main.transaction.chart.state.ChartStateEvent
 import com.ssmmhh.jibam.ui.main.transaction.chart.state.ChartViewState
@@ -39,7 +39,7 @@ constructor(
 
     val pieChartData: LiveData<List<ChartData>> = _pieChartData
 
-    fun getAllTransactionByCategoryId(categoryId: Int): LiveData<List<Transaction>> =
+    fun getAllTransactionByCategoryId(categoryId: Int): LiveData<List<TransactionDto>> =
         monthManger.currentMonth.flatMapLatest {
             transactionRepository.getAllTransactionByCategoryId(
                 categoryId = categoryId,
@@ -76,7 +76,7 @@ constructor(
         )
     }
 
-    fun setRecentlyDeletedTrans(recentlyDeletedTransaction: Transaction) {
+    fun setRecentlyDeletedTrans(recentlyDeletedTransaction: TransactionDto) {
         setViewState(
             ChartViewState(
                 recentlyDeletedTransaction = recentlyDeletedTransaction
@@ -84,7 +84,7 @@ constructor(
         )
     }
 
-    fun getRecentlyDeletedTrans(): Transaction? = viewState.value?.recentlyDeletedTransaction
+    fun getRecentlyDeletedTrans(): TransactionDto? = viewState.value?.recentlyDeletedTransaction
 
     fun deleteTransaction(transactionId: Int) {
         launchNewJob(
@@ -95,7 +95,7 @@ constructor(
         )
     }
 
-    fun insertRecentlyDeletedTrans(transaction: Transaction) {
+    fun insertRecentlyDeletedTrans(transaction: TransactionDto) {
 
         launchNewJob(
             ChartStateEvent.InsertTransaction(

@@ -4,8 +4,8 @@ import android.content.res.Resources
 import androidx.annotation.StringRes
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.models.ChartData
-import com.ssmmhh.jibam.models.PieChartData
-import com.ssmmhh.jibam.models.Transaction
+import com.ssmmhh.jibam.persistence.dtos.ChartDataDto
+import com.ssmmhh.jibam.persistence.dtos.TransactionDto
 import com.ssmmhh.jibam.persistence.RecordsDao
 import com.ssmmhh.jibam.persistence.entities.CategoryEntity
 import com.ssmmhh.jibam.persistence.getRecords
@@ -38,7 +38,7 @@ constructor(
         minDate: Int?,
         maxDate: Int?,
         query: String
-    ): Flow<List<Transaction>> = recordsDao.getRecords(
+    ): Flow<List<TransactionDto>> = recordsDao.getRecords(
         minDate = minDate,
         maxDate = maxDate,
         query = query
@@ -61,7 +61,7 @@ constructor(
         )
     }
 
-    private fun calculatePercentage(values: List<PieChartData>): List<ChartData> {
+    private fun calculatePercentage(values: List<ChartDataDto>): List<ChartData> {
         val sumOfAllExpenses = values.filter { it.isExpensesCategory }.sumOf { it.sumOfMoney }
 
         val sumOfAllIncome = values.filter { it.isIncomeCategory }.sumOf { it.sumOfMoney }
@@ -99,7 +99,7 @@ constructor(
         categoryId: Int,
         minDate: Int,
         maxDate: Int
-    ): Flow<List<Transaction>> = recordsDao.getAllTransactionByCategoryId(
+    ): Flow<List<TransactionDto>> = recordsDao.getAllTransactionByCategoryId(
         categoryId = categoryId,
         fromDate = minDate,
         toDate = maxDate
@@ -389,11 +389,11 @@ constructor(
             recordsDao.getTransactionById(stateEvent.transactionId)
         }
 
-        return object : CacheResponseHandler<DetailEditTransactionViewState, Transaction>(
+        return object : CacheResponseHandler<DetailEditTransactionViewState, TransactionDto>(
             response = cacheResult,
             stateEvent = stateEvent
         ) {
-            override suspend fun handleSuccess(resultObj: Transaction): DataState<DetailEditTransactionViewState> {
+            override suspend fun handleSuccess(resultObj: TransactionDto): DataState<DetailEditTransactionViewState> {
                 return DataState.data(
                     response = buildResponse(
                         message = "Transaction Successfully returned",

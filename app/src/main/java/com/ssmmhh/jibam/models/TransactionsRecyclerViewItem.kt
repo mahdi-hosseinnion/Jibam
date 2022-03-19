@@ -1,12 +1,9 @@
 package com.ssmmhh.jibam.models
 
 import android.content.Context
-import android.content.res.Resources
-import android.util.Log
-import androidx.room.ColumnInfo
+import com.ssmmhh.jibam.persistence.dtos.TransactionDto
 import com.ssmmhh.jibam.util.getCategoryImageResourceIdFromDrawableByCategoryImage
 import com.ssmmhh.jibam.util.getResourcesStringValueByName
-import java.time.DayOfWeek
 
 sealed class TransactionsRecyclerViewItem(
     val itemType: Int
@@ -58,7 +55,7 @@ fun TransactionsRecyclerViewItem.Transaction.getCategoryImageResourceId(
     context: Context,
 ): Int = getCategoryImageResourceIdFromDrawableByCategoryImage(context, this.categoryImage)
 
-fun TransactionsRecyclerViewItem.Transaction.toTransaction(): Transaction = Transaction(
+fun TransactionsRecyclerViewItem.Transaction.toTransaction(): TransactionDto = TransactionDto(
     id = this.id,
     money = this.money,
     memo = this.memo,

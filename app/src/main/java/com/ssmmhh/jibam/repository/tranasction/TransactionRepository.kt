@@ -1,8 +1,7 @@
 package com.ssmmhh.jibam.repository.tranasction
 
 import com.ssmmhh.jibam.models.ChartData
-import com.ssmmhh.jibam.models.PieChartData
-import com.ssmmhh.jibam.models.Transaction
+import com.ssmmhh.jibam.persistence.dtos.TransactionDto
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionStateEvent
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionViewState
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionStateEvent
@@ -20,7 +19,7 @@ interface TransactionRepository {
         minDate: Int? = null,
         maxDate: Int? = null,
         query: String = ""
-    ): Flow<List<Transaction>>
+    ): Flow<List<TransactionDto>>
 
     fun getSumOfIncome(
         minDate: Int? = null,
@@ -42,7 +41,7 @@ interface TransactionRepository {
         categoryId: Int,
         minDate: Int,
         maxDate: Int
-    ): Flow<List<Transaction>>
+    ): Flow<List<TransactionDto>>
 
     suspend fun deleteTransaction(
         stateEvent: TransactionsStateEvent.DeleteTransaction

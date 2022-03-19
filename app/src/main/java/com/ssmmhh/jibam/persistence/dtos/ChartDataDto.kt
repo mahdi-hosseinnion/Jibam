@@ -1,4 +1,4 @@
-package com.ssmmhh.jibam.models
+package com.ssmmhh.jibam.persistence.dtos
 
 import android.content.Context
 import android.content.res.Resources
@@ -8,7 +8,7 @@ import com.ssmmhh.jibam.persistence.entities.CategoryEntity
 import com.ssmmhh.jibam.util.getCategoryImageResourceIdFromDrawableByCategoryImage
 import com.ssmmhh.jibam.util.getResourcesStringValueByName
 
-data class PieChartData(
+data class ChartDataDto(
     @ColumnInfo(name = "categoryId")
     val categoryId: Int,
     @ColumnInfo(name = "sumOfMoney")

@@ -2,7 +2,7 @@ package com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransa
 
 import android.util.Log
 import com.ssmmhh.jibam.persistence.entities.CategoryEntity
-import com.ssmmhh.jibam.models.Transaction
+import com.ssmmhh.jibam.persistence.dtos.TransactionDto
 import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 import com.ssmmhh.jibam.util.Event
 import kotlinx.coroutines.flow.*
@@ -11,9 +11,9 @@ import kotlin.math.absoluteValue
 
 data class DetailEditTransactionViewState(
     // default transaction used to determine if user update transaction or did not
-    val defaultTransaction: Transaction? = null,
+    val defaultTransaction: TransactionDto? = null,
     // transaction used to maintain inserted data during configuration change
-    val transaction: Transaction? = null,
+    val transaction: TransactionDto? = null,
     val moneyStr: String? = null,
     val transactionCategoryType: Int? = null,
     val combineCalender: GregorianCalendar? = null,

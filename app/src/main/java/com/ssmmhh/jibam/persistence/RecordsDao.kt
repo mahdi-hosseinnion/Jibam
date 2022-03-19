@@ -1,8 +1,8 @@
 package com.ssmmhh.jibam.persistence
 
 import androidx.room.*
-import com.ssmmhh.jibam.models.PieChartData
-import com.ssmmhh.jibam.models.Transaction
+import com.ssmmhh.jibam.persistence.dtos.ChartDataDto
+import com.ssmmhh.jibam.persistence.dtos.TransactionDto
 import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -26,7 +26,7 @@ interface RecordsDao {
             WHERE rId = :id
         """
     )
-    suspend fun getTransactionById(id: Int): Transaction?
+    suspend fun getTransactionById(id: Int): TransactionDto?
 
 
     /**
@@ -56,7 +56,7 @@ interface RecordsDao {
                 "OR memo LIKE '%' || :query || '%' " +
                 ") " + ORDER_BY_DATE
     )
-    fun getAllRecords(query: String): Flow<List<Transaction>>
+    fun getAllRecords(query: String): Flow<List<TransactionDto>>
 
     //fromDate and toDate count in the result >=
     @Query(
@@ -77,7 +77,7 @@ interface RecordsDao {
         minDate: Int,
         maxDate: Int,
         query: String
-    ): Flow<List<Transaction>>
+    ): Flow<List<TransactionDto>>
 
     //TODO CHANGE DATE > MIN DATE TO DATE >=MINDATE
     @Query(
@@ -95,7 +95,7 @@ interface RecordsDao {
     )
     fun loadAllRecordsAfterThan(
         minDate: Int, query: String
-    ): Flow<List<Transaction>>
+    ): Flow<List<TransactionDto>>
 
     @Query(
         "SELECT records.*, " +
@@ -112,7 +112,7 @@ interface RecordsDao {
     )
     fun loadAllRecordsBeforeThan(
         maxDate: Int, query: String
-    ): Flow<List<Transaction>>
+    ): Flow<List<TransactionDto>>
 
     /*
         sum queries
@@ -160,7 +160,7 @@ interface RecordsDao {
     suspend fun sumOfMoneyGroupByCategory(
         fromDate: Int,
         toDate: Int
-    ): List<PieChartData>
+    ): List<ChartDataDto>
 
     @Query(
         """SELECT records.*,  
@@ -177,7 +177,7 @@ interface RecordsDao {
         categoryId: Int,
         fromDate: Int,
         toDate: Int
-    ): Flow<List<Transaction>>
+    ): Flow<List<TransactionDto>>
 
     companion object {
         const val ORDER_BY_DATE = "ORDER BY date DESC"
@@ -187,7 +187,7 @@ fun RecordsDao.getRecords(
     minDate: Int? = null,
     maxDate: Int? = null,
     query: String = ""
-): Flow<List<Transaction>> {
+): Flow<List<TransactionDto>> {
     if (minDate != null && maxDate != null) {
         return loadAllRecordsBetweenDates(minDate, maxDate, query)
     }

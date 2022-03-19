@@ -15,7 +15,7 @@ import com.bumptech.glide.RequestManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.persistence.entities.CategoryEntity
-import com.ssmmhh.jibam.models.Transaction
+import com.ssmmhh.jibam.persistence.dtos.TransactionDto
 import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.common.AddEditTransactionParentFragment
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionPresenterState
@@ -237,7 +237,7 @@ constructor(
         btmsheetViewPagerAdapter.submitData(list)
     }
 
-    private fun setTransactionFields(transaction: Transaction) {
+    private fun setTransactionFields(transaction: TransactionDto) {
         //set category name and image to fab
         setCategoryFields(
             transaction.getCategoryNameFromStringFile(requireContext()),
