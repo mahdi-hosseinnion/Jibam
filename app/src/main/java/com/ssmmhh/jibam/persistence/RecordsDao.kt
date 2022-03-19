@@ -72,7 +72,6 @@ interface RecordsDao {
                 ") " +
                 ORDER_BY_DATE
 
-//                ORDER BY date_updated DESC LIMIT (:page * :pageSize)
     )
     fun loadAllRecordsBetweenDates(
         minDate: Int,
@@ -147,11 +146,6 @@ interface RecordsDao {
     @Query("SELECT SUM(money) FROM records WHERE (date < :maxDate) AND (money > 0) ")
     fun returnTheSumOfIncomeBeforeThan(maxDate: Int): Flow<Double>
 
-    //chart fragment query
-//    @Query("SELECT SUM(money) as sumOfMoney ,cat_id as cat_id FROM records GROUP BY cat_id")
-//    suspend fun sumOfMoneyGroupByCountry(): List<PieChartData>
-    //TODO test this JOIN
-    //TODO https://www.w3schools.com/sql/sql_join.asp
     @Query(
         """SELECT SUM(money) as sumOfMoney,
             categories.cId as categoryId, 
@@ -188,4 +182,52 @@ interface RecordsDao {
     companion object {
         const val ORDER_BY_DATE = "ORDER BY date DESC"
     }
+}
+fun RecordsDao.getRecords(
+    minDate: Int? = null,
+    maxDate: Int? = null,
+    query: String = ""
+): Flow<List<Transaction>> {
+    if (minDate != null && maxDate != null) {
+        return loadAllRecordsBetweenDates(minDate, maxDate, query)
+    }
+    if (minDate == null && maxDate != null) {
+        return loadAllRecordsBeforeThan(maxDate, query)
+    }
+    if (maxDate == null && minDate != null) {
+        return loadAllRecordsAfterThan(minDate, query)
+    }
+    return getAllRecords(query)
+}
+
+fun RecordsDao.getSumOfIncome(
+    minDate: Int? = null,
+    maxDate: Int? = null
+): Flow<Double?> {
+    if (minDate != null && maxDate != null) {
+        return returnTheSumOfIncomeBetweenDates(minDate, maxDate)
+    }
+    if (minDate == null && maxDate != null) {
+        return returnTheSumOfIncomeBeforeThan(maxDate)
+    }
+    if (maxDate == null && minDate != null) {
+        return returnTheSumOfIncomeAfterThan(minDate)
+    }
+    return returnTheSumOfAllIncome()
+}
+
+fun RecordsDao.getSumOfExpenses(
+    minDate: Int? = null,
+    maxDate: Int? = null
+): Flow<Double?> {
+    if (minDate != null && maxDate != null) {
+        return returnTheSumOfExpensesBetweenDates(minDate, maxDate)
+    }
+    if (minDate == null && maxDate != null) {
+        return returnTheSumOfExpensesBeforeThan(maxDate)
+    }
+    if (maxDate == null && minDate != null) {
+        return returnTheSumOfExpensesAfterThan(minDate)
+    }
+    return returnTheSumOfAllExpenses()
 }

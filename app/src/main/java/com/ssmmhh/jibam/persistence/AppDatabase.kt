@@ -6,7 +6,14 @@ import com.ssmmhh.jibam.persistence.entities.CategoryEntity
 import com.ssmmhh.jibam.persistence.entities.CategoryImageEntity
 import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 
-@Database(entities = [CategoryEntity::class, TransactionEntity::class, CategoryImageEntity::class], version = 4)
+@Database(
+    entities = [
+        CategoryEntity::class,
+        TransactionEntity::class,
+        CategoryImageEntity::class
+    ],
+    version = 4
+)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun getCategoriesDao(): CategoriesDao
