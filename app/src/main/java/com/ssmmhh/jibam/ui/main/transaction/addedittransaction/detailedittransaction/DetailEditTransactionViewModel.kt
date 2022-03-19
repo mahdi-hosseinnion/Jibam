@@ -3,7 +3,7 @@ package com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransa
 import android.content.res.Resources
 import android.util.Log
 import com.ssmmhh.jibam.persistence.entities.CategoryEntity
-import com.ssmmhh.jibam.models.Transaction
+import com.ssmmhh.jibam.persistence.dtos.TransactionDto
 import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 import com.ssmmhh.jibam.repository.cateogry.CategoryRepository
 import com.ssmmhh.jibam.repository.tranasction.TransactionRepository
@@ -131,9 +131,9 @@ constructor(
 
     fun getTransactionCategoryType(): Int? = viewState.value?.transactionCategoryType
 
-    fun getDefaultTransaction(): Transaction? = viewState.value?.defaultTransaction
+    fun getDefaultTransaction(): TransactionDto? = viewState.value?.defaultTransaction
 
-    fun getTransaction(): Transaction? = viewState.value?.transaction
+    fun getTransaction(): TransactionDto? = viewState.value?.transaction
 
     fun getCombineCalender(): GregorianCalendar {
         val viewStateValue = viewState.value?.combineCalender

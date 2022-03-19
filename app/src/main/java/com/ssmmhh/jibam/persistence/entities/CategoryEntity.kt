@@ -10,7 +10,7 @@ import com.ssmmhh.jibam.util.getResourcesStringValueByName
 @Entity(tableName = "categories")
 data class CategoryEntity(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "cId")
+    @ColumnInfo(name = COLUMN_ID)
     val id: Int,
     /**
      * 1 => expenses
@@ -45,5 +45,6 @@ data class CategoryEntity(
     companion object {
         const val EXPENSES_TYPE_MARKER = 1
         const val INCOME_TYPE_MARKER = 2
+        const val COLUMN_ID = "cId"
     }
 }

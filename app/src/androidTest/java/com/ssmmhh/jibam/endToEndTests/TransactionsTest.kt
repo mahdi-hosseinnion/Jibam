@@ -11,7 +11,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.models.Transaction
+import com.ssmmhh.jibam.persistence.dtos.TransactionDto
 import com.ssmmhh.jibam.persistence.RecordsDao
 import com.ssmmhh.jibam.ui.main.MainActivity
 import com.ssmmhh.jibam.ui.main.transaction.common.MonthManger
@@ -162,7 +162,7 @@ class TransactionsTest {
             )
         }
 
-    private suspend fun insertNRandomTransactionsToDbThenReturnAllOfTransactionsInDb(n: Int): List<Transaction> {
+    private suspend fun insertNRandomTransactionsToDbThenReturnAllOfTransactionsInDb(n: Int): List<TransactionDto> {
         //insert 20 random transactions
         repeat(n) {
             val date = Random.nextLong(

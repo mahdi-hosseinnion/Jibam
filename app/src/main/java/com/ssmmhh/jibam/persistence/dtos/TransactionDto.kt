@@ -1,15 +1,13 @@
-package com.ssmmhh.jibam.models
+package com.ssmmhh.jibam.persistence.dtos
 
 import android.content.Context
 import androidx.room.ColumnInfo
-import android.content.res.Resources
-import android.util.Log
-import androidx.room.Ignore
+import com.ssmmhh.jibam.models.TransactionsRecyclerViewItem
 import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 import com.ssmmhh.jibam.util.getCategoryImageResourceIdFromDrawableByCategoryImage
 import com.ssmmhh.jibam.util.getResourcesStringValueByName
 
-data class Transaction(
+data class TransactionDto(
     @ColumnInfo(name = "rId")
     val id: Int,
     @ColumnInfo(name = "money")

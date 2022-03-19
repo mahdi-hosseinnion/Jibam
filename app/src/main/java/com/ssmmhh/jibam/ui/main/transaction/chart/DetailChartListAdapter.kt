@@ -8,7 +8,7 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.LayoutChartListItemBinding
-import com.ssmmhh.jibam.models.Transaction
+import com.ssmmhh.jibam.persistence.dtos.TransactionDto
 import com.ssmmhh.jibam.util.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -19,7 +19,7 @@ class DetailChartListAdapter(
     private val isCalendarSolar: Boolean,
     private var requestManager: RequestManager,
     private var currentLocale: Locale,
-    private var data: List<Transaction>? = null
+    private var data: List<TransactionDto>? = null
 
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -30,7 +30,7 @@ class DetailChartListAdapter(
         private const val DATE_PATTERN = "MM/dd/yyyy"
 
         private const val EMPTY_LIST_MARKER = -2
-        private val EMPTY_LIST_MARKER_TRANSACTION = Transaction(
+        private val EMPTY_LIST_MARKER_TRANSACTION = TransactionDto(
             id = EMPTY_LIST_MARKER,
             0.0,
             "",
@@ -74,7 +74,7 @@ class DetailChartListAdapter(
         }
     }
 
-    fun swapData(data: List<Transaction>?) {
+    fun swapData(data: List<TransactionDto>?) {
         if (data.isNullOrEmpty()) {
             this.data = arrayListOf(EMPTY_LIST_MARKER_TRANSACTION)
         } else {
@@ -85,7 +85,7 @@ class DetailChartListAdapter(
         notifyDataSetChanged()
     }
 
-    fun getTransaction(position: Int): Transaction? = this.data?.get(index = position)
+    fun getTransaction(position: Int): TransactionDto? = this.data?.get(index = position)
 
 
     class DetailChartViewHolder(
@@ -97,7 +97,7 @@ class DetailChartListAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
-            item: Transaction,
+            item: TransactionDto,
             totalAmount: Double,
             biggestAmount: Double
         ) = with(itemView) {
@@ -119,7 +119,7 @@ class DetailChartListAdapter(
         }
 
 
-        private fun loadImage(item: Transaction) {
+        private fun loadImage(item: TransactionDto) {
 
             binding.cardView.setCardBackgroundColor(
                 itemView.resources.getColor(
@@ -177,7 +177,7 @@ class DetailChartListAdapter(
     }
 
     interface Interaction {
-        fun onItemSelected(position: Int, item: Transaction)
+        fun onItemSelected(position: Int, item: TransactionDto)
     }
 
 

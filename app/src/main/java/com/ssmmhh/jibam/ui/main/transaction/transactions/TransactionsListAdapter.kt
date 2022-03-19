@@ -18,6 +18,7 @@ import com.ssmmhh.jibam.models.TransactionsRecyclerViewItem.Companion.HEADER_VIE
 import com.ssmmhh.jibam.models.TransactionsRecyclerViewItem.Companion.NO_MORE_RESULT_VIEW_TYPE
 import com.ssmmhh.jibam.models.TransactionsRecyclerViewItem.Companion.NO_RESULT_FOUND_VIEW_TYPE
 import com.ssmmhh.jibam.models.TransactionsRecyclerViewItem.Companion.DATABASE_IS_EMPTY_VIEW_TYPE
+import com.ssmmhh.jibam.persistence.dtos.TransactionDto
 import com.ssmmhh.jibam.util.*
 import java.util.*
 
@@ -214,7 +215,7 @@ class TransactionsListAdapter(
     override fun getItemCount(): Int = differ.currentList.size
 
 
-    fun getTransaction(position: Int): Transaction? {
+    fun getTransaction(position: Int): TransactionDto? {
         val item = differ.currentList[position]
         return if (item is TransactionsRecyclerViewItem.Transaction)
             item.toTransaction()
@@ -223,7 +224,7 @@ class TransactionsListAdapter(
     }
 
     fun insertRemovedTransactionAt(
-        transaction: Transaction,
+        transaction: TransactionDto,
         position: Int?,
         header: TransactionsRecyclerViewItem.Header?
     ) {
@@ -411,7 +412,7 @@ class TransactionsListAdapter(
 
     interface Interaction {
 
-        fun onClickedOnTransaction(position: Int, item: Transaction)
+        fun onClickedOnTransaction(position: Int, item: TransactionDto)
 
         fun restoreListPosition()
     }

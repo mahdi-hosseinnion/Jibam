@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.FragmentDetailChartBinding
-import com.ssmmhh.jibam.models.Transaction
+import com.ssmmhh.jibam.persistence.dtos.TransactionDto
 import com.ssmmhh.jibam.repository.buildResponse
 import com.ssmmhh.jibam.ui.main.transaction.chart.ChartViewModel.Companion.FORCE_TO_NULL
 import com.ssmmhh.jibam.ui.main.transaction.common.BaseFragment
@@ -130,7 +130,7 @@ class DetailChartFragment(
         }
     }
 
-    private fun swipeDeleteTransaction(transactionToDelete: Transaction?) {
+    private fun swipeDeleteTransaction(transactionToDelete: TransactionDto?) {
         if (transactionToDelete == null) {
             //show error to user
             return
@@ -164,7 +164,7 @@ class DetailChartFragment(
                 //TODO remove this
                 viewModel.setRecentlyDeletedTrans(
                     // an empty transaction with force to null memo to remove transaction in viewmodel
-                    Transaction(
+                    TransactionDto(
                         0,
                         0.0,
                         memo = FORCE_TO_NULL,
@@ -189,7 +189,7 @@ class DetailChartFragment(
     }
 
 
-    override fun onItemSelected(position: Int, item: Transaction) {
+    override fun onItemSelected(position: Int, item: TransactionDto) {
         navigateToAddTransactionFragment(item.id)
     }
 
