@@ -3,11 +3,21 @@ package com.ssmmhh.jibam.persistence.entities
 import android.content.Context
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.ssmmhh.jibam.util.getCategoryImageResourceIdFromDrawableByCategoryImage
 import com.ssmmhh.jibam.util.getResourcesStringValueByName
 
-@Entity(tableName = "categories")
+@Entity(
+    tableName = "categories",
+    foreignKeys = [
+        ForeignKey(
+            entity = CategoryImageEntity::class,
+            parentColumns = arrayOf(CategoryImageEntity.COLUMN_ID),
+            childColumns = arrayOf(CategoryEntity.COLUMN_CATEGORY_IMAGE_ID),
+            onDelete = ForeignKey.SET_NULL
+        )
+    ]
+)
 data class CategoryEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = COLUMN_ID)
@@ -20,8 +30,8 @@ data class CategoryEntity(
     val type: Int,
     @ColumnInfo(name = "category_Name")
     val name: String,
-    @ColumnInfo(name = "img_res")
-    val img_res: String,
+    @ColumnInfo(name = COLUMN_CATEGORY_IMAGE_ID)
+    val categoryImageId: Int,
     @ColumnInfo(name = "ordering")
     val ordering: Int
 ) {
@@ -32,9 +42,6 @@ data class CategoryEntity(
         defaultName: String = name
     ): String = getResourcesStringValueByName(context, this.name) ?: defaultName
 
-    fun getCategoryImageResourceId(
-        context: Context,
-    ): Int = getCategoryImageResourceIdFromDrawableByCategoryImage(context, this.img_res)
 
     val isExpensesCategory: Boolean
         get() = type == EXPENSES_TYPE_MARKER
@@ -46,5 +53,6 @@ data class CategoryEntity(
         const val EXPENSES_TYPE_MARKER = 1
         const val INCOME_TYPE_MARKER = 2
         const val COLUMN_ID = "cId"
+        const val COLUMN_CATEGORY_IMAGE_ID = "imageId"
     }
 }

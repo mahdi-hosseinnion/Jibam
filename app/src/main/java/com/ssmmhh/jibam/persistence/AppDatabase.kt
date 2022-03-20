@@ -15,7 +15,7 @@ import com.ssmmhh.jibam.persistence.entities.TransactionEntity
         TransactionEntity::class,
         CategoryImageEntity::class
     ],
-    version = 5,
+    version = 6,
     autoMigrations = [
         AutoMigration(from = 4, to = 5)]
     ,

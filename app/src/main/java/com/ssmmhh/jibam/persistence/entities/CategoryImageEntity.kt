@@ -14,7 +14,7 @@ import com.ssmmhh.jibam.util.getResourcesStringValueByName
 data class CategoryImageEntity(
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
+    @ColumnInfo(name = COLUMN_ID)
     val id: Int,
     @ColumnInfo(name = "image_res")
     val image_res: String,
@@ -30,4 +30,8 @@ data class CategoryImageEntity(
     fun getCategoryImageResourceId(
         context: Context,
     ): Int = getCategoryImageResourceIdFromDrawableByCategoryImage(context, image_res)
+
+    companion object {
+        const val COLUMN_ID = "id"
+    }
 }
