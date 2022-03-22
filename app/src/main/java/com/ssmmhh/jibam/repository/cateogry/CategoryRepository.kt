@@ -1,5 +1,6 @@
 package com.ssmmhh.jibam.repository.cateogry
 
+import com.ssmmhh.jibam.persistence.dtos.CategoryDto
 import com.ssmmhh.jibam.persistence.entities.CategoryEntity
 import com.ssmmhh.jibam.persistence.entities.CategoryImageEntity
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionStateEvent
@@ -16,7 +17,7 @@ import kotlinx.coroutines.flow.Flow
 interface CategoryRepository {
 
     fun getCategoryList(
-    ): Flow<List<CategoryEntity>>
+    ): Flow<List<CategoryDto>>
 
     fun getCategoryImages(
     ): Flow<List<CategoryImageEntity>>

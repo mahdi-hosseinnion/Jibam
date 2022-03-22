@@ -37,6 +37,7 @@ class AddCategoryListAdapter(
             HEADER_ITEM,
             "",
             "",
+            ""
         )
 
         const val DEFAULT_CATEGORY_IMAGE_POSITION = 1

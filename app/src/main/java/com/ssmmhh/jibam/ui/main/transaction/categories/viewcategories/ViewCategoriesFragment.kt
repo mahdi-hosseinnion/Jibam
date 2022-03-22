@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.persistence.entities.CategoryEntity
+import com.ssmmhh.jibam.models.Category
 import com.ssmmhh.jibam.ui.main.transaction.categories.addcategoires.AddCategoryFragment.Companion.EXPENSES
 import com.ssmmhh.jibam.ui.main.transaction.categories.addcategoires.AddCategoryFragment.Companion.INCOME
 import com.ssmmhh.jibam.ui.main.transaction.categories.viewcategories.state.ViewCategoriesStateEvent
@@ -45,7 +45,7 @@ class ViewCategoriesFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding =  FragmentViewCategoriesBinding.inflate(inflater, container, false)
+        _binding = FragmentViewCategoriesBinding.inflate(inflater, container, false)
         val view = binding.root
         return view
     }
@@ -86,18 +86,19 @@ class ViewCategoriesFragment(
     }
 
     private fun setupUi() {
-        binding.  toolbar.topAppBarNormal.title = getString(R.string.category_setting)
-        binding.  toolbar. topAppBarNormal.setNavigationOnClickListener {
+        binding.toolbar.topAppBarNormal.title = getString(R.string.category_setting)
+        binding.toolbar.topAppBarNormal.setNavigationOnClickListener {
             navigateBack()
         }
         //set titles
-        val tabLayout = TabLayoutMediator(binding.tabLayout, binding.viewPagerViewCategories) { tab, position ->
-            if (position == 0) {
-                tab.text = getString(R.string.expenses)
-            } else {
-                tab.text = getString(R.string.income)
-            }
-        }.attach()
+        val tabLayout =
+            TabLayoutMediator(binding.tabLayout, binding.viewPagerViewCategories) { tab, position ->
+                if (position == 0) {
+                    tab.text = getString(R.string.expenses)
+                } else {
+                    tab.text = getString(R.string.income)
+                }
+            }.attach()
     }
 
     override fun onResume() {
@@ -116,7 +117,7 @@ class ViewCategoriesFragment(
             requestManager = requestManager,
         )
 
-        binding.   viewPagerViewCategories.adapter = viewPagerAdapter
+        binding.viewPagerViewCategories.adapter = viewPagerAdapter
     }
 
     override fun handleLoading() {
@@ -167,7 +168,7 @@ class ViewCategoriesFragment(
     }
 
 
-    override fun onDeleteClicked(position: Int, categoryEntity: CategoryEntity) {
+    override fun onDeleteClicked(position: Int, categoryEntity: Category) {
         val callback = object : AreYouSureCallback {
             override fun proceed() {
                 deleteCategory(categoryEntity)
@@ -200,7 +201,7 @@ class ViewCategoriesFragment(
     }
 
 
-    fun deleteCategory(categoryEntity: CategoryEntity) {
+    fun deleteCategory(categoryEntity: Category) {
         viewModel.launchNewJob(
             ViewCategoriesStateEvent.DeleteCategory(
                 categoryEntity.id

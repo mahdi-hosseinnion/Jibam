@@ -175,8 +175,8 @@ interface RecordsDao {
             categories.cId as categoryId, 
             categories.category_Name as category_name, 
             categories.type as categoryType, 
-            category_images.image_res as category_image, 
-            category_images.image_background_color as category_image_color 
+            category_images.image_res as category_image_res, 
+            category_images.image_background_color as category_image_background_color 
             FROM records 
             LEFT JOIN categories ON records.cat_id = categories.cId 
             LEFT JOIN category_images ON categories.imageId = category_images.id 

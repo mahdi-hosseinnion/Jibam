@@ -10,7 +10,7 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.LayoutCategoryListItemBinding
-import com.ssmmhh.jibam.persistence.entities.CategoryEntity
+import com.ssmmhh.jibam.models.Category
 import com.ssmmhh.jibam.util.CategoriesImageBackgroundColors
 import com.ssmmhh.jibam.util.EspressoIdlingResources
 
@@ -24,13 +24,13 @@ class CategoryBottomSheetListAdapter(
     private val TAG: String = "CategoryBottomSheetListAdapter"
     private val BLOG_ITEM = 0
 
-    val DIFF_CALLBACK = object : DiffUtil.ItemCallback<CategoryEntity>() {
+    val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Category>() {
 
-        override fun areItemsTheSame(oldItem: CategoryEntity, newItem: CategoryEntity): Boolean {
+        override fun areItemsTheSame(oldItem: Category, newItem: Category): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: CategoryEntity, newItem: CategoryEntity): Boolean {
+        override fun areContentsTheSame(oldItem: Category, newItem: Category): Boolean {
             return oldItem == newItem
         }
 
@@ -108,7 +108,7 @@ class CategoryBottomSheetListAdapter(
 //        }
 //    }
     fun setSelectedCategory(categoryId: Int) {
-        var categoryEntity1: CategoryEntity? = null
+        var categoryEntity1: Category? = null
         for (category in differ.currentList) {
             if (category.id == categoryId) {
                 categoryEntity1 = category
@@ -120,7 +120,7 @@ class CategoryBottomSheetListAdapter(
     }
 
     fun submitList(
-        blogList: List<CategoryEntity>?,
+        blogList: List<Category>?,
     ) {
         EspressoIdlingResources.increment(TAG)
         //after diffUtil library do its calculation then this runnable will run
@@ -142,7 +142,7 @@ class CategoryBottomSheetListAdapter(
         private val interaction: Interaction?,
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: CategoryEntity, selectedItemId: Int?) = with(itemView) {
+        fun bind(item: Category, selectedItemId: Int?) = with(itemView) {
             itemView.setOnClickListener {
 
                 setSelectedBackground(item.id)
@@ -156,7 +156,7 @@ class CategoryBottomSheetListAdapter(
 
             binding.categoryName.text = item.getCategoryNameFromStringFile(context)
 
-            val categoryImageResourceId = item.getCategoryImageResourceId(context)
+            val categoryImageResourceId = item.image.getImageResourceId(context)
             requestManager
                 .load(categoryImageResourceId)
                 .centerInside()
@@ -215,6 +215,6 @@ class CategoryBottomSheetListAdapter(
 
     interface Interaction {
 
-        fun onItemSelected(position: Int, item: CategoryEntity)
+        fun onItemSelected(position: Int, item: Category)
     }
 }

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 6,
-    "identityHash": "d60a535e3b146c02cc10c06324fd3cb3",
+    "identityHash": "1e85a2e13d07d2d4a4f31f6dba189ef4",
     "entities": [
       {
         "tableName": "categories",
@@ -118,12 +118,18 @@
       },
       {
         "tableName": "category_images",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `image_res` TEXT NOT NULL, `group_name` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `group_name` TEXT NOT NULL, `image_res` TEXT NOT NULL, `image_background_color` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "group_name",
+            "columnName": "group_name",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -133,8 +139,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "group_name",
-            "columnName": "group_name",
+            "fieldPath": "image_background_color",
+            "columnName": "image_background_color",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -152,7 +158,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd60a535e3b146c02cc10c06324fd3cb3')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1e85a2e13d07d2d4a4f31f6dba189ef4')"
     ]
   }
 }

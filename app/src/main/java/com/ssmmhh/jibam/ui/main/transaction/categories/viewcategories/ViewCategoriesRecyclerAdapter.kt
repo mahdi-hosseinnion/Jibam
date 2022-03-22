@@ -8,7 +8,7 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.LayoutViewCategoriesListItemBinding
-import com.ssmmhh.jibam.persistence.entities.CategoryEntity
+import com.ssmmhh.jibam.models.Category
 import com.ssmmhh.jibam.util.CategoriesImageBackgroundColors
 import java.util.*
 import kotlin.collections.ArrayList
@@ -17,7 +17,7 @@ import kotlin.collections.indices
 import kotlin.collections.set
 
 class ViewCategoriesRecyclerAdapter(
-    private var listOfCategoryEntities: List<CategoryEntity>?,
+    private var listOfCategoryEntities: List<Category>?,
     private val interaction: CategoryInteraction,
     private val requestManager: RequestManager,
 ) : RecyclerView.Adapter<ViewCategoriesRecyclerAdapter.ViewPagerRecyclerViewHolder>() {
@@ -42,7 +42,7 @@ class ViewCategoriesRecyclerAdapter(
 
     override fun getItemCount(): Int = listOfCategoryEntities?.size ?: 0
 
-    fun getItemAtPosition(position: Int): CategoryEntity? = listOfCategoryEntities?.get(position)
+    fun getItemAtPosition(position: Int): Category? = listOfCategoryEntities?.get(position)
 
     fun onItemMoved(from: Int, to: Int) {
         listOfCategoryEntities?.let { list ->
@@ -70,7 +70,7 @@ class ViewCategoriesRecyclerAdapter(
         return result
     }
 
-    fun submitData(data: List<CategoryEntity>?) {
+    fun submitData(data: List<Category>?) {
         listOfCategoryEntities = data
         notifyDataSetChanged()
     }
@@ -81,7 +81,7 @@ class ViewCategoriesRecyclerAdapter(
         private val requestManager: RequestManager,
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(holder: RecyclerView.ViewHolder, item: CategoryEntity?) {
+        fun bind(holder: RecyclerView.ViewHolder, item: Category?) {
             if (item != null) {
                 //todo fix show promote
 //                Check that the view exists for the item
@@ -118,7 +118,8 @@ class ViewCategoriesRecyclerAdapter(
                         )
                     )
 
-                    val categoryImageResourceId = item.getCategoryImageResourceId(context)
+                    val categoryImageResourceId = item.image.getImageResourceId(context)
+
                     requestManager
                         .load(categoryImageResourceId)
                         .centerInside()
@@ -157,7 +158,7 @@ class ViewCategoriesRecyclerAdapter(
     }
 
     interface CategoryInteraction {
-        fun onDeleteClicked(position: Int, categoryEntity: CategoryEntity)
+        fun onDeleteClicked(position: Int, categoryEntity: Category)
 
         //called when ad view request a start of drag
         fun onStartDrag(viewHolder: RecyclerView.ViewHolder, itemType: Int)

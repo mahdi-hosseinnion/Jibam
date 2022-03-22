@@ -81,14 +81,7 @@ constructor(
                 }
             }
             newList.add(
-                ChartData(
-                    categoryId = item.categoryId,
-                    percentage = percentage.roundToOneDigit(),
-                    sumOfMoney = item.sumOfMoney,
-                    categoryName = item.categoryName,
-                    categoryType = item.categoryType,
-                    categoryImage = item.categoryImage
-                )
+                item.toChartData(percentage.roundToOneDigit())
             )
         }
         return newList

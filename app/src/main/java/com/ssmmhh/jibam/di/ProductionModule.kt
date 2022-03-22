@@ -25,8 +25,8 @@ object ProductionModule {
         return Room
             .databaseBuilder(app, AppDatabase::class.java, AppDatabase.DATABASE_NAME)
             .createFromAsset("databases/categories.db")
+            .fallbackToDestructiveMigrationFrom(6)
             .addMigrations(MIGRATION_4_5)
-            .fallbackToDestructiveMigrationFrom(6, 7)
             .build()
     }
 }

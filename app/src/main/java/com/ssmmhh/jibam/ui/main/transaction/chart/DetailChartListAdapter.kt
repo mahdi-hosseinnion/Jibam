@@ -37,6 +37,7 @@ class DetailChartListAdapter(
             0,
             "",
             "",
+            "",
             0
         )
 

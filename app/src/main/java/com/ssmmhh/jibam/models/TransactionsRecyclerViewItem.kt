@@ -2,7 +2,6 @@ package com.ssmmhh.jibam.models
 
 import android.content.Context
 import com.ssmmhh.jibam.persistence.dtos.TransactionDto
-import com.ssmmhh.jibam.util.getCategoryImageResourceIdFromDrawableByCategoryImage
 import com.ssmmhh.jibam.util.getResourcesStringValueByName
 
 sealed class TransactionsRecyclerViewItem(
@@ -58,8 +57,8 @@ fun TransactionsRecyclerViewItem.Transaction.toTransaction(): TransactionDto = T
     memo = this.memo,
     categoryId = this.categoryId,
     categoryName = this.categoryName,
-    categoryImageResourceName = this.categoryImage.imageResourceName,
-    categoryImageBackgroundColor = this.categoryImage.imageBackgroundColor,
+    categoryImageResourceName = this.categoryImage.resourceName,
+    categoryImageBackgroundColor = this.categoryImage.backgroundColor,
     date = this.date,
 )
 

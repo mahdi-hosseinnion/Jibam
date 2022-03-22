@@ -1,12 +1,9 @@
 package com.ssmmhh.jibam.persistence.dtos
 
-import android.content.Context
-import android.content.res.Resources
 import androidx.room.ColumnInfo
-import androidx.room.Ignore
+import com.ssmmhh.jibam.models.CategoryImage
+import com.ssmmhh.jibam.models.ChartData
 import com.ssmmhh.jibam.persistence.entities.CategoryEntity
-import com.ssmmhh.jibam.util.getCategoryImageResourceIdFromDrawableByCategoryImage
-import com.ssmmhh.jibam.util.getResourcesStringValueByName
 
 data class ChartDataDto(
     @ColumnInfo(name = "categoryId")
@@ -17,7 +14,7 @@ data class ChartDataDto(
     val categoryName: String,
     @ColumnInfo(name = "categoryType")
     val categoryType: Int,
-    @ColumnInfo(name = "category_image")
+    @ColumnInfo(name = "category_image_res")
     val categoryImageResourceName: String,
     @ColumnInfo(name = "category_image_background_color")
     val categoryImageBackgroundColor: String,
@@ -28,4 +25,18 @@ data class ChartDataDto(
 
     val isIncomeCategory: Boolean
         get() = categoryType == CategoryEntity.INCOME_TYPE_MARKER
+
+    fun toChartData(
+        percentage: Double
+    ): ChartData = ChartData(
+        categoryId = this.categoryId,
+        sumOfMoney = this.sumOfMoney,
+        categoryName = this.categoryName,
+        categoryType = this.categoryType,
+        categoryImage = CategoryImage(
+            resourceName = this.categoryImageResourceName,
+            backgroundColor = this.categoryImageBackgroundColor
+        ),
+        percentage = percentage,
+    )
 }

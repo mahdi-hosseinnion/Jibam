@@ -57,8 +57,8 @@ data class TransactionDto(
             categoryId = this.categoryId,
             categoryName = this.categoryName,
             categoryImage = CategoryImage(
-                imageResourceName = this.categoryImageResourceName,
-                imageBackgroundColor = this.categoryImageBackgroundColor,
+                resourceName = this.categoryImageResourceName,
+                backgroundColor = this.categoryImageBackgroundColor,
             ),
             date = this.date
         )

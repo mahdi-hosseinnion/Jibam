@@ -334,7 +334,7 @@ class TransactionsListAdapter(
                     CategoriesImageBackgroundColors.getCategoryColorById(item.categoryId)
                 )
             )
-            val categoryImageResourceId = item.getCategoryImageResourceId(itemView.context)
+            val categoryImageResourceId = item.categoryImage.getImageResourceId(itemView.context)
             requestManager
                 ?.load(categoryImageResourceId)
                 ?.centerInside()

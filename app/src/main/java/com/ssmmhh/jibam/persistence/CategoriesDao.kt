@@ -1,20 +1,45 @@
 package com.ssmmhh.jibam.persistence
 
 import androidx.room.*
+import com.ssmmhh.jibam.persistence.dtos.CategoryDto
 import com.ssmmhh.jibam.persistence.entities.CategoryEntity
 import com.ssmmhh.jibam.persistence.entities.CategoryImageEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CategoriesDao {
-    @Query("SELECT * FROM categories $CATEGORY_ORDER")
-    fun getCategories(): Flow<List<CategoryEntity>>
+    @Query(
+        """
+        SELECT *, 
+        category_images.image_res as imageResourceId, 
+        category_images.image_background_color as imageBackgroundColor 
+        FROM categories 
+        LEFT JOIN category_images ON categories.imageId = category_images.id 
+        $CATEGORY_ORDER"""
+    )
+    fun getCategories(): Flow<List<CategoryDto>>
 
-    @Query("SELECT * FROM categories $CATEGORY_ORDER")
-    suspend fun getAllOfCategories(): List<CategoryEntity>
+    @Query(
+        """
+        SELECT *, 
+        category_images.image_res as imageResourceId, 
+        category_images.image_background_color as imageBackgroundColor 
+        FROM categories 
+        LEFT JOIN category_images ON categories.imageId = category_images.id 
+        $CATEGORY_ORDER"""
+    )
+    suspend fun getAllOfCategories(): List<CategoryDto>
 
-    @Query("SELECT * FROM categories WHERE type = :type $CATEGORY_ORDER")
-    suspend  fun getAllOfCategoriesWithType(type: Int): List<CategoryEntity>
+    @Query(
+        """
+        SELECT *, 
+        category_images.image_res as imageResourceId, 
+        category_images.image_background_color as imageBackgroundColor 
+        FROM categories 
+        LEFT JOIN category_images ON categories.imageId = category_images.id 
+        WHERE type = :type $CATEGORY_ORDER"""
+    )
+    suspend fun getAllOfCategoriesWithType(type: Int): List<CategoryDto>
 
     @Query("SELECT * FROM category_images")
     fun getCategoriesImages(): Flow<List<CategoryImageEntity>>
@@ -37,8 +62,17 @@ interface CategoriesDao {
     @Query("SELECT MAX(ordering) FROM categories")
     suspend fun getMaxOfOrdering(): Int
 
-    @Query("SELECT * FROM categories WHERE cId = :id")
-    suspend fun getCategoryById(id: Int): CategoryEntity?
+    @Query(
+        """
+        SELECT *, 
+        category_images.image_res as imageResourceId, 
+        category_images.image_background_color as imageBackgroundColor 
+        FROM categories 
+        LEFT JOIN category_images ON categories.imageId = category_images.id 
+        WHERE cId = :id
+        """
+    )
+    suspend fun getCategoryById(id: Int): CategoryDto?
 
     @Query(
         """
@@ -51,7 +85,11 @@ interface CategoriesDao {
 
     @Query(
         """
-        SELECT * FROM categories 
+        SELECT *, 
+        category_images.image_res as imageResourceId, 
+        category_images.image_background_color as imageBackgroundColor 
+        FROM categories 
+        LEFT JOIN category_images ON categories.imageId = category_images.id 
         WHERE type = :type 
         AND 
         ordering BETWEEN :fromOrder AND :toOrder 
@@ -62,7 +100,7 @@ interface CategoriesDao {
         type: Int,
         fromOrder: Int,
         toOrder: Int
-    ): List<CategoryEntity>
+    ): List<CategoryDto>
 
     @Query("""UPDATE categories SET ordering = (ordering + 1) WHERE type = :type""")
     fun increaseAllOfOrdersByOne(type: Int)

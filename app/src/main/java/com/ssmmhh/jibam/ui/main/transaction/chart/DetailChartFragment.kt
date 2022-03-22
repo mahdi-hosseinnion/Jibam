@@ -171,6 +171,7 @@ class DetailChartFragment(
                         0,
                         "",
                         "",
+                        "",
                         0
                     )
                 )

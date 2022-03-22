@@ -14,8 +14,9 @@ import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.bumptech.glide.RequestManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.persistence.entities.CategoryEntity
+import com.ssmmhh.jibam.models.Category
 import com.ssmmhh.jibam.persistence.dtos.TransactionDto
+import com.ssmmhh.jibam.persistence.entities.CategoryEntity.Companion.EXPENSES_TYPE_MARKER
 import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.common.AddEditTransactionParentFragment
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionPresenterState
@@ -233,7 +234,7 @@ constructor(
         }
 
 
-    private fun setAllOfCategoriesFields(list: List<CategoryEntity>) {
+    private fun setAllOfCategoriesFields(list: List<Category>) {
         btmsheetViewPagerAdapter.submitData(list)
     }
 
@@ -241,7 +242,7 @@ constructor(
         //set category name and image to fab
         setCategoryFields(
             transaction.getCategoryNameFromStringFile(requireContext()),
-            transaction.categoryImage
+            transaction.categoryImageResourceName
         )
 
         //set memo
@@ -326,7 +327,7 @@ constructor(
     }
 
 
-    override fun onItemSelected(position: Int, item: CategoryEntity) {
+    override fun onItemSelected(position: Int, item: Category) {
         //on category changed
         viewModel.setTransactionCategory(item)
         viewModel.setPresenterState(NoneState)
@@ -407,7 +408,7 @@ constructor(
             return null
         }
 
-        if (type == CategoryEntity.EXPENSES_TYPE_MARKER) {
+        if (type == EXPENSES_TYPE_MARKER) {
             money = money.times(-1)
         }
 

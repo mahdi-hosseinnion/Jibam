@@ -5,6 +5,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.ssmmhh.jibam.models.Category
 import com.ssmmhh.jibam.util.getResourcesStringValueByName
 
 @Entity(
@@ -37,22 +38,11 @@ data class CategoryEntity(
 ) {
 
 
-    fun getCategoryNameFromStringFile(
-        context: Context,
-        defaultName: String = name
-    ): String = getResourcesStringValueByName(context, this.name) ?: defaultName
-
-
-    val isExpensesCategory: Boolean
-        get() = type == EXPENSES_TYPE_MARKER
-
-    val isIncomeCategory: Boolean
-        get() = type == INCOME_TYPE_MARKER
-
     companion object {
         const val EXPENSES_TYPE_MARKER = 1
         const val INCOME_TYPE_MARKER = 2
         const val COLUMN_ID = "cId"
         const val COLUMN_CATEGORY_IMAGE_ID = "imageId"
     }
+
 }
