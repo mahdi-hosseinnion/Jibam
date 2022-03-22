@@ -21,8 +21,11 @@ interface RecordsDao {
             SELECT records.*, 
             categories.category_Name as category_name, 
             categories.cId as cat_id, 
-            categories.img_res as category_image 
-            FROM records LEFT JOIN categories ON records.cat_id = categories.cId 
+            category_images.image_res as category_image, 
+            category_images.image_background_color as category_image_color 
+            FROM records 
+            LEFT JOIN categories ON records.cat_id = categories.cId 
+            LEFT JOIN category_images ON categories.imageId = category_images.id 
             WHERE rId = :id
         """
     )
@@ -46,31 +49,42 @@ interface RecordsDao {
         get records queries
      */
     @Query(
-        "SELECT records.*, " +
-                "categories.category_Name as category_name, " +
-                "categories.img_res as category_image " +
-                "FROM records LEFT JOIN categories ON records.cat_id = categories.cId " +
-                "WHERE " +
-                "( " +
-                "money LIKE '%' || :query || '%' " +
-                "OR memo LIKE '%' || :query || '%' " +
-                ") " + ORDER_BY_DATE
+        """
+                SELECT records.*, 
+                categories.category_Name as category_name, 
+                category_images.image_res as category_image, 
+                category_images.image_background_color as category_image_color 
+                FROM records 
+                LEFT JOIN categories ON records.cat_id = categories.cId 
+                LEFT JOIN category_images ON categories.imageId = category_images.id 
+                WHERE 
+                ( 
+                money LIKE '%' || :query || '%' 
+                OR memo LIKE '%' || :query || '%' 
+                ) 
+                $ORDER_BY_DATE
+                """
     )
     fun getAllRecords(query: String): Flow<List<TransactionDto>>
 
     //fromDate and toDate count in the result >=
     @Query(
-        "SELECT records.*, " +
-                "categories.category_Name as category_name, " +
-                "categories.img_res as category_image " +
-                "FROM records LEFT JOIN categories ON records.cat_id = categories.cId " +
-                "WHERE date BETWEEN :minDate AND :maxDate " +
-                "AND " +
-                "( " +
-                "money LIKE '%' || :query || '%' " +
-                "OR memo LIKE '%' || :query || '%' " +
-                ") " +
-                ORDER_BY_DATE
+        """
+                SELECT records.*, 
+                categories.category_Name as category_name, 
+                category_images.image_res as category_image, 
+                category_images.image_background_color as category_image_color 
+                FROM records 
+                LEFT JOIN categories ON records.cat_id = categories.cId 
+                LEFT JOIN category_images ON categories.imageId = category_images.id 
+                WHERE date BETWEEN :minDate AND :maxDate 
+                AND 
+                ( 
+                money LIKE '%' || :query || '%' 
+                OR memo LIKE '%' || :query || '%' 
+                ) 
+                $ORDER_BY_DATE
+                """
 
     )
     fun loadAllRecordsBetweenDates(
@@ -81,34 +95,44 @@ interface RecordsDao {
 
     //TODO CHANGE DATE > MIN DATE TO DATE >=MINDATE
     @Query(
-        "SELECT records.*, " +
-                "categories.category_Name as category_name, " +
-                "categories.img_res as category_image " +
-                "FROM records LEFT JOIN categories ON records.cat_id = categories.cId " +
-                "WHERE date > :minDate " +
-                "AND " +
-                "( " +
-                "money LIKE '%' || :query || '%' " +
-                "OR memo LIKE '%' || :query || '%' " +
-                ")" +
-                ORDER_BY_DATE
+        """
+                SELECT records.*, 
+                categories.category_Name as category_name, 
+                category_images.image_res as category_image, 
+                category_images.image_background_color as category_image_color 
+                FROM records 
+                LEFT JOIN categories ON records.cat_id = categories.cId 
+                LEFT JOIN category_images ON categories.imageId = category_images.id 
+                WHERE date > :minDate 
+                AND 
+                ( 
+                money LIKE '%' || :query || '%' 
+                OR memo LIKE '%' || :query || '%' 
+                ) 
+                $ORDER_BY_DATE
+                """
     )
     fun loadAllRecordsAfterThan(
         minDate: Int, query: String
     ): Flow<List<TransactionDto>>
 
     @Query(
-        "SELECT records.*, " +
-                "categories.category_Name as category_name, " +
-                "categories.img_res as category_image " +
-                "FROM records LEFT JOIN categories ON records.cat_id = categories.cId " +
-                "WHERE date < :maxDate " +
-                "AND " +
-                "( " +
-                "money LIKE '%' || :query || '%' " +
-                "OR memo LIKE '%' || :query || '%' " +
-                ")" +
-                ORDER_BY_DATE
+        """
+                SELECT records.*, 
+                categories.category_Name as category_name, 
+                category_images.image_res as category_image, 
+                category_images.image_background_color as category_image_color 
+                FROM records 
+                LEFT JOIN categories ON records.cat_id = categories.cId 
+                LEFT JOIN category_images ON categories.imageId = category_images.id 
+                WHERE date < :maxDate 
+                AND 
+                ( 
+                money LIKE '%' || :query || '%' 
+                OR memo LIKE '%' || :query || '%' 
+                )
+                $ORDER_BY_DATE
+                """
     )
     fun loadAllRecordsBeforeThan(
         maxDate: Int, query: String
@@ -151,8 +175,11 @@ interface RecordsDao {
             categories.cId as categoryId, 
             categories.category_Name as category_name, 
             categories.type as categoryType, 
-            categories.img_res as category_image 
-            FROM records LEFT JOIN categories ON records.cat_id=categories.cId 
+            category_images.image_res as category_image, 
+            category_images.image_background_color as category_image_color 
+            FROM records 
+            LEFT JOIN categories ON records.cat_id = categories.cId 
+            LEFT JOIN category_images ON categories.imageId = category_images.id 
             WHERE date BETWEEN :fromDate AND :toDate 
             GROUP BY cat_id 
             ORDER BY ABS(SUM(money)) DESC"""
@@ -165,9 +192,11 @@ interface RecordsDao {
     @Query(
         """SELECT records.*,  
             categories.category_Name as category_name, 
-            categories.type as categoryType, 
-            categories.img_res as category_image 
-            FROM records LEFT JOIN categories ON records.cat_id=categories.cId 
+            category_images.image_res as category_image, 
+            category_images.image_background_color as category_image_color 
+            FROM records 
+            LEFT JOIN categories ON records.cat_id = categories.cId 
+            LEFT JOIN category_images ON categories.imageId = category_images.id 
             WHERE cat_id = :categoryId 
             AND 
             date BETWEEN :fromDate AND :toDate 
@@ -183,6 +212,7 @@ interface RecordsDao {
         const val ORDER_BY_DATE = "ORDER BY date DESC"
     }
 }
+
 fun RecordsDao.getRecords(
     minDate: Int? = null,
     maxDate: Int? = null,

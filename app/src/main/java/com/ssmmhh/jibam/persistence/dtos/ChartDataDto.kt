@@ -18,18 +18,10 @@ data class ChartDataDto(
     @ColumnInfo(name = "categoryType")
     val categoryType: Int,
     @ColumnInfo(name = "category_image")
-    val categoryImage: String,
+    val categoryImageResourceName: String,
+    @ColumnInfo(name = "category_image_background_color")
+    val categoryImageBackgroundColor: String,
 ) {
-
-    fun getCategoryNameFromStringFile(
-        context: Context,
-        defaultName: String = this.categoryName
-    ): String =
-        getResourcesStringValueByName(context, this.categoryName) ?: defaultName
-
-    fun getCategoryImageResourceId(
-        context: Context,
-    ): Int = getCategoryImageResourceIdFromDrawableByCategoryImage(context, this.categoryImage)
 
     val isExpensesCategory: Boolean
         get() = categoryType == CategoryEntity.EXPENSES_TYPE_MARKER

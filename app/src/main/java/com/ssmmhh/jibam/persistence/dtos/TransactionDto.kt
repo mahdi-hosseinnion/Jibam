@@ -2,6 +2,7 @@ package com.ssmmhh.jibam.persistence.dtos
 
 import android.content.Context
 import androidx.room.ColumnInfo
+import com.ssmmhh.jibam.models.CategoryImage
 import com.ssmmhh.jibam.models.TransactionsRecyclerViewItem
 import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 import com.ssmmhh.jibam.util.getCategoryImageResourceIdFromDrawableByCategoryImage
@@ -19,7 +20,9 @@ data class TransactionDto(
     @ColumnInfo(name = "category_name")
     val categoryName: String,
     @ColumnInfo(name = "category_image")
-    val categoryImage: String,
+    val categoryImageResourceName: String,
+    @ColumnInfo(name = "category_image_color")
+    val categoryImageBackgroundColor: String,
     //int can handle the time till 1/19/2038, 6:44:07 AM in millisecond
     @ColumnInfo(name = "date")
     val date: Int,
@@ -33,7 +36,10 @@ data class TransactionDto(
 
     fun getCategoryImageResourceId(
         context: Context,
-    ): Int = getCategoryImageResourceIdFromDrawableByCategoryImage(context, this.categoryImage)
+    ): Int = getCategoryImageResourceIdFromDrawableByCategoryImage(
+        context,
+        this.categoryImageResourceName
+    )
 
     fun toTransactionEntity(): TransactionEntity = TransactionEntity(
         id = this.id,
@@ -50,7 +56,10 @@ data class TransactionDto(
             memo = this.memo,
             categoryId = this.categoryId,
             categoryName = this.categoryName,
-            categoryImage = this.categoryImage,
+            categoryImage = CategoryImage(
+                imageResourceName = this.categoryImageResourceName,
+                imageBackgroundColor = this.categoryImageBackgroundColor,
+            ),
             date = this.date
         )
 }

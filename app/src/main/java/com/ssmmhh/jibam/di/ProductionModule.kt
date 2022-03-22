@@ -26,6 +26,7 @@ object ProductionModule {
             .databaseBuilder(app, AppDatabase::class.java, AppDatabase.DATABASE_NAME)
             .createFromAsset("databases/categories.db")
             .addMigrations(MIGRATION_4_5)
+            .fallbackToDestructiveMigrationFrom(6, 7)
             .build()
     }
 }

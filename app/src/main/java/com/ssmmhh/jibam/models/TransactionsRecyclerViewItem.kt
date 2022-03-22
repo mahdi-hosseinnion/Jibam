@@ -15,7 +15,7 @@ sealed class TransactionsRecyclerViewItem(
         val memo: String?,
         val categoryId: Int,
         val categoryName: String,
-        val categoryImage: String,
+        val categoryImage: CategoryImage,
         val date: Int,
     ) : TransactionsRecyclerViewItem(TRANSACTION_VIEW_TYPE)
 
@@ -51,9 +51,6 @@ fun TransactionsRecyclerViewItem.Transaction.getCategoryNameFromStringFile(
     defaultName: String = categoryName
 ): String = getResourcesStringValueByName(context, this.categoryName) ?: defaultName
 
-fun TransactionsRecyclerViewItem.Transaction.getCategoryImageResourceId(
-    context: Context,
-): Int = getCategoryImageResourceIdFromDrawableByCategoryImage(context, this.categoryImage)
 
 fun TransactionsRecyclerViewItem.Transaction.toTransaction(): TransactionDto = TransactionDto(
     id = this.id,
@@ -61,7 +58,8 @@ fun TransactionsRecyclerViewItem.Transaction.toTransaction(): TransactionDto = T
     memo = this.memo,
     categoryId = this.categoryId,
     categoryName = this.categoryName,
-    categoryImage = this.categoryImage,
+    categoryImageResourceName = this.categoryImage.imageResourceName,
+    categoryImageBackgroundColor = this.categoryImage.imageBackgroundColor,
     date = this.date,
 )
 
