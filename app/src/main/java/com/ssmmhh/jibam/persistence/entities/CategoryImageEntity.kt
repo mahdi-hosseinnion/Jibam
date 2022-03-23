@@ -8,17 +8,17 @@ import com.ssmmhh.jibam.util.getCategoryImageResourceIdFromDrawableByCategoryIma
 import com.ssmmhh.jibam.util.getResourcesStringValueByName
 
 
-@Entity(tableName = "category_images")
+@Entity(tableName = "categoryImages")
 data class CategoryImageEntity(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = COLUMN_ID)
     val id: Int,
-    @ColumnInfo(name = "group_name")
+    @ColumnInfo(name = "groupName")
     val group_name: String,
-    @ColumnInfo(name = "image_res")
+    @ColumnInfo(name = "imageResName")
     val image_res: String,
-    @ColumnInfo(name = "image_background_color")
+    @ColumnInfo(name = "imageBackgroundColor")
     val image_background_color: String
 ) {
 

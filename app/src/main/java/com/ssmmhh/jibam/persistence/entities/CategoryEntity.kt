@@ -29,7 +29,7 @@ data class CategoryEntity(
      */
     @ColumnInfo(name = "type")
     val type: Int,
-    @ColumnInfo(name = "category_Name")
+    @ColumnInfo(name = "name")
     val name: String,
     @ColumnInfo(name = COLUMN_CATEGORY_IMAGE_ID)
     val categoryImageId: Int,
@@ -41,7 +41,7 @@ data class CategoryEntity(
     companion object {
         const val EXPENSES_TYPE_MARKER = 1
         const val INCOME_TYPE_MARKER = 2
-        const val COLUMN_ID = "cId"
+        const val COLUMN_ID = "id"
         const val COLUMN_CATEGORY_IMAGE_ID = "imageId"
     }
 
