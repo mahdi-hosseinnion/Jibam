@@ -32,6 +32,8 @@ object TestModule {
         return Room
             .databaseBuilder(app, AppDatabase::class.java, TEST_DATABASE_NAME)
             .createFromAsset("databases/categories.db")
+            .fallbackToDestructiveMigration()
+            .addMigrations(AppDatabase.MIGRATION_4_5)
             .build()
     }
 }

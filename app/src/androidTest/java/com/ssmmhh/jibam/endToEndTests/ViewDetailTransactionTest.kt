@@ -52,8 +52,6 @@ class ViewDetailTransactionTest {
 
     private val appContext = InstrumentationRegistry.getInstrumentation().targetContext
 
-    private val packageName = appContext.packageName
-
     //a global variable to store mainActivity scenario instance to run before each test and close
     //after each test
     private var mainActivityScenario: ActivityScenario<MainActivity>? = null
@@ -88,7 +86,7 @@ class ViewDetailTransactionTest {
     @Test
     fun viewDetailOfTransaction_transactionWithOutMemo(): Unit = runBlocking {
         //insert a transaction into the database
-        val transactionCategory = categoriesDao.getCategoryById(9)!!
+        val transactionCategory = categoriesDao.getCategoryById(9)!!.toCategory()
         val transactionMoney = 876.5
         val tempTransaction = TransactionEntity(
             id = 0,
@@ -151,7 +149,7 @@ class ViewDetailTransactionTest {
     @Test
     fun viewDetailOfTransaction_transactionWithMemo(): Unit = runBlocking {
         //insert a transaction into the database
-        val transactionCategory = categoriesDao.getCategoryById(5)!!
+        val transactionCategory = categoriesDao.getCategoryById(5)!!.toCategory()
         val transactionMemo = "Hello memo"
         val transactionMoney = 876.5
         val tempTransaction = TransactionEntity(
@@ -212,7 +210,7 @@ class ViewDetailTransactionTest {
     fun viewDetailOfTransaction_ThenRemoveIt(): Unit = runBlocking {
         //Arrange
         //insert a transaction into the database
-        val transactionCategory = categoriesDao.getCategoryById(5)!!
+        val transactionCategory = categoriesDao.getCategoryById(5)!!.toCategory()
         val transactionId = 1596
         val tempTransaction = TransactionEntity(
             id = transactionId,
