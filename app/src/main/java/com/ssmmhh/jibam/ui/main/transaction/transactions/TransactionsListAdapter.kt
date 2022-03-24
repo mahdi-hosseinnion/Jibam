@@ -20,6 +20,7 @@ import com.ssmmhh.jibam.models.TransactionsRecyclerViewItem.Companion.NO_RESULT_
 import com.ssmmhh.jibam.models.TransactionsRecyclerViewItem.Companion.DATABASE_IS_EMPTY_VIEW_TYPE
 import com.ssmmhh.jibam.persistence.dtos.TransactionDto
 import com.ssmmhh.jibam.util.*
+import java.math.BigDecimal
 import java.util.*
 
 
@@ -319,7 +320,7 @@ class TransactionsListAdapter(
             } else {
                 mainText.text = item.memo
             }
-            if (item.money >= 0.0) {
+            if (item.money >= BigDecimal.ZERO) {
                 //income
                 price.text = separate3By3(item.money, currentLocale)
                 price.setTextColor(itemView.resources.getColor(R.color.blue_500))

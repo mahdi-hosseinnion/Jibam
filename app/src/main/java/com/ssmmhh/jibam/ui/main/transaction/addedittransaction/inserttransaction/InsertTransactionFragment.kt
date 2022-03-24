@@ -20,6 +20,7 @@ import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.inserttransaction
 import com.ssmmhh.jibam.util.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import java.math.BigDecimal
 import java.util.*
 
 @FlowPreview
@@ -339,7 +340,7 @@ constructor(
         val calculatedMoney = textCalculator.calculateResult(moneyEditTextStr)
             .replace(",".toRegex(), "")
 
-        if (calculatedMoney.isBlank() || calculatedMoney.toDouble() <= 0) {
+        if (calculatedMoney.isBlank() || calculatedMoney.toBigDecimal() <= BigDecimal.ZERO) {
             showSnackBar(R.string.pls_insert_valid_amount_of_money)
             viewModel.setPresenterState(EnteringAmountOfMoneyState)
             return null
@@ -348,9 +349,9 @@ constructor(
         val calender = viewModel.getCombineCalender()
 
         //add marker to money if its expenses
-        var money: Double = calculatedMoney.toDouble()
+        var money: BigDecimal = calculatedMoney.toBigDecimal()
         if (category.isExpensesCategory) {
-            money = money.times(-1)
+            money = money.negate()
         }
 
         return TransactionEntity(

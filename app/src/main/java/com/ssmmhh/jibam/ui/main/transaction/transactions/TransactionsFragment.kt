@@ -46,6 +46,7 @@ import kotlinx.coroutines.FlowPreview
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt
 import uk.co.samuelwall.materialtaptargetprompt.extras.backgrounds.RectanglePromptBackground
 import uk.co.samuelwall.materialtaptargetprompt.extras.focals.RectanglePromptFocal
+import java.math.BigDecimal
 import java.util.*
 import kotlin.random.Random
 
@@ -342,12 +343,12 @@ class TransactionsFragment(
 
     private fun insertRandomTransaction() {
         val categoryId = Random.nextInt(1, 42)
-        var money = Random.nextInt(0, 1000).toDouble()
+        var money = Random.nextInt(0, 1000).toBigDecimal()
         //it just hardcoded TODO CHANGE IT LATER
         //we mark money with "-" base of category id
         val dateRange = 2_592_000_000L//30 day to millisecond
         if (categoryId <= 30) {
-            money *= -1
+            money = money.negate()
         }
         if (Random.nextBoolean()) {
             viewModel.launchNewJob(
@@ -422,13 +423,13 @@ class TransactionsFragment(
             if (sm.inNotNull()) {
                 checkForSummeryMoneyPromote()
             }
-            sm.balance = (sm.income.plus(sm.expenses))
             binding.txtBalance.text = separate3By3AndRoundIt(sm.balance, currentLocale)
-            if (sm.expenses != 0.0) {
+
+            if (sm.expenses != BigDecimal.ZERO) {
                 binding.txtExpenses.text =
-                    separate3By3AndRoundIt(sm.expenses.times(-1), currentLocale)
+                    separate3By3AndRoundIt(sm.expenses.negate(), currentLocale)
             } else {
-                binding.txtExpenses.text = separate3By3AndRoundIt(0.0, currentLocale)
+                binding.txtExpenses.text = separate3By3AndRoundIt(BigDecimal.ZERO, currentLocale)
             }
             binding.txtIncome.text = separate3By3AndRoundIt(sm.income, currentLocale)
         }

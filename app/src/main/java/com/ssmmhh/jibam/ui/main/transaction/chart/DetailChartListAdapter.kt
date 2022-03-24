@@ -10,6 +10,7 @@ import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.LayoutChartListItemBinding
 import com.ssmmhh.jibam.persistence.dtos.TransactionDto
 import com.ssmmhh.jibam.util.*
+import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.abs
@@ -23,8 +24,8 @@ class DetailChartListAdapter(
 
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var totalAmount: Double = data?.sumOf { abs(it.money) } ?: 0.0
-    private var biggestAmount: Double = data?.maxOf { abs(it.money) } ?: 0.0
+    private var totalAmount: BigDecimal = data?.sumOf { (it.money).abs() } ?: BigDecimal.ZERO
+    private var biggestAmount: BigDecimal = data?.maxOf { (it.money).abs() } ?: BigDecimal.ZERO
 
     companion object {
         private const val DATE_PATTERN = "MM/dd/yyyy"
@@ -32,7 +33,7 @@ class DetailChartListAdapter(
         private const val EMPTY_LIST_MARKER = -2
         private val EMPTY_LIST_MARKER_TRANSACTION = TransactionDto(
             id = EMPTY_LIST_MARKER,
-            0.0,
+            BigDecimal.ZERO,
             "",
             0,
             "",
@@ -80,8 +81,8 @@ class DetailChartListAdapter(
             this.data = arrayListOf(EMPTY_LIST_MARKER_TRANSACTION)
         } else {
             this.data = data
-            totalAmount = data.sumOf { abs(it.money) }
-            biggestAmount = data.maxOf { abs(it.money) }
+            totalAmount = data.sumOf { (it.money).abs() }
+            biggestAmount = data.maxOf { (it.money).abs() }
         }
         notifyDataSetChanged()
     }
@@ -99,8 +100,8 @@ class DetailChartListAdapter(
 
         fun bind(
             item: TransactionDto,
-            totalAmount: Double,
-            biggestAmount: Double
+            totalAmount: BigDecimal,
+            biggestAmount: BigDecimal
         ) = with(itemView) {
             loadImage(item)
             showPercentage(item.money, totalAmount, biggestAmount)
@@ -110,7 +111,7 @@ class DetailChartListAdapter(
             } else {
                 binding.categoryName.text = item.memo
             }
-            binding.sumOfMoney.text = abs(item.money).toString().localizeNumber(resources)
+            binding.sumOfMoney.text = (item.money).abs().toString().localizeNumber(resources)
             binding.txtDate.visibility = View.VISIBLE
             binding.txtDate.text = dateWithPattern(item.date)
 
@@ -139,9 +140,9 @@ class DetailChartListAdapter(
         }
 
         private fun showPercentage(
-            money: Double,
-            totalAmount: Double,
-            biggestAmount: Double
+            money: BigDecimal,
+            totalAmount: BigDecimal,
+            biggestAmount: BigDecimal
         ) {
             val percentage = calculatePercentageAndRoundResult(
                 money,

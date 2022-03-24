@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.ssmmhh.jibam.models.Month
+import com.ssmmhh.jibam.models.SummaryMoney
 import com.ssmmhh.jibam.models.TransactionsRecyclerViewItem
 import com.ssmmhh.jibam.repository.tranasction.TransactionRepository
 import com.ssmmhh.jibam.ui.main.transaction.common.BaseViewModel
@@ -20,6 +21,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
 import java.util.*
 import javax.inject.Inject
 
@@ -100,10 +102,9 @@ constructor(
         transactionRepository.getSumOfExpenses(minDate, maxDate)
             .handleLoadingAndException(GET_SUM_OF_EXPENSES)
     ) { _income, _expenses ->
-        val income: Double = _income ?: 0.0
-        val expenses: Double = _expenses ?: 0.0
+        val income: BigDecimal = _income ?: BigDecimal.ZERO
+        val expenses: BigDecimal = _expenses ?: BigDecimal.ZERO
         return@combine SummaryMoney(
-            balance = income.plus(expenses),//expenses is negative
             expenses = expenses,
             income = income
         )

@@ -14,7 +14,7 @@ import com.ssmmhh.jibam.persistence.entities.TransactionEntity
         TransactionEntity::class,
         CategoryImageEntity::class
     ],
-    version = 9,
+    version = 10,
 )
 abstract class AppDatabase : RoomDatabase() {
 

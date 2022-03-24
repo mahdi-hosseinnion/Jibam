@@ -1,15 +1,19 @@
 package com.ssmmhh.jibam.persistence.dtos
 
 import androidx.room.ColumnInfo
+import androidx.room.TypeConverters
 import com.ssmmhh.jibam.models.Image
 import com.ssmmhh.jibam.models.ChartData
+import com.ssmmhh.jibam.persistence.BigDecimalTypeConverter
 import com.ssmmhh.jibam.persistence.entities.CategoryEntity
+import java.math.BigDecimal
 
+@TypeConverters(BigDecimalTypeConverter::class)
 data class ChartDataDto(
     @ColumnInfo(name = "categoryId")
     val categoryId: Int,
     @ColumnInfo(name = "sumOfMoney")
-    val sumOfMoney: Double,
+    val sumOfMoney: BigDecimal,
     @ColumnInfo(name = "category_name")
     val categoryName: String,
     @ColumnInfo(name = "categoryType")
@@ -27,7 +31,7 @@ data class ChartDataDto(
         get() = categoryType == CategoryEntity.INCOME_TYPE_MARKER
 
     fun toChartData(
-        percentage: Double
+        percentage: Float
     ): ChartData = ChartData(
         categoryId = this.categoryId,
         sumOfMoney = this.sumOfMoney,

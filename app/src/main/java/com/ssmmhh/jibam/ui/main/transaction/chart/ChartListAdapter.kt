@@ -27,7 +27,7 @@ class ChartListAdapter(
     private val colors: List<Int>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var biggestPercentage: Double = 100.0
+    private var biggestPercentage: Float = 100.0f
 
     val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ChartData>() {
 
@@ -83,14 +83,14 @@ class ChartListAdapter(
         val colors: List<Int>
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: ChartData, biggestPercentage: Double) = with(itemView) {
+        fun bind(item: ChartData, biggestPercentage: Float) = with(itemView) {
             itemView.setOnClickListener {
                 interaction?.onItemSelected(adapterPosition, item)
             }
             binding.txtDate.visibility = View.GONE
 
             binding.categoryName.text = item.getCategoryNameFromStringFile(context)
-            binding.sumOfMoney.text = separate3By3(item.sumOfMoney.absoluteValue, currentLocale)
+            binding.sumOfMoney.text = separate3By3(item.sumOfMoney.abs(), currentLocale)
 
             binding.txtPercentage.text =
                 ("${item.percentage.toString()}%").localizeNumber(_resources)

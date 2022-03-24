@@ -429,7 +429,7 @@ constructor(
                         if (finalNumberText == binding.edtMoney.text.toString()
                                 .removeOperationSigns()
                         ) ""
-                        else finalNumberText.convertFarsiDigitsToEnglishDigits().toDoubleOrNull()
+                        else finalNumberText.convertFarsiDigitsToEnglishDigits().toBigDecimalOrNull()
                             ?.let { separate3By3(it, currentLocale) }
                             ?: finalNumberText
                 }

@@ -24,6 +24,7 @@ import com.ssmmhh.jibam.ui.main.transaction.transactions.state.TransactionsViewS
 import com.ssmmhh.jibam.util.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import java.math.BigDecimal
 import java.util.*
 import javax.inject.Inject
 
@@ -44,10 +45,10 @@ constructor(
         query = query
     )
 
-    override fun getSumOfIncome(minDate: Int?, maxDate: Int?): Flow<Double?> =
+    override fun getSumOfIncome(minDate: Int?, maxDate: Int?): Flow<BigDecimal?> =
         transactionsDao.getSumOfIncome(minDate, maxDate)
 
-    override fun getSumOfExpenses(minDate: Int?, maxDate: Int?): Flow<Double?> =
+    override fun getSumOfExpenses(minDate: Int?, maxDate: Int?): Flow<BigDecimal?> =
         transactionsDao.getSumOfExpenses(minDate, maxDate)
 
     override fun getPieChartData(minDate: Int, maxDate: Int): Flow<List<ChartData>> = flow {
@@ -69,19 +70,19 @@ constructor(
         val newList = ArrayList<ChartData>()
 
         for (item in values) {
-            val percentage: Double = when (item.categoryType) {
+            val percentage: BigDecimal = when (item.categoryType) {
                 CategoryEntity.EXPENSES_TYPE_MARKER -> {
-                    (item.sumOfMoney.div(sumOfAllExpenses)).times(100)
+                    (item.sumOfMoney.div(sumOfAllExpenses)).times(BigDecimal("100"))
                 }
                 CategoryEntity.INCOME_TYPE_MARKER -> {
-                    (item.sumOfMoney.div(sumOfAllIncome)).times(100)
+                    (item.sumOfMoney.div(sumOfAllIncome)).times(BigDecimal("100"))
                 }
                 else -> {
-                    0.0
+                    BigDecimal.ZERO
                 }
             }
             newList.add(
-                item.toChartData(percentage.roundToOneDigit())
+                item.toChartData(percentage.toFloat().roundToOneDigit())
             )
         }
         return newList

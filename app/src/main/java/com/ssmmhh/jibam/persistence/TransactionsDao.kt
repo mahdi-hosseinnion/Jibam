@@ -5,6 +5,7 @@ import com.ssmmhh.jibam.persistence.dtos.ChartDataDto
 import com.ssmmhh.jibam.persistence.dtos.TransactionDto
 import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 import kotlinx.coroutines.flow.Flow
+import java.math.BigDecimal
 
 @Dao
 interface TransactionsDao {
@@ -144,31 +145,31 @@ interface TransactionsDao {
 
     //return all
     @Query("SELECT SUM(money) FROM transactions WHERE money < 0 ")
-    fun returnTheSumOfAllExpenses(): Flow<Double?>
+    fun returnTheSumOfAllExpenses(): Flow<BigDecimal?>
 
     @Query("SELECT SUM(money) FROM transactions WHERE money > 0 ")
-    fun returnTheSumOfAllIncome(): Flow<Double?>
+    fun returnTheSumOfAllIncome(): Flow<BigDecimal?>
 
     //between dates
     @Query("SELECT SUM(money) FROM transactions WHERE (date BETWEEN :minDate AND :maxDate) AND(money < 0) ")
-    fun returnTheSumOfExpensesBetweenDates(minDate: Int, maxDate: Int): Flow<Double>
+    fun returnTheSumOfExpensesBetweenDates(minDate: Int, maxDate: Int): Flow<BigDecimal>
 
     @Query("SELECT SUM(money) FROM transactions WHERE (date BETWEEN :minDate AND :maxDate) AND(money > 0) ")
-    fun returnTheSumOfIncomeBetweenDates(minDate: Int, maxDate: Int): Flow<Double>
+    fun returnTheSumOfIncomeBetweenDates(minDate: Int, maxDate: Int): Flow<BigDecimal>
 
     //after than
     @Query("SELECT SUM(money) FROM transactions WHERE (date > :minDate) AND (money < 0) ")
-    fun returnTheSumOfExpensesAfterThan(minDate: Int): Flow<Double>
+    fun returnTheSumOfExpensesAfterThan(minDate: Int): Flow<BigDecimal>
 
     @Query("SELECT SUM(money) FROM transactions WHERE (date > :minDate) AND (money > 0) ")
-    fun returnTheSumOfIncomeAfterThan(minDate: Int): Flow<Double>
+    fun returnTheSumOfIncomeAfterThan(minDate: Int): Flow<BigDecimal>
 
     //before than
     @Query("SELECT SUM(money) FROM transactions WHERE (date < :maxDate) AND (money < 0) ")
-    fun returnTheSumOfExpensesBeforeThan(maxDate: Int): Flow<Double>
+    fun returnTheSumOfExpensesBeforeThan(maxDate: Int): Flow<BigDecimal>
 
     @Query("SELECT SUM(money) FROM transactions WHERE (date < :maxDate) AND (money > 0) ")
-    fun returnTheSumOfIncomeBeforeThan(maxDate: Int): Flow<Double>
+    fun returnTheSumOfIncomeBeforeThan(maxDate: Int): Flow<BigDecimal>
 
     @Query(
         """SELECT SUM(money) as sumOfMoney,
@@ -233,7 +234,7 @@ fun TransactionsDao.getRecords(
 fun TransactionsDao.getSumOfIncome(
     minDate: Int? = null,
     maxDate: Int? = null
-): Flow<Double?> {
+): Flow<BigDecimal?> {
     if (minDate != null && maxDate != null) {
         return returnTheSumOfIncomeBetweenDates(minDate, maxDate)
     }
@@ -249,7 +250,7 @@ fun TransactionsDao.getSumOfIncome(
 fun TransactionsDao.getSumOfExpenses(
     minDate: Int? = null,
     maxDate: Int? = null
-): Flow<Double?> {
+): Flow<BigDecimal?> {
     if (minDate != null && maxDate != null) {
         return returnTheSumOfExpensesBetweenDates(minDate, maxDate)
     }

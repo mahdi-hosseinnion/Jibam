@@ -17,6 +17,7 @@ import com.ssmmhh.jibam.persistence.entities.CategoryEntity.Companion.EXPENSES_T
 import com.ssmmhh.jibam.persistence.entities.CategoryEntity.Companion.INCOME_TYPE_MARKER
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import java.math.BigDecimal
 import java.util.*
 import javax.inject.Inject
 
@@ -67,7 +68,7 @@ constructor(
         val transactionCategoryType: Int? =
             newViewState.transactionCategoryType ?: outdated.transactionCategoryType
             ?: defaultTransaction?.let {
-                if (it.money > 0) {
+                if (it.money > BigDecimal.ZERO) {
                     INCOME_TYPE_MARKER
                 } else {
                     EXPENSES_TYPE_MARKER
@@ -75,7 +76,7 @@ constructor(
             }
         //money base value should be default transaction money
         val moneyStr =
-            newViewState.moneyStr ?: outdated.moneyStr ?: convertTransactionMoneyToDoubleMoney(
+            newViewState.moneyStr ?: outdated.moneyStr ?: convertTransactionMoneyToBigDecimalMoney(
                 defaultTransaction?.money
             )
 
@@ -95,14 +96,14 @@ constructor(
         )
     }
 
-    private fun convertTransactionMoneyToDoubleMoney(value: Double?): String? {
+    private fun convertTransactionMoneyToBigDecimalMoney(value: BigDecimal?): String? {
         if (value == null) {
             return null
         }
-        val transactionMoney = if (value > 0)
+        val transactionMoney = if (value > BigDecimal.ZERO)
             value.toString()
-        else if (value < 0)
-            (value.times(-1)).toString()
+        else if (value < BigDecimal.ZERO)
+            (value.times(BigDecimal("-1"))).toPlainString()
         else "0"
         return convertDoubleToString(transactionMoney)
     }
@@ -244,7 +245,7 @@ constructor(
             )
         )
         //we show user the inserted money in their language digits not in english so we need to convert it here
-        submitButtonState.onMoneyChange((money.convertLocaleNumberToEnglish(resources)).toDoubleOrNull())
+        submitButtonState.onMoneyChange((money.convertLocaleNumberToEnglish(resources)).toBigDecimalOrNull())
     }
 
     fun updateTransaction(entity: TransactionEntity) {

@@ -22,8 +22,8 @@ sealed class TransactionsRecyclerViewItem(
 
     data class Header(
         val date: String,
-        val expensesSum: Double?,
-        val incomeSum: Double?
+        val expensesSum: BigDecimal?,
+        val incomeSum: BigDecimal?
     ) : TransactionsRecyclerViewItem(HEADER_VIEW_TYPE)
 
 

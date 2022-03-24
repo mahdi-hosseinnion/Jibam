@@ -2,13 +2,15 @@ package com.ssmmhh.jibam.persistence.dtos
 
 import android.content.Context
 import androidx.room.ColumnInfo
+import androidx.room.TypeConverters
 import com.ssmmhh.jibam.models.Image
 import com.ssmmhh.jibam.models.TransactionsRecyclerViewItem
+import com.ssmmhh.jibam.persistence.BigDecimalTypeConverter
 import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 import com.ssmmhh.jibam.util.getCategoryImageResourceIdFromDrawableByCategoryImage
 import com.ssmmhh.jibam.util.getResourcesStringValueByName
 import java.math.BigDecimal
-
+@TypeConverters(BigDecimalTypeConverter::class)
 data class TransactionDto(
     @ColumnInfo(name = "id")
     val id: Int,

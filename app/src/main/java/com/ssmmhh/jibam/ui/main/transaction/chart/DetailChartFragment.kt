@@ -22,6 +22,7 @@ import com.ssmmhh.jibam.ui.main.transaction.common.BaseFragment
 import com.ssmmhh.jibam.util.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import java.math.BigDecimal
 import java.util.*
 
 @ExperimentalCoroutinesApi
@@ -166,7 +167,7 @@ class DetailChartFragment(
                     // an empty transaction with force to null memo to remove transaction in viewmodel
                     TransactionDto(
                         0,
-                        0.0,
+                        BigDecimal.ZERO,
                         memo = FORCE_TO_NULL,
                         0,
                         "",

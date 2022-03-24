@@ -12,6 +12,7 @@ import com.ssmmhh.jibam.ui.main.transaction.transactions.state.TransactionsState
 import com.ssmmhh.jibam.ui.main.transaction.transactions.state.TransactionsViewState
 import com.ssmmhh.jibam.util.DataState
 import kotlinx.coroutines.flow.Flow
+import java.math.BigDecimal
 
 interface TransactionRepository {
 
@@ -24,13 +25,13 @@ interface TransactionRepository {
     fun getSumOfIncome(
         minDate: Int? = null,
         maxDate: Int? = null
-    ): Flow<Double?>
+    ): Flow<BigDecimal?>
 
 
     fun getSumOfExpenses(
         minDate: Int? = null,
         maxDate: Int? = null
-    ): Flow<Double?>
+    ): Flow<BigDecimal?>
 
     fun getPieChartData(
         minDate: Int,
