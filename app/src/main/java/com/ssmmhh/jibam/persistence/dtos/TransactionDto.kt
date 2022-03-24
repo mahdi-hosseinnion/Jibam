@@ -7,12 +7,13 @@ import com.ssmmhh.jibam.models.TransactionsRecyclerViewItem
 import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 import com.ssmmhh.jibam.util.getCategoryImageResourceIdFromDrawableByCategoryImage
 import com.ssmmhh.jibam.util.getResourcesStringValueByName
+import java.math.BigDecimal
 
 data class TransactionDto(
     @ColumnInfo(name = "id")
     val id: Int,
     @ColumnInfo(name = "money")
-    val money: Double,
+    val money: BigDecimal,
     @ColumnInfo(name = "memo")
     val memo: String?,
     @ColumnInfo(name = "categoryId")
