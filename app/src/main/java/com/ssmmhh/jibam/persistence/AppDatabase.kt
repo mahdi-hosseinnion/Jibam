@@ -1,6 +1,5 @@
 package com.ssmmhh.jibam.persistence
 
-import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
@@ -15,13 +14,13 @@ import com.ssmmhh.jibam.persistence.entities.TransactionEntity
         TransactionEntity::class,
         CategoryImageEntity::class
     ],
-    version = 8,
+    version = 9,
 )
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun getCategoriesDao(): CategoriesDao
 
-    abstract fun getRecordsDao(): RecordsDao
+    abstract fun getRecordsDao(): TransactionsDao
 
     companion object {
         val DATABASE_NAME: String = "app_db"

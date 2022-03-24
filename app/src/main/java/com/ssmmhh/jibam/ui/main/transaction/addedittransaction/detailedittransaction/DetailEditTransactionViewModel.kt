@@ -164,7 +164,7 @@ constructor(
             )
         )
 
-        val newDate = (updated.timeInMillis.div(1_000)).toInt()
+        val newDate = (updated.timeInMillis.div(1_000))
 
         val outDatedTransaction = getTransaction() ?: getDefaultTransaction()
         setViewState(
@@ -186,7 +186,7 @@ constructor(
                 combineCalender = updated
             )
         )
-        val newDate = (updated.timeInMillis.div(1_000)).toInt()
+        val newDate = (updated.timeInMillis.div(1_000))
         val outDatedTransaction = getTransaction() ?: getDefaultTransaction()
         setViewState(
             DetailEditTransactionViewState(

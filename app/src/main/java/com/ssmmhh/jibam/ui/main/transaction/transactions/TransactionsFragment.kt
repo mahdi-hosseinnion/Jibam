@@ -357,9 +357,9 @@ class TransactionsFragment(
                         money = money,
                         memo = null,
                         cat_id = categoryId,
-                        date = Random.nextInt(
-                            startOfMonth,
-                            endOfMonth
+                        date = Random.nextLong(
+                            startOfMonth.toLong(),
+                            endOfMonth.toLong()
                         )
                     )
                 )
@@ -372,10 +372,9 @@ class TransactionsFragment(
                         money = money,
                         memo = "memo ${Random.nextInt(451252)}",
                         cat_id = categoryId,
-                        date = Random.nextInt(
-                            ((System.currentTimeMillis()).minus(dateRange)).div(1_000)
-                                .toInt(),
-                            ((System.currentTimeMillis())).div(1_000).toInt()
+                        date = Random.nextLong(
+                            ((System.currentTimeMillis()).minus(dateRange)).div(1_000),
+                            ((System.currentTimeMillis())).div(1_000)
                         )
                     )
                 )

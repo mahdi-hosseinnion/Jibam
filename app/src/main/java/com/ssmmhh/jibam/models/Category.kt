@@ -1,7 +1,6 @@
 package com.ssmmhh.jibam.models
 
 import android.content.Context
-import androidx.room.ColumnInfo
 import com.ssmmhh.jibam.persistence.entities.CategoryEntity
 import com.ssmmhh.jibam.util.getResourcesStringValueByName
 
@@ -10,7 +9,7 @@ data class Category(
     val type: Int,
     val name: String,
     val ordering: Int,
-    val image: CategoryImage
+    val image: Image
 ){
     fun getCategoryNameFromStringFile(
         context: Context,

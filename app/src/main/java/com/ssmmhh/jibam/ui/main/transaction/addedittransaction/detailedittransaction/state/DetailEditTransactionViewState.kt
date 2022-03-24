@@ -88,7 +88,7 @@ class SubmitButtonState() {
 
     }
 
-    fun onDateChange(newDate: Int) {
+    fun onDateChange(newDate: Long) {
         _doesDateChange.value = defaultTransaction?.date != newDate
 
     }

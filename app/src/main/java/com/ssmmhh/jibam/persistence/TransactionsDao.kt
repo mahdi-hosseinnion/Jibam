@@ -7,26 +7,26 @@ import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface RecordsDao {
+interface TransactionsDao {
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrReplace(transactionEntity: TransactionEntity): Long
 
-    @Query("SELECT * FROM records WHERE rId = :id")
+    @Query("SELECT * FROM transactions WHERE id = :id")
     suspend fun getRecordById(id: Int): TransactionEntity
 
     @Query(
         """
-            SELECT records.*, 
-            categories.category_Name as category_name, 
-            categories.cId as cat_id, 
-            category_images.image_res as category_image, 
-            category_images.image_background_color as category_image_color 
-            FROM records 
-            LEFT JOIN categories ON records.cat_id = categories.cId 
-            LEFT JOIN category_images ON categories.imageId = category_images.id 
-            WHERE rId = :id
+            SELECT transactions.*, 
+            categories.name as category_name, 
+            categories.id as categoryId, 
+            categoryImages.resName as category_image, 
+            categoryImages.backgroundColor as category_image_color 
+            FROM transactions 
+            LEFT JOIN categories ON transactions.categoryId = categories.id 
+            LEFT JOIN categoryImages ON categories.imageId = categoryImages.id 
+            WHERE transactions.id = :id
         """
     )
     suspend fun getTransactionById(id: Int): TransactionDto?
@@ -42,21 +42,21 @@ interface RecordsDao {
     @Delete
     suspend fun deleteRecord(vararg transactionEntity: TransactionEntity): Int
 
-    @Query("DELETE FROM records WHERE rId = :id")
+    @Query("DELETE FROM transactions WHERE id = :id")
     suspend fun deleteRecord(id: Int): Int
 
     /*
-        get records queries
+        get transactions queries
      */
     @Query(
         """
-                SELECT records.*, 
-                categories.category_Name as category_name, 
-                category_images.image_res as category_image, 
-                category_images.image_background_color as category_image_color 
-                FROM records 
-                LEFT JOIN categories ON records.cat_id = categories.cId 
-                LEFT JOIN category_images ON categories.imageId = category_images.id 
+                SELECT transactions.*, 
+                categories.name as category_name, 
+                categoryImages.resName as category_image, 
+                categoryImages.backgroundColor as category_image_color 
+                FROM transactions 
+                LEFT JOIN categories ON transactions.categoryId = categories.id 
+                LEFT JOIN categoryImages ON categories.imageId = categoryImages.id 
                 WHERE 
                 ( 
                 money LIKE '%' || :query || '%' 
@@ -70,13 +70,13 @@ interface RecordsDao {
     //fromDate and toDate count in the result >=
     @Query(
         """
-                SELECT records.*, 
-                categories.category_Name as category_name, 
-                category_images.image_res as category_image, 
-                category_images.image_background_color as category_image_color 
-                FROM records 
-                LEFT JOIN categories ON records.cat_id = categories.cId 
-                LEFT JOIN category_images ON categories.imageId = category_images.id 
+                SELECT transactions.*, 
+                categories.name as category_name, 
+                categoryImages.resName as category_image, 
+                categoryImages.backgroundColor as category_image_color 
+                FROM transactions 
+                LEFT JOIN categories ON transactions.categoryId = categories.id 
+                LEFT JOIN categoryImages ON categories.imageId = categoryImages.id 
                 WHERE date BETWEEN :minDate AND :maxDate 
                 AND 
                 ( 
@@ -96,13 +96,13 @@ interface RecordsDao {
     //TODO CHANGE DATE > MIN DATE TO DATE >=MINDATE
     @Query(
         """
-                SELECT records.*, 
-                categories.category_Name as category_name, 
-                category_images.image_res as category_image, 
-                category_images.image_background_color as category_image_color 
-                FROM records 
-                LEFT JOIN categories ON records.cat_id = categories.cId 
-                LEFT JOIN category_images ON categories.imageId = category_images.id 
+                SELECT transactions.*, 
+                categories.name as category_name, 
+                categoryImages.resName as category_image, 
+                categoryImages.backgroundColor as category_image_color 
+                FROM transactions 
+                LEFT JOIN categories ON transactions.categoryId = categories.id 
+                LEFT JOIN categoryImages ON categories.imageId = categoryImages.id 
                 WHERE date > :minDate 
                 AND 
                 ( 
@@ -118,13 +118,13 @@ interface RecordsDao {
 
     @Query(
         """
-                SELECT records.*, 
-                categories.category_Name as category_name, 
-                category_images.image_res as category_image, 
-                category_images.image_background_color as category_image_color 
-                FROM records 
-                LEFT JOIN categories ON records.cat_id = categories.cId 
-                LEFT JOIN category_images ON categories.imageId = category_images.id 
+                SELECT transactions.*, 
+                categories.name as category_name, 
+                categoryImages.resName as category_image, 
+                categoryImages.backgroundColor as category_image_color 
+                FROM transactions 
+                LEFT JOIN categories ON transactions.categoryId = categories.id 
+                LEFT JOIN categoryImages ON categories.imageId = categoryImages.id 
                 WHERE date < :maxDate 
                 AND 
                 ( 
@@ -143,45 +143,45 @@ interface RecordsDao {
      */
 
     //return all
-    @Query("SELECT SUM(money) FROM records WHERE money < 0 ")
+    @Query("SELECT SUM(money) FROM transactions WHERE money < 0 ")
     fun returnTheSumOfAllExpenses(): Flow<Double?>
 
-    @Query("SELECT SUM(money) FROM records WHERE money > 0 ")
+    @Query("SELECT SUM(money) FROM transactions WHERE money > 0 ")
     fun returnTheSumOfAllIncome(): Flow<Double?>
 
     //between dates
-    @Query("SELECT SUM(money) FROM records WHERE (date BETWEEN :minDate AND :maxDate) AND(money < 0) ")
+    @Query("SELECT SUM(money) FROM transactions WHERE (date BETWEEN :minDate AND :maxDate) AND(money < 0) ")
     fun returnTheSumOfExpensesBetweenDates(minDate: Int, maxDate: Int): Flow<Double>
 
-    @Query("SELECT SUM(money) FROM records WHERE (date BETWEEN :minDate AND :maxDate) AND(money > 0) ")
+    @Query("SELECT SUM(money) FROM transactions WHERE (date BETWEEN :minDate AND :maxDate) AND(money > 0) ")
     fun returnTheSumOfIncomeBetweenDates(minDate: Int, maxDate: Int): Flow<Double>
 
     //after than
-    @Query("SELECT SUM(money) FROM records WHERE (date > :minDate) AND (money < 0) ")
+    @Query("SELECT SUM(money) FROM transactions WHERE (date > :minDate) AND (money < 0) ")
     fun returnTheSumOfExpensesAfterThan(minDate: Int): Flow<Double>
 
-    @Query("SELECT SUM(money) FROM records WHERE (date > :minDate) AND (money > 0) ")
+    @Query("SELECT SUM(money) FROM transactions WHERE (date > :minDate) AND (money > 0) ")
     fun returnTheSumOfIncomeAfterThan(minDate: Int): Flow<Double>
 
     //before than
-    @Query("SELECT SUM(money) FROM records WHERE (date < :maxDate) AND (money < 0) ")
+    @Query("SELECT SUM(money) FROM transactions WHERE (date < :maxDate) AND (money < 0) ")
     fun returnTheSumOfExpensesBeforeThan(maxDate: Int): Flow<Double>
 
-    @Query("SELECT SUM(money) FROM records WHERE (date < :maxDate) AND (money > 0) ")
+    @Query("SELECT SUM(money) FROM transactions WHERE (date < :maxDate) AND (money > 0) ")
     fun returnTheSumOfIncomeBeforeThan(maxDate: Int): Flow<Double>
 
     @Query(
         """SELECT SUM(money) as sumOfMoney,
-            categories.cId as categoryId, 
-            categories.category_Name as category_name, 
+            categories.id as categoryId, 
+            categories.name as category_name, 
             categories.type as categoryType, 
-            category_images.image_res as category_image_res, 
-            category_images.image_background_color as category_image_background_color 
-            FROM records 
-            LEFT JOIN categories ON records.cat_id = categories.cId 
-            LEFT JOIN category_images ON categories.imageId = category_images.id 
+            categoryImages.resName as category_image_res, 
+            categoryImages.backgroundColor as category_image_background_color 
+            FROM transactions 
+            LEFT JOIN categories ON transactions.categoryId = categories.id 
+            LEFT JOIN categoryImages ON categories.imageId = categoryImages.id 
             WHERE date BETWEEN :fromDate AND :toDate 
-            GROUP BY cat_id 
+            GROUP BY categoryId 
             ORDER BY ABS(SUM(money)) DESC"""
     )
     suspend fun sumOfMoneyGroupByCategory(
@@ -190,14 +190,14 @@ interface RecordsDao {
     ): List<ChartDataDto>
 
     @Query(
-        """SELECT records.*,  
-            categories.category_Name as category_name, 
-            category_images.image_res as category_image, 
-            category_images.image_background_color as category_image_color 
-            FROM records 
-            LEFT JOIN categories ON records.cat_id = categories.cId 
-            LEFT JOIN category_images ON categories.imageId = category_images.id 
-            WHERE cat_id = :categoryId 
+        """SELECT transactions.*,  
+            categories.name as category_name, 
+            categoryImages.resName as category_image, 
+            categoryImages.backgroundColor as category_image_color 
+            FROM transactions 
+            LEFT JOIN categories ON transactions.categoryId = categories.id 
+            LEFT JOIN categoryImages ON categories.imageId = categoryImages.id 
+            WHERE categoryId = :categoryId 
             AND 
             date BETWEEN :fromDate AND :toDate 
             ORDER BY ABS(money) DESC"""
@@ -213,7 +213,7 @@ interface RecordsDao {
     }
 }
 
-fun RecordsDao.getRecords(
+fun TransactionsDao.getRecords(
     minDate: Int? = null,
     maxDate: Int? = null,
     query: String = ""
@@ -230,7 +230,7 @@ fun RecordsDao.getRecords(
     return getAllRecords(query)
 }
 
-fun RecordsDao.getSumOfIncome(
+fun TransactionsDao.getSumOfIncome(
     minDate: Int? = null,
     maxDate: Int? = null
 ): Flow<Double?> {
@@ -246,7 +246,7 @@ fun RecordsDao.getSumOfIncome(
     return returnTheSumOfAllIncome()
 }
 
-fun RecordsDao.getSumOfExpenses(
+fun TransactionsDao.getSumOfExpenses(
     minDate: Int? = null,
     maxDate: Int? = null
 ): Flow<Double?> {

@@ -207,16 +207,16 @@ class AddCategoryListAdapter(
     ) {
 
         val finalList = ArrayList<CategoryImageEntity>()
-        categoryImageEntityList?.sortedBy { it.group_name }?.let {
+        categoryImageEntityList?.sortedBy { it.groupName }?.let {
             var tempName = ""
             //add category with maker for showing
             for (item in it) {
-                if (item.group_name == tempName) {
+                if (item.groupName == tempName) {
                     finalList.add(item)
                 } else {
                     //add header
-                    tempName = item.group_name
-                    finalList.add(HEADER_MARKER.copy(group_name = tempName))
+                    tempName = item.groupName
+                    finalList.add(HEADER_MARKER.copy(groupName = tempName))
                     finalList.add(item)
                 }
             }

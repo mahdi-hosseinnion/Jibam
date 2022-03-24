@@ -417,7 +417,7 @@ constructor(
             money = money,
             memo = binding.edtMemo.text.toString(),
             cat_id = transaction.categoryId,
-            date = (calender.timeInMillis).div(1_000).toInt()
+            date = (calender.timeInMillis).div(1_000)
         )
     }
 

@@ -10,22 +10,22 @@ import kotlinx.coroutines.flow.Flow
 interface CategoriesDao {
     @Query(
         """
-        SELECT *, 
-        category_images.image_res as imageResourceId, 
-        category_images.image_background_color as imageBackgroundColor 
+        SELECT categories.*, 
+        categoryImages.resName as imageResourceId, 
+        categoryImages.backgroundColor as imageBackgroundColor 
         FROM categories 
-        LEFT JOIN category_images ON categories.imageId = category_images.id 
+        LEFT JOIN categoryImages ON categories.imageId = categoryImages.id 
         $CATEGORY_ORDER"""
     )
     fun getCategories(): Flow<List<CategoryDto>>
 
     @Query(
         """
-        SELECT *, 
-        category_images.image_res as imageResourceId, 
-        category_images.image_background_color as imageBackgroundColor 
+        SELECT categories.*, 
+        categoryImages.resName as imageResourceId, 
+        categoryImages.backgroundColor as imageBackgroundColor 
         FROM categories 
-        LEFT JOIN category_images ON categories.imageId = category_images.id 
+        LEFT JOIN categoryImages ON categories.imageId = categoryImages.id 
         $CATEGORY_ORDER"""
     )
     suspend fun getAllOfCategories(): List<CategoryDto>
@@ -33,15 +33,15 @@ interface CategoriesDao {
     @Query(
         """
         SELECT *, 
-        category_images.image_res as imageResourceId, 
-        category_images.image_background_color as imageBackgroundColor 
+        categoryImages.resName as imageResourceId, 
+        categoryImages.backgroundColor as imageBackgroundColor 
         FROM categories 
-        LEFT JOIN category_images ON categories.imageId = category_images.id 
+        LEFT JOIN categoryImages ON categories.imageId = categoryImages.id 
         WHERE type = :type $CATEGORY_ORDER"""
     )
     suspend fun getAllOfCategoriesWithType(type: Int): List<CategoryDto>
 
-    @Query("SELECT * FROM category_images")
+    @Query("SELECT * FROM categoryImages")
     fun getCategoriesImages(): Flow<List<CategoryImageEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -53,7 +53,7 @@ interface CategoriesDao {
     @Delete
     suspend fun deleteCategory(categoryEntity: CategoryEntity): Int
 
-    @Query("DELETE FROM categories WHERE cId = :categoryId")
+    @Query("DELETE FROM categories WHERE id = :categoryId")
     suspend fun deleteCategory(categoryId: Int): Int
 
     @Query("SELECT MIN(ordering) FROM categories")
@@ -64,12 +64,12 @@ interface CategoriesDao {
 
     @Query(
         """
-        SELECT *, 
-        category_images.image_res as imageResourceId, 
-        category_images.image_background_color as imageBackgroundColor 
+        SELECT categories.*, 
+        categoryImages.resName as imageResourceId, 
+        categoryImages.backgroundColor as imageBackgroundColor 
         FROM categories 
-        LEFT JOIN category_images ON categories.imageId = category_images.id 
-        WHERE cId = :id
+        LEFT JOIN categoryImages ON categories.imageId = categoryImages.id 
+        WHERE categories.id = :id
         """
     )
     suspend fun getCategoryById(id: Int): CategoryDto?
@@ -78,7 +78,7 @@ interface CategoriesDao {
         """
         UPDATE categories SET 
         ordering = :newOrder 
-        WHERE cId = :categoryId
+        WHERE id = :categoryId
         """
     )
     suspend fun updateOrder(categoryId: Int, newOrder: Int): Int
@@ -86,10 +86,10 @@ interface CategoriesDao {
     @Query(
         """
         SELECT *, 
-        category_images.image_res as imageResourceId, 
-        category_images.image_background_color as imageBackgroundColor 
+        categoryImages.resName as imageResourceId, 
+        categoryImages.backgroundColor as imageBackgroundColor 
         FROM categories 
-        LEFT JOIN category_images ON categories.imageId = category_images.id 
+        LEFT JOIN categoryImages ON categories.imageId = categoryImages.id 
         WHERE type = :type 
         AND 
         ordering BETWEEN :fromOrder AND :toOrder 

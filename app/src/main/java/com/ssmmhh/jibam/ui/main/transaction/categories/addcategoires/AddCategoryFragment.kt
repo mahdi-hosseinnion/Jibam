@@ -218,7 +218,7 @@ class AddCategoryFragment(
 
     private fun setCategoryImageToImageView(categoryImageEntity: CategoryImageEntity) {
         val categoryImageUrl = this.resources.getIdentifier(
-            "ic_cat_${categoryImageEntity.image_res}",
+            "ic_cat_${categoryImageEntity.imageResName}",
             "drawable",
             this@AddCategoryFragment.requireActivity().packageName
         )

@@ -1,7 +1,7 @@
 package com.ssmmhh.jibam.persistence.dtos
 
 import androidx.room.ColumnInfo
-import com.ssmmhh.jibam.models.CategoryImage
+import com.ssmmhh.jibam.models.Image
 import com.ssmmhh.jibam.models.ChartData
 import com.ssmmhh.jibam.persistence.entities.CategoryEntity
 
@@ -33,7 +33,7 @@ data class ChartDataDto(
         sumOfMoney = this.sumOfMoney,
         categoryName = this.categoryName,
         categoryType = this.categoryType,
-        categoryImage = CategoryImage(
+        categoryImage = Image(
             resourceName = this.categoryImageResourceName,
             backgroundColor = this.categoryImageBackgroundColor
         ),

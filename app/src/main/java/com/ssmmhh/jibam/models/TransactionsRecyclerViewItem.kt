@@ -14,8 +14,8 @@ sealed class TransactionsRecyclerViewItem(
         val memo: String?,
         val categoryId: Int,
         val categoryName: String,
-        val categoryImage: CategoryImage,
-        val date: Int,
+        val image: Image,
+        val date: Long,
     ) : TransactionsRecyclerViewItem(TRANSACTION_VIEW_TYPE)
 
 
@@ -57,8 +57,8 @@ fun TransactionsRecyclerViewItem.Transaction.toTransaction(): TransactionDto = T
     memo = this.memo,
     categoryId = this.categoryId,
     categoryName = this.categoryName,
-    categoryImageResourceName = this.categoryImage.resourceName,
-    categoryImageBackgroundColor = this.categoryImage.backgroundColor,
+    categoryImageResourceName = this.image.resourceName,
+    categoryImageBackgroundColor = this.image.backgroundColor,
     date = this.date,
 )
 

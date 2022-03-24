@@ -15,7 +15,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 import com.ssmmhh.jibam.persistence.CategoriesDao
-import com.ssmmhh.jibam.persistence.RecordsDao
+import com.ssmmhh.jibam.persistence.TransactionsDao
 import com.ssmmhh.jibam.ui.main.MainActivity
 import com.ssmmhh.jibam.util.DateUtils
 import com.ssmmhh.jibam.util.EspressoIdlingResources
@@ -48,7 +48,7 @@ class ViewDetailTransactionTest {
     lateinit var sharedPrefEditor: SharedPreferences.Editor
 
     @Inject
-    lateinit var recordsDao: RecordsDao
+    lateinit var transactionsDao: TransactionsDao
 
     private val appContext = InstrumentationRegistry.getInstrumentation().targetContext
 
@@ -96,7 +96,7 @@ class ViewDetailTransactionTest {
             date = DateUtils.getCurrentTime()
 
         )
-        recordsDao.insertOrReplace(tempTransaction)
+        transactionsDao.insertOrReplace(tempTransaction)
         //click on item with transactionMemo in recyclerView
         onView(
             withText(
@@ -160,7 +160,7 @@ class ViewDetailTransactionTest {
             date = DateUtils.getCurrentTime()
 
         )
-        recordsDao.insertOrReplace(tempTransaction)
+        transactionsDao.insertOrReplace(tempTransaction)
         //click on item with transactionMemo in recyclerView
         onView(
             withText(transactionMemo)
@@ -220,9 +220,9 @@ class ViewDetailTransactionTest {
             date = DateUtils.getCurrentTime()
 
         )
-        recordsDao.insertOrReplace(tempTransaction)
+        transactionsDao.insertOrReplace(tempTransaction)
         //check if transaction is actully inserted into database
-        assert(recordsDao.getTransactionById(transactionId) != null)
+        assert(transactionsDao.getTransactionById(transactionId) != null)
         //click on item with transactionMemo in recyclerView
         onView(
             withText(
@@ -247,10 +247,10 @@ class ViewDetailTransactionTest {
         //confirm that backed to transaction fragment
         onView(withId(R.id.transaction_toolbar)).check(matches(isDisplayed()))
         //confirm that transaction removed from cache
-        assert(recordsDao.getTransactionById(transactionId) == null)
+        assert(transactionsDao.getTransactionById(transactionId) == null)
         Log.d(
             "TESTING",
-            "viewDetailOfTransaction_ThenRemoveIt: ${recordsDao.getTransactionById(transactionId)}"
+            "viewDetailOfTransaction_ThenRemoveIt: ${transactionsDao.getTransactionById(transactionId)}"
         )
     }
     //TODO add tests to test edit transaction functionality

@@ -15,21 +15,21 @@ data class CategoryImageEntity(
     @ColumnInfo(name = COLUMN_ID)
     val id: Int,
     @ColumnInfo(name = "groupName")
-    val group_name: String,
-    @ColumnInfo(name = "imageResName")
-    val image_res: String,
-    @ColumnInfo(name = "imageBackgroundColor")
+    val groupName: String,
+    @ColumnInfo(name = "resName")
+    val imageResName: String,
+    @ColumnInfo(name = "backgroundColor")
     val image_background_color: String
 ) {
 
     fun getCategoryGroupNameFromStringFile(
         context: Context,
-        defaultName: String = group_name
-    ): String = getResourcesStringValueByName(context, this.group_name) ?: defaultName
+        defaultName: String = groupName
+    ): String = getResourcesStringValueByName(context, this.groupName) ?: defaultName
 
     fun getCategoryImageResourceId(
         context: Context,
-    ): Int = getCategoryImageResourceIdFromDrawableByCategoryImage(context, image_res)
+    ): Int = getCategoryImageResourceIdFromDrawableByCategoryImage(context, imageResName)
 
     companion object {
         const val COLUMN_ID = "id"

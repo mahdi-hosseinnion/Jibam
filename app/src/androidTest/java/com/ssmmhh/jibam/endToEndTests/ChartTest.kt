@@ -13,7 +13,7 @@ import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.platform.app.InstrumentationRegistry
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.persistence.CategoriesDao
-import com.ssmmhh.jibam.persistence.RecordsDao
+import com.ssmmhh.jibam.persistence.TransactionsDao
 import com.ssmmhh.jibam.ui.main.MainActivity
 import com.ssmmhh.jibam.ui.main.transaction.chart.ChartListAdapter
 import com.ssmmhh.jibam.ui.main.transaction.chart.DetailChartListAdapter
@@ -57,7 +57,7 @@ class ChartTest {
     lateinit var categoriesDao: CategoriesDao
 
     @Inject
-    lateinit var recordsDao: RecordsDao
+    lateinit var transactionsDao: TransactionsDao
 
     init {
         //inject this class using dagger
@@ -159,7 +159,7 @@ class ChartTest {
             packageName = packageName
         )
         for (item in transactionsToInsert) {
-            recordsDao.insertOrReplace(item)
+            transactionsDao.insertOrReplace(item)
         }
 
         //Act
@@ -274,7 +274,7 @@ class ChartTest {
             packageName = packageName
         )
         for (item in transactionsToInsert) {
-            recordsDao.insertOrReplace(item)
+            transactionsDao.insertOrReplace(item)
         }
 
         //Act

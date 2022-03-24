@@ -49,7 +49,7 @@ constructor(
             type = getCurrentViewStateOrNew().categoryType
                 ?: return R.string.unable_to_recognize_category_type,
 
-            categoryImageId = getCurrentViewStateOrNew().categoryImage?.id
+            imageId = getCurrentViewStateOrNew().categoryImage?.id
                 ?: return R.string.pls_select_image_for_category
         )
         launchNewJob(

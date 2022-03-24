@@ -11,7 +11,7 @@ data class ChartData(
     val sumOfMoney: Double,
     val categoryName: String,
     val categoryType: Int,
-    val categoryImage: CategoryImage,
+    val categoryImage: Image,
     val percentage: Double
 ) {
     fun getCategoryNameFromStringFile(

@@ -32,7 +32,7 @@ data class CategoryEntity(
     @ColumnInfo(name = "name")
     val name: String,
     @ColumnInfo(name = COLUMN_CATEGORY_IMAGE_ID)
-    val categoryImageId: Int,
+    val imageId: Int,
     @ColumnInfo(name = "ordering")
     val ordering: Int
 ) {
