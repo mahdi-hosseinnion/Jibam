@@ -9,11 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import com.bumptech.glide.RequestManager
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.persistence.entities.CategoryEntity
+import com.ssmmhh.jibam.models.Category
 
 class CategoryBottomSheetViewPagerAdapter(
     private val context: Context,
-    private val categoryEntityList: List<CategoryEntity>?,
+    private val categoryEntityList: List<Category>?,
     private var isLeftToRight: Boolean,
     interaction: CategoryBottomSheetListAdapter.Interaction? = null,
     requestManager: RequestManager,
@@ -94,7 +94,7 @@ class CategoryBottomSheetViewPagerAdapter(
             if (position == 0) income else expenses
     }
 
-    fun submitData(categoryEntityList: List<CategoryEntity>?) {
+    fun submitData(categoryEntityList: List<Category>?) {
 
         expensesRecyclerViewAdapter.submitList(categoryEntityList?.filter { it.isExpensesCategory })
         incomeRecyclerViewAdapter.submitList(categoryEntityList?.filter { it.isIncomeCategory })

@@ -2,27 +2,29 @@ package com.ssmmhh.jibam.persistence.dtos
 
 import android.content.Context
 import androidx.room.ColumnInfo
+import com.ssmmhh.jibam.models.Image
 import com.ssmmhh.jibam.models.TransactionsRecyclerViewItem
 import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 import com.ssmmhh.jibam.util.getCategoryImageResourceIdFromDrawableByCategoryImage
 import com.ssmmhh.jibam.util.getResourcesStringValueByName
 
 data class TransactionDto(
-    @ColumnInfo(name = "rId")
+    @ColumnInfo(name = "id")
     val id: Int,
     @ColumnInfo(name = "money")
     val money: Double,
     @ColumnInfo(name = "memo")
     val memo: String?,
-    @ColumnInfo(name = "cat_id")
+    @ColumnInfo(name = "categoryId")
     val categoryId: Int,
     @ColumnInfo(name = "category_name")
     val categoryName: String,
     @ColumnInfo(name = "category_image")
-    val categoryImage: String,
-    //int can handle the time till 1/19/2038, 6:44:07 AM in millisecond
+    val categoryImageResourceName: String,
+    @ColumnInfo(name = "category_image_color")
+    val categoryImageBackgroundColor: String,
     @ColumnInfo(name = "date")
-    val date: Int,
+    val date: Long,
 ) {
 
     fun getCategoryNameFromStringFile(
@@ -33,7 +35,10 @@ data class TransactionDto(
 
     fun getCategoryImageResourceId(
         context: Context,
-    ): Int = getCategoryImageResourceIdFromDrawableByCategoryImage(context, this.categoryImage)
+    ): Int = getCategoryImageResourceIdFromDrawableByCategoryImage(
+        context,
+        this.categoryImageResourceName
+    )
 
     fun toTransactionEntity(): TransactionEntity = TransactionEntity(
         id = this.id,
@@ -50,7 +55,10 @@ data class TransactionDto(
             memo = this.memo,
             categoryId = this.categoryId,
             categoryName = this.categoryName,
-            categoryImage = this.categoryImage,
+            image = Image(
+                resourceName = this.categoryImageResourceName,
+                backgroundColor = this.categoryImageBackgroundColor,
+            ),
             date = this.date
         )
 }

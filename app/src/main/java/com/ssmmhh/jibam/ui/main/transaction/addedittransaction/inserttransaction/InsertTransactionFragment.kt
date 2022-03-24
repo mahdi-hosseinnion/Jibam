@@ -12,7 +12,7 @@ import com.bumptech.glide.RequestManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.persistence.entities.CategoryEntity
+import com.ssmmhh.jibam.models.Category
 import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.common.AddEditTransactionParentFragment
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionPresenterState
@@ -201,19 +201,19 @@ constructor(
 
         }
 
-    private fun handleBottomSheetDrag(categoryEntity: CategoryEntity?) {
-        val didUserSelectCategory = categoryEntity != null
+    private fun handleBottomSheetDrag(category: Category?) {
+        val didUserSelectCategory = category != null
         //user should not be able to drag down bottom sheet when no category has been selected
         bottomSheetBehavior.isDraggable = didUserSelectCategory
         binding.edtMoney.isEnabled = didUserSelectCategory
         binding.finalNUmber.isEnabled = didUserSelectCategory
-        binding.bottomSheetCloseBtn.visibility = if (categoryEntity == null)
+        binding.bottomSheetCloseBtn.visibility = if (category == null)
             View.GONE
         else
             View.VISIBLE
     }
 
-    private fun setAllOfCategoriesFields(list: List<CategoryEntity>) {
+    private fun setAllOfCategoriesFields(list: List<Category>) {
         btmsheetViewPagerAdapter.submitData(list)
     }
 
@@ -239,12 +239,12 @@ constructor(
         }
     }
 
-    private fun setCategoryFields(categoryEntity: CategoryEntity) {
+    private fun setCategoryFields(category: Category) {
         //set name and icon
-        binding.categoryFab.text = categoryEntity.getCategoryNameFromStringFile(requireContext())
+        binding.categoryFab.text = category.getCategoryNameFromStringFile(requireContext())
         binding.categoryFab.extend()
 
-        val resourceId: Int = categoryEntity.getCategoryImageResourceId(requireContext())
+        val resourceId: Int = category.image.getImageResourceId(requireContext())
         binding.categoryFab.icon = VectorDrawableCompat.create(resources, resourceId, null)
     }
 
@@ -304,7 +304,7 @@ constructor(
     }
 
 
-    override fun onItemSelected(position: Int, item: CategoryEntity) {
+    override fun onItemSelected(position: Int, item: Category) {
         //on category changed
         viewModel.setTransactionCategory(item)
         viewModel.setPresenterState(EnteringAmountOfMoneyState)
@@ -358,7 +358,7 @@ constructor(
             money = money,
             memo = binding.edtMemo.text.toString(),
             cat_id = category.id,
-            date = (calender.timeInMillis).div(1_000).toInt()
+            date = (calender.timeInMillis).div(1_000)
         )
     }
 

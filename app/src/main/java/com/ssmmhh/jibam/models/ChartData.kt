@@ -11,18 +11,20 @@ data class ChartData(
     val sumOfMoney: Double,
     val categoryName: String,
     val categoryType: Int,
-    val categoryImage: String,
+    val categoryImage: Image,
     val percentage: Double
 ) {
     fun getCategoryNameFromStringFile(
         context: Context,
         defaultName: String = this.categoryName
-    ): String =
-        getResourcesStringValueByName(context, this.categoryName) ?: defaultName
+    ): String = getResourcesStringValueByName(context, this.categoryName) ?: defaultName
 
     fun getCategoryImageResourceId(
         context: Context,
-    ): Int = getCategoryImageResourceIdFromDrawableByCategoryImage(context, this.categoryImage)
+    ): Int = getCategoryImageResourceIdFromDrawableByCategoryImage(
+        context,
+        this.categoryImage.resourceName
+    )
 
     val isExpensesCategory: Boolean
         get() = categoryType == CategoryEntity.EXPENSES_TYPE_MARKER

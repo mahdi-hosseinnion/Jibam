@@ -12,7 +12,7 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.persistence.dtos.TransactionDto
-import com.ssmmhh.jibam.persistence.RecordsDao
+import com.ssmmhh.jibam.persistence.TransactionsDao
 import com.ssmmhh.jibam.ui.main.MainActivity
 import com.ssmmhh.jibam.ui.main.transaction.common.MonthManger
 import com.ssmmhh.jibam.util.DateUtils
@@ -48,7 +48,7 @@ class TransactionsTest {
     lateinit var sharedPrefEditor: SharedPreferences.Editor
 
     @Inject
-    lateinit var recordsDao: RecordsDao
+    lateinit var transactionsDao: TransactionsDao
 
     @Inject
     lateinit var monthManger: MonthManger
@@ -170,8 +170,8 @@ class TransactionsTest {
                 monthManger.getEndOfCurrentMonth(DateUtils.getCurrentUnixTimeInMilliSeconds()),
             )
             val transaction = createRandomTransaction(date = date.div(1_000).toInt())
-            recordsDao.insertOrReplace(transaction)
+            transactionsDao.insertOrReplace(transaction)
         }
-        return recordsDao.getAllRecords("").first()
+        return transactionsDao.getAllRecords("").first()
     }
 }

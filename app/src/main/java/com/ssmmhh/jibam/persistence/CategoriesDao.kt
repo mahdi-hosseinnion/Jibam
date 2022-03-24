@@ -1,22 +1,47 @@
 package com.ssmmhh.jibam.persistence
 
 import androidx.room.*
+import com.ssmmhh.jibam.persistence.dtos.CategoryDto
 import com.ssmmhh.jibam.persistence.entities.CategoryEntity
 import com.ssmmhh.jibam.persistence.entities.CategoryImageEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CategoriesDao {
-    @Query("SELECT * FROM categories $CATEGORY_ORDER")
-    fun getCategories(): Flow<List<CategoryEntity>>
+    @Query(
+        """
+        SELECT categories.*, 
+        categoryImages.resName as imageResourceId, 
+        categoryImages.backgroundColor as imageBackgroundColor 
+        FROM categories 
+        LEFT JOIN categoryImages ON categories.imageId = categoryImages.id 
+        $CATEGORY_ORDER"""
+    )
+    fun getCategories(): Flow<List<CategoryDto>>
 
-    @Query("SELECT * FROM categories $CATEGORY_ORDER")
-    suspend fun getAllOfCategories(): List<CategoryEntity>
+    @Query(
+        """
+        SELECT categories.*, 
+        categoryImages.resName as imageResourceId, 
+        categoryImages.backgroundColor as imageBackgroundColor 
+        FROM categories 
+        LEFT JOIN categoryImages ON categories.imageId = categoryImages.id 
+        $CATEGORY_ORDER"""
+    )
+    suspend fun getAllOfCategories(): List<CategoryDto>
 
-    @Query("SELECT * FROM categories WHERE type = :type $CATEGORY_ORDER")
-    suspend  fun getAllOfCategoriesWithType(type: Int): List<CategoryEntity>
+    @Query(
+        """
+        SELECT *, 
+        categoryImages.resName as imageResourceId, 
+        categoryImages.backgroundColor as imageBackgroundColor 
+        FROM categories 
+        LEFT JOIN categoryImages ON categories.imageId = categoryImages.id 
+        WHERE type = :type $CATEGORY_ORDER"""
+    )
+    suspend fun getAllOfCategoriesWithType(type: Int): List<CategoryDto>
 
-    @Query("SELECT * FROM category_images")
+    @Query("SELECT * FROM categoryImages")
     fun getCategoriesImages(): Flow<List<CategoryImageEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -28,7 +53,7 @@ interface CategoriesDao {
     @Delete
     suspend fun deleteCategory(categoryEntity: CategoryEntity): Int
 
-    @Query("DELETE FROM categories WHERE cId = :categoryId")
+    @Query("DELETE FROM categories WHERE id = :categoryId")
     suspend fun deleteCategory(categoryId: Int): Int
 
     @Query("SELECT MIN(ordering) FROM categories")
@@ -37,21 +62,34 @@ interface CategoriesDao {
     @Query("SELECT MAX(ordering) FROM categories")
     suspend fun getMaxOfOrdering(): Int
 
-    @Query("SELECT * FROM categories WHERE cId = :id")
-    suspend fun getCategoryById(id: Int): CategoryEntity?
+    @Query(
+        """
+        SELECT categories.*, 
+        categoryImages.resName as imageResourceId, 
+        categoryImages.backgroundColor as imageBackgroundColor 
+        FROM categories 
+        LEFT JOIN categoryImages ON categories.imageId = categoryImages.id 
+        WHERE categories.id = :id
+        """
+    )
+    suspend fun getCategoryById(id: Int): CategoryDto?
 
     @Query(
         """
         UPDATE categories SET 
         ordering = :newOrder 
-        WHERE cId = :categoryId
+        WHERE id = :categoryId
         """
     )
     suspend fun updateOrder(categoryId: Int, newOrder: Int): Int
 
     @Query(
         """
-        SELECT * FROM categories 
+        SELECT *, 
+        categoryImages.resName as imageResourceId, 
+        categoryImages.backgroundColor as imageBackgroundColor 
+        FROM categories 
+        LEFT JOIN categoryImages ON categories.imageId = categoryImages.id 
         WHERE type = :type 
         AND 
         ordering BETWEEN :fromOrder AND :toOrder 
@@ -62,7 +100,7 @@ interface CategoriesDao {
         type: Int,
         fromOrder: Int,
         toOrder: Int
-    ): List<CategoryEntity>
+    ): List<CategoryDto>
 
     @Query("""UPDATE categories SET ordering = (ordering + 1) WHERE type = :type""")
     fun increaseAllOfOrdersByOne(type: Int)

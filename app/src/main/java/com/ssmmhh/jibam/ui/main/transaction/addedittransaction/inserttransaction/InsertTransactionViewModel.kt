@@ -1,6 +1,6 @@
 package com.ssmmhh.jibam.ui.main.transaction.addedittransaction.inserttransaction
 
-import com.ssmmhh.jibam.persistence.entities.CategoryEntity
+import com.ssmmhh.jibam.models.Category
 import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 import com.ssmmhh.jibam.repository.cateogry.CategoryRepository
 import com.ssmmhh.jibam.repository.tranasction.TransactionRepository
@@ -127,7 +127,7 @@ constructor(
         return new
     }
 
-    fun setTransactionCategory(item: CategoryEntity) {
+    fun setTransactionCategory(item: Category) {
         setViewState(
             InsertTransactionViewState(
                 categoryEntity = item
@@ -135,7 +135,7 @@ constructor(
         )
     }
 
-    fun getTransactionCategory(): CategoryEntity? = getCurrentViewStateOrNew().categoryEntity
+    fun getTransactionCategory(): Category? = getCurrentViewStateOrNew().categoryEntity
 
     fun insertTransaction(entity: TransactionEntity) {
         launchNewJob(

@@ -31,7 +31,7 @@ object TestData {
             categoriesDao: CategoriesDao,
         ): String = categoriesDao.getCategoryById(
             largestExpensesCategoryId
-        )!!.getCategoryNameFromStringFile(
+        )!!.toCategory().getCategoryNameFromStringFile(
             instrumentationContext
         )
 
@@ -45,7 +45,7 @@ object TestData {
             categoriesDao: CategoriesDao,
         ): String = categoriesDao.getCategoryById(
             largestIncomeCategoryId
-        )!!.getCategoryNameFromStringFile(
+        )!!.toCategory().getCategoryNameFromStringFile(
             instrumentationContext
         )
     }

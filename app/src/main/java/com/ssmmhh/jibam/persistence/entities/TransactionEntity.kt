@@ -3,7 +3,7 @@ package com.ssmmhh.jibam.persistence.entities
 import androidx.room.*
 
 @Entity(
-    tableName = "records",
+    tableName = "transactions",
     foreignKeys = [
         ForeignKey(
             entity = CategoryEntity::class,
@@ -15,7 +15,7 @@ import androidx.room.*
 )
 data class TransactionEntity(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "rId")
+    @ColumnInfo(name = "id")
     val id: Int,
     @ColumnInfo(name = "money")
     //TODO ("use bigDecimal for data")
@@ -25,12 +25,10 @@ data class TransactionEntity(
     //category id exactly id
     @ColumnInfo(name = COLUMN_CATEGORY_ID)
     val cat_id: Int,
-    //int can handle the time till 1/19/2038, 6:44:07 AM in millisecond
     @ColumnInfo(name = "date")
-    //TODO ("use long for data")
-    val date: Int,
+    val date: Long,
 ) {
     companion object {
-        const val COLUMN_CATEGORY_ID = "cat_id"
+        const val COLUMN_CATEGORY_ID = "categoryId"
     }
 }

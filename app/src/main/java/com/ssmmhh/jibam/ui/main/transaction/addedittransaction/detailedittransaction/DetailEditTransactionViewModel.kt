@@ -2,7 +2,7 @@ package com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransa
 
 import android.content.res.Resources
 import android.util.Log
-import com.ssmmhh.jibam.persistence.entities.CategoryEntity
+import com.ssmmhh.jibam.models.Category
 import com.ssmmhh.jibam.persistence.dtos.TransactionDto
 import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 import com.ssmmhh.jibam.repository.cateogry.CategoryRepository
@@ -164,7 +164,7 @@ constructor(
             )
         )
 
-        val newDate = (updated.timeInMillis.div(1_000)).toInt()
+        val newDate = (updated.timeInMillis.div(1_000))
 
         val outDatedTransaction = getTransaction() ?: getDefaultTransaction()
         setViewState(
@@ -186,7 +186,7 @@ constructor(
                 combineCalender = updated
             )
         )
-        val newDate = (updated.timeInMillis.div(1_000)).toInt()
+        val newDate = (updated.timeInMillis.div(1_000))
         val outDatedTransaction = getTransaction() ?: getDefaultTransaction()
         setViewState(
             DetailEditTransactionViewState(
@@ -198,13 +198,14 @@ constructor(
         submitButtonState.onDateChange(newDate)
     }
 
-    fun setTransactionCategory(categoryEntity: CategoryEntity) {
+    fun setTransactionCategory(categoryEntity: Category) {
         val transaction = getTransaction()
         setViewState(
             DetailEditTransactionViewState(
                 transaction = transaction?.copy(
                     categoryId = categoryEntity.id,
-                    categoryImage = categoryEntity.img_res,
+                    categoryImageResourceName = categoryEntity.image.resourceName,
+                    categoryImageBackgroundColor = categoryEntity.image.backgroundColor,
                     categoryName = categoryEntity.name
                 ),
                 transactionCategoryType = categoryEntity.type

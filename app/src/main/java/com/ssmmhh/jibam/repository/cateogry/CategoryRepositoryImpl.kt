@@ -6,6 +6,7 @@ import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.persistence.entities.CategoryEntity
 import com.ssmmhh.jibam.persistence.entities.CategoryImageEntity
 import com.ssmmhh.jibam.persistence.CategoriesDao
+import com.ssmmhh.jibam.persistence.dtos.CategoryDto
 import com.ssmmhh.jibam.repository.safeCacheCall
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionStateEvent
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionViewState
@@ -26,7 +27,7 @@ constructor(
     private val _resources: Resources
 ) : CategoryRepository {
 
-    override fun getCategoryList(): Flow<List<CategoryEntity>> =
+    override fun getCategoryList(): Flow<List<CategoryDto>> =
         categoriesDao.getCategories()
 
     override fun getCategoryImages(): Flow<List<CategoryImageEntity>> =
@@ -40,11 +41,11 @@ constructor(
             categoriesDao.getAllOfCategories()
         }
         return object :
-            CacheResponseHandler<DetailEditTransactionViewState, List<CategoryEntity>>(
+            CacheResponseHandler<DetailEditTransactionViewState, List<CategoryDto>>(
                 response = cacheResult,
                 stateEvent = stateEvent
             ) {
-            override suspend fun handleSuccess(resultObj: List<CategoryEntity>): DataState<DetailEditTransactionViewState> {
+            override suspend fun handleSuccess(resultObj: List<CategoryDto>): DataState<DetailEditTransactionViewState> {
                 return if (resultObj.isNotEmpty()) {
                     DataState.data(
                         Response(
@@ -53,7 +54,7 @@ constructor(
                             messageType = MessageType.Success
                         ),
                         data = DetailEditTransactionViewState(
-                            allOfCategories = Event(resultObj)
+                            allOfCategories = Event(resultObj.map { it.toCategory() })
                         ),
                         stateEvent = stateEvent
                     )
@@ -80,11 +81,11 @@ constructor(
             categoriesDao.getAllOfCategories()
         }
         return object :
-            CacheResponseHandler<ViewCategoriesViewState, List<CategoryEntity>>(
+            CacheResponseHandler<ViewCategoriesViewState, List<CategoryDto>>(
                 response = cacheResult,
                 stateEvent = stateEvent
             ) {
-            override suspend fun handleSuccess(resultObj: List<CategoryEntity>): DataState<ViewCategoriesViewState> {
+            override suspend fun handleSuccess(resultObj: List<CategoryDto>): DataState<ViewCategoriesViewState> {
                 return if (resultObj.isNotEmpty()) {
                     DataState.data(
                         Response(
@@ -93,7 +94,7 @@ constructor(
                             messageType = MessageType.Success
                         ),
                         data = ViewCategoriesViewState(
-                            categoryEntityList = resultObj
+                            categoryEntityList = resultObj.map { it.toCategory() }
                         ),
                         stateEvent = stateEvent
                     )
@@ -114,18 +115,17 @@ constructor(
 
     override suspend fun getAllOfCategories(
         stateEvent: InsertTransactionStateEvent.GetAllOfCategories
-    ):
-            DataState<InsertTransactionViewState> {
+    ): DataState<InsertTransactionViewState> {
 
         val cacheResult = safeCacheCall {
             categoriesDao.getAllOfCategories()
         }
         return object :
-            CacheResponseHandler<InsertTransactionViewState, List<CategoryEntity>>(
+            CacheResponseHandler<InsertTransactionViewState, List<CategoryDto>>(
                 response = cacheResult,
                 stateEvent = stateEvent
             ) {
-            override suspend fun handleSuccess(resultObj: List<CategoryEntity>): DataState<InsertTransactionViewState> {
+            override suspend fun handleSuccess(resultObj: List<CategoryDto>): DataState<InsertTransactionViewState> {
                 return if (resultObj.isNotEmpty()) {
                     DataState.data(
                         Response(
@@ -134,7 +134,7 @@ constructor(
                             messageType = MessageType.Success
                         ),
                         data = InsertTransactionViewState(
-                            allOfCategories = Event(resultObj)
+                            allOfCategories = Event(resultObj.map { it.toCategory() })
                         ),
                         stateEvent = stateEvent
                     )
@@ -193,7 +193,7 @@ constructor(
         }.getResult()
     }
 
-   private suspend fun increaseAllOfOrdersByOne(type: Int): CacheResult<Unit?> = safeCacheCall {
+    private suspend fun increaseAllOfOrdersByOne(type: Int): CacheResult<Unit?> = safeCacheCall {
         categoriesDao.increaseAllOfOrdersByOne(type)
     }
 

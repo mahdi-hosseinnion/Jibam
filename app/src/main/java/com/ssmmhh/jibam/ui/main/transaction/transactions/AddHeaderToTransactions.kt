@@ -61,8 +61,8 @@ class AddHeaderToTransactions(
         return resultList
     }
 
-    private fun currentDateInString(time: Int): String {
-        val dv: Long = ((time.toLong()) * 1000) // its need to be in milisecond
+    private fun currentDateInString(time: Long): String {
+        val dv: Long = (time * 1000) // its need to be in milisecond
 
         val transDate = getFormattedDate(dv)
 
@@ -89,7 +89,7 @@ class AddHeaderToTransactions(
             )
         } else {
             TransactionsRecyclerViewItem.Header(
-                expensesSum =null,
+                expensesSum = null,
                 incomeSum = null,
                 date = date
             )

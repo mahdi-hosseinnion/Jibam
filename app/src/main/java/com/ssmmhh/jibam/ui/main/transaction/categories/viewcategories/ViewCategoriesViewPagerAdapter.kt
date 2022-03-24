@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.ssmmhh.jibam.databinding.LayoutViewpagerListItemBinding
-import com.ssmmhh.jibam.persistence.entities.CategoryEntity
+import com.ssmmhh.jibam.models.Category
 import kotlinx.coroutines.FlowPreview
 
 @FlowPreview
@@ -16,7 +16,7 @@ class ViewCategoriesViewPagerAdapter(
     private val context: Context,
     private var expensesItemTouchHelper: ItemTouchHelper,
     private var incomeItemTouchHelper: ItemTouchHelper,
-    listOfCategoryEntities: List<CategoryEntity>? = null,
+    listOfCategoryEntities: List<Category>? = null,
     categoryInteraction: ViewCategoriesRecyclerAdapter.CategoryInteraction,
     requestManager: RequestManager,
 ) : RecyclerView.Adapter<ViewCategoriesViewPagerAdapter.ViewPagerViewHolder>() {
@@ -65,7 +65,7 @@ class ViewCategoriesViewPagerAdapter(
 
     }
 
-    fun submitList(newData: List<CategoryEntity>) {
+    fun submitList(newData: List<Category>) {
         expensesRecyclerAdapter.submitData(newData.filter { it.isExpensesCategory })
         incomeRecyclerAdapter.submitData(newData.filter { it.isIncomeCategory })
     }

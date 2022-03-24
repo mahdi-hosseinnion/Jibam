@@ -2,7 +2,6 @@ package com.ssmmhh.jibam.models
 
 import android.content.Context
 import com.ssmmhh.jibam.persistence.dtos.TransactionDto
-import com.ssmmhh.jibam.util.getCategoryImageResourceIdFromDrawableByCategoryImage
 import com.ssmmhh.jibam.util.getResourcesStringValueByName
 
 sealed class TransactionsRecyclerViewItem(
@@ -15,8 +14,8 @@ sealed class TransactionsRecyclerViewItem(
         val memo: String?,
         val categoryId: Int,
         val categoryName: String,
-        val categoryImage: String,
-        val date: Int,
+        val image: Image,
+        val date: Long,
     ) : TransactionsRecyclerViewItem(TRANSACTION_VIEW_TYPE)
 
 
@@ -51,9 +50,6 @@ fun TransactionsRecyclerViewItem.Transaction.getCategoryNameFromStringFile(
     defaultName: String = categoryName
 ): String = getResourcesStringValueByName(context, this.categoryName) ?: defaultName
 
-fun TransactionsRecyclerViewItem.Transaction.getCategoryImageResourceId(
-    context: Context,
-): Int = getCategoryImageResourceIdFromDrawableByCategoryImage(context, this.categoryImage)
 
 fun TransactionsRecyclerViewItem.Transaction.toTransaction(): TransactionDto = TransactionDto(
     id = this.id,
@@ -61,7 +57,8 @@ fun TransactionsRecyclerViewItem.Transaction.toTransaction(): TransactionDto = T
     memo = this.memo,
     categoryId = this.categoryId,
     categoryName = this.categoryName,
-    categoryImage = this.categoryImage,
+    categoryImageResourceName = this.image.resourceName,
+    categoryImageBackgroundColor = this.image.backgroundColor,
     date = this.date,
 )
 

@@ -1,7 +1,7 @@
 package com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransaction.state
 
 import android.util.Log
-import com.ssmmhh.jibam.persistence.entities.CategoryEntity
+import com.ssmmhh.jibam.models.Category
 import com.ssmmhh.jibam.persistence.dtos.TransactionDto
 import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 import com.ssmmhh.jibam.util.Event
@@ -17,7 +17,7 @@ data class DetailEditTransactionViewState(
     val moneyStr: String? = null,
     val transactionCategoryType: Int? = null,
     val combineCalender: GregorianCalendar? = null,
-    val allOfCategories: Event<List<CategoryEntity>?>? = null,
+    val allOfCategories: Event<List<Category>?>? = null,
     val successfullyDeletedTransactionIndicator: Int? = null,
     val presenterState: Event<DetailEditTransactionPresenterState>? = null
 
@@ -88,7 +88,7 @@ class SubmitButtonState() {
 
     }
 
-    fun onDateChange(newDate: Int) {
+    fun onDateChange(newDate: Long) {
         _doesDateChange.value = defaultTransaction?.date != newDate
 
     }

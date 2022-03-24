@@ -37,6 +37,7 @@ class DetailChartListAdapter(
             0,
             "",
             "",
+            "",
             0
         )
 
@@ -155,7 +156,7 @@ class DetailChartListAdapter(
             binding.prgPercentage.max = calculatePercentage(biggestAmount, totalAmount).toInt()
         }
 
-        private fun dateWithPattern(date: Int): String {
+        private fun dateWithPattern(date: Long): String {
             return if (isCalendarSolar) {
                 SolarCalendar.calcSolarCalendar(
                     date.times(1000L),
