@@ -145,11 +145,11 @@ class ChartTest {
         //Arrange
         //insert ten random transaction
         //transactions date should be in this
-        val dateRange = 100_000
+        val dateRange = 100_000L
         val transactionsToInsert = TestData.ChartPageTestData.entities.map {
             val currentTime = DateUtils.getCurrentTime()
             it.copy(
-                date = Random.nextInt(currentTime.minus(dateRange), currentTime.plus(dateRange))
+                date = Random.nextLong(currentTime.minus(dateRange), currentTime.plus(dateRange))
             )
         }
 
@@ -222,7 +222,7 @@ class ChartTest {
                 matches(
                     atPositionOnView(
                         transactionsThatHaveSameCategoryAsLargestOne.indexOf(item),
-                        withText(item.money.absoluteValue.toString()),
+                        withText(item.money.abs().toString()),
                         R.id.sumOfMoney
                     )
                 )
@@ -249,7 +249,7 @@ class ChartTest {
         )
         //check money amount in detail
         onView(withId(R.id.edt_money))
-            .check(matches(withText(transactionsThatHaveSameCategoryAsLargestOne[0].money.absoluteValue.toString())))
+            .check(matches(withText(transactionsThatHaveSameCategoryAsLargestOne[0].money.abs().toString())))
         //check memo
         onView(withId(R.id.edt_memo))
             .check(matches(withText(transactionsThatHaveSameCategoryAsLargestOne[0].memo ?: "")))
@@ -260,11 +260,11 @@ class ChartTest {
         //Arrange
         //insert ten random transaction
         //transactions date should be in this
-        val dateRange = 100_000
+        val dateRange = 100_000L
         val transactionsToInsert = TestData.ChartPageTestData.entities.map {
             val currentTime = DateUtils.getCurrentTime()
             it.copy(
-                date = Random.nextInt(currentTime.minus(dateRange), currentTime.plus(dateRange))
+                date = Random.nextLong(currentTime.minus(dateRange), currentTime.plus(dateRange))
             )
         }
 
@@ -341,7 +341,7 @@ class ChartTest {
                 matches(
                     atPositionOnView(
                         transactionsThatHaveSameCategoryAsLargestOne.indexOf(item),
-                        withText(item.money.absoluteValue.toString()),
+                        withText(item.money.abs().toString()),
                         R.id.sumOfMoney
                     )
                 )

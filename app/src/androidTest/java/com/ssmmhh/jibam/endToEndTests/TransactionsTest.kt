@@ -31,6 +31,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.math.BigDecimal
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.absoluteValue
@@ -132,7 +133,7 @@ class TransactionsTest {
 
             //check summery money section text values
             //confirm incomes has right value
-            val sumOfIncomes = insertedTransactions.filter { it.money > 0 }.sumOf { it.money }
+            val sumOfIncomes = insertedTransactions.filter { it.money > BigDecimal.ZERO }.sumOf { it.money }
             onView(withId(R.id.txt_income)).check(
                 matches(
                     withText(
@@ -144,11 +145,11 @@ class TransactionsTest {
                 )
             )
             //confirm expenses has right value
-            val sumOfExpenses = insertedTransactions.filter { it.money < 0 }.sumOf { it.money }
+            val sumOfExpenses = insertedTransactions.filter { it.money < BigDecimal.ZERO }.sumOf { it.money }
             onView(withId(R.id.txt_expenses)).check(
                 matches(
                     withText(
-                        separate3By3AndRoundIt(sumOfExpenses.absoluteValue, currentLocale)
+                        separate3By3AndRoundIt(sumOfExpenses.abs(), currentLocale)
                     )
                 )
             )
@@ -169,7 +170,7 @@ class TransactionsTest {
                 monthManger.getStartOfCurrentMonth(DateUtils.getCurrentUnixTimeInMilliSeconds()),
                 monthManger.getEndOfCurrentMonth(DateUtils.getCurrentUnixTimeInMilliSeconds()),
             )
-            val transaction = createRandomTransaction(date = date.div(1_000).toInt())
+            val transaction = createRandomTransaction(date = date.div(1_000))
             transactionsDao.insertOrReplace(transaction)
         }
         return transactionsDao.getAllRecords("").first()

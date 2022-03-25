@@ -120,7 +120,7 @@ object DateUtils {
 
     fun getCurrentUnixTimeInSeconds(): Long = ((System.currentTimeMillis()).div(1_000))
 
-    fun getCurrentTime(): Int = getCurrentUnixTimeInSeconds().toInt()
+    fun getCurrentTime(): Long = getCurrentUnixTimeInSeconds()
 
     val shamsiMonths = arrayOf(
         R.string.Farvardin,

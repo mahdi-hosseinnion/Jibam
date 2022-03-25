@@ -28,6 +28,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.math.BigDecimal
 import javax.inject.Inject
 
 /**
@@ -87,7 +88,7 @@ class ViewDetailTransactionTest {
     fun viewDetailOfTransaction_transactionWithOutMemo(): Unit = runBlocking {
         //insert a transaction into the database
         val transactionCategory = categoriesDao.getCategoryById(9)!!.toCategory()
-        val transactionMoney = 876.5
+        val transactionMoney = BigDecimal("876.5")
         val tempTransaction = TransactionEntity(
             id = 0,
             money = transactionMoney,
@@ -151,7 +152,7 @@ class ViewDetailTransactionTest {
         //insert a transaction into the database
         val transactionCategory = categoriesDao.getCategoryById(5)!!.toCategory()
         val transactionMemo = "Hello memo"
-        val transactionMoney = 876.5
+        val transactionMoney = BigDecimal("876.5")
         val tempTransaction = TransactionEntity(
             id = 0,
             money = transactionMoney,
@@ -214,7 +215,7 @@ class ViewDetailTransactionTest {
         val transactionId = 1596
         val tempTransaction = TransactionEntity(
             id = transactionId,
-            money = 876.5,
+            money = BigDecimal("876.5"),
             memo = null,
             cat_id = transactionCategory.id,
             date = DateUtils.getCurrentTime()
@@ -250,7 +251,11 @@ class ViewDetailTransactionTest {
         assert(transactionsDao.getTransactionById(transactionId) == null)
         Log.d(
             "TESTING",
-            "viewDetailOfTransaction_ThenRemoveIt: ${transactionsDao.getTransactionById(transactionId)}"
+            "viewDetailOfTransaction_ThenRemoveIt: ${
+                transactionsDao.getTransactionById(
+                    transactionId
+                )
+            }"
         )
     }
     //TODO add tests to test edit transaction functionality
