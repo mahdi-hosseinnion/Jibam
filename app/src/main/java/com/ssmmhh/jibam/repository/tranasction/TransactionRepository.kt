@@ -22,16 +22,11 @@ interface TransactionRepository {
         query: String = ""
     ): Flow<List<TransactionDto>>
 
-    fun getSumOfIncome(
-        minDate: Int? = null,
-        maxDate: Int? = null
-    ): Flow<BigDecimal?>
+    fun getListOfAllOfMoney(
+        minDate: Int?,
+        maxDate: Int?
+    ): Flow<List<BigDecimal>>
 
-
-    fun getSumOfExpenses(
-        minDate: Int? = null,
-        maxDate: Int? = null
-    ): Flow<BigDecimal?>
 
     fun getPieChartData(
         minDate: Int,

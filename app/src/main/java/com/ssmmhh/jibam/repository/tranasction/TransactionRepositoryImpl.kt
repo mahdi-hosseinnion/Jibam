@@ -8,9 +8,8 @@ import com.ssmmhh.jibam.persistence.dtos.ChartDataDto
 import com.ssmmhh.jibam.persistence.dtos.TransactionDto
 import com.ssmmhh.jibam.persistence.TransactionsDao
 import com.ssmmhh.jibam.persistence.entities.CategoryEntity
+import com.ssmmhh.jibam.persistence.getListOfMoney
 import com.ssmmhh.jibam.persistence.getRecords
-import com.ssmmhh.jibam.persistence.getSumOfExpenses
-import com.ssmmhh.jibam.persistence.getSumOfIncome
 import com.ssmmhh.jibam.repository.buildResponse
 import com.ssmmhh.jibam.repository.safeCacheCall
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionStateEvent
@@ -45,11 +44,8 @@ constructor(
         query = query
     )
 
-    override fun getSumOfIncome(minDate: Int?, maxDate: Int?): Flow<BigDecimal?> =
-        transactionsDao.getSumOfIncome(minDate, maxDate)
-
-    override fun getSumOfExpenses(minDate: Int?, maxDate: Int?): Flow<BigDecimal?> =
-        transactionsDao.getSumOfExpenses(minDate, maxDate)
+    override fun getListOfAllOfMoney(minDate: Int?, maxDate: Int?): Flow<List<BigDecimal>> =
+        transactionsDao.getListOfMoney(minDate, maxDate)
 
     override fun getPieChartData(minDate: Int, maxDate: Int): Flow<List<ChartData>> = flow {
         emit(
@@ -63,19 +59,19 @@ constructor(
     }
 
     private fun calculatePercentage(values: List<ChartDataDto>): List<ChartData> {
-        val sumOfAllExpenses = values.filter { it.isExpensesCategory }.sumOf { it.sumOfMoney }
+        val sumOfAllExpenses = values.filter { it.isExpensesCategory }.sumOf { it.money }
 
-        val sumOfAllIncome = values.filter { it.isIncomeCategory }.sumOf { it.sumOfMoney }
+        val sumOfAllIncome = values.filter { it.isIncomeCategory }.sumOf { it.money }
 
         val newList = ArrayList<ChartData>()
 
         for (item in values) {
             val percentage: BigDecimal = when (item.categoryType) {
                 CategoryEntity.EXPENSES_TYPE_MARKER -> {
-                    (item.sumOfMoney.div(sumOfAllExpenses)).times(BigDecimal("100"))
+                    (item.money.div(sumOfAllExpenses)).times(BigDecimal("100"))
                 }
                 CategoryEntity.INCOME_TYPE_MARKER -> {
-                    (item.sumOfMoney.div(sumOfAllIncome)).times(BigDecimal("100"))
+                    (item.money.div(sumOfAllIncome)).times(BigDecimal("100"))
                 }
                 else -> {
                     BigDecimal.ZERO

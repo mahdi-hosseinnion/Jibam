@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import java.math.BigDecimal
 
 @Dao
+@TypeConverters(BigDecimalTypeConverter::class)
 interface TransactionsDao {
 
 
@@ -144,35 +145,24 @@ interface TransactionsDao {
      */
 
     //return all
-    @Query("SELECT SUM(money) FROM transactions WHERE money < 0 ")
-    fun returnTheSumOfAllExpenses(): Flow<BigDecimal?>
 
-    @Query("SELECT SUM(money) FROM transactions WHERE money > 0 ")
-    fun returnTheSumOfAllIncome(): Flow<BigDecimal?>
+    @Query("SELECT money FROM transactions ")
+    fun getListOfAllOfMoney(): Flow<List<BigDecimal>>
 
     //between dates
-    @Query("SELECT SUM(money) FROM transactions WHERE (date BETWEEN :minDate AND :maxDate) AND(money < 0) ")
-    fun returnTheSumOfExpensesBetweenDates(minDate: Int, maxDate: Int): Flow<BigDecimal>
-
-    @Query("SELECT SUM(money) FROM transactions WHERE (date BETWEEN :minDate AND :maxDate) AND(money > 0) ")
-    fun returnTheSumOfIncomeBetweenDates(minDate: Int, maxDate: Int): Flow<BigDecimal>
+    @Query("SELECT money FROM transactions WHERE (date BETWEEN :minDate AND :maxDate)")
+    fun getListOfMoneyBetweenDates(minDate: Int, maxDate: Int): Flow<List<BigDecimal>>
 
     //after than
-    @Query("SELECT SUM(money) FROM transactions WHERE (date > :minDate) AND (money < 0) ")
-    fun returnTheSumOfExpensesAfterThan(minDate: Int): Flow<BigDecimal>
-
-    @Query("SELECT SUM(money) FROM transactions WHERE (date > :minDate) AND (money > 0) ")
-    fun returnTheSumOfIncomeAfterThan(minDate: Int): Flow<BigDecimal>
+    @Query("SELECT money FROM transactions WHERE (date > :minDate)")
+    fun getListOfMoneyAfterThan(minDate: Int): Flow<List<BigDecimal>>
 
     //before than
-    @Query("SELECT SUM(money) FROM transactions WHERE (date < :maxDate) AND (money < 0) ")
-    fun returnTheSumOfExpensesBeforeThan(maxDate: Int): Flow<BigDecimal>
-
-    @Query("SELECT SUM(money) FROM transactions WHERE (date < :maxDate) AND (money > 0) ")
-    fun returnTheSumOfIncomeBeforeThan(maxDate: Int): Flow<BigDecimal>
+    @Query("SELECT money FROM transactions WHERE (date < :maxDate)")
+    fun getListOfMoneyBeforeThan(maxDate: Int): Flow<List<BigDecimal>>
 
     @Query(
-        """SELECT SUM(money) as sumOfMoney,
+        """SELECT money as money, 
             categories.id as categoryId, 
             categories.name as category_name, 
             categories.type as categoryType, 
@@ -183,8 +173,9 @@ interface TransactionsDao {
             LEFT JOIN categoryImages ON categories.imageId = categoryImages.id 
             WHERE date BETWEEN :fromDate AND :toDate 
             GROUP BY categoryId 
-            ORDER BY ABS(SUM(money)) DESC"""
+            """
     )
+    //TODO ADD ORDER TO IT(ORDER BY ABS(SUM(money)) DESC)
     suspend fun sumOfMoneyGroupByCategory(
         fromDate: Int,
         toDate: Int
@@ -231,34 +222,18 @@ fun TransactionsDao.getRecords(
     return getAllRecords(query)
 }
 
-fun TransactionsDao.getSumOfIncome(
+fun TransactionsDao.getListOfMoney(
     minDate: Int? = null,
     maxDate: Int? = null
-): Flow<BigDecimal?> {
+): Flow<List<BigDecimal>> {
     if (minDate != null && maxDate != null) {
-        return returnTheSumOfIncomeBetweenDates(minDate, maxDate)
+        return getListOfMoneyBetweenDates(minDate, maxDate)
     }
     if (minDate == null && maxDate != null) {
-        return returnTheSumOfIncomeBeforeThan(maxDate)
+        return getListOfMoneyBeforeThan(maxDate)
     }
     if (maxDate == null && minDate != null) {
-        return returnTheSumOfIncomeAfterThan(minDate)
+        return getListOfMoneyAfterThan(minDate)
     }
-    return returnTheSumOfAllIncome()
-}
-
-fun TransactionsDao.getSumOfExpenses(
-    minDate: Int? = null,
-    maxDate: Int? = null
-): Flow<BigDecimal?> {
-    if (minDate != null && maxDate != null) {
-        return returnTheSumOfExpensesBetweenDates(minDate, maxDate)
-    }
-    if (minDate == null && maxDate != null) {
-        return returnTheSumOfExpensesBeforeThan(maxDate)
-    }
-    if (maxDate == null && minDate != null) {
-        return returnTheSumOfExpensesAfterThan(minDate)
-    }
-    return returnTheSumOfAllExpenses()
+    return getListOfAllOfMoney()
 }

@@ -9,7 +9,7 @@ import java.math.BigDecimal
 
 data class ChartData(
     val categoryId: Int,
-    val sumOfMoney: BigDecimal,
+    val money: BigDecimal,
     val categoryName: String,
     val categoryType: Int,
     val categoryImage: Image,

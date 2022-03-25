@@ -12,8 +12,8 @@ import java.math.BigDecimal
 data class ChartDataDto(
     @ColumnInfo(name = "categoryId")
     val categoryId: Int,
-    @ColumnInfo(name = "sumOfMoney")
-    val sumOfMoney: BigDecimal,
+    @ColumnInfo(name = "money")
+    val money: BigDecimal,
     @ColumnInfo(name = "category_name")
     val categoryName: String,
     @ColumnInfo(name = "categoryType")
@@ -34,7 +34,7 @@ data class ChartDataDto(
         percentage: Float
     ): ChartData = ChartData(
         categoryId = this.categoryId,
-        sumOfMoney = this.sumOfMoney,
+        money = money,
         categoryName = this.categoryName,
         categoryType = this.categoryType,
         categoryImage = Image(

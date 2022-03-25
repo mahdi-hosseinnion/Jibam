@@ -90,7 +90,7 @@ class ChartListAdapter(
             binding.txtDate.visibility = View.GONE
 
             binding.categoryName.text = item.getCategoryNameFromStringFile(context)
-            binding.sumOfMoney.text = separate3By3(item.sumOfMoney.abs(), currentLocale)
+            binding.sumOfMoney.text = separate3By3(item.money.abs(), currentLocale)
 
             binding.txtPercentage.text =
                 ("${item.percentage.toString()}%").localizeNumber(_resources)
