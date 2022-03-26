@@ -9,8 +9,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
 import com.ssmmhh.jibam.persistence.AppDatabase
-import com.ssmmhh.jibam.persistence.CategoriesDao
-import com.ssmmhh.jibam.persistence.TransactionsDao
+import com.ssmmhh.jibam.persistence.daos.CategoriesDao
+import com.ssmmhh.jibam.persistence.daos.TransactionsDao
 import com.ssmmhh.jibam.repository.cateogry.CategoryRepository
 import com.ssmmhh.jibam.repository.cateogry.CategoryRepositoryImpl
 import com.ssmmhh.jibam.repository.tranasction.TransactionRepository

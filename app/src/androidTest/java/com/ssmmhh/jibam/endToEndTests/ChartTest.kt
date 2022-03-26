@@ -12,7 +12,7 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.platform.app.InstrumentationRegistry
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.persistence.CategoriesDao
+import com.ssmmhh.jibam.persistence.daos.CategoriesDao
 import com.ssmmhh.jibam.persistence.TransactionsDao
 import com.ssmmhh.jibam.ui.main.MainActivity
 import com.ssmmhh.jibam.ui.main.transaction.chart.ChartListAdapter
@@ -33,7 +33,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import java.util.*
 import javax.inject.Inject
-import kotlin.math.absoluteValue
 import kotlin.random.Random
 
 /**

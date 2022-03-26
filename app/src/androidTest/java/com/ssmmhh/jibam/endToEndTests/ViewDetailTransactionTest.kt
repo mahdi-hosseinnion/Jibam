@@ -14,7 +14,7 @@ import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.platform.app.InstrumentationRegistry
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.persistence.entities.TransactionEntity
-import com.ssmmhh.jibam.persistence.CategoriesDao
+import com.ssmmhh.jibam.persistence.daos.CategoriesDao
 import com.ssmmhh.jibam.persistence.TransactionsDao
 import com.ssmmhh.jibam.ui.main.MainActivity
 import com.ssmmhh.jibam.util.DateUtils

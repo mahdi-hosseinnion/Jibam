@@ -1,4 +1,4 @@
-package com.ssmmhh.jibam.persistence
+package com.ssmmhh.jibam.persistence.typeconverters
 
 import androidx.room.TypeConverter
 import java.math.BigDecimal

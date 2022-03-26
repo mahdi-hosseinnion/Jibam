@@ -1,9 +1,10 @@
-package com.ssmmhh.jibam.persistence
+package com.ssmmhh.jibam.persistence.daos
 
 import androidx.room.*
 import com.ssmmhh.jibam.persistence.dtos.ChartDataDto
 import com.ssmmhh.jibam.persistence.dtos.TransactionDto
 import com.ssmmhh.jibam.persistence.entities.TransactionEntity
+import com.ssmmhh.jibam.persistence.typeconverters.BigDecimalTypeConverter
 import kotlinx.coroutines.flow.Flow
 import java.math.BigDecimal
 

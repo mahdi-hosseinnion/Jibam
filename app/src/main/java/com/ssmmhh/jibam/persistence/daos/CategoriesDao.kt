@@ -1,4 +1,4 @@
-package com.ssmmhh.jibam.persistence
+package com.ssmmhh.jibam.persistence.daos
 
 import androidx.room.*
 import com.ssmmhh.jibam.persistence.dtos.CategoryDto

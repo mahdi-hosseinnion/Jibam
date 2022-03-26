@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.TypeConverters
 import com.ssmmhh.jibam.models.Image
 import com.ssmmhh.jibam.models.ChartData
-import com.ssmmhh.jibam.persistence.BigDecimalTypeConverter
+import com.ssmmhh.jibam.persistence.typeconverters.BigDecimalTypeConverter
 import com.ssmmhh.jibam.persistence.entities.CategoryEntity
 import java.math.BigDecimal
 

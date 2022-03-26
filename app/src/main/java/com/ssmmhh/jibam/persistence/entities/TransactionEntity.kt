@@ -1,7 +1,7 @@
 package com.ssmmhh.jibam.persistence.entities
 
 import androidx.room.*
-import com.ssmmhh.jibam.persistence.BigDecimalTypeConverter
+import com.ssmmhh.jibam.persistence.typeconverters.BigDecimalTypeConverter
 import java.math.BigDecimal
 
 @Entity(
