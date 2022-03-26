@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.ssmmhh.jibam.persistence.daos.CategoriesDao
-import com.ssmmhh.jibam.persistence.daos.TransactionsDao
+import com.ssmmhh.jibam.persistence.daos.TransactionDao
 import com.ssmmhh.jibam.persistence.entities.CategoryEntity
 import com.ssmmhh.jibam.persistence.entities.CategoryImageEntity
 import com.ssmmhh.jibam.persistence.entities.TransactionEntity
@@ -22,7 +22,7 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun getCategoriesDao(): CategoriesDao
 
-    abstract fun getRecordsDao(): TransactionsDao
+    abstract fun getRecordsDao(): TransactionDao
 
     companion object {
         val DATABASE_NAME: String = "app_db"

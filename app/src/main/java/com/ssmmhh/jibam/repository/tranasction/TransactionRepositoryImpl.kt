@@ -4,11 +4,9 @@ import android.content.res.Resources
 import androidx.annotation.StringRes
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.models.ChartData
+import com.ssmmhh.jibam.persistence.daos.TransactionDao
 import com.ssmmhh.jibam.persistence.dtos.ChartDataDto
 import com.ssmmhh.jibam.persistence.dtos.TransactionDto
-import com.ssmmhh.jibam.persistence.daos.TransactionsDao
-import com.ssmmhh.jibam.persistence.daos.getListOfMoney
-import com.ssmmhh.jibam.persistence.daos.getRecords
 import com.ssmmhh.jibam.persistence.entities.CategoryEntity
 import com.ssmmhh.jibam.repository.buildResponse
 import com.ssmmhh.jibam.repository.safeCacheCall
@@ -24,33 +22,32 @@ import com.ssmmhh.jibam.util.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.math.BigDecimal
-import java.util.*
 import javax.inject.Inject
 
 class TransactionRepositoryImpl
 @Inject
 constructor(
-    private val transactionsDao: TransactionsDao,
+    private val transactionDao: TransactionDao,
     private val _resources: Resources
 ) : TransactionRepository {
 
     override fun getTransactionList(
-        minDate: Int?,
-        maxDate: Int?,
+        minDate: Int,
+        maxDate: Int,
         query: String
-    ): Flow<List<TransactionDto>> = transactionsDao.getRecords(
+    ): Flow<List<TransactionDto>> = transactionDao.getAllOfTransactionsBetweenDates(
         minDate = minDate,
         maxDate = maxDate,
         query = query
     )
 
-    override fun getListOfAllOfMoney(minDate: Int?, maxDate: Int?): Flow<List<BigDecimal>> =
-        transactionsDao.getListOfMoney(minDate, maxDate)
+    override fun getListOfAllOfMoney(minDate: Int, maxDate: Int): Flow<List<BigDecimal>> =
+        transactionDao.getListOfMoneyBetweenDates(minDate, maxDate)
 
     override fun getPieChartData(minDate: Int, maxDate: Int): Flow<List<ChartData>> = flow {
         emit(
             calculatePercentage(
-                transactionsDao.sumOfMoneyGroupByCategory(
+                transactionDao.sumOfMoneyGroupByCategory(
                     fromDate = minDate,
                     toDate = maxDate
                 )
@@ -104,7 +101,7 @@ constructor(
         categoryId: Int,
         minDate: Int,
         maxDate: Int
-    ): Flow<List<TransactionDto>> = transactionsDao.getAllTransactionByCategoryId(
+    ): Flow<List<TransactionDto>> = transactionDao.getAllTransactionByCategoryId(
         categoryId = categoryId,
         fromDate = minDate,
         toDate = maxDate
@@ -118,7 +115,7 @@ constructor(
     ): DataState<InsertTransactionViewState> {
 
         val cacheResult = safeCacheCall {
-            transactionsDao.insertOrReplace(stateEvent.transactionEntity)
+            transactionDao.insertTransaction(stateEvent.transactionEntity)
         }
 
         return object : CacheResponseHandler<InsertTransactionViewState, Long>(
@@ -156,7 +153,7 @@ constructor(
     ): DataState<ChartViewState> {
 
         val cacheResult = safeCacheCall {
-            transactionsDao.insertOrReplace(stateEvent.transactionEntity)
+            transactionDao.insertTransaction(stateEvent.transactionEntity)
         }
 
         return object : CacheResponseHandler<ChartViewState, Long>(
@@ -192,7 +189,7 @@ constructor(
     ): DataState<DetailEditTransactionViewState> {
 
         val cacheResult = safeCacheCall {
-            transactionsDao.updateRecord(transactionEntity = stateEvent.transactionEntity)
+            transactionDao.updateTransaction(transactionEntity = stateEvent.transactionEntity)
         }
         return object : CacheResponseHandler<DetailEditTransactionViewState, Int>(
             response = cacheResult,
@@ -227,7 +224,7 @@ constructor(
     ): DataState<TransactionsViewState> {
 
         val cacheResult = safeCacheCall {
-            transactionsDao.insertOrReplace(stateEvent.transactionEntity)
+            transactionDao.insertTransaction(stateEvent.transactionEntity)
         }
 
         return object : CacheResponseHandler<TransactionsViewState, Long>(
@@ -264,7 +261,7 @@ constructor(
         stateEvent: TransactionsStateEvent.DeleteTransaction
     ): DataState<TransactionsViewState> {
         val cacheResult = safeCacheCall {
-            transactionsDao.deleteRecord(stateEvent.transactionEntity)
+            transactionDao.deleteTransaction(stateEvent.transactionEntity)
         }
         return object : CacheResponseHandler<TransactionsViewState, Int>(
             response = cacheResult,
@@ -307,7 +304,7 @@ constructor(
         stateEvent: DetailEditTransactionStateEvent.DeleteTransaction
     ): DataState<DetailEditTransactionViewState> {
         val cacheResult = safeCacheCall {
-            transactionsDao.deleteRecord(stateEvent.transactionId)
+            transactionDao.deleteTransaction(stateEvent.transactionId)
         }
         return object : CacheResponseHandler<DetailEditTransactionViewState, Int>(
             response = cacheResult,
@@ -350,7 +347,7 @@ constructor(
         stateEvent: ChartStateEvent.DeleteTransaction
     ): DataState<ChartViewState> {
         val cacheResult = safeCacheCall {
-            transactionsDao.deleteRecord(stateEvent.transactionId)
+            transactionDao.deleteTransaction(stateEvent.transactionId)
         }
         return object : CacheResponseHandler<ChartViewState, Int>(
             response = cacheResult,
@@ -391,7 +388,7 @@ constructor(
         stateEvent: DetailEditTransactionStateEvent.GetTransactionById
     ): DataState<DetailEditTransactionViewState> {
         val cacheResult = safeCacheCall {
-            transactionsDao.getTransactionById(stateEvent.transactionId)
+            transactionDao.getTransactionById(stateEvent.transactionId)
         }
 
         return object : CacheResponseHandler<DetailEditTransactionViewState, TransactionDto>(

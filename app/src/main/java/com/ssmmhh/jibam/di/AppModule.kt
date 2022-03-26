@@ -10,7 +10,7 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
 import com.ssmmhh.jibam.persistence.AppDatabase
 import com.ssmmhh.jibam.persistence.daos.CategoriesDao
-import com.ssmmhh.jibam.persistence.daos.TransactionsDao
+import com.ssmmhh.jibam.persistence.daos.TransactionDao
 import com.ssmmhh.jibam.repository.cateogry.CategoryRepository
 import com.ssmmhh.jibam.repository.cateogry.CategoryRepositoryImpl
 import com.ssmmhh.jibam.repository.tranasction.TransactionRepository
@@ -57,7 +57,7 @@ object AppModule {
     @JvmStatic
     @Singleton
     @Provides
-    fun provideRecordsDao(db: AppDatabase): TransactionsDao {
+    fun provideRecordsDao(db: AppDatabase): TransactionDao {
         return db.getRecordsDao()
     }
 

@@ -17,14 +17,14 @@ import java.math.BigDecimal
 interface TransactionRepository {
 
     fun getTransactionList(
-        minDate: Int? = null,
-        maxDate: Int? = null,
+        minDate: Int,
+        maxDate: Int,
         query: String = ""
     ): Flow<List<TransactionDto>>
 
     fun getListOfAllOfMoney(
-        minDate: Int?,
-        maxDate: Int?
+        minDate: Int,
+        maxDate: Int
     ): Flow<List<BigDecimal>>
 
 
