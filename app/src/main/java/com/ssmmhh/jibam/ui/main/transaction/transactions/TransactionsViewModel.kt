@@ -21,7 +21,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import java.math.BigDecimal
 import java.util.*
 import javax.inject.Inject
 
@@ -65,13 +64,13 @@ constructor(
     val transactions: LiveData<List<TransactionsRecyclerViewItem>> = _transactions
 
     private fun getTransactionList(
-        minData: Int,
-        maxDate: Int,
+        fromDate: Long,
+        toDate: Long,
         query: String
     ): Flow<List<TransactionsRecyclerViewItem>> =
         transactionRepository.getTransactionList(
-            minDate = minData,
-            maxDate = maxDate,
+            fromDate = fromDate,
+            toDate = toDate,
             query = query
         ).handleLoadingAndException(GET_TRANSACTION_LIST)
             .map {
@@ -94,12 +93,12 @@ constructor(
     val summeryMoney: LiveData<SummaryMoney> = _summeryMoney
 
     private fun getSummeryMoney(
-        minDate: Int,
-        maxDate: Int
+        fromDate: Long,
+        toDate: Long
     ): Flow<SummaryMoney> = combine(
-        transactionRepository.observeSumOfIncomesBetweenDates(minDate, maxDate)
+        transactionRepository.observeSumOfIncomesBetweenDates(fromDate, toDate)
             .handleLoadingAndException(GET_SUM_OF_INCOME),
-        transactionRepository.observeSumOfExpensesBetweenDates(minDate, maxDate)
+        transactionRepository.observeSumOfExpensesBetweenDates(fromDate, toDate)
             .handleLoadingAndException(GET_SUM_OF_EXPENSES)
     ) { income, expenses ->
         return@combine SummaryMoney(

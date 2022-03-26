@@ -32,8 +32,8 @@ constructor(
         monthManger.currentMonth.flatMapLatest {
             setCurrentMonth(it)
             transactionRepository.getPieChartData(
-                minDate = it.startOfMonth,
-                maxDate = it.endOfMonth
+                fromDate = it.startOfMonth,
+                toDate = it.endOfMonth
             )
         }.asLiveData()
 
@@ -43,8 +43,8 @@ constructor(
         monthManger.currentMonth.flatMapLatest {
             transactionRepository.getAllTransactionByCategoryId(
                 categoryId = categoryId,
-                minDate = it.startOfMonth,
-                maxDate = it.endOfMonth
+                fromDate = it.startOfMonth,
+                toDate = it.endOfMonth
             )
         }.asLiveData()
 

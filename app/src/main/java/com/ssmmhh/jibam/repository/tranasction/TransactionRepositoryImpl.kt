@@ -32,47 +32,36 @@ constructor(
 ) : TransactionRepository {
 
     override fun getTransactionList(
-        minDate: Int,
-        maxDate: Int,
+        fromDate: Long,
+        toDate: Long,
         query: String
     ): Flow<List<TransactionDto>> = transactionDao.getAllOfTransactionsBetweenDates(
-        minDate = minDate,
-        maxDate = maxDate,
+        fromDate = fromDate,
+        toDate = toDate,
         query = query
     )
 
-    override fun observeSumOfExpensesBetweenDates(minDate: Int, maxDate: Int): Flow<BigDecimal> =
-        transactionDao.observeSumOfExpensesBetweenDates(minDate, maxDate)
+    override fun observeSumOfExpensesBetweenDates(fromDate: Long, toDate: Long): Flow<BigDecimal> =
+        transactionDao.observeSumOfExpensesBetweenDates(fromDate, toDate)
 
-    override fun observeSumOfIncomesBetweenDates(minDate: Int, maxDate: Int): Flow<BigDecimal> =
-        transactionDao.observeSumOfIncomesBetweenDates(minDate, maxDate)
+    override fun observeSumOfIncomesBetweenDates(fromDate: Long, toDate: Long): Flow<BigDecimal> =
+        transactionDao.observeSumOfIncomesBetweenDates(fromDate, toDate)
 
-    override fun getPieChartData(minDate: Int, maxDate: Int): Flow<List<ChartData>> = flow {
+    override fun getPieChartData(fromDate: Long, toDate: Long): Flow<List<ChartData>> = flow {
         emit(
             calculatePercentage(
-                transactionDao.sumOfMoneyGroupByCategory(
-                    fromDate = minDate,
-                    toDate = maxDate
+                transactionDao.getSumOfEachCategoryMoney(
+                    fromDate = fromDate,
+                    toDate = toDate
                 )
             )
         )
     }
 
-    private fun calculatePercentage(listOfChartDataDto: List<ChartDataDto>): List<ChartData> {
-        //Group all of chart data by its category id
-        val groupedValue = listOfChartDataDto.groupBy { it.categoryId }
-        //convert grouped hashMap to list of ChartDataDto
-        val groupedList = groupedValue.map { item ->
-            //get the first item of map then change its money to sum of all of list
-            return@map item.value.first().copy(
-                money = item.value.sumOf { it.money }
-            )
-        }
-        //sort the list by money
-        val values = groupedList.sortedByDescending { it.money.abs() }
+    private fun calculatePercentage(values: List<ChartDataDto>): List<ChartData> {
         //calculate the sum of all of moneys for further percentage calculation
-        val sumOfAllExpenses = values.filter { it.isExpensesCategory }.sumOf { it.money }
-        val sumOfAllIncome = values.filter { it.isIncomeCategory }.sumOf { it.money }
+        val sumOfAllExpenses = values.filter { it.isExpensesCategory }.sumOf { it.sumOfMoney }
+        val sumOfAllIncome = values.filter { it.isIncomeCategory }.sumOf { it.sumOfMoney }
 
         /**
          * calculate percentage of each data
@@ -83,11 +72,11 @@ constructor(
             val percentage = when (item.categoryType) {
                 CategoryEntity.EXPENSES_TYPE_MARKER -> {
                     //change scale to 3 then times it to 100 for single decimal result
-                    (item.money.setScale(divisionScale)
+                    (item.sumOfMoney.setScale(divisionScale)
                         .div(sumOfAllExpenses)).times(BigDecimal("100"))
                 }
                 CategoryEntity.INCOME_TYPE_MARKER -> {
-                    (item.money.setScale(divisionScale)
+                    (item.sumOfMoney.setScale(divisionScale)
                         .div(sumOfAllIncome)).times(BigDecimal("100"))
                 }
                 else -> {
@@ -102,12 +91,12 @@ constructor(
 
     override fun getAllTransactionByCategoryId(
         categoryId: Int,
-        minDate: Int,
-        maxDate: Int
+        fromDate: Long,
+        toDate: Long
     ): Flow<List<TransactionDto>> = transactionDao.getAllTransactionByCategoryId(
         categoryId = categoryId,
-        fromDate = minDate,
-        toDate = maxDate
+        fromDate = fromDate,
+        toDate = toDate
     )
 
 

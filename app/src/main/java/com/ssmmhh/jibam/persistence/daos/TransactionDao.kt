@@ -70,11 +70,11 @@ interface TransactionDao {
     suspend fun getTransactionById(id: Int): TransactionDto?
 
     /**
-     * Observe all of transactions with date between [minDate] and [maxDate] and money or memo like
+     * Observe all of transactions with date between [fromDate] and [toDate] and money or memo like
      * [query], order by date descending.
      * Left join on categories and categoryImages table.
      *
-     * @return transactions with date between [minDate] and [maxDate] and money or memo like [query].
+     * @return transactions with date between [fromDate] and [toDate] and money or memo like [query].
      */
     @Query(
         value =
@@ -86,7 +86,7 @@ interface TransactionDao {
             FROM transactions 
             LEFT JOIN categories ON transactions.categoryId = categories.id 
             LEFT JOIN categoryImages ON categories.imageId = categoryImages.id 
-            WHERE date BETWEEN :minDate AND :maxDate 
+            WHERE date BETWEEN :fromDate AND :toDate 
             AND 
             ( 
             money LIKE '%' || :query || '%' 
@@ -97,40 +97,40 @@ interface TransactionDao {
         """
     )
     fun getAllOfTransactionsBetweenDates(
-        minDate: Int,
-        maxDate: Int,
+        fromDate: Long,
+        toDate: Long,
         query: String
     ): Flow<List<TransactionDto>>
 
     /**
-     *  Observe the sum of expense transaction's money with date between [minDate] and [maxDate].
+     *  Observe the sum of expense transaction's money with date between [fromDate] and [toDate].
      *
-     *  @return The sum of expense transaction's money with date between [minDate] and [maxDate].
+     *  @return The sum of expense transaction's money with date between [fromDate] and [toDate].
      */
     @Query(
         """
         SELECT SUM(money) 
         FROM transactions 
-        WHERE (date BETWEEN :minDate AND :maxDate) 
+        WHERE (date BETWEEN :fromDate AND :toDate) 
         AND (money < 0) 
         """
     )
-    fun observeSumOfExpensesBetweenDates(minDate: Int, maxDate: Int): Flow<BigDecimal>
+    fun observeSumOfExpensesBetweenDates(fromDate: Long, toDate: Long): Flow<BigDecimal>
 
     /**
-     *  Observe the sum of income transaction's money with date between [minDate] and [maxDate].
+     *  Observe the sum of income transaction's money with date between [fromDate] and [toDate].
      *
-     *  @return The sum of income transaction's money with date between [minDate] and [maxDate].
+     *  @return The sum of income transaction's money with date between [fromDate] and [toDate].
      */
     @Query(
         """
         SELECT SUM(money) 
         FROM transactions 
-        WHERE (date BETWEEN :minDate AND :maxDate) 
+        WHERE (date BETWEEN :fromDate AND :toDate) 
         AND (money > 0) 
         """
     )
-    fun observeSumOfIncomesBetweenDates(minDate: Int, maxDate: Int): Flow<BigDecimal>
+    fun observeSumOfIncomesBetweenDates(fromDate: Long, toDate: Long): Flow<BigDecimal>
 
     @Query(
         value =
@@ -150,13 +150,14 @@ interface TransactionDao {
     )
     fun getAllTransactionByCategoryId(
         categoryId: Int,
-        fromDate: Int,
-        toDate: Int
+        fromDate: Long,
+        toDate: Long
     ): Flow<List<TransactionDto>>
 
-
+    //TODO FIX THIS
     @Query(
-        """SELECT money as money, 
+        """
+            SELECT SUM(money) as sumOfMoney,
             categories.id as categoryId, 
             categories.name as category_name, 
             categories.type as categoryType, 
@@ -166,10 +167,12 @@ interface TransactionDao {
             LEFT JOIN categories ON transactions.categoryId = categories.id 
             LEFT JOIN categoryImages ON categories.imageId = categoryImages.id 
             WHERE date BETWEEN :fromDate AND :toDate 
+            GROUP BY categoryId 
+            ORDER BY ABS(SUM(money)) DESC
             """
     )
-    suspend fun sumOfMoneyGroupByCategory(
-        fromDate: Int,
-        toDate: Int
+    suspend fun getSumOfEachCategoryMoney(
+        fromDate: Long,
+        toDate: Long
     ): List<ChartDataDto>
 }

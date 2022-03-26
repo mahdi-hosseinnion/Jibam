@@ -338,8 +338,8 @@ class TransactionsFragment(
     }
 
     //JUST FOR TEST
-    var startOfMonth = System.currentTimeMillis().div(1_000).toInt()
-    var endOfMonth = System.currentTimeMillis().div(1_000).toInt()
+    var startOfMonth = System.currentTimeMillis().div(1_000)
+    var endOfMonth = System.currentTimeMillis().div(1_000)
 
     private fun insertRandomTransaction() {
         val categoryId = Random.nextInt(1, 42)

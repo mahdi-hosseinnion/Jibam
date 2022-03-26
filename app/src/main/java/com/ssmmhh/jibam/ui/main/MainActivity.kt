@@ -35,13 +35,13 @@ class MainActivity : BaseActivity() {
 
     @Inject
     lateinit var currentLocale: Locale
-    
+
     @Inject
-    lateinit var  monthManager:MonthManger
-    
+    lateinit var monthManager: MonthManger
+
     @Inject
     lateinit var transactionDao: TransactionDao
-    
+
     lateinit var navController: NavController
 
     lateinit var appBarConfiguration: AppBarConfiguration
@@ -62,16 +62,14 @@ class MainActivity : BaseActivity() {
         }
         uiSetup()
         lifecycleScope.launchWhenCreated {
-            monthManager.currentMonth.collect {
-                 transactionDao.observeSumOfExpensesBetweenDates(
-                    minDate = it.startOfMonth,
-                    maxDate = it.endOfMonth
-                ).collect {
-                     Log.d(TAG, "onCreate: value: $it")
-
-                 }
+            monthManager.currentMonth.collect { month ->
+                val result = transactionDao.getSumOfEachCategoryMoney(
+                    fromDate = month.startOfMonth,
+                    toDate = month.endOfMonth
+                )
+                Log.d(TAG, "onCreate: data: \n ${result.map { it.toString() + "\n" }}")
             }
-            
+
         }
     }
 
