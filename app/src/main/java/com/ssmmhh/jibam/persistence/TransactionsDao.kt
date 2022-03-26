@@ -172,7 +172,6 @@ interface TransactionsDao {
             LEFT JOIN categories ON transactions.categoryId = categories.id 
             LEFT JOIN categoryImages ON categories.imageId = categoryImages.id 
             WHERE date BETWEEN :fromDate AND :toDate 
-            GROUP BY categoryId 
             """
     )
     //TODO ADD ORDER TO IT(ORDER BY ABS(SUM(money)) DESC)

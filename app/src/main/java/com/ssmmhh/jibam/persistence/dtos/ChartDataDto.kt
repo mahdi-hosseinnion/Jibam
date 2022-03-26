@@ -34,7 +34,7 @@ data class ChartDataDto(
         percentage: Float
     ): ChartData = ChartData(
         categoryId = this.categoryId,
-        money = money,
+        sumOfMoney = this.money,
         categoryName = this.categoryName,
         categoryType = this.categoryType,
         categoryImage = Image(

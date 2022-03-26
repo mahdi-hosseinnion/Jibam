@@ -58,30 +58,45 @@ constructor(
         )
     }
 
-    private fun calculatePercentage(values: List<ChartDataDto>): List<ChartData> {
-        val sumOfAllExpenses = values.filter { it.isExpensesCategory }.sumOf { it.money }
-
-        val sumOfAllIncome = values.filter { it.isIncomeCategory }.sumOf { it.money }
-
-        val newList = ArrayList<ChartData>()
-
-        for (item in values) {
-            val percentage: BigDecimal = when (item.categoryType) {
-                CategoryEntity.EXPENSES_TYPE_MARKER -> {
-                    (item.money.div(sumOfAllExpenses)).times(BigDecimal("100"))
-                }
-                CategoryEntity.INCOME_TYPE_MARKER -> {
-                    (item.money.div(sumOfAllIncome)).times(BigDecimal("100"))
-                }
-                else -> {
-                    BigDecimal.ZERO
-                }
-            }
-            newList.add(
-                item.toChartData(percentage.toFloat().roundToOneDigit())
+    private fun calculatePercentage(listOfChartDataDto: List<ChartDataDto>): List<ChartData> {
+        //Group all of chart data by its category id
+        val groupedValue = listOfChartDataDto.groupBy { it.categoryId }
+        //convert grouped hashMap to list of ChartDataDto
+        val groupedList = groupedValue.map { item ->
+            //get the first item of map then change its money to sum of all of list
+            return@map item.value.first().copy(
+                money = item.value.sumOf { it.money }
             )
         }
-        return newList
+        //sort the list by money
+        val values = groupedList.sortedByDescending { it.money.abs() }
+        //calculate the sum of all of moneys for further percentage calculation
+        val sumOfAllExpenses = values.filter { it.isExpensesCategory }.sumOf { it.money }
+        val sumOfAllIncome = values.filter { it.isIncomeCategory }.sumOf { it.money }
+
+        /**
+         * calculate percentage of each data
+         * map it to ChartData
+         */
+        return values.map { item ->
+            val divisionScale = 3
+            val percentage = when (item.categoryType) {
+                CategoryEntity.EXPENSES_TYPE_MARKER -> {
+                    //change scale to 3 then times it to 100 for single decimal result
+                    (item.money.setScale(divisionScale)
+                        .div(sumOfAllExpenses)).times(BigDecimal("100"))
+                }
+                CategoryEntity.INCOME_TYPE_MARKER -> {
+                    (item.money.setScale(divisionScale)
+                        .div(sumOfAllIncome)).times(BigDecimal("100"))
+                }
+                else -> {
+                    BigDecimal("-1")
+                }
+            }
+            return@map item.toChartData(percentage.toFloat())
+        }
+
     }
 
 
