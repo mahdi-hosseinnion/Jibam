@@ -24,6 +24,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 import org.hamcrest.Description
 import org.hamcrest.Matcher
+import java.math.BigDecimal
 import java.util.*
 import kotlin.math.round
 import kotlin.random.Random
@@ -33,7 +34,7 @@ import kotlin.random.Random
 @ExperimentalCoroutinesApi
 fun getTestBaseApplication(): TestBaseApplication = ApplicationProvider.getApplicationContext()
 
-val instrumentationContext : Context get() = InstrumentationRegistry.getInstrumentation().context
+val instrumentationContext: Context get() = InstrumentationRegistry.getInstrumentation().context
 
 fun atPositionOnView(
     position: Int,
@@ -155,17 +156,19 @@ const val lastExpenseCategoryId = 30
 const val lastIncomeCategoryId = 41
 fun createRandomTransaction(
     id: Int = 0,
-    date: Int = DateUtils.getCurrentTime()
+    date: Long = DateUtils.getCurrentTime()
 ): TransactionEntity {
     val isExpenseTransaction = Random.nextBoolean()
 
-    val randomMoneyAmount = Random.nextDouble(1.0, 1234.0).roundTo(2)
+    var randomMoneyAmount = Random.nextDouble(1.0, 1234.0).roundTo(2).toString().toBigDecimal()
     val randomString = UUID.randomUUID().toString()
         .substring(0, Random.nextInt(20))
-
+    if (isExpenseTransaction) {
+        randomMoneyAmount = randomMoneyAmount.negate()
+    }
     return TransactionEntity(
         id = id,
-        money = randomMoneyAmount * (if (isExpenseTransaction) -1 else 1),
+        money = randomMoneyAmount,
         memo = if (Random.nextBoolean()) null else randomString,
         cat_id = if (isExpenseTransaction)
             Random.nextInt(1, lastExpenseCategoryId.plus(1))

@@ -6,8 +6,8 @@ import com.ssmmhh.jibam.persistence.dtos.TransactionDto
 import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 import com.ssmmhh.jibam.util.Event
 import kotlinx.coroutines.flow.*
+import java.math.BigDecimal
 import java.util.*
-import kotlin.math.absoluteValue
 
 data class DetailEditTransactionViewState(
     // default transaction used to determine if user update transaction or did not
@@ -72,11 +72,11 @@ class SubmitButtonState() {
         return@combine money || memo || category || date
     }.distinctUntilChanged()
 
-    fun onMoneyChange(newMoney: Double?) {
+    fun onMoneyChange(newMoney: BigDecimal?) {
         //default money is negative when transaction is in expenses category but newMoney is
         //always positive but so we use .absoluteValue
         _doesMoneyChange.value =
-            defaultTransaction?.money?.absoluteValue != newMoney?.absoluteValue
+            defaultTransaction?.money?.abs() != newMoney?.abs()
     }
 
     fun onMemoChange(newMemo: String?) {

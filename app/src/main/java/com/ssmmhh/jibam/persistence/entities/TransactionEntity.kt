@@ -1,6 +1,8 @@
 package com.ssmmhh.jibam.persistence.entities
 
 import androidx.room.*
+import com.ssmmhh.jibam.persistence.BigDecimalTypeConverter
+import java.math.BigDecimal
 
 @Entity(
     tableName = "transactions",
@@ -10,16 +12,16 @@ import androidx.room.*
             parentColumns = arrayOf(CategoryEntity.COLUMN_ID),
             childColumns = arrayOf(TransactionEntity.COLUMN_CATEGORY_ID),
             onDelete = ForeignKey.CASCADE
-            )
+        )
     ]
 )
+@TypeConverters(BigDecimalTypeConverter::class)
 data class TransactionEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     val id: Int,
     @ColumnInfo(name = "money")
-    //TODO ("use bigDecimal for data")
-    val money: Double,
+    val money: BigDecimal,
     @ColumnInfo(name = "memo")
     val memo: String?,
     //category id exactly id

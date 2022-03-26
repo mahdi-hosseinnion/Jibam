@@ -4,6 +4,7 @@ import android.content.res.Resources
 import com.ssmmhh.jibam.persistence.dtos.TransactionDto
 import com.ssmmhh.jibam.models.TransactionsRecyclerViewItem
 import com.ssmmhh.jibam.util.SolarCalendar
+import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -24,14 +25,14 @@ class AddHeaderToTransactions(
         }
         val resultList = ArrayList<TransactionsRecyclerViewItem>()
         var headerDate = currentDateInString(currentList[0].date)
-        var incomeSum = 0.0
-        var expensesSum = 0.0
+        var incomeSum = BigDecimal.ZERO
+        var expensesSum = BigDecimal.ZERO
         var tempList = ArrayList<TransactionsRecyclerViewItem>()
         for (item in currentList) {
             if (currentDateInString(item.date) == headerDate) {
                 //make new header and items
                 tempList.add(item.toTransactionsRecyclerViewItem())
-                if (item.money >= 0) { //income
+                if (item.money >= BigDecimal.ZERO) { //income
                     incomeSum += item.money
                 } else { //expenses
                     expensesSum += item.money
@@ -43,11 +44,11 @@ class AddHeaderToTransactions(
                 //clear item to defualt
                 headerDate = currentDateInString(item.date)
                 tempList.clear()
-                incomeSum = 0.0
-                expensesSum = 0.0
+                incomeSum = BigDecimal.ZERO
+                expensesSum = BigDecimal.ZERO
                 //make new header and items
                 tempList.add(item.toTransactionsRecyclerViewItem())
-                if (item.money >= 0) { //income
+                if (item.money >= BigDecimal.ZERO) { //income
                     incomeSum += item.money
                 } else { //expenses
                     expensesSum += item.money
@@ -77,8 +78,8 @@ class AddHeaderToTransactions(
 
     private fun createHeader(
         date: String,
-        income: Double,
-        expenses: Double,
+        income: BigDecimal,
+        expenses: BigDecimal,
         length: Int
     ): TransactionsRecyclerViewItem.Header {
         return if (length > 1) {

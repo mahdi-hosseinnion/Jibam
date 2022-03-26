@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.ssmmhh.jibam.R
 import kotlinx.coroutines.withContext
+import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
@@ -46,21 +47,21 @@ const val WRONG_FARSI_LOCALE_DOT = '٫'
 const val WRONG_FARSI_LOCALE_NUMBER_SEPARATOR = '٬'
 const val DOT = '.'
 const val NUMBER_SEPARATOR = ','
-fun separate3By3(money1: Double, locale: Locale): String =
+fun separate3By3(money1: BigDecimal, locale: Locale): String =
     separate3By3_(money1, locale)
         .replace(WRONG_FARSI_LOCALE_NUMBER_SEPARATOR, NUMBER_SEPARATOR)
         .replace(WRONG_FARSI_LOCALE_DOT, DOT)
 
-private fun separate3By3_(money1: Double, locale: Locale): String {
+private fun separate3By3_(money1: BigDecimal, locale: Locale): String {
     var money = money1
     var isMoneyNegative = false
-    if (money < 0.0) {
-        money *= -1.0
+    if (money < BigDecimal.ZERO) {
+        money = money.negate()
         isMoneyNegative = true
     }
     //we use formatter to apply local(farsi digits) and ,
     val formatter: DecimalFormat = NumberFormat.getInstance(locale) as DecimalFormat
-    if (money < 1000.0) {
+    if (money < BigDecimal("1000.0")) {
         return if (isMoneyNegative)
             if (locale.isFarsi())
                 "${formatter.format(money)}-"
@@ -98,7 +99,7 @@ fun localizeDoubleNumber(money1: Double?, locale: Locale): String? {
     return (formatter.format(money)).replace(WRONG_FARSI_LOCALE_DOT, DOT)
 }
 
-fun separate3By3AndRoundIt(money: Double, locale: Locale): String {
+fun separate3By3AndRoundIt(money: BigDecimal, locale: Locale): String {
     //TIP this method will round -354.3999999999942 to -354.4
     val finalResult = separate3By3(money, locale)
 
@@ -204,12 +205,14 @@ fun trySafe(method: () -> Unit) =
     }
 
 fun Double.roundToOneDigit(): Double = Math.round(this * 10.0) / 10.0
+fun Float.roundToOneDigit(): Float = Math.round(this * 10.0f) / 10.0f
+fun BigDecimal.roundToOneDigit(): BigDecimal = this.setScale(1, BigDecimal.ROUND_HALF_EVEN)
 
 
-fun calculatePercentage(value: Double, totalAmount: Double): Double =
-    (abs(value.div(totalAmount))).times(100)
+fun calculatePercentage(value: BigDecimal, totalAmount: BigDecimal): BigDecimal =
+    ((value.div(totalAmount)).abs()).times(BigDecimal("100"))
 
-fun calculatePercentageAndRoundResult(value: Double, totalAmount: Double): Double =
+fun calculatePercentageAndRoundResult(value: BigDecimal, totalAmount: BigDecimal): BigDecimal =
     calculatePercentage(value, totalAmount).roundToOneDigit()
 
 /**
@@ -251,7 +254,7 @@ fun separateCalculatorText3By3(text: String, locale: Locale): String {
         var selectedNumber = value.substring(lastOperationPosition, currentOperationPosition)
         //if selectedNumber size is grater then 3 we will separate it
         if (selectedNumber.length > 3) {
-            selectedNumber = selectedNumber.convertFarsiDigitsToEnglishDigits().toDoubleOrNull()
+            selectedNumber = selectedNumber.convertFarsiDigitsToEnglishDigits().toBigDecimalOrNull()
                 ?.let { separate3By3(it, locale) }
                 ?: selectedNumber
         }
@@ -270,7 +273,7 @@ fun separateCalculatorText3By3(text: String, locale: Locale): String {
     var lastSectionNumber = value.substring(lastOperationPosition)
     //if selectedNumber size is grater then 3 it will be separate
     if (lastSectionNumber.length > 3) {
-        lastSectionNumber = lastSectionNumber.convertFarsiDigitsToEnglishDigits().toDoubleOrNull()
+        lastSectionNumber = lastSectionNumber.convertFarsiDigitsToEnglishDigits().toBigDecimalOrNull()
             ?.let { separate3By3(it, locale) }
             ?: lastSectionNumber
     }

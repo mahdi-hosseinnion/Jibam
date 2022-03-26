@@ -26,6 +26,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
+import java.math.BigDecimal
 import java.util.*
 
 @FlowPreview
@@ -398,7 +399,10 @@ constructor(
         val calender = viewModel.getCombineCalender()
 
         //add marker to money if its expenses
-        var money: Double = calculatedMoney.toDouble()
+        var money: BigDecimal = calculatedMoney.toBigDecimalOrNull() ?: kotlin.run {
+            showSnackBar(R.string.pls_insert_valid_amount_of_money)
+            return null
+        }
 
         val type = viewModel.getTransactionCategoryType()
 
@@ -409,7 +413,7 @@ constructor(
         }
 
         if (type == EXPENSES_TYPE_MARKER) {
-            money = money.times(-1)
+            money = money.negate()
         }
 
         return TransactionEntity(

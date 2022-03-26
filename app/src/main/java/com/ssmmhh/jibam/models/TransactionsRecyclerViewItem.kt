@@ -3,6 +3,7 @@ package com.ssmmhh.jibam.models
 import android.content.Context
 import com.ssmmhh.jibam.persistence.dtos.TransactionDto
 import com.ssmmhh.jibam.util.getResourcesStringValueByName
+import java.math.BigDecimal
 
 sealed class TransactionsRecyclerViewItem(
     val itemType: Int
@@ -10,7 +11,7 @@ sealed class TransactionsRecyclerViewItem(
 
     data class Transaction(
         val id: Int,
-        val money: Double,
+        val money: BigDecimal,
         val memo: String?,
         val categoryId: Int,
         val categoryName: String,
@@ -21,8 +22,8 @@ sealed class TransactionsRecyclerViewItem(
 
     data class Header(
         val date: String,
-        val expensesSum: Double?,
-        val incomeSum: Double?
+        val expensesSum: BigDecimal?,
+        val incomeSum: BigDecimal?
     ) : TransactionsRecyclerViewItem(HEADER_VIEW_TYPE)
 
 

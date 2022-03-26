@@ -8,9 +8,8 @@ import com.ssmmhh.jibam.persistence.dtos.ChartDataDto
 import com.ssmmhh.jibam.persistence.dtos.TransactionDto
 import com.ssmmhh.jibam.persistence.TransactionsDao
 import com.ssmmhh.jibam.persistence.entities.CategoryEntity
+import com.ssmmhh.jibam.persistence.getListOfMoney
 import com.ssmmhh.jibam.persistence.getRecords
-import com.ssmmhh.jibam.persistence.getSumOfExpenses
-import com.ssmmhh.jibam.persistence.getSumOfIncome
 import com.ssmmhh.jibam.repository.buildResponse
 import com.ssmmhh.jibam.repository.safeCacheCall
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionStateEvent
@@ -24,6 +23,7 @@ import com.ssmmhh.jibam.ui.main.transaction.transactions.state.TransactionsViewS
 import com.ssmmhh.jibam.util.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import java.math.BigDecimal
 import java.util.*
 import javax.inject.Inject
 
@@ -44,11 +44,8 @@ constructor(
         query = query
     )
 
-    override fun getSumOfIncome(minDate: Int?, maxDate: Int?): Flow<Double?> =
-        transactionsDao.getSumOfIncome(minDate, maxDate)
-
-    override fun getSumOfExpenses(minDate: Int?, maxDate: Int?): Flow<Double?> =
-        transactionsDao.getSumOfExpenses(minDate, maxDate)
+    override fun getListOfAllOfMoney(minDate: Int?, maxDate: Int?): Flow<List<BigDecimal>> =
+        transactionsDao.getListOfMoney(minDate, maxDate)
 
     override fun getPieChartData(minDate: Int, maxDate: Int): Flow<List<ChartData>> = flow {
         emit(
@@ -61,30 +58,45 @@ constructor(
         )
     }
 
-    private fun calculatePercentage(values: List<ChartDataDto>): List<ChartData> {
-        val sumOfAllExpenses = values.filter { it.isExpensesCategory }.sumOf { it.sumOfMoney }
-
-        val sumOfAllIncome = values.filter { it.isIncomeCategory }.sumOf { it.sumOfMoney }
-
-        val newList = ArrayList<ChartData>()
-
-        for (item in values) {
-            val percentage: Double = when (item.categoryType) {
-                CategoryEntity.EXPENSES_TYPE_MARKER -> {
-                    (item.sumOfMoney.div(sumOfAllExpenses)).times(100)
-                }
-                CategoryEntity.INCOME_TYPE_MARKER -> {
-                    (item.sumOfMoney.div(sumOfAllIncome)).times(100)
-                }
-                else -> {
-                    0.0
-                }
-            }
-            newList.add(
-                item.toChartData(percentage.roundToOneDigit())
+    private fun calculatePercentage(listOfChartDataDto: List<ChartDataDto>): List<ChartData> {
+        //Group all of chart data by its category id
+        val groupedValue = listOfChartDataDto.groupBy { it.categoryId }
+        //convert grouped hashMap to list of ChartDataDto
+        val groupedList = groupedValue.map { item ->
+            //get the first item of map then change its money to sum of all of list
+            return@map item.value.first().copy(
+                money = item.value.sumOf { it.money }
             )
         }
-        return newList
+        //sort the list by money
+        val values = groupedList.sortedByDescending { it.money.abs() }
+        //calculate the sum of all of moneys for further percentage calculation
+        val sumOfAllExpenses = values.filter { it.isExpensesCategory }.sumOf { it.money }
+        val sumOfAllIncome = values.filter { it.isIncomeCategory }.sumOf { it.money }
+
+        /**
+         * calculate percentage of each data
+         * map it to ChartData
+         */
+        return values.map { item ->
+            val divisionScale = 3
+            val percentage = when (item.categoryType) {
+                CategoryEntity.EXPENSES_TYPE_MARKER -> {
+                    //change scale to 3 then times it to 100 for single decimal result
+                    (item.money.setScale(divisionScale)
+                        .div(sumOfAllExpenses)).times(BigDecimal("100"))
+                }
+                CategoryEntity.INCOME_TYPE_MARKER -> {
+                    (item.money.setScale(divisionScale)
+                        .div(sumOfAllIncome)).times(BigDecimal("100"))
+                }
+                else -> {
+                    BigDecimal("-1")
+                }
+            }
+            return@map item.toChartData(percentage.toFloat())
+        }
+
     }
 
 

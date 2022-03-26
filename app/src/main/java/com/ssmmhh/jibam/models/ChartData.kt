@@ -4,15 +4,16 @@ import android.content.Context
 import com.ssmmhh.jibam.persistence.entities.CategoryEntity
 import com.ssmmhh.jibam.util.getCategoryImageResourceIdFromDrawableByCategoryImage
 import com.ssmmhh.jibam.util.getResourcesStringValueByName
+import java.math.BigDecimal
 
 
 data class ChartData(
     val categoryId: Int,
-    val sumOfMoney: Double,
+    val sumOfMoney: BigDecimal,
     val categoryName: String,
     val categoryType: Int,
     val categoryImage: Image,
-    val percentage: Double
+    val percentage: Float
 ) {
     fun getCategoryNameFromStringFile(
         context: Context,
