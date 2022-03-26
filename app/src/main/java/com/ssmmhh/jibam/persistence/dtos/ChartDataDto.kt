@@ -14,13 +14,13 @@ data class ChartDataDto(
     val categoryId: Int,
     @ColumnInfo(name = "sumOfMoney")
     val sumOfMoney: BigDecimal,
-    @ColumnInfo(name = "category_name")
+    @ColumnInfo(name = "categoryName")
     val categoryName: String,
     @ColumnInfo(name = "categoryType")
     val categoryType: Int,
-    @ColumnInfo(name = "category_image_res")
+    @ColumnInfo(name = "categoryImageRes")
     val categoryImageResourceName: String,
-    @ColumnInfo(name = "category_image_background_color")
+    @ColumnInfo(name = "categoryImageBackgroundColor")
     val categoryImageBackgroundColor: String,
 ) {
 

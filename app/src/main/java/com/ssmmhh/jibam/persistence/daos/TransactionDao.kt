@@ -197,8 +197,8 @@ interface TransactionDao {
             categories.id as categoryId, 
             categories.name as categoryName, 
             categories.type as categoryType, 
-            categoryImages.resName as category_image_res, 
-            categoryImages.backgroundColor as category_image_background_color 
+            categoryImages.resName as categoryImageRes, 
+            categoryImages.backgroundColor as categoryImageBackgroundColor 
             FROM transactions 
             LEFT JOIN categories ON transactions.categoryId = categories.id 
             LEFT JOIN categoryImages ON categories.imageId = categoryImages.id 
