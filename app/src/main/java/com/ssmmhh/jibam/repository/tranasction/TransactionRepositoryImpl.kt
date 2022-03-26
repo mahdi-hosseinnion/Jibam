@@ -41,8 +41,11 @@ constructor(
         query = query
     )
 
-    override fun getListOfAllOfMoney(minDate: Int, maxDate: Int): Flow<List<BigDecimal>> =
-        transactionDao.getListOfMoneyBetweenDates(minDate, maxDate)
+    override fun observeSumOfExpensesBetweenDates(minDate: Int, maxDate: Int): Flow<BigDecimal> =
+        transactionDao.observeSumOfExpensesBetweenDates(minDate, maxDate)
+
+    override fun observeSumOfIncomesBetweenDates(minDate: Int, maxDate: Int): Flow<BigDecimal> =
+        transactionDao.observeSumOfIncomesBetweenDates(minDate, maxDate)
 
     override fun getPieChartData(minDate: Int, maxDate: Int): Flow<List<ChartData>> = flow {
         emit(

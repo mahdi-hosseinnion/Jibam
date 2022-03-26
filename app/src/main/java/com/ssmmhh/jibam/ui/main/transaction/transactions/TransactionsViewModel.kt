@@ -96,29 +96,17 @@ constructor(
     private fun getSummeryMoney(
         minDate: Int,
         maxDate: Int
-    ): Flow<SummaryMoney> = transactionRepository.getListOfAllOfMoney(
-        minDate,
-        maxDate
-    ).handleLoadingAndException(GET_SUM_OF_INCOME).map { listOfMoney ->
-        return@map SummaryMoney(
-            income = listOfMoney.filter { it >= BigDecimal.ZERO }.sumOf { it },
-            expenses = listOfMoney.filter { it < BigDecimal.ZERO }.sumOf { it }
+    ): Flow<SummaryMoney> = combine(
+        transactionRepository.observeSumOfIncomesBetweenDates(minDate, maxDate)
+            .handleLoadingAndException(GET_SUM_OF_INCOME),
+        transactionRepository.observeSumOfExpensesBetweenDates(minDate, maxDate)
+            .handleLoadingAndException(GET_SUM_OF_EXPENSES)
+    ) { income, expenses ->
+        return@combine SummaryMoney(
+            expenses = expenses,
+            income = income
         )
     }
-    /*
-         combine(
-         transactionRepository.getSumOfIncome(minDate, maxDate)
-             .handleLoadingAndException(GET_SUM_OF_INCOME),
-         transactionRepository.getSumOfExpenses(minDate, maxDate)
-             .handleLoadingAndException(GET_SUM_OF_EXPENSES)
-     ) { _income, _expenses ->
-         val income: BigDecimal = _income ?: BigDecimal.ZERO
-         val expenses: BigDecimal = _expenses ?: BigDecimal.ZERO
-         return@combine SummaryMoney(
-             expenses = expenses,
-             income = income
-         )
-     }*/
 
     fun setSearchQuery(query: String) {
         viewModelScope.launch {

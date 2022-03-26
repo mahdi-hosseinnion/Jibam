@@ -103,13 +103,34 @@ interface TransactionDao {
     ): Flow<List<TransactionDto>>
 
     /**
-     *  Observe a list of transaction.money with date between [minDate] and [maxDate].
+     *  Observe the sum of expense transaction's money with date between [minDate] and [maxDate].
      *
-     *  @return a list of transaction.money with date between [minDate] and [maxDate].
+     *  @return The sum of expense transaction's money with date between [minDate] and [maxDate].
      */
-    @Query("SELECT money FROM transactions WHERE (date BETWEEN :minDate AND :maxDate)")
-    fun getListOfMoneyBetweenDates(minDate: Int, maxDate: Int): Flow<List<BigDecimal>>
+    @Query(
+        """
+        SELECT SUM(money) 
+        FROM transactions 
+        WHERE (date BETWEEN :minDate AND :maxDate) 
+        AND (money < 0) 
+        """
+    )
+    fun observeSumOfExpensesBetweenDates(minDate: Int, maxDate: Int): Flow<BigDecimal>
 
+    /**
+     *  Observe the sum of income transaction's money with date between [minDate] and [maxDate].
+     *
+     *  @return The sum of income transaction's money with date between [minDate] and [maxDate].
+     */
+    @Query(
+        """
+        SELECT SUM(money) 
+        FROM transactions 
+        WHERE (date BETWEEN :minDate AND :maxDate) 
+        AND (money > 0) 
+        """
+    )
+    fun observeSumOfIncomesBetweenDates(minDate: Int, maxDate: Int): Flow<BigDecimal>
 
     @Query(
         value =

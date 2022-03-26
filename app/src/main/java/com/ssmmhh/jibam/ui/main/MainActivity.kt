@@ -63,7 +63,7 @@ class MainActivity : BaseActivity() {
         uiSetup()
         lifecycleScope.launchWhenCreated {
             monthManager.currentMonth.collect {
-                 transactionDao.aaaaaaaaaaaaaaaaaaaaaaaa(
+                 transactionDao.observeSumOfExpensesBetweenDates(
                     minDate = it.startOfMonth,
                     maxDate = it.endOfMonth
                 ).collect {
