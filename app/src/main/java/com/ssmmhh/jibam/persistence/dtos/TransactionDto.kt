@@ -20,11 +20,11 @@ data class TransactionDto(
     val memo: String?,
     @ColumnInfo(name = "categoryId")
     val categoryId: Int,
-    @ColumnInfo(name = "category_name")
+    @ColumnInfo(name = "categoryName")
     val categoryName: String,
-    @ColumnInfo(name = "category_image")
+    @ColumnInfo(name = "categoryImage")
     val categoryImageResourceName: String,
-    @ColumnInfo(name = "category_image_color")
+    @ColumnInfo(name = "categoryImageColor")
     val categoryImageBackgroundColor: String,
     @ColumnInfo(name = "date")
     val date: Long,
