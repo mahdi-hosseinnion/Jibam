@@ -76,7 +76,8 @@ interface CategoriesDao {
     @Query(
         value =
         """
-        SELECT categories.*, 
+        SELECT categories.id as id,
+        categories.* ,
         categoryImages.resName as imageResourceId, 
         categoryImages.backgroundColor as imageBackgroundColor 
         FROM categories 
@@ -95,7 +96,8 @@ interface CategoriesDao {
     @Query(
         value =
         """
-        SELECT *, 
+        SELECT categories.id as id,
+        categories.* ,
         categoryImages.resName as imageResourceId, 
         categoryImages.backgroundColor as imageBackgroundColor 
         FROM categories 

@@ -251,8 +251,6 @@ constructor(
                 stateEvent
             )
 
-        val dataBaseOrder = allCategories.map { "id: ${it.id} order: ${it.ordering} |" }
-
         val newOrder = stateEvent.newOrder
 
         var didAllCategoriesUpdatedSuccessfully = true
