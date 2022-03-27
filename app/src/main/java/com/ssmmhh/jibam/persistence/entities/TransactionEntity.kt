@@ -24,7 +24,6 @@ data class TransactionEntity(
     val money: BigDecimal,
     @ColumnInfo(name = "memo")
     val memo: String?,
-    //category id exactly id
     @ColumnInfo(name = COLUMN_CATEGORY_ID)
     val cat_id: Int,
     @ColumnInfo(name = "date")

@@ -12,9 +12,9 @@ class BigDecimalTypeConverter {
     @TypeConverter
     fun stringToBigDecimal(input: String?): BigDecimal =
         if (input.isNullOrBlank())
-            BigDecimal.valueOf(0.0)
+            BigDecimal.ZERO
         else
-            input.toBigDecimalOrNull() ?: BigDecimal.valueOf(0.0)
+            input.toBigDecimalOrNull() ?: BigDecimal.ZERO
 
 
 }
