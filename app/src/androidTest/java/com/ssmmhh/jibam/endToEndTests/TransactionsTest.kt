@@ -12,7 +12,7 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.persistence.dtos.TransactionDto
-import com.ssmmhh.jibam.persistence.TransactionsDao
+import com.ssmmhh.jibam.persistence.daos.TransactionDao
 import com.ssmmhh.jibam.ui.main.MainActivity
 import com.ssmmhh.jibam.ui.main.transaction.common.MonthManger
 import com.ssmmhh.jibam.util.DateUtils
@@ -49,7 +49,7 @@ class TransactionsTest {
     lateinit var sharedPrefEditor: SharedPreferences.Editor
 
     @Inject
-    lateinit var transactionsDao: TransactionsDao
+    lateinit var transactionsDao: TransactionDao
 
     @Inject
     lateinit var monthManger: MonthManger
@@ -133,7 +133,8 @@ class TransactionsTest {
 
             //check summery money section text values
             //confirm incomes has right value
-            val sumOfIncomes = insertedTransactions.filter { it.money > BigDecimal.ZERO }.sumOf { it.money }
+            val sumOfIncomes =
+                insertedTransactions.filter { it.money > BigDecimal.ZERO }.sumOf { it.money }
             onView(withId(R.id.txt_income)).check(
                 matches(
                     withText(
@@ -145,7 +146,8 @@ class TransactionsTest {
                 )
             )
             //confirm expenses has right value
-            val sumOfExpenses = insertedTransactions.filter { it.money < BigDecimal.ZERO }.sumOf { it.money }
+            val sumOfExpenses =
+                insertedTransactions.filter { it.money < BigDecimal.ZERO }.sumOf { it.money }
             onView(withId(R.id.txt_expenses)).check(
                 matches(
                     withText(
@@ -171,8 +173,8 @@ class TransactionsTest {
                 monthManger.getEndOfCurrentMonth(DateUtils.getCurrentUnixTimeInMilliSeconds()),
             )
             val transaction = createRandomTransaction(date = date.div(1_000))
-            transactionsDao.insertOrReplace(transaction)
+            transactionsDao.insertTransaction(transaction)
         }
-        return transactionsDao.getAllRecords("").first()
+        return transactionsDao.observeAllOfTransactionsBetweenDates(0, Long.MAX_VALUE, "").first()
     }
 }
