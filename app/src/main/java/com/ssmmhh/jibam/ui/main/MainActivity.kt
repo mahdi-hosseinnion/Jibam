@@ -2,7 +2,6 @@ package com.ssmmhh.jibam.ui.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.lifecycleScope
@@ -14,14 +13,11 @@ import com.ssmmhh.jibam.BaseApplication
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.ActivityMainBinding
 import com.ssmmhh.jibam.di.factories.MainFragmentFactory
-import com.ssmmhh.jibam.persistence.daos.TransactionDao
 import com.ssmmhh.jibam.ui.BaseActivity
 import com.ssmmhh.jibam.ui.app_intro.AppIntroActivity
-import com.ssmmhh.jibam.ui.main.transaction.common.MonthManger
 import com.ssmmhh.jibam.util.PreferenceKeys
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.flow.collect
 import java.util.*
 import javax.inject.Inject
 
@@ -35,12 +31,6 @@ class MainActivity : BaseActivity() {
 
     @Inject
     lateinit var currentLocale: Locale
-
-    @Inject
-    lateinit var monthManager: MonthManger
-
-    @Inject
-    lateinit var transactionDao: TransactionDao
 
     lateinit var navController: NavController
 
@@ -61,16 +51,7 @@ class MainActivity : BaseActivity() {
             firstSetup()
         }
         uiSetup()
-        lifecycleScope.launchWhenCreated {
-            monthManager.currentMonth.collect { month ->
-                val result = transactionDao.getSumOfEachCategoryMoney(
-                    fromDate = month.startOfMonth,
-                    toDate = month.endOfMonth
-                )
-                Log.d(TAG, "onCreate: data: \n ${result.map { it.toString() + "\n" }}")
-            }
 
-        }
     }
 
     private fun checkForAppIntro() {

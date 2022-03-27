@@ -35,7 +35,7 @@ constructor(
         fromDate: Long,
         toDate: Long,
         query: String
-    ): Flow<List<TransactionDto>> = transactionDao.getAllOfTransactionsBetweenDates(
+    ): Flow<List<TransactionDto>> = transactionDao.observeAllOfTransactionsBetweenDates(
         fromDate = fromDate,
         toDate = toDate,
         query = query
@@ -93,7 +93,7 @@ constructor(
         categoryId: Int,
         fromDate: Long,
         toDate: Long
-    ): Flow<List<TransactionDto>> = transactionDao.getAllTransactionByCategoryId(
+    ): Flow<List<TransactionDto>> = transactionDao.observeAllOfTransactionsWithCategoryId(
         categoryId = categoryId,
         fromDate = fromDate,
         toDate = toDate

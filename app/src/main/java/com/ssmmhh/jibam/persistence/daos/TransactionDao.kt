@@ -106,7 +106,7 @@ interface TransactionDao {
             ORDER BY date DESC 
         """
     )
-    fun getAllOfTransactionsBetweenDates(
+    fun observeAllOfTransactionsBetweenDates(
         fromDate: Long,
         toDate: Long,
         query: String
@@ -174,7 +174,7 @@ interface TransactionDao {
             ORDER BY ABS(money) DESC 
         """
     )
-    fun getAllTransactionByCategoryId(
+    fun observeAllOfTransactionsWithCategoryId(
         categoryId: Int,
         fromDate: Long,
         toDate: Long

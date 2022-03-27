@@ -27,10 +27,10 @@ constructor(
 ) : CategoryRepository {
 
     override fun getCategoryList(): Flow<List<CategoryDto>> =
-        categoriesDao.getCategories()
+        categoriesDao.observeCategories()
 
     override fun getCategoryImages(): Flow<List<CategoryImageEntity>> =
-        categoriesDao.getCategoriesImages()
+        categoriesDao.observeCategoriesImages()
 
     override suspend fun getAllOfCategories(
         stateEvent: DetailEditTransactionStateEvent.GetAllOfCategories
