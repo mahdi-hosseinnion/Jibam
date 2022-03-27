@@ -5,7 +5,7 @@ import androidx.room.ColumnInfo
 import androidx.room.TypeConverters
 import com.ssmmhh.jibam.models.Image
 import com.ssmmhh.jibam.models.TransactionsRecyclerViewItem
-import com.ssmmhh.jibam.persistence.BigDecimalTypeConverter
+import com.ssmmhh.jibam.persistence.typeconverters.BigDecimalTypeConverter
 import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 import com.ssmmhh.jibam.util.getCategoryImageResourceIdFromDrawableByCategoryImage
 import com.ssmmhh.jibam.util.getResourcesStringValueByName
@@ -20,11 +20,11 @@ data class TransactionDto(
     val memo: String?,
     @ColumnInfo(name = "categoryId")
     val categoryId: Int,
-    @ColumnInfo(name = "category_name")
+    @ColumnInfo(name = "categoryName")
     val categoryName: String,
-    @ColumnInfo(name = "category_image")
+    @ColumnInfo(name = "categoryImage")
     val categoryImageResourceName: String,
-    @ColumnInfo(name = "category_image_color")
+    @ColumnInfo(name = "categoryImageColor")
     val categoryImageBackgroundColor: String,
     @ColumnInfo(name = "date")
     val date: Long,

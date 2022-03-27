@@ -39,13 +39,13 @@ constructor(
         _toDate
     ) { from, to ->
         return@combine Month(
-            from.longDateToIntDate(),
-            to.longDateToIntDate(),
+            from.toSecond(),
+            to.toSecond(),
             getMonthName(from)
         )
     }
 
-    private fun Long.longDateToIntDate(): Int = (this.div(1_000)).toInt()
+    private fun Long.toSecond(): Long = (this.div(1_000))
 
     fun setMonthAndYear(month: Int, year: Int) {
         val from = getStartOfCurrentMonth(month, year)

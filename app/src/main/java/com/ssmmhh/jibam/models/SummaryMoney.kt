@@ -3,8 +3,8 @@ package com.ssmmhh.jibam.models
 import java.math.BigDecimal
 
 data class SummaryMoney(
-    val income: BigDecimal = BigDecimal.ZERO,
-    val expenses: BigDecimal = BigDecimal.ZERO,
+    val income: BigDecimal,
+    val expenses: BigDecimal,
 ) {
     val balance get() = this.expenses + this.income
 

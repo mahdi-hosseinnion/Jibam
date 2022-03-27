@@ -17,26 +17,31 @@ import java.math.BigDecimal
 interface TransactionRepository {
 
     fun getTransactionList(
-        minDate: Int? = null,
-        maxDate: Int? = null,
+        fromDate: Long,
+        toDate: Long,
         query: String = ""
     ): Flow<List<TransactionDto>>
 
-    fun getListOfAllOfMoney(
-        minDate: Int?,
-        maxDate: Int?
-    ): Flow<List<BigDecimal>>
+    fun observeSumOfExpensesBetweenDates(
+        fromDate: Long,
+        toDate: Long
+    ): Flow<BigDecimal>
+
+    fun observeSumOfIncomesBetweenDates(
+        fromDate: Long,
+        toDate: Long
+    ): Flow<BigDecimal>
 
 
     fun getPieChartData(
-        minDate: Int,
-        maxDate: Int
+        fromDate: Long,
+        toDate: Long
     ): Flow<List<ChartData>>
 
     fun getAllTransactionByCategoryId(
         categoryId: Int,
-        minDate: Int,
-        maxDate: Int
+        fromDate: Long,
+        toDate: Long
     ): Flow<List<TransactionDto>>
 
     suspend fun deleteTransaction(

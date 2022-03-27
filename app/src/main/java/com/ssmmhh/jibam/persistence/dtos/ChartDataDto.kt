@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.TypeConverters
 import com.ssmmhh.jibam.models.Image
 import com.ssmmhh.jibam.models.ChartData
-import com.ssmmhh.jibam.persistence.BigDecimalTypeConverter
+import com.ssmmhh.jibam.persistence.typeconverters.BigDecimalTypeConverter
 import com.ssmmhh.jibam.persistence.entities.CategoryEntity
 import java.math.BigDecimal
 
@@ -12,15 +12,15 @@ import java.math.BigDecimal
 data class ChartDataDto(
     @ColumnInfo(name = "categoryId")
     val categoryId: Int,
-    @ColumnInfo(name = "money")
-    val money: BigDecimal,
-    @ColumnInfo(name = "category_name")
+    @ColumnInfo(name = "sumOfMoney")
+    val sumOfMoney: BigDecimal,
+    @ColumnInfo(name = "categoryName")
     val categoryName: String,
     @ColumnInfo(name = "categoryType")
     val categoryType: Int,
-    @ColumnInfo(name = "category_image_res")
+    @ColumnInfo(name = "categoryImageRes")
     val categoryImageResourceName: String,
-    @ColumnInfo(name = "category_image_background_color")
+    @ColumnInfo(name = "categoryImageBackgroundColor")
     val categoryImageBackgroundColor: String,
 ) {
 
@@ -34,7 +34,7 @@ data class ChartDataDto(
         percentage: Float
     ): ChartData = ChartData(
         categoryId = this.categoryId,
-        sumOfMoney = this.money,
+        sumOfMoney = this.sumOfMoney,
         categoryName = this.categoryName,
         categoryType = this.categoryType,
         categoryImage = Image(

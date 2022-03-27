@@ -51,6 +51,7 @@ class MainActivity : BaseActivity() {
             firstSetup()
         }
         uiSetup()
+
     }
 
     private fun checkForAppIntro() {

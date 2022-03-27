@@ -210,7 +210,7 @@ fun BigDecimal.roundToOneDigit(): BigDecimal = this.setScale(1, BigDecimal.ROUND
 
 
 fun calculatePercentage(value: BigDecimal, totalAmount: BigDecimal): BigDecimal =
-    ((value.div(totalAmount)).abs()).times(BigDecimal("100"))
+    ((value.setScale(3).div(totalAmount)).abs()).times(BigDecimal("100"))
 
 fun calculatePercentageAndRoundResult(value: BigDecimal, totalAmount: BigDecimal): BigDecimal =
     calculatePercentage(value, totalAmount).roundToOneDigit()

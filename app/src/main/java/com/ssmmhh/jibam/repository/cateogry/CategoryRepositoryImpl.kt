@@ -3,9 +3,8 @@ package com.ssmmhh.jibam.repository.cateogry
 import android.content.res.Resources
 import androidx.annotation.StringRes
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.persistence.entities.CategoryEntity
 import com.ssmmhh.jibam.persistence.entities.CategoryImageEntity
-import com.ssmmhh.jibam.persistence.CategoriesDao
+import com.ssmmhh.jibam.persistence.daos.CategoriesDao
 import com.ssmmhh.jibam.persistence.dtos.CategoryDto
 import com.ssmmhh.jibam.repository.safeCacheCall
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionStateEvent
@@ -28,10 +27,10 @@ constructor(
 ) : CategoryRepository {
 
     override fun getCategoryList(): Flow<List<CategoryDto>> =
-        categoriesDao.getCategories()
+        categoriesDao.observeCategories()
 
     override fun getCategoryImages(): Flow<List<CategoryImageEntity>> =
-        categoriesDao.getCategoriesImages()
+        categoriesDao.observeCategoriesImages()
 
     override suspend fun getAllOfCategories(
         stateEvent: DetailEditTransactionStateEvent.GetAllOfCategories

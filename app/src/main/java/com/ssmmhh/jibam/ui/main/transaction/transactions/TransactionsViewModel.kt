@@ -21,7 +21,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import java.math.BigDecimal
 import java.util.*
 import javax.inject.Inject
 
@@ -65,13 +64,13 @@ constructor(
     val transactions: LiveData<List<TransactionsRecyclerViewItem>> = _transactions
 
     private fun getTransactionList(
-        minData: Int,
-        maxDate: Int,
+        fromDate: Long,
+        toDate: Long,
         query: String
     ): Flow<List<TransactionsRecyclerViewItem>> =
         transactionRepository.getTransactionList(
-            minDate = minData,
-            maxDate = maxDate,
+            fromDate = fromDate,
+            toDate = toDate,
             query = query
         ).handleLoadingAndException(GET_TRANSACTION_LIST)
             .map {
@@ -94,31 +93,19 @@ constructor(
     val summeryMoney: LiveData<SummaryMoney> = _summeryMoney
 
     private fun getSummeryMoney(
-        minDate: Int,
-        maxDate: Int
-    ): Flow<SummaryMoney> = transactionRepository.getListOfAllOfMoney(
-        minDate,
-        maxDate
-    ).handleLoadingAndException(GET_SUM_OF_INCOME).map { listOfMoney ->
-        return@map SummaryMoney(
-            income = listOfMoney.filter { it >= BigDecimal.ZERO }.sumOf { it },
-            expenses = listOfMoney.filter { it < BigDecimal.ZERO }.sumOf { it }
+        fromDate: Long,
+        toDate: Long
+    ): Flow<SummaryMoney> = combine(
+        transactionRepository.observeSumOfIncomesBetweenDates(fromDate, toDate)
+            .handleLoadingAndException(GET_SUM_OF_INCOME),
+        transactionRepository.observeSumOfExpensesBetweenDates(fromDate, toDate)
+            .handleLoadingAndException(GET_SUM_OF_EXPENSES)
+    ) { income, expenses ->
+        return@combine SummaryMoney(
+            expenses = expenses,
+            income = income
         )
     }
-    /*
-         combine(
-         transactionRepository.getSumOfIncome(minDate, maxDate)
-             .handleLoadingAndException(GET_SUM_OF_INCOME),
-         transactionRepository.getSumOfExpenses(minDate, maxDate)
-             .handleLoadingAndException(GET_SUM_OF_EXPENSES)
-     ) { _income, _expenses ->
-         val income: BigDecimal = _income ?: BigDecimal.ZERO
-         val expenses: BigDecimal = _expenses ?: BigDecimal.ZERO
-         return@combine SummaryMoney(
-             expenses = expenses,
-             income = income
-         )
-     }*/
 
     fun setSearchQuery(query: String) {
         viewModelScope.launch {

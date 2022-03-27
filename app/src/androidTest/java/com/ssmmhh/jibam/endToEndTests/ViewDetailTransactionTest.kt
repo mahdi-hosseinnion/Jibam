@@ -14,8 +14,8 @@ import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.platform.app.InstrumentationRegistry
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.persistence.entities.TransactionEntity
-import com.ssmmhh.jibam.persistence.CategoriesDao
-import com.ssmmhh.jibam.persistence.TransactionsDao
+import com.ssmmhh.jibam.persistence.daos.CategoriesDao
+import com.ssmmhh.jibam.persistence.daos.TransactionDao
 import com.ssmmhh.jibam.ui.main.MainActivity
 import com.ssmmhh.jibam.util.DateUtils
 import com.ssmmhh.jibam.util.EspressoIdlingResources
@@ -49,7 +49,7 @@ class ViewDetailTransactionTest {
     lateinit var sharedPrefEditor: SharedPreferences.Editor
 
     @Inject
-    lateinit var transactionsDao: TransactionsDao
+    lateinit var transactionsDao: TransactionDao
 
     private val appContext = InstrumentationRegistry.getInstrumentation().targetContext
 
@@ -97,7 +97,7 @@ class ViewDetailTransactionTest {
             date = DateUtils.getCurrentTime()
 
         )
-        transactionsDao.insertOrReplace(tempTransaction)
+        transactionsDao.insertTransaction(tempTransaction)
         //click on item with transactionMemo in recyclerView
         onView(
             withText(
@@ -161,7 +161,7 @@ class ViewDetailTransactionTest {
             date = DateUtils.getCurrentTime()
 
         )
-        transactionsDao.insertOrReplace(tempTransaction)
+        transactionsDao.insertTransaction(tempTransaction)
         //click on item with transactionMemo in recyclerView
         onView(
             withText(transactionMemo)
@@ -221,7 +221,7 @@ class ViewDetailTransactionTest {
             date = DateUtils.getCurrentTime()
 
         )
-        transactionsDao.insertOrReplace(tempTransaction)
+        transactionsDao.insertTransaction(tempTransaction)
         //check if transaction is actully inserted into database
         assert(transactionsDao.getTransactionById(transactionId) != null)
         //click on item with transactionMemo in recyclerView

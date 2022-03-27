@@ -358,6 +358,8 @@ class TransactionsListAdapter(
             //money for expenses
             headerExpensesSum.text =
                 item.expensesSum?.let {
+                    if (it == BigDecimal.ZERO) return@let ""
+
                     val expensesText = separate3By3(
                         it,
                         currentLocale
@@ -368,6 +370,8 @@ class TransactionsListAdapter(
 
             //cat_id for income
             headerIncomeSum.text = item.incomeSum?.let {
+                if (it == BigDecimal.ZERO) return@let ""
+
                 val incomeText = separate3By3(
                     item.incomeSum,
                     currentLocale
