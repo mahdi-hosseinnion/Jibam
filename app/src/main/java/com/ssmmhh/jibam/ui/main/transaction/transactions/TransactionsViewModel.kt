@@ -156,10 +156,27 @@ constructor(
 
     override suspend fun getResultByStateEvent(stateEvent: TransactionsStateEvent): DataState<TransactionsViewState> =
         when (stateEvent) {
-            is TransactionsStateEvent.InsertTransaction -> transactionRepository
-                .insertTransaction(stateEvent)
-            is TransactionsStateEvent.DeleteTransaction -> transactionRepository
-                .deleteTransaction(stateEvent)
+            is TransactionsStateEvent.InsertTransaction -> {
+                val result = transactionRepository.insertTransaction(stateEvent)
+                DataState(
+                    stateMessage = result.stateMessage,
+                    data = TransactionsViewState(
+                        insertedTransactionRawId = result.data
+                    ),
+                    stateEvent = result.stateEvent
+                )
+            }
+
+            is TransactionsStateEvent.DeleteTransaction -> {
+                val result = transactionRepository.deleteTransaction(stateEvent)
+                DataState(
+                    stateMessage = result.stateMessage,
+                    data = TransactionsViewState(
+                        successfullyDeletedTransactionIndicator = result.data
+                    ),
+                    stateEvent = result.stateEvent
+                )
+            }
         }
 
     override fun updateViewState(newViewState: TransactionsViewState): TransactionsViewState {

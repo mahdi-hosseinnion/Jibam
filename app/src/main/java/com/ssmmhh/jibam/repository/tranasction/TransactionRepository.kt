@@ -8,9 +8,12 @@ import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.inserttransaction
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionViewState
 import com.ssmmhh.jibam.ui.main.transaction.chart.state.ChartStateEvent
 import com.ssmmhh.jibam.ui.main.transaction.chart.state.ChartViewState
+import com.ssmmhh.jibam.ui.main.transaction.common.state.DeleteTransactionStateEvent
+import com.ssmmhh.jibam.ui.main.transaction.common.state.InsertNewTransactionStateEvent
 import com.ssmmhh.jibam.ui.main.transaction.transactions.state.TransactionsStateEvent
 import com.ssmmhh.jibam.ui.main.transaction.transactions.state.TransactionsViewState
 import com.ssmmhh.jibam.util.DataState
+import com.ssmmhh.jibam.util.StateEvent
 import kotlinx.coroutines.flow.Flow
 import java.math.BigDecimal
 
@@ -45,32 +48,16 @@ interface TransactionRepository {
     ): Flow<List<TransactionDto>>
 
     suspend fun deleteTransaction(
-        stateEvent: TransactionsStateEvent.DeleteTransaction
-    ): DataState<TransactionsViewState>
+        stateEvent:DeleteTransactionStateEvent
+    ): DataState<Int>
 
     suspend fun insertTransaction(
-        stateEvent: TransactionsStateEvent.InsertTransaction
-    ): DataState<TransactionsViewState>
-
-    suspend fun insertTransaction(
-        stateEvent: InsertTransactionStateEvent.InsertTransaction
-    ): DataState<InsertTransactionViewState>
-
-    suspend fun insertTransaction(
-        stateEvent: ChartStateEvent.InsertTransaction
-    ): DataState<ChartViewState>
+        stateEvent: InsertNewTransactionStateEvent
+    ): DataState<Long>
 
     suspend fun updateTransaction(
         stateEvent: DetailEditTransactionStateEvent.UpdateTransaction
     ): DataState<DetailEditTransactionViewState>
-
-    suspend fun deleteTransaction(
-        stateEvent: DetailEditTransactionStateEvent.DeleteTransaction
-    ): DataState<DetailEditTransactionViewState>
-
-    suspend fun deleteTransaction(
-        stateEvent: ChartStateEvent.DeleteTransaction
-    ): DataState<ChartViewState>
 
     suspend fun getTransactionById(
         stateEvent: DetailEditTransactionStateEvent.GetTransactionById

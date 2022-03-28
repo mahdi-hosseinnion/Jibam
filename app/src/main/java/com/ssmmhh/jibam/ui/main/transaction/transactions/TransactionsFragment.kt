@@ -514,7 +514,7 @@ class TransactionsFragment(
                         //delete from database
                         viewModel.launchNewJob(
                             TransactionsStateEvent.DeleteTransaction(
-                                transactionEntity = deletedTrans.toTransactionEntity(),
+                                transactionId = deletedTrans.id,
                                 showSuccessToast = false
                             )
                         )

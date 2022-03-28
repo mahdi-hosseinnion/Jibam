@@ -52,12 +52,26 @@ constructor(
 
     override suspend fun getResultByStateEvent(stateEvent: ChartStateEvent): DataState<ChartViewState> =
         when (stateEvent) {
-            is ChartStateEvent.DeleteTransaction -> transactionRepository.deleteTransaction(
-                stateEvent
-            )
-            is ChartStateEvent.InsertTransaction -> transactionRepository.insertTransaction(
-                stateEvent
-            )
+            is ChartStateEvent.DeleteTransaction -> {
+                val result = transactionRepository.deleteTransaction(
+                    stateEvent
+                )
+                DataState(
+                    stateMessage = result.stateMessage,
+                    data = null,
+                    stateEvent = result.stateEvent
+                )
+            }
+            is ChartStateEvent.InsertTransaction -> {
+                val result = transactionRepository.insertTransaction(
+                    stateEvent
+                )
+                DataState(
+                    stateMessage = result.stateMessage,
+                    data = null,
+                    stateEvent = result.stateEvent
+                )
+            }
         }
 
     override fun updateViewState(newViewState: ChartViewState): ChartViewState {

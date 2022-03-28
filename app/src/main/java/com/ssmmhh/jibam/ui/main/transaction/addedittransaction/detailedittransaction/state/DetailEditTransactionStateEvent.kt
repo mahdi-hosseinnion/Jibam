@@ -1,6 +1,7 @@
 package com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransaction.state
 
 import com.ssmmhh.jibam.persistence.entities.TransactionEntity
+import com.ssmmhh.jibam.ui.main.transaction.common.state.DeleteTransactionStateEvent
 import com.ssmmhh.jibam.util.StateEvent
 
 sealed class DetailEditTransactionStateEvent : StateEvent {
@@ -33,9 +34,9 @@ sealed class DetailEditTransactionStateEvent : StateEvent {
     }
 
     data class DeleteTransaction(
-        val transactionId: Int,
-        val showSuccessToast: Boolean = true
-    ) : DetailEditTransactionStateEvent() {
+        override val transactionId: Int,
+        override val showSuccessToast: Boolean = true
+    ) : DetailEditTransactionStateEvent(), DeleteTransactionStateEvent {
         override fun errorInfo(): String =
             "Unable to delete transaction"
 

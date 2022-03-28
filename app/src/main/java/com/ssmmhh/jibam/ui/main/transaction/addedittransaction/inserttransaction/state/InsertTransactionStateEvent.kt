@@ -1,13 +1,14 @@
 package com.ssmmhh.jibam.ui.main.transaction.addedittransaction.inserttransaction.state
 
 import com.ssmmhh.jibam.persistence.entities.TransactionEntity
+import com.ssmmhh.jibam.ui.main.transaction.common.state.InsertNewTransactionStateEvent
 import com.ssmmhh.jibam.util.StateEvent
 
 sealed class InsertTransactionStateEvent : StateEvent {
 
     data class InsertTransaction(
-        val transactionEntity: TransactionEntity
-    ) : InsertTransactionStateEvent() {
+        override val transactionEntity: TransactionEntity
+    ) : InsertTransactionStateEvent(),InsertNewTransactionStateEvent{
         override fun errorInfo(): String = "Unable to insert transaction"
 
         override fun getId(): String =

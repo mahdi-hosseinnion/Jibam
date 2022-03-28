@@ -62,9 +62,16 @@ constructor(
         is DetailEditTransactionStateEvent.UpdateTransaction -> transactionRepository.updateTransaction(
             stateEvent
         )
-        is DetailEditTransactionStateEvent.DeleteTransaction -> transactionRepository.deleteTransaction(
-            stateEvent
-        )
+        is DetailEditTransactionStateEvent.DeleteTransaction -> {
+            val result = transactionRepository.deleteTransaction(
+                stateEvent
+            )
+            DataState(
+                stateMessage = result.stateMessage,
+                data = DetailEditTransactionViewState(successfullyDeletedTransactionIndicator = result.data),
+                stateEvent = result.stateEvent
+            )
+        }
     }
 
     override fun updateViewState(newViewState: DetailEditTransactionViewState): DetailEditTransactionViewState {

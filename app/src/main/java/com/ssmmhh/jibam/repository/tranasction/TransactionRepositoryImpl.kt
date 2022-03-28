@@ -16,6 +16,8 @@ import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.inserttransaction
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionViewState
 import com.ssmmhh.jibam.ui.main.transaction.chart.state.ChartStateEvent
 import com.ssmmhh.jibam.ui.main.transaction.chart.state.ChartViewState
+import com.ssmmhh.jibam.ui.main.transaction.common.state.DeleteTransactionStateEvent
+import com.ssmmhh.jibam.ui.main.transaction.common.state.InsertNewTransactionStateEvent
 import com.ssmmhh.jibam.ui.main.transaction.transactions.state.TransactionsStateEvent
 import com.ssmmhh.jibam.ui.main.transaction.transactions.state.TransactionsViewState
 import com.ssmmhh.jibam.util.*
@@ -103,18 +105,18 @@ constructor(
     fun getString(@StringRes id: Int) = _resources.getString(id)
 
     override suspend fun insertTransaction(
-        stateEvent: InsertTransactionStateEvent.InsertTransaction
-    ): DataState<InsertTransactionViewState> {
+        stateEvent: InsertNewTransactionStateEvent
+    ): DataState<Long> {
 
         val cacheResult = safeCacheCall {
             transactionDao.insertTransaction(stateEvent.transactionEntity)
         }
 
-        return object : CacheResponseHandler<InsertTransactionViewState, Long>(
+        return object : CacheResponseHandler<Long, Long>(
             response = cacheResult,
             stateEvent = stateEvent
         ) {
-            override suspend fun handleSuccess(resultObj: Long): DataState<InsertTransactionViewState> {
+            override suspend fun handleSuccess(resultObj: Long): DataState<Long> {
                 return if (resultObj > 0) {
                     DataState.data(
                         response = buildResponse(
@@ -122,45 +124,7 @@ constructor(
                             UIComponentType.Toast,
                             MessageType.Success
                         ),
-                        data = InsertTransactionViewState(
-                            insertedTransactionRawId = resultObj
-                        )
-                    )
-                } else {
-                    DataState.error(
-                        response = buildResponse(
-                            message = getString(R.string.transaction_error_inserted),
-                            UIComponentType.Toast,
-                            MessageType.Success
-                        ),
-                        stateEvent = stateEvent
-                    )
-                }
-            }
-        }.getResult()
-    }
-
-    override suspend fun insertTransaction(
-        stateEvent: ChartStateEvent.InsertTransaction
-    ): DataState<ChartViewState> {
-
-        val cacheResult = safeCacheCall {
-            transactionDao.insertTransaction(stateEvent.transactionEntity)
-        }
-
-        return object : CacheResponseHandler<ChartViewState, Long>(
-            response = cacheResult,
-            stateEvent = stateEvent
-        ) {
-            override suspend fun handleSuccess(resultObj: Long): DataState<ChartViewState> {
-                return if (resultObj > 0) {
-                    DataState.data(
-                        response = buildResponse(
-                            message = getString(R.string.transaction_successfully_inserted),
-                            UIComponentType.Toast,
-                            MessageType.Success
-                        ),
-                        data = null
+                        data = resultObj
                     )
                 } else {
                     DataState.error(
@@ -211,98 +175,17 @@ constructor(
         }.getResult()
     }
 
-    override suspend fun insertTransaction(
-        stateEvent: TransactionsStateEvent.InsertTransaction
-    ): DataState<TransactionsViewState> {
-
-        val cacheResult = safeCacheCall {
-            transactionDao.insertTransaction(stateEvent.transactionEntity)
-        }
-
-        return object : CacheResponseHandler<TransactionsViewState, Long>(
-            response = cacheResult,
-            stateEvent = stateEvent
-        ) {
-            override suspend fun handleSuccess(resultObj: Long): DataState<TransactionsViewState> {
-                return if (resultObj > 0) {
-                    DataState.data(
-                        response = buildResponse(
-                            message = getString(R.string.transaction_successfully_inserted),
-                            UIComponentType.Toast,
-                            MessageType.Success
-                        ),
-                        data = TransactionsViewState(
-                            insertedTransactionRawId = resultObj
-                        )
-                    )
-                } else {
-                    DataState.error(
-                        response = buildResponse(
-                            message = getString(R.string.transaction_error_inserted),
-                            UIComponentType.Toast,
-                            MessageType.Success
-                        ),
-                        stateEvent = stateEvent
-                    )
-                }
-            }
-        }.getResult()
-    }
-
     override suspend fun deleteTransaction(
-        stateEvent: TransactionsStateEvent.DeleteTransaction
-    ): DataState<TransactionsViewState> {
-        val cacheResult = safeCacheCall {
-            transactionDao.deleteTransaction(stateEvent.transactionEntity)
-        }
-        return object : CacheResponseHandler<TransactionsViewState, Int>(
-            response = cacheResult,
-            stateEvent = stateEvent
-        ) {
-            override suspend fun handleSuccess(resultObj: Int): DataState<TransactionsViewState> {
-                return if (resultObj > 0) {
-                    //success
-                    val uiComponentType: UIComponentType = if (stateEvent.showSuccessToast) {
-                        UIComponentType.Toast
-                    } else {
-                        UIComponentType.None
-                    }
-                    DataState.data(
-                        response = Response(
-                            message = getString(R.string.transaction_successfully_deleted),
-                            uiComponentType = uiComponentType,
-                            messageType = MessageType.Success
-                        ),
-                        data = TransactionsViewState(
-                            successfullyDeletedTransactionIndicator = resultObj
-                        ),
-                        stateEvent = stateEvent
-                    )
-                } else {
-                    DataState.error(
-                        response = Response(
-                            message = getString(R.string.transaction_error_deleted),
-                            uiComponentType = UIComponentType.Toast,
-                            messageType = MessageType.Error
-                        )
-                    )
-                }
-
-            }
-        }.getResult()
-    }
-
-    override suspend fun deleteTransaction(
-        stateEvent: DetailEditTransactionStateEvent.DeleteTransaction
-    ): DataState<DetailEditTransactionViewState> {
+        stateEvent: DeleteTransactionStateEvent
+    ): DataState<Int> {
         val cacheResult = safeCacheCall {
             transactionDao.deleteTransaction(stateEvent.transactionId)
         }
-        return object : CacheResponseHandler<DetailEditTransactionViewState, Int>(
+        return object : CacheResponseHandler<Int, Int>(
             response = cacheResult,
             stateEvent = stateEvent
         ) {
-            override suspend fun handleSuccess(resultObj: Int): DataState<DetailEditTransactionViewState> {
+            override suspend fun handleSuccess(resultObj: Int): DataState<Int> {
                 return if (resultObj > 0) {
                     //success
                     val uiComponentType: UIComponentType = if (stateEvent.showSuccessToast) {
@@ -316,9 +199,7 @@ constructor(
                             uiComponentType = uiComponentType,
                             messageType = MessageType.Success
                         ),
-                        data = DetailEditTransactionViewState(
-                            successfullyDeletedTransactionIndicator = resultObj
-                        ),
+                        data = resultObj,
                         stateEvent = stateEvent
                     )
                 } else {
@@ -335,46 +216,6 @@ constructor(
         }.getResult()
     }
 
-    override suspend fun deleteTransaction(
-        stateEvent: ChartStateEvent.DeleteTransaction
-    ): DataState<ChartViewState> {
-        val cacheResult = safeCacheCall {
-            transactionDao.deleteTransaction(stateEvent.transactionId)
-        }
-        return object : CacheResponseHandler<ChartViewState, Int>(
-            response = cacheResult,
-            stateEvent = stateEvent
-        ) {
-            override suspend fun handleSuccess(resultObj: Int): DataState<ChartViewState> {
-                return if (resultObj > 0) {
-                    //success
-                    val uiComponentType: UIComponentType = if (stateEvent.showSuccessToast) {
-                        UIComponentType.Toast
-                    } else {
-                        UIComponentType.None
-                    }
-                    DataState.data(
-                        response = Response(
-                            message = getString(R.string.transaction_successfully_deleted),
-                            uiComponentType = uiComponentType,
-                            messageType = MessageType.Success
-                        ),
-                        data = null,
-                        stateEvent = stateEvent
-                    )
-                } else {
-                    DataState.error(
-                        response = Response(
-                            message = getString(R.string.transaction_error_deleted),
-                            uiComponentType = UIComponentType.Toast,
-                            messageType = MessageType.Error
-                        )
-                    )
-                }
-
-            }
-        }.getResult()
-    }
 
     override suspend fun getTransactionById(
         stateEvent: DetailEditTransactionStateEvent.GetTransactionById

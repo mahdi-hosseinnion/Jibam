@@ -4,6 +4,7 @@ import com.ssmmhh.jibam.models.Category
 import com.ssmmhh.jibam.persistence.entities.TransactionEntity
 import com.ssmmhh.jibam.repository.cateogry.CategoryRepository
 import com.ssmmhh.jibam.repository.tranasction.TransactionRepository
+import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionViewState
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionPresenterState
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionStateEvent
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionViewState
@@ -38,9 +39,17 @@ constructor(
         stateEvent: InsertTransactionStateEvent
     ): DataState<InsertTransactionViewState> =
         when (stateEvent) {
-            is InsertTransactionStateEvent.InsertTransaction -> transactionRepository.insertTransaction(
-                stateEvent
-            )
+            is InsertTransactionStateEvent.InsertTransaction -> {
+                val result =  transactionRepository.insertTransaction(
+                    stateEvent
+                )
+                DataState(
+                    stateMessage = result.stateMessage,
+                    data = InsertTransactionViewState(insertedTransactionRawId = result.data),
+                    stateEvent = result.stateEvent
+                )
+            }
+
             is InsertTransactionStateEvent.GetAllOfCategories -> {
                 val result = categoryRepository.getAllOfCategories(
                     stateEvent
