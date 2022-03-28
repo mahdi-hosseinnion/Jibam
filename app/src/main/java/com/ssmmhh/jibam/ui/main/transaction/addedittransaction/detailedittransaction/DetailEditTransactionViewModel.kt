@@ -55,7 +55,7 @@ constructor(
             )
             DataState(
                 stateMessage = result.stateMessage,
-                data = DetailEditTransactionViewState(allOfCategories = result.data?.allOfCategories),
+                data = DetailEditTransactionViewState(allOfCategories = result.data),
                 stateEvent = result.stateEvent
             )
         }

@@ -47,7 +47,7 @@ constructor(
                 )
                 DataState(
                     stateMessage = result.stateMessage,
-                    data = InsertTransactionViewState(allOfCategories = result.data?.allOfCategories),
+                    data = InsertTransactionViewState(allOfCategories = result.data),
                     stateEvent = result.stateEvent
                 )
             }

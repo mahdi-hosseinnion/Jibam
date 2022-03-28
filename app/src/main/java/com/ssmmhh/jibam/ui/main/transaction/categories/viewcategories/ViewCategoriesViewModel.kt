@@ -39,7 +39,7 @@ constructor(
                 )
                 DataState(
                     stateMessage = result.stateMessage,
-                    data = ViewCategoriesViewState(categoryEntityList = result.data?.allOfCategories?.peekContent()),
+                    data = ViewCategoriesViewState(categoryEntityList = result.data?.peekContent()),
                     stateEvent = result.stateEvent
                 )
             }

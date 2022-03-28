@@ -13,7 +13,6 @@ import com.ssmmhh.jibam.ui.main.transaction.categories.addcategoires.state.AddCa
 import com.ssmmhh.jibam.ui.main.transaction.categories.addcategoires.state.AddCategoryViewState
 import com.ssmmhh.jibam.ui.main.transaction.categories.viewcategories.state.ViewCategoriesStateEvent
 import com.ssmmhh.jibam.ui.main.transaction.categories.viewcategories.state.ViewCategoriesViewState
-import com.ssmmhh.jibam.ui.main.transaction.common.state.GetAllOfCategoriesViewState
 import com.ssmmhh.jibam.util.*
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -33,16 +32,16 @@ constructor(
 
     override suspend fun getAllOfCategories(
         stateEvent: StateEvent
-    ): DataState<GetAllOfCategoriesViewState> {
+    ): DataState<Event<List<Category>?>?> {
 
         val cacheResult = safeCacheCall {
             categoriesDao.getAllOfCategories()
         }
-        return object : CacheResponseHandler<GetAllOfCategoriesViewState, List<CategoryDto>>(
+        return object : CacheResponseHandler<Event<List<Category>?>?, List<CategoryDto>>(
             response = cacheResult,
             stateEvent = stateEvent
         ) {
-            override suspend fun handleSuccess(resultObj: List<CategoryDto>): DataState<GetAllOfCategoriesViewState> {
+            override suspend fun handleSuccess(resultObj: List<CategoryDto>): DataState<Event<List<Category>?>?> {
                 return if (resultObj.isNotEmpty()) {
                     DataState.data(
                         Response(
@@ -50,9 +49,7 @@ constructor(
                             uiComponentType = UIComponentType.None,
                             messageType = MessageType.Success
                         ),
-                        data = GetAllOfCategoriesViewState(
-                            allOfCategories = Event(resultObj.map { it.toCategory() })
-                        ),
+                        data = Event(resultObj.map { it.toCategory() }),
                         stateEvent = stateEvent
                     )
                 } else {
