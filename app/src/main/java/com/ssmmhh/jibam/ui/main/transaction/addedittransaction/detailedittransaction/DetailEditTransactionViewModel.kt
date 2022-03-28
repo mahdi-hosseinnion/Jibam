@@ -49,9 +49,16 @@ constructor(
         is DetailEditTransactionStateEvent.GetTransactionById -> transactionRepository.getTransactionById(
             stateEvent
         )
-        is DetailEditTransactionStateEvent.GetAllOfCategories -> categoryRepository.getAllOfCategories(
-            stateEvent
-        )
+        is DetailEditTransactionStateEvent.GetAllOfCategories -> {
+            val result = categoryRepository.getAllOfCategories(
+                stateEvent
+            )
+            DataState(
+                stateMessage = result.stateMessage,
+                data = DetailEditTransactionViewState(allOfCategories = result.data?.allOfCategories),
+                stateEvent = result.stateEvent
+            )
+        }
         is DetailEditTransactionStateEvent.UpdateTransaction -> transactionRepository.updateTransaction(
             stateEvent
         )

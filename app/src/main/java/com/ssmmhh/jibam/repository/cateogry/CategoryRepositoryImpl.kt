@@ -3,18 +3,17 @@ package com.ssmmhh.jibam.repository.cateogry
 import android.content.res.Resources
 import androidx.annotation.StringRes
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.persistence.entities.CategoryImageEntity
+import com.ssmmhh.jibam.models.Category
 import com.ssmmhh.jibam.persistence.daos.CategoriesDao
 import com.ssmmhh.jibam.persistence.dtos.CategoryDto
+import com.ssmmhh.jibam.persistence.entities.CategoryImageEntity
 import com.ssmmhh.jibam.repository.safeCacheCall
-import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionStateEvent
-import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.detailedittransaction.state.DetailEditTransactionViewState
-import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionStateEvent
 import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.inserttransaction.state.InsertTransactionViewState
 import com.ssmmhh.jibam.ui.main.transaction.categories.addcategoires.state.AddCategoryStateEvent
 import com.ssmmhh.jibam.ui.main.transaction.categories.addcategoires.state.AddCategoryViewState
 import com.ssmmhh.jibam.ui.main.transaction.categories.viewcategories.state.ViewCategoriesStateEvent
 import com.ssmmhh.jibam.ui.main.transaction.categories.viewcategories.state.ViewCategoriesViewState
+import com.ssmmhh.jibam.ui.main.transaction.common.state.GetAllOfCategoriesViewState
 import com.ssmmhh.jibam.util.*
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -33,18 +32,17 @@ constructor(
         categoriesDao.observeCategoriesImages()
 
     override suspend fun getAllOfCategories(
-        stateEvent: DetailEditTransactionStateEvent.GetAllOfCategories
-    ): DataState<DetailEditTransactionViewState> {
+        stateEvent: StateEvent
+    ): DataState<GetAllOfCategoriesViewState> {
 
         val cacheResult = safeCacheCall {
             categoriesDao.getAllOfCategories()
         }
-        return object :
-            CacheResponseHandler<DetailEditTransactionViewState, List<CategoryDto>>(
-                response = cacheResult,
-                stateEvent = stateEvent
-            ) {
-            override suspend fun handleSuccess(resultObj: List<CategoryDto>): DataState<DetailEditTransactionViewState> {
+        return object : CacheResponseHandler<GetAllOfCategoriesViewState, List<CategoryDto>>(
+            response = cacheResult,
+            stateEvent = stateEvent
+        ) {
+            override suspend fun handleSuccess(resultObj: List<CategoryDto>): DataState<GetAllOfCategoriesViewState> {
                 return if (resultObj.isNotEmpty()) {
                     DataState.data(
                         Response(
@@ -52,87 +50,7 @@ constructor(
                             uiComponentType = UIComponentType.None,
                             messageType = MessageType.Success
                         ),
-                        data = DetailEditTransactionViewState(
-                            allOfCategories = Event(resultObj.map { it.toCategory() })
-                        ),
-                        stateEvent = stateEvent
-                    )
-                } else {
-                    DataState.error(
-                        Response(
-                            message = getString(R.string.getting_all_categories_error),
-                            uiComponentType = UIComponentType.Dialog,
-                            messageType = MessageType.Error
-                        ),
-                        stateEvent = stateEvent
-                    )
-                }
-            }
-        }.getResult()
-
-    }
-
-    override suspend fun getAllOfCategories(
-        stateEvent: ViewCategoriesStateEvent.GetAllOfCategories
-    ): DataState<ViewCategoriesViewState> {
-
-        val cacheResult = safeCacheCall {
-            categoriesDao.getAllOfCategories()
-        }
-        return object :
-            CacheResponseHandler<ViewCategoriesViewState, List<CategoryDto>>(
-                response = cacheResult,
-                stateEvent = stateEvent
-            ) {
-            override suspend fun handleSuccess(resultObj: List<CategoryDto>): DataState<ViewCategoriesViewState> {
-                return if (resultObj.isNotEmpty()) {
-                    DataState.data(
-                        Response(
-                            message = "Successfully return all of categories",
-                            uiComponentType = UIComponentType.None,
-                            messageType = MessageType.Success
-                        ),
-                        data = ViewCategoriesViewState(
-                            categoryEntityList = resultObj.map { it.toCategory() }
-                        ),
-                        stateEvent = stateEvent
-                    )
-                } else {
-                    DataState.error(
-                        Response(
-                            message = getString(R.string.getting_all_categories_error),
-                            uiComponentType = UIComponentType.Dialog,
-                            messageType = MessageType.Error
-                        ),
-                        stateEvent = stateEvent
-                    )
-                }
-            }
-        }.getResult()
-
-    }
-
-    override suspend fun getAllOfCategories(
-        stateEvent: InsertTransactionStateEvent.GetAllOfCategories
-    ): DataState<InsertTransactionViewState> {
-
-        val cacheResult = safeCacheCall {
-            categoriesDao.getAllOfCategories()
-        }
-        return object :
-            CacheResponseHandler<InsertTransactionViewState, List<CategoryDto>>(
-                response = cacheResult,
-                stateEvent = stateEvent
-            ) {
-            override suspend fun handleSuccess(resultObj: List<CategoryDto>): DataState<InsertTransactionViewState> {
-                return if (resultObj.isNotEmpty()) {
-                    DataState.data(
-                        Response(
-                            message = "Successfully return all of categories",
-                            uiComponentType = UIComponentType.None,
-                            messageType = MessageType.Success
-                        ),
-                        data = InsertTransactionViewState(
+                        data = GetAllOfCategoriesViewState(
                             allOfCategories = Event(resultObj.map { it.toCategory() })
                         ),
                         stateEvent = stateEvent

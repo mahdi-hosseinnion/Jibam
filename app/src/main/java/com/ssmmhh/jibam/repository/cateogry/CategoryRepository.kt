@@ -11,7 +11,9 @@ import com.ssmmhh.jibam.ui.main.transaction.categories.addcategoires.state.AddCa
 import com.ssmmhh.jibam.ui.main.transaction.categories.addcategoires.state.AddCategoryViewState
 import com.ssmmhh.jibam.ui.main.transaction.categories.viewcategories.state.ViewCategoriesStateEvent
 import com.ssmmhh.jibam.ui.main.transaction.categories.viewcategories.state.ViewCategoriesViewState
+import com.ssmmhh.jibam.ui.main.transaction.common.state.GetAllOfCategoriesViewState
 import com.ssmmhh.jibam.util.DataState
+import com.ssmmhh.jibam.util.StateEvent
 import kotlinx.coroutines.flow.Flow
 
 interface CategoryRepository {
@@ -23,16 +25,8 @@ interface CategoryRepository {
     ): Flow<List<CategoryImageEntity>>
 
     suspend fun getAllOfCategories(
-        stateEvent: DetailEditTransactionStateEvent.GetAllOfCategories
-    ): DataState<DetailEditTransactionViewState>
-
-    suspend fun getAllOfCategories(
-        stateEvent: ViewCategoriesStateEvent.GetAllOfCategories
-    ): DataState<ViewCategoriesViewState>
-
-    suspend fun getAllOfCategories(
-        stateEvent: InsertTransactionStateEvent.GetAllOfCategories
-    ): DataState<InsertTransactionViewState>
+        stateEvent: StateEvent
+    ): DataState<GetAllOfCategoriesViewState>
 
     suspend fun insertCategory(
         stateEvent: AddCategoryStateEvent.InsertCategory

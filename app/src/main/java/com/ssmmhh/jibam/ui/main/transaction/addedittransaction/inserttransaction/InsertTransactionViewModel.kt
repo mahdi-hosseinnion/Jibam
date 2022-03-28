@@ -10,6 +10,7 @@ import com.ssmmhh.jibam.ui.main.transaction.addedittransaction.inserttransaction
 import com.ssmmhh.jibam.ui.main.transaction.common.BaseViewModel
 import com.ssmmhh.jibam.util.DataState
 import com.ssmmhh.jibam.util.Event
+import com.ssmmhh.jibam.util.Response
 import java.util.*
 import javax.inject.Inject
 
@@ -40,9 +41,17 @@ constructor(
             is InsertTransactionStateEvent.InsertTransaction -> transactionRepository.insertTransaction(
                 stateEvent
             )
-            is InsertTransactionStateEvent.GetAllOfCategories -> categoryRepository.getAllOfCategories(
-                stateEvent
-            )
+            is InsertTransactionStateEvent.GetAllOfCategories -> {
+                val result = categoryRepository.getAllOfCategories(
+                    stateEvent
+                )
+                DataState(
+                    stateMessage = result.stateMessage,
+                    data = InsertTransactionViewState(allOfCategories = result.data?.allOfCategories),
+                    stateEvent = result.stateEvent
+                )
+            }
+
         }
 
     override fun updateViewState(newViewState: InsertTransactionViewState): InsertTransactionViewState {

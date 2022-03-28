@@ -33,9 +33,16 @@ constructor(
             is ViewCategoriesStateEvent.ChangeCategoryOrder -> categoryRepository.changeCategoryOrder(
                 stateEvent
             )
-            is ViewCategoriesStateEvent.GetAllOfCategories -> categoryRepository.getAllOfCategories(
-                stateEvent
-            )
+            is ViewCategoriesStateEvent.GetAllOfCategories -> {
+                val result = categoryRepository.getAllOfCategories(
+                    stateEvent
+                )
+                DataState(
+                    stateMessage = result.stateMessage,
+                    data = ViewCategoriesViewState(categoryEntityList = result.data?.allOfCategories?.peekContent()),
+                    stateEvent = result.stateEvent
+                )
+            }
         }
 
     override fun updateViewState(newViewStateView: ViewCategoriesViewState): ViewCategoriesViewState {
