@@ -1,9 +1,9 @@
 package com.ssmmhh.jibam.di
 
 import android.app.Application
-import com.ssmmhh.jibam.ui.app_intro.AppIntroActivity
-import com.ssmmhh.jibam.ui.main.MainActivity
-import com.ssmmhh.jibam.ui.main.transaction.common.MonthManger
+import com.ssmmhh.jibam.feature_intro.AppIntroActivity
+import com.ssmmhh.jibam.MainActivity
+import com.ssmmhh.jibam.ui.main.transaction.feature_common.MonthManger
 import dagger.BindsInstance
 import dagger.Component
 import kotlinx.coroutines.ExperimentalCoroutinesApi

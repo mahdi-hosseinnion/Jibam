@@ -2,8 +2,8 @@ package com.ssmmhh.jibam.di
 
 import android.app.Application
 import androidx.room.Room
-import com.ssmmhh.jibam.persistence.AppDatabase
-import com.ssmmhh.jibam.persistence.AppDatabase.Companion.MIGRATION_4_5
+import com.ssmmhh.jibam.data.source.local.AppDatabase
+import com.ssmmhh.jibam.data.source.local.AppDatabase.Companion.MIGRATION_4_5
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.ExperimentalCoroutinesApi

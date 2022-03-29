@@ -11,10 +11,10 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.persistence.entities.CategoryEntity
-import com.ssmmhh.jibam.persistence.daos.CategoriesDao
-import com.ssmmhh.jibam.persistence.dtos.CategoryDto
-import com.ssmmhh.jibam.ui.main.MainActivity
+import com.ssmmhh.jibam.data.source.local.entity.CategoryEntity
+import com.ssmmhh.jibam.data.source.local.dao.CategoriesDao
+import com.ssmmhh.jibam.data.source.local.dto.CategoryDto
+import com.ssmmhh.jibam.MainActivity
 import com.ssmmhh.jibam.util.EspressoIdlingResources
 import com.ssmmhh.jibam.util.PreferenceKeys
 import com.ssmmhh.jibam.utils.*

@@ -9,8 +9,8 @@ import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.ui.app_intro.AppIntroActivity
-import com.ssmmhh.jibam.ui.main.MainActivity
+import com.ssmmhh.jibam.feature_intro.AppIntroActivity
+import com.ssmmhh.jibam.MainActivity
 import com.ssmmhh.jibam.util.PreferenceKeys
 import com.ssmmhh.jibam.utils.getTestBaseApplication
 import kotlinx.coroutines.ExperimentalCoroutinesApi

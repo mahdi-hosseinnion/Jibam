@@ -2,7 +2,7 @@ package com.ssmmhh.jibam.util
 
 import android.content.res.Resources
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.ui.main.transaction.transactions.TransactionsListAdapter
+import com.ssmmhh.jibam.ui.main.transaction.feature_transactions.TransactionsListAdapter
 import java.util.*
 
 //  this algorithm for years and it is very accurate between 1901 and 2099.
@@ -278,9 +278,7 @@ object SolarCalendar {
 //        const val maxGregorianMonth = 3
 //        const val maxGregorianDay = 19
     //yea integer max value
-    enum
-
-    class ShamsiPatterns {
+    enum class ShamsiPatterns {
         RECYCLER_VIEW,
         DETAIL_FRAGMENT, DETAIL_CHART_FRAGMENT, YEAR_MONTH, JUST_MONTH_NAME, JUST_MONTH_NUMBER, JUST_YEAR_NUMBER, TEST
     }

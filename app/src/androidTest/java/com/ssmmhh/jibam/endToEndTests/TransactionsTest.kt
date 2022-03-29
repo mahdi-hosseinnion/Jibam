@@ -11,10 +11,10 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.persistence.dtos.TransactionDto
-import com.ssmmhh.jibam.persistence.daos.TransactionDao
-import com.ssmmhh.jibam.ui.main.MainActivity
-import com.ssmmhh.jibam.ui.main.transaction.common.MonthManger
+import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
+import com.ssmmhh.jibam.data.source.local.dao.TransactionDao
+import com.ssmmhh.jibam.MainActivity
+import com.ssmmhh.jibam.ui.main.transaction.feature_common.MonthManger
 import com.ssmmhh.jibam.util.DateUtils
 import com.ssmmhh.jibam.util.EspressoIdlingResources
 import com.ssmmhh.jibam.util.PreferenceKeys
@@ -34,7 +34,6 @@ import org.junit.runner.RunWith
 import java.math.BigDecimal
 import java.util.*
 import javax.inject.Inject
-import kotlin.math.absoluteValue
 import kotlin.random.Random
 
 /**

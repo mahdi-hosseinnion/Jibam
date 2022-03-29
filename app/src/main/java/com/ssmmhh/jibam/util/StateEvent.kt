@@ -2,7 +2,7 @@ package com.ssmmhh.jibam.util
 
 interface StateEvent {
 
-    fun errorInfo():String
+    val errorInfo: String
 
-    fun getId():String
+    val getId: String
 }

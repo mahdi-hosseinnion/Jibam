@@ -11,8 +11,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
-import com.ssmmhh.jibam.models.TransactionsRecyclerViewItem
-import com.ssmmhh.jibam.ui.main.transaction.transactions.TransactionsListAdapter
+import com.ssmmhh.jibam.data.model.TransactionsRecyclerViewItem
 
 abstract class SwipeToDeleteCallback(context: Context) :
     ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {

@@ -2,7 +2,7 @@ package com.ssmmhh.jibam.di
 
 import android.app.Application
 import androidx.room.Room
-import com.ssmmhh.jibam.persistence.AppDatabase
+import com.ssmmhh.jibam.data.source.local.AppDatabase
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

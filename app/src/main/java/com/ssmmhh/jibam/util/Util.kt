@@ -8,12 +8,11 @@ import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.ssmmhh.jibam.R
-import kotlinx.coroutines.withContext
+import com.ssmmhh.jibam.ui.main.transaction.feature_addedittransaction.common.CalculatorKeyboard
 import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
-import kotlin.math.abs
 
 /*fun sortCategoriesWithPinned(categoryList: List<Category>?): List<Category>? {
     if (categoryList == null) {

@@ -5,7 +5,7 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-//https://jdf.scr.ir/jdf/kotlin
+//source: https://jdf.scr.ir/jdf/kotlin
 object DateUtils {
 
     /**  Gregorian & Jalali (Hijri_Shamsi,Solar) Date Converter Functions

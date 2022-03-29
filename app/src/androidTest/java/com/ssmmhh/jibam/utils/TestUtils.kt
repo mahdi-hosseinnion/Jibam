@@ -16,7 +16,7 @@ import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry
 import com.ssmmhh.jibam.TestBaseApplication
-import com.ssmmhh.jibam.persistence.entities.TransactionEntity
+import com.ssmmhh.jibam.data.source.local.entity.TransactionEntity
 import com.ssmmhh.jibam.util.DateUtils
 import com.ssmmhh.jibam.util.PreferenceKeys
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,7 +24,6 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 import org.hamcrest.Description
 import org.hamcrest.Matcher
-import java.math.BigDecimal
 import java.util.*
 import kotlin.math.round
 import kotlin.random.Random

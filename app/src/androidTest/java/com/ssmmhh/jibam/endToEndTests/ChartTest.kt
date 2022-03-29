@@ -12,11 +12,11 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.platform.app.InstrumentationRegistry
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.persistence.daos.CategoriesDao
-import com.ssmmhh.jibam.persistence.daos.TransactionDao
-import com.ssmmhh.jibam.ui.main.MainActivity
-import com.ssmmhh.jibam.ui.main.transaction.chart.ChartListAdapter
-import com.ssmmhh.jibam.ui.main.transaction.chart.DetailChartListAdapter
+import com.ssmmhh.jibam.data.source.local.dao.CategoriesDao
+import com.ssmmhh.jibam.data.source.local.dao.TransactionDao
+import com.ssmmhh.jibam.MainActivity
+import com.ssmmhh.jibam.ui.main.transaction.feature_chart.ChartListAdapter
+import com.ssmmhh.jibam.ui.main.transaction.feature_chart.DetailChartListAdapter
 import com.ssmmhh.jibam.util.DateUtils
 import com.ssmmhh.jibam.util.EspressoIdlingResources
 import com.ssmmhh.jibam.util.PreferenceKeys
