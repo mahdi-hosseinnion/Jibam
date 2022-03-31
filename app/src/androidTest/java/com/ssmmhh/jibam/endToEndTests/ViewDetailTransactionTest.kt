@@ -16,7 +16,7 @@ import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.source.local.entity.TransactionEntity
 import com.ssmmhh.jibam.data.source.local.dao.CategoriesDao
 import com.ssmmhh.jibam.data.source.local.dao.TransactionDao
-import com.ssmmhh.jibam.MainActivity
+import com.ssmmhh.jibam.presentation.MainActivity
 import com.ssmmhh.jibam.util.DateUtils
 import com.ssmmhh.jibam.util.EspressoIdlingResources
 import com.ssmmhh.jibam.util.PreferenceKeys

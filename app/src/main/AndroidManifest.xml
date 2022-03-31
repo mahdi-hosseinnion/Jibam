@@ -11,9 +11,9 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/Theme.Jibi">
-        <activity android:name="com.ssmmhh.jibam.feature_intro.AppIntroActivity" />
+        <activity android:name="com.ssmmhh.jibam.presentation.intro.AppIntroActivity" />
         <activity
-            android:name="com.ssmmhh.jibam.MainActivity"
+            android:name="com.ssmmhh.jibam.presentation.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>

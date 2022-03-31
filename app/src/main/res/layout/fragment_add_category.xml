@@ -6,7 +6,7 @@
     android:id="@+id/add_category_fragment_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".feature_categories.addcategoires.AddCategoryFragment">
+    tools:context=".presentation.categories.addcategoires.AddCategoryFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

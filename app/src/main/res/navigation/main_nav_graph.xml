@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/transactionFragment"
-        android:name="com.ssmmhh.jibam.feature_transactions.TransactionsFragment"
+        android:name="com.ssmmhh.jibam.presentation.feature_transactions.TransactionsFragment"
         android:label=""
         tools:layout="@layout/fragment_transaction">
         <action
@@ -55,7 +55,7 @@
     </fragment>
     <fragment
         android:id="@+id/insertTransactionFragment"
-        android:name="com.ssmmhh.jibam.feature_addedittransaction.inserttransaction.InsertTransactionFragment"
+        android:name="com.ssmmhh.jibam.presentation.addedittransaction.inserttransaction.InsertTransactionFragment"
         android:label=""
         tools:layout="@layout/fragment_add_transaction">
         <action
@@ -70,7 +70,7 @@
 
     <fragment
         android:id="@+id/viewCategoriesFragment"
-        android:name="com.ssmmhh.jibam.feature_categories.viewcategories.ViewCategoriesFragment"
+        android:name="com.ssmmhh.jibam.presentation.categories.viewcategories.ViewCategoriesFragment"
         android:label=""
         tools:layout="@layout/fragment_view_categories">
         <action
@@ -90,7 +90,7 @@
     </fragment>
     <fragment
         android:id="@+id/addCategoryFragment"
-        android:name="com.ssmmhh.jibam.feature_categories.addcategoires.AddCategoryFragment"
+        android:name="com.ssmmhh.jibam.presentation.categories.addcategoires.AddCategoryFragment"
         android:label=""
         tools:layout="@layout/fragment_add_category">
         <argument
@@ -100,7 +100,7 @@
     </fragment>
     <fragment
         android:id="@+id/settingFragment"
-        android:name="com.ssmmhh.jibam.feature_setting.SettingFragment"
+        android:name="com.ssmmhh.jibam.presentation.setting.SettingFragment"
         android:label=""
         tools:layout="@layout/fragment_setting">
         <action
@@ -113,7 +113,7 @@
     </fragment>
     <fragment
         android:id="@+id/aboutUsFragment"
-        android:name="com.ssmmhh.jibam.feature_aboutus.AboutUsFragment"
+        android:name="com.ssmmhh.jibam.presentation.aboutus.AboutUsFragment"
         android:label=""
         tools:layout="@layout/fragment_about_us">
         <action
@@ -126,7 +126,7 @@
     </fragment>
     <fragment
         android:id="@+id/chartFragment"
-        android:name="com.ssmmhh.jibam.feature_chart.ChartFragment"
+        android:name="com.ssmmhh.jibam.presentation.chart.ChartFragment"
         android:label=""
         tools:layout="@layout/fragment_chart">
         <action
@@ -146,7 +146,7 @@
     </fragment>
     <fragment
         android:id="@+id/detailChartFragment"
-        android:name="com.ssmmhh.jibam.feature_chart.DetailChartFragment"
+        android:name="com.ssmmhh.jibam.presentation.chart.DetailChartFragment"
         android:label=""
         tools:layout="@layout/fragment_detail_chart">
         <action
@@ -176,7 +176,7 @@
     </fragment>
     <fragment
         android:id="@+id/detailEditTransactionFragment"
-        android:name="com.ssmmhh.jibam.feature_addedittransaction.detailedittransaction.DetailEditTransactionFragment">
+        android:name="com.ssmmhh.jibam.presentation.addedittransaction.detailedittransaction.DetailEditTransactionFragment">
         <action
             android:id="@+id/action_detailEditTransactionFragment_to_transactionFragment"
             app:destination="@id/transactionFragment"

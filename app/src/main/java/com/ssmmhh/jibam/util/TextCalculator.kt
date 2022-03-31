@@ -1,10 +1,10 @@
 package com.ssmmhh.jibam.util
 
 import android.util.Log
-import com.ssmmhh.jibam.feature_addedittransaction.common.CalculatorKeyboard.Companion.DIVISION
-import com.ssmmhh.jibam.feature_addedittransaction.common.CalculatorKeyboard.Companion.MINES
-import com.ssmmhh.jibam.feature_addedittransaction.common.CalculatorKeyboard.Companion.PLUS
-import com.ssmmhh.jibam.feature_addedittransaction.common.CalculatorKeyboard.Companion.TIMES
+import com.ssmmhh.jibam.presentation.addedittransaction.common.CalculatorKeyboard.Companion.DIVISION
+import com.ssmmhh.jibam.presentation.addedittransaction.common.CalculatorKeyboard.Companion.MINES
+import com.ssmmhh.jibam.presentation.addedittransaction.common.CalculatorKeyboard.Companion.PLUS
+import com.ssmmhh.jibam.presentation.addedittransaction.common.CalculatorKeyboard.Companion.TIMES
 
 //TODO divide by 0?
 class TextCalculator {

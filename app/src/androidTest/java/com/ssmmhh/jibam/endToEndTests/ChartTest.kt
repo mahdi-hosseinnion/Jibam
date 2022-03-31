@@ -14,7 +14,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.source.local.dao.CategoriesDao
 import com.ssmmhh.jibam.data.source.local.dao.TransactionDao
-import com.ssmmhh.jibam.MainActivity
+import com.ssmmhh.jibam.presentation.MainActivity
 import com.ssmmhh.jibam.ui.main.transaction.feature_chart.ChartListAdapter
 import com.ssmmhh.jibam.ui.main.transaction.feature_chart.DetailChartListAdapter
 import com.ssmmhh.jibam.util.DateUtils

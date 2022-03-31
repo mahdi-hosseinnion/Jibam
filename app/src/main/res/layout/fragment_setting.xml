@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="#e0e0e0"
     android:orientation="vertical"
-    tools:context=".feature_setting.SettingFragment">
+    tools:context=".presentation.setting.SettingFragment">
 
     <include
         android:id="@+id/toolbar"

@@ -11,7 +11,7 @@ import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.MainActivity
+import com.ssmmhh.jibam.presentation.MainActivity
 import com.ssmmhh.jibam.ui.main.transaction.feature_addedittransaction.categorybottomsheet.CategoryBottomSheetListAdapter.CategoryViewHolder
 import com.ssmmhh.jibam.util.EspressoIdlingResources
 import com.ssmmhh.jibam.util.PreferenceKeys

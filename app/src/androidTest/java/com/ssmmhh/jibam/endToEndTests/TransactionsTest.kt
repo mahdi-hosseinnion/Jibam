@@ -13,7 +13,7 @@ import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
 import com.ssmmhh.jibam.data.source.local.dao.TransactionDao
-import com.ssmmhh.jibam.MainActivity
+import com.ssmmhh.jibam.presentation.MainActivity
 import com.ssmmhh.jibam.ui.main.transaction.feature_common.MonthManger
 import com.ssmmhh.jibam.util.DateUtils
 import com.ssmmhh.jibam.util.EspressoIdlingResources
