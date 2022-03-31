@@ -5,8 +5,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.activity.OnBackPressedCallback
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.bumptech.glide.RequestManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -15,13 +18,15 @@ import com.ssmmhh.jibam.data.model.Category
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
 import com.ssmmhh.jibam.data.source.local.entity.CategoryEntity.Companion.EXPENSES_TYPE_MARKER
 import com.ssmmhh.jibam.data.source.local.entity.TransactionEntity
-import com.ssmmhh.jibam.ui.main.transaction.feature_addedittransaction.common.AddEditTransactionParentFragment
-import com.ssmmhh.jibam.ui.main.transaction.feature_addedittransaction.detailedittransaction.state.DetailEditTransactionPresenterState
-import com.ssmmhh.jibam.ui.main.transaction.feature_addedittransaction.detailedittransaction.state.DetailEditTransactionPresenterState.*
+import com.ssmmhh.jibam.feature_addedittransaction.common.AddEditTransactionParentFragment
+import com.ssmmhh.jibam.feature_addedittransaction.detailedittransaction.state.DetailEditTransactionPresenterState
+import com.ssmmhh.jibam.feature_addedittransaction.detailedittransaction.state.DetailEditTransactionPresenterState.*
+import com.ssmmhh.jibam.feature_addedittransaction.detailedittransaction.DetailEditTransactionFragmentArgs
 import com.ssmmhh.jibam.util.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import java.math.BigDecimal
 import java.util.*
 
@@ -77,18 +82,17 @@ constructor(
             //we use delay here
             //b/c its fab flashed(appear and disappear quickly) when data did not set to editTexts
             delay(500)
-            viewModel.submitButtonState.isSubmitButtonEnable
-                .collect {
-                    Log.d("DetailEditTransactionVi", "setupUi: $it ")
-                    backStackForDialog.isEnabled = it
-                    binding.toolbar?.topAppBarNormal?.title = if (it) {
-                        binding.fabSubmit.show()
-                        getString(R.string.edit_transaction)
-                    } else {
-                        binding.fabSubmit.hide()
-                        getString(R.string.details)
-                    }
+            viewModel.submitButtonState.isSubmitButtonEnable.collect {
+                Log.d("DetailEditTransactionVi", "setupUi: $it ")
+                backStackForDialog.isEnabled = it
+                binding.toolbar?.topAppBarNormal?.title = if (it) {
+                    binding.fabSubmit.show()
+                    getString(R.string.edit_transaction)
+                } else {
+                    binding.fabSubmit.hide()
+                    getString(R.string.details)
                 }
+            }
         }
 
         /**
@@ -120,7 +124,7 @@ constructor(
         viewModel.stateMessage.observe(viewLifecycleOwner) { sm ->
             sm?.let { stateMessage ->
 
-                uiCommunicationListener.onResponseReceived(
+                activityCommunicationListener.onResponseReceived(
                     response = stateMessage.response,
                     stateMessageCallback = object : StateMessageCallback {
                         override fun removeMessageFromStack() {
@@ -130,12 +134,12 @@ constructor(
                 if (stateMessage.response.message ==
                     getString(R.string.transaction_successfully_deleted)
                 ) {
-                    uiCommunicationListener.hideSoftKeyboard()
+                    activityCommunicationListener.hideSoftKeyboard()
                     navigateBack()
                 }
                 if (stateMessage.response.message == getString(R.string.transaction_successfully_updated)) {
                     //transaction successfully inserted
-                    uiCommunicationListener.hideSoftKeyboard()
+                    activityCommunicationListener.hideSoftKeyboard()
                     navigateBack()
                 }
                 if (stateMessage.response.messageType == MessageType.Error) {
@@ -176,7 +180,7 @@ constructor(
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
                 binding.categoryFab.hide()
                 viewModel.submitButtonState.forcedHidden(true)
-                uiCommunicationListener.hideSoftKeyboard()
+                activityCommunicationListener.hideSoftKeyboard()
                 disableContentInteraction(binding.edtMemo)
             }
 
@@ -185,7 +189,7 @@ constructor(
                 binding.categoryFab.show()
                 viewModel.submitButtonState.forcedHidden(false)
                 disableContentInteraction(binding.edtMemo)
-//                uiCommunicationListener.hideSoftKeyboard()
+//                activityCommunicationListener.hideSoftKeyboard()
                 showCustomKeyboard(binding.edtMoney)
             }
             is AddingNoteState -> {
@@ -200,7 +204,7 @@ constructor(
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 binding.categoryFab.show()
                 viewModel.submitButtonState.forcedHidden(false)
-                uiCommunicationListener.hideSoftKeyboard()
+                activityCommunicationListener.hideSoftKeyboard()
                 hideCustomKeyboard()
                 disableContentInteraction(binding.edtMemo)
                 //apply
@@ -211,7 +215,7 @@ constructor(
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 binding.categoryFab.show()
                 viewModel.submitButtonState.forcedHidden(false)
-                uiCommunicationListener.hideSoftKeyboard()
+                activityCommunicationListener.hideSoftKeyboard()
                 hideCustomKeyboard()
                 disableContentInteraction(binding.edtMemo)
                 //apply
@@ -223,7 +227,7 @@ constructor(
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 binding.categoryFab.show()
                 viewModel.submitButtonState.forcedHidden(false)
-                uiCommunicationListener.hideSoftKeyboard()
+                activityCommunicationListener.hideSoftKeyboard()
                 hideCustomKeyboard()
                 disableContentInteraction(binding.edtMemo)
 
@@ -248,7 +252,7 @@ constructor(
         }
 
         //set date to edit text
-        setDateToEditTexts(((transaction.date).toLong()).times(1_000))
+        setDateToEditTexts(((transaction.date)).times(1_000))
 
     }
 
@@ -426,7 +430,7 @@ constructor(
             if (this.isEnabled) {
                 showDiscardOrSaveDialog()
             } else {
-                uiCommunicationListener.hideSoftKeyboard()
+                activityCommunicationListener.hideSoftKeyboard()
                 navigateBack()
             }
         }
@@ -440,7 +444,7 @@ constructor(
             }
 
             override fun discard() {
-                uiCommunicationListener.hideSoftKeyboard()
+                activityCommunicationListener.hideSoftKeyboard()
                 navigateBack()
             }
 

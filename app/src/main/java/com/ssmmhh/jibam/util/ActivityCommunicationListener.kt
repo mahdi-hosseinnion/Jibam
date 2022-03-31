@@ -4,7 +4,7 @@ import com.ssmmhh.jibam.util.Response
 import com.ssmmhh.jibam.util.StateMessageCallback
 
 
-interface UICommunicationListener {
+interface ActivityCommunicationListener {
 
     fun onResponseReceived(
         response: Response,

@@ -6,6 +6,7 @@ import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.bumptech.glide.RequestManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
@@ -13,9 +14,9 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.model.Category
 import com.ssmmhh.jibam.data.source.local.entity.TransactionEntity
-import com.ssmmhh.jibam.ui.main.transaction.feature_addedittransaction.common.AddEditTransactionParentFragment
-import com.ssmmhh.jibam.ui.main.transaction.feature_addedittransaction.inserttransaction.state.InsertTransactionPresenterState
-import com.ssmmhh.jibam.ui.main.transaction.feature_addedittransaction.inserttransaction.state.InsertTransactionPresenterState.*
+import com.ssmmhh.jibam.feature_addedittransaction.common.AddEditTransactionParentFragment
+import com.ssmmhh.jibam.feature_addedittransaction.inserttransaction.state.InsertTransactionPresenterState
+import com.ssmmhh.jibam.feature_addedittransaction.inserttransaction.state.InsertTransactionPresenterState.*
 import com.ssmmhh.jibam.util.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -88,7 +89,7 @@ constructor(
         viewModel.stateMessage.observe(viewLifecycleOwner) { sm ->
             sm?.let { stateMessage ->
 
-                uiCommunicationListener.onResponseReceived(
+                activityCommunicationListener.onResponseReceived(
                     response = stateMessage.response,
                     stateMessageCallback = object : StateMessageCallback {
                         override fun removeMessageFromStack() {
@@ -97,7 +98,7 @@ constructor(
                     })
                 if (stateMessage.response.message == getString(R.string.transaction_successfully_inserted)) {
                     //transaction successfully inserted
-                    uiCommunicationListener.hideSoftKeyboard()
+                    activityCommunicationListener.hideSoftKeyboard()
                     navigateBack()
                 }
                 if (stateMessage.response.messageType == MessageType.Error) {
@@ -136,7 +137,7 @@ constructor(
 
                 binding.categoryFab.hide()
                 binding.fabSubmit.hide()
-                uiCommunicationListener.hideSoftKeyboard()
+                activityCommunicationListener.hideSoftKeyboard()
                 disableContentInteraction(binding.edtMemo)
             }
 
@@ -147,7 +148,7 @@ constructor(
                 binding.categoryFab.show()
                 binding.fabSubmit.show()
                 disableContentInteraction(binding.edtMemo)
-//                uiCommunicationListener.hideSoftKeyboard()
+//                activityCommunicationListener.hideSoftKeyboard()
                 showCustomKeyboard(binding.edtMoney)
             }
             is AddingNoteState -> {
@@ -166,7 +167,7 @@ constructor(
 
                 binding.categoryFab.show()
                 binding.fabSubmit.show()
-                uiCommunicationListener.hideSoftKeyboard()
+                activityCommunicationListener.hideSoftKeyboard()
                 hideCustomKeyboard()
                 disableContentInteraction(binding.edtMemo)
                 //apply
@@ -179,7 +180,7 @@ constructor(
 
                 binding.categoryFab.show()
                 binding.fabSubmit.show()
-                uiCommunicationListener.hideSoftKeyboard()
+                activityCommunicationListener.hideSoftKeyboard()
                 hideCustomKeyboard()
                 disableContentInteraction(binding.edtMemo)
                 //apply
@@ -193,7 +194,7 @@ constructor(
 
                 binding.categoryFab.show()
                 binding.fabSubmit.show()
-                uiCommunicationListener.hideSoftKeyboard()
+                activityCommunicationListener.hideSoftKeyboard()
                 hideCustomKeyboard()
                 disableContentInteraction(binding.edtMemo)
 

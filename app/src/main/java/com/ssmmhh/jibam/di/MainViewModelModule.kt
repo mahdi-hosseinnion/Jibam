@@ -2,14 +2,14 @@ package com.ssmmhh.jibam.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.ssmmhh.jibam.di.key.MainViewModelKey
-import com.ssmmhh.jibam.ui.main.transaction.feature_addedittransaction.detailedittransaction.DetailEditTransactionViewModel
-import com.ssmmhh.jibam.ui.main.transaction.feature_addedittransaction.inserttransaction.InsertTransactionViewModel
-import com.ssmmhh.jibam.ui.main.transaction.feature_categories.addcategoires.AddCategoryViewModel
-import com.ssmmhh.jibam.ui.main.transaction.feature_categories.viewcategories.ViewCategoriesViewModel
-import com.ssmmhh.jibam.ui.main.transaction.feature_chart.ChartViewModel
-import com.ssmmhh.jibam.ui.main.transaction.feature_transactions.TransactionsViewModel
 import com.ssmmhh.jibam.di.factory.MainViewModelFactory
+import com.ssmmhh.jibam.di.key.MainViewModelKey
+import com.ssmmhh.jibam.feature_addedittransaction.detailedittransaction.DetailEditTransactionViewModel
+import com.ssmmhh.jibam.feature_addedittransaction.inserttransaction.InsertTransactionViewModel
+import com.ssmmhh.jibam.feature_categories.addcategoires.AddCategoryViewModel
+import com.ssmmhh.jibam.feature_categories.viewcategories.ViewCategoriesViewModel
+import com.ssmmhh.jibam.feature_chart.ChartViewModel
+import com.ssmmhh.jibam.feature_transactions.TransactionsViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap

@@ -3,8 +3,8 @@ package com.ssmmhh.jibam.data.source.repository
 import com.ssmmhh.jibam.data.util.CacheResult
 import com.ssmmhh.jibam.util.*
 import com.ssmmhh.jibam.util.Constants.CACHE_TIMEOUT
-import com.ssmmhh.jibam.util.ErrorHandling.Companion.CACHE_ERROR_TIMEOUT
-import com.ssmmhh.jibam.util.ErrorHandling.Companion.UNKNOWN_ERROR
+import com.ssmmhh.jibam.util.ErrorHandling.CACHE_ERROR_TIMEOUT
+import com.ssmmhh.jibam.util.ErrorHandling.UNKNOWN_ERROR
 import kotlinx.coroutines.*
 
 private const val TAG = "RepositoryExtensions"

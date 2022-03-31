@@ -1,7 +1,7 @@
 package com.ssmmhh.jibam.feature_addedittransaction.detailedittransaction.state
 
 import com.ssmmhh.jibam.data.source.local.entity.TransactionEntity
-import com.ssmmhh.jibam.ui.main.transaction.feature_common.state.DeleteTransactionStateEvent
+import com.ssmmhh.jibam.feature_common.state.DeleteTransactionStateEvent
 import com.ssmmhh.jibam.util.StateEvent
 
 sealed class DetailEditTransactionStateEvent : StateEvent {
@@ -10,26 +10,26 @@ sealed class DetailEditTransactionStateEvent : StateEvent {
         val transactionId: Int
     ) : DetailEditTransactionStateEvent() {
 
-        override fun errorInfo(): String = "ERROR: getting transaction!"
+        override val errorInfo: String = "ERROR: getting transaction!"
 
-        override fun getId(): String =
+        override val getId: String =
             "GetSpecificTransaction id: $transactionId ${this.hashCode()}"
     }
 
     object GetAllOfCategories : DetailEditTransactionStateEvent() {
-        override fun errorInfo(): String = "Unable to get all of categories"
+        override val errorInfo: String = "Unable to get all of categories"
 
-        override fun getId(): String =
+        override val getId: String =
             "GetAllOfCategories time: hash: ${this.hashCode()}"
     }
 
     data class UpdateTransaction(
         val transactionEntity: TransactionEntity
     ) : DetailEditTransactionStateEvent() {
-        override fun errorInfo(): String =
+        override val errorInfo: String =
             "Unable to update transaction"
 
-        override fun getId(): String =
+        override val getId: String =
             "UpdateTransaction $transactionEntity hash: ${this.hashCode()} "
     }
 
@@ -37,10 +37,10 @@ sealed class DetailEditTransactionStateEvent : StateEvent {
         override val transactionId: Int,
         override val showSuccessToast: Boolean = true
     ) : DetailEditTransactionStateEvent(), DeleteTransactionStateEvent {
-        override fun errorInfo(): String =
+        override val errorInfo: String =
             "Unable to delete transaction"
 
-        override fun getId(): String =
+        override val getId: String =
             "DeleteTransaction $transactionId hash: ${this.hashCode()} " +
                     "showSuccessToast: $showSuccessToast"
     }

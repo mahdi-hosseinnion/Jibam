@@ -10,7 +10,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.ssmmhh.jibam.util.*
 import com.google.android.material.snackbar.Snackbar
-import com.ssmmhh.jibam.util.UICommunicationListener
+import com.ssmmhh.jibam.util.ActivityCommunicationListener
 import com.ssmmhh.jibam.ui.displayToast
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
@@ -18,7 +18,7 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 
 abstract class BaseActivity : AppCompatActivity(),
-    UICommunicationListener {
+    ActivityCommunicationListener {
 
     private val TAG = "BaseActivity"
 

@@ -5,9 +5,12 @@ import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import androidx.activity.addCallback
 import androidx.annotation.StringRes
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
@@ -16,8 +19,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.FragmentAddCategoryBinding
 import com.ssmmhh.jibam.data.source.local.entity.CategoryImageEntity
-import com.ssmmhh.jibam.ui.main.transaction.feature_categories.addcategoires.AddCategoryViewModel.Companion.INSERT_CATEGORY_SUCCESS_MARKER
-import com.ssmmhh.jibam.ui.main.transaction.feature_common.BaseFragment
+import com.ssmmhh.jibam.feature_categories.addcategoires.AddCategoryViewModel.Companion.INSERT_CATEGORY_SUCCESS_MARKER
+import com.ssmmhh.jibam.feature_common.BaseFragment
 import com.ssmmhh.jibam.util.*
 import com.ssmmhh.jibam.data.source.local.entity.CategoryEntity.Companion.EXPENSES_TYPE_MARKER
 import com.ssmmhh.jibam.data.source.local.entity.CategoryEntity.Companion.INCOME_TYPE_MARKER
@@ -283,7 +286,7 @@ class AddCategoryFragment(
     }
 
     override fun navigateBack() {
-        uiCommunicationListener.hideSoftKeyboard()
+        activityCommunicationListener.hideSoftKeyboard()
         super.navigateBack()
     }
 

@@ -3,8 +3,42 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout-v21/fragment_add_category.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout-v21/fragment_transaction.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout-v21/layout_category_images_header.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout-v21/layout_chart_list_item.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout-v21/layout_transaction_list_item.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout/activity_main.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout/bottom_sheet_month_picker.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout/custom_tab_layout.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout/drawer_header_layout.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout/fragment_about_us.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout/fragment_add_category.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout/fragment_add_transaction.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout/fragment_detail_chart.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout/fragment_setting.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout/fragment_transaction.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout/fragment_view_categories.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout/layout_category_images_header.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout/layout_category_images_list_item.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout/layout_category_list_item.xml" value="0.2755208333333333" />
         <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout/layout_chart_list_item.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout/layout_detail_chart_empty_list_item.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout/layout_no_more_results.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout/layout_no_results_found_in_database_list_item.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout/layout_no_results_found_list_item.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout/layout_toolbar_with_back_btn.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout/layout_toolbar_with_month_changer.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout/layout_transacion_header.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout/layout_transaction_list_item.xml" value="0.2755208333333333" />
         <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout/layout_view_categories_list_item.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout/layout_viewpager_list_item.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout/list_item.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout/recycler_view_layout.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/layout/toolbar_month_changer.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/menu/add_menu.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/menu/delete_menu.xml" value="0.2755208333333333" />
+        <entry key="..\:/0AndroidProject/Jibam/app/src/main/res/menu/navigation_drawer_menu.xml" value="0.2755208333333333" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable-anydpi/ic_delete_.xml" value="0.2916666666666667" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/app_intro_back_slide_2.xml" value="0.29375" />
         <entry key="..\:/0AndroidProject/Jibi/app/src/main/res/drawable/app_intro_back_slide_3.xml" value="0.29375" />

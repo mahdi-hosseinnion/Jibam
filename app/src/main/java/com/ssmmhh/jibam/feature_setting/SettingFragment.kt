@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.FragmentSettingBinding
-import com.ssmmhh.jibam.ui.main.transaction.feature_common.BaseFragment
+import com.ssmmhh.jibam.feature_common.BaseFragment
 import com.ssmmhh.jibam.util.PreferenceKeys
 import com.ssmmhh.jibam.util.PreferenceKeys.APP_CALENDAR_PREFERENCE
 import com.ssmmhh.jibam.util.PreferenceKeys.CALENDAR_GREGORIAN

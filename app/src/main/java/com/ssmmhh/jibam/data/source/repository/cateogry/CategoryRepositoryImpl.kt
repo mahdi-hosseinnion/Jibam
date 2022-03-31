@@ -11,10 +11,10 @@ import com.ssmmhh.jibam.data.source.repository.safeCacheCall
 import com.ssmmhh.jibam.data.util.CacheResponseHandler
 import com.ssmmhh.jibam.data.util.CacheResult
 import com.ssmmhh.jibam.data.util.DataState
-import com.ssmmhh.jibam.ui.main.transaction.feature_categories.addcategoires.state.AddCategoryStateEvent
-import com.ssmmhh.jibam.ui.main.transaction.feature_categories.addcategoires.state.AddCategoryViewState
-import com.ssmmhh.jibam.ui.main.transaction.feature_categories.viewcategories.state.ViewCategoriesStateEvent
-import com.ssmmhh.jibam.ui.main.transaction.feature_categories.viewcategories.state.ViewCategoriesViewState
+import com.ssmmhh.jibam.feature_categories.addcategoires.state.AddCategoryStateEvent
+import com.ssmmhh.jibam.feature_categories.addcategoires.state.AddCategoryViewState
+import com.ssmmhh.jibam.feature_categories.viewcategories.state.ViewCategoriesStateEvent
+import com.ssmmhh.jibam.feature_categories.viewcategories.state.ViewCategoriesViewState
 import com.ssmmhh.jibam.util.*
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

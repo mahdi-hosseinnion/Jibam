@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".ui.main.transaction.feature_chart.DetailChartFragment">
+    tools:context=".feature_chart.DetailChartFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

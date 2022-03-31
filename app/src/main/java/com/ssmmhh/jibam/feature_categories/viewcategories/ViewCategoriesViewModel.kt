@@ -1,9 +1,9 @@
 package com.ssmmhh.jibam.feature_categories.viewcategories
 
 import com.ssmmhh.jibam.data.source.repository.cateogry.CategoryRepository
-import com.ssmmhh.jibam.ui.main.transaction.feature_categories.viewcategories.state.ViewCategoriesStateEvent
-import com.ssmmhh.jibam.ui.main.transaction.feature_categories.viewcategories.state.ViewCategoriesViewState
-import com.ssmmhh.jibam.ui.main.transaction.feature_common.BaseViewModel
+import com.ssmmhh.jibam.feature_categories.viewcategories.state.ViewCategoriesStateEvent
+import com.ssmmhh.jibam.feature_categories.viewcategories.state.ViewCategoriesViewState
+import com.ssmmhh.jibam.feature_common.BaseViewModel
 import com.ssmmhh.jibam.data.util.DataState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview

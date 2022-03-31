@@ -21,12 +21,13 @@ import androidx.annotation.StringRes
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.text.TextUtilsCompat
 import androidx.core.view.ViewCompat
+import androidx.lifecycle.lifecycleScope
 import com.alirezaafkar.sundatepicker.DatePicker
 import com.bumptech.glide.RequestManager
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.ui.main.transaction.feature_addedittransaction.categorybottomsheet.CategoryBottomSheetListAdapter
-import com.ssmmhh.jibam.ui.main.transaction.feature_addedittransaction.categorybottomsheet.CategoryBottomSheetViewPagerAdapter
-import com.ssmmhh.jibam.ui.main.transaction.feature_common.BaseFragment
+import com.ssmmhh.jibam.feature_addedittransaction.categorybottomsheet.CategoryBottomSheetListAdapter
+import com.ssmmhh.jibam.feature_addedittransaction.categorybottomsheet.CategoryBottomSheetViewPagerAdapter
+import com.ssmmhh.jibam.feature_common.BaseFragment
 import com.ssmmhh.jibam.util.*
 import com.ssmmhh.jibam.util.PreferenceKeys.CALENDAR_SOLAR
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -35,6 +36,7 @@ import com.ssmmhh.jibam.databinding.FragmentAddTransactionBinding
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -143,7 +145,7 @@ constructor(
         binding.edtTime.setOnClickListener {
             onClickedOnTime()
         }
-        uiCommunicationListener.hideSoftKeyboard()
+        activityCommunicationListener.hideSoftKeyboard()
         setupCategoryBottomSheet()
     }
 

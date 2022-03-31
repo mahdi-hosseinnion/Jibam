@@ -8,9 +8,9 @@ sealed class AddCategoryStateEvent : StateEvent {
     data class InsertCategory(
         val categoryEntity: CategoryEntity
     ) : AddCategoryStateEvent() {
-        override fun errorInfo(): String =
+        override val errorInfo: String =
             "Unable to insert this category"
 
-        override fun getId(): String = "InsertCategory $categoryEntity ${this.hashCode()}"
+        override val getId: String = "InsertCategory $categoryEntity ${this.hashCode()}"
     }
 }

@@ -35,11 +35,11 @@ abstract class BaseViewModel<_ViewState, _StateEvent : StateEvent>() : ViewModel
 
     fun launchNewJob(stateEvent: _StateEvent) {
 
-        if (_activeJobStack.contains(stateEvent.getId())) {
+        if (_activeJobStack.contains(stateEvent.getId)) {
             //if already job is active
             return
         }
-        EspressoIdlingResources.increment(stateEvent.getId())
+        EspressoIdlingResources.increment(stateEvent.getId)
         val job = viewModelScope.launch(Dispatchers.IO + handler) {
 
             ensureActive()
@@ -49,21 +49,21 @@ abstract class BaseViewModel<_ViewState, _StateEvent : StateEvent>() : ViewModel
             handleNewDataState(dataState)
         }
         //add job to active job stack
-        _activeJobStack.add(stateEvent.getId())
+        _activeJobStack.add(stateEvent.getId)
 
         job.invokeOnCompletion { throwable ->
-            EspressoIdlingResources.decrement(stateEvent.getId())
-            _activeJobStack.remove(stateEvent.getId())
+            EspressoIdlingResources.decrement(stateEvent.getId)
+            _activeJobStack.remove(stateEvent.getId)
             //handle nonCancelable jobs
 
             if (throwable == null) {
-                mahdiLog(TAG, "launchNewJob: Job: completed normally  ${stateEvent.getId()}")
+                mahdiLog(TAG, "launchNewJob: Job: completed normally  ${stateEvent.getId}")
                 return@invokeOnCompletion
             }
             if (throwable is CancellationException) {
                 mahdiLog(
                     TAG,
-                    "launchNewJob: Job: cancelled normally  ${stateEvent.getId()} msg: ${throwable.message} cuze: ${throwable.cause?.message} , $throwable , ${throwable.cause}"
+                    "launchNewJob: Job: cancelled normally  ${stateEvent.getId} msg: ${throwable.message} cuze: ${throwable.cause?.message} , $throwable , ${throwable.cause}"
                 )
                 return@invokeOnCompletion
             }

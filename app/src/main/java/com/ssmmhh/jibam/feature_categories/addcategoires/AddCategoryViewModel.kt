@@ -6,9 +6,9 @@ import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.source.local.entity.CategoryEntity
 import com.ssmmhh.jibam.data.source.local.entity.CategoryImageEntity
 import com.ssmmhh.jibam.data.source.repository.cateogry.CategoryRepository
-import com.ssmmhh.jibam.ui.main.transaction.feature_categories.addcategoires.state.AddCategoryStateEvent
-import com.ssmmhh.jibam.ui.main.transaction.feature_categories.addcategoires.state.AddCategoryViewState
-import com.ssmmhh.jibam.ui.main.transaction.feature_common.BaseViewModel
+import com.ssmmhh.jibam.feature_categories.addcategoires.state.AddCategoryStateEvent
+import com.ssmmhh.jibam.feature_categories.addcategoires.state.AddCategoryViewState
+import com.ssmmhh.jibam.feature_common.BaseViewModel
 import com.ssmmhh.jibam.data.util.DataState
 import javax.inject.Inject
 

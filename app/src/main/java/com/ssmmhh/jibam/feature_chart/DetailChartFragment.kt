@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,8 +17,10 @@ import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.FragmentDetailChartBinding
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
 import com.ssmmhh.jibam.data.source.repository.buildResponse
-import com.ssmmhh.jibam.ui.main.transaction.feature_chart.ChartViewModel.Companion.FORCE_TO_NULL
-import com.ssmmhh.jibam.ui.main.transaction.feature_common.BaseFragment
+import com.ssmmhh.jibam.feature_chart.ChartViewModel.Companion.FORCE_TO_NULL
+import com.ssmmhh.jibam.feature_common.BaseFragment
+import com.ssmmhh.jibam.feature_chart.DetailChartFragmentArgs
+import com.ssmmhh.jibam.feature_chart.DetailChartFragmentDirections
 import com.ssmmhh.jibam.util.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -176,7 +180,7 @@ class DetailChartFragment(
                 )
             }
         }
-        uiCommunicationListener.onResponseReceived(
+        activityCommunicationListener.onResponseReceived(
             buildResponse(
                 getString(R.string.transaction_successfully_deleted),
                 UIComponentType.UndoSnackBar(undoCallback, binding.detailChartFragmentRoot),

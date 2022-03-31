@@ -20,6 +20,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -32,9 +33,10 @@ import com.ssmmhh.jibam.data.model.Month
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
 import com.ssmmhh.jibam.data.source.local.entity.TransactionEntity
 import com.ssmmhh.jibam.data.source.repository.buildResponse
-import com.ssmmhh.jibam.ui.main.transaction.feature_common.BaseFragment
-import com.ssmmhh.jibam.ui.main.transaction.feature_transactions.state.TransactionsStateEvent
-import com.ssmmhh.jibam.ui.main.transaction.feature_transactions.state.TransactionsViewState
+import com.ssmmhh.jibam.feature_common.BaseFragment
+import com.ssmmhh.jibam.feature_transactions.state.TransactionsStateEvent
+import com.ssmmhh.jibam.feature_transactions.state.TransactionsViewState
+import com.ssmmhh.jibam.feature_transactions.TransactionsFragmentDirections
 import com.ssmmhh.jibam.util.*
 import com.ssmmhh.jibam.util.PreferenceKeys.APP_CALENDAR_PREFERENCE
 import com.ssmmhh.jibam.util.PreferenceKeys.PROMOTE_FAB_TRANSACTION_FRAGMENT
@@ -294,7 +296,7 @@ class TransactionsFragment(
 
     private fun disableSearchMode() {
 
-        uiCommunicationListener.hideSoftKeyboard()
+        activityCommunicationListener.hideSoftKeyboard()
         //invisible search stuff
         binding.bottomSheetSearchEdt.visibility = View.GONE
         binding.bottomSheetSearchClear.visibility = View.GONE
@@ -542,7 +544,7 @@ class TransactionsFragment(
                 viewModel.setRecentlyDeletedTrans(null)
             }
         }
-        uiCommunicationListener.onResponseReceived(
+        activityCommunicationListener.onResponseReceived(
             buildResponse(
                 getString(R.string.transaction_successfully_deleted),
                 UIComponentType.UndoSnackBar(undoCallback, binding.fragmentTransacionRoot),

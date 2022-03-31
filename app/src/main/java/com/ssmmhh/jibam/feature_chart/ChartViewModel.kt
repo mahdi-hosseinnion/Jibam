@@ -2,17 +2,19 @@ package com.ssmmhh.jibam.feature_chart
 
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.asLiveData
 import com.ssmmhh.jibam.data.model.ChartData
 import com.ssmmhh.jibam.data.model.Month
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
 import com.ssmmhh.jibam.data.source.repository.tranasction.TransactionRepository
-import com.ssmmhh.jibam.ui.main.transaction.feature_chart.state.ChartStateEvent
-import com.ssmmhh.jibam.ui.main.transaction.feature_chart.state.ChartViewState
-import com.ssmmhh.jibam.ui.main.transaction.feature_common.BaseViewModel
-import com.ssmmhh.jibam.ui.main.transaction.feature_common.MonthManger
+import com.ssmmhh.jibam.feature_chart.state.ChartStateEvent
+import com.ssmmhh.jibam.feature_chart.state.ChartViewState
+import com.ssmmhh.jibam.feature_common.BaseViewModel
+import com.ssmmhh.jibam.feature_common.MonthManger
 import com.ssmmhh.jibam.data.util.DataState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.flatMapLatest
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi

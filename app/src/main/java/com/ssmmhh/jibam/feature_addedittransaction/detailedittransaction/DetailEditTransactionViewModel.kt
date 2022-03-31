@@ -7,11 +7,11 @@ import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
 import com.ssmmhh.jibam.data.source.local.entity.TransactionEntity
 import com.ssmmhh.jibam.data.source.repository.cateogry.CategoryRepository
 import com.ssmmhh.jibam.data.source.repository.tranasction.TransactionRepository
-import com.ssmmhh.jibam.ui.main.transaction.feature_addedittransaction.detailedittransaction.state.DetailEditTransactionPresenterState
-import com.ssmmhh.jibam.ui.main.transaction.feature_addedittransaction.detailedittransaction.state.DetailEditTransactionStateEvent
-import com.ssmmhh.jibam.ui.main.transaction.feature_addedittransaction.detailedittransaction.state.DetailEditTransactionViewState
-import com.ssmmhh.jibam.ui.main.transaction.feature_addedittransaction.detailedittransaction.state.SubmitButtonState
-import com.ssmmhh.jibam.ui.main.transaction.feature_common.BaseViewModel
+import com.ssmmhh.jibam.feature_addedittransaction.detailedittransaction.state.DetailEditTransactionPresenterState
+import com.ssmmhh.jibam.feature_addedittransaction.detailedittransaction.state.DetailEditTransactionStateEvent
+import com.ssmmhh.jibam.feature_addedittransaction.detailedittransaction.state.DetailEditTransactionViewState
+import com.ssmmhh.jibam.feature_addedittransaction.detailedittransaction.state.SubmitButtonState
+import com.ssmmhh.jibam.feature_common.BaseViewModel
 import com.ssmmhh.jibam.util.*
 import com.ssmmhh.jibam.data.source.local.entity.CategoryEntity.Companion.EXPENSES_TYPE_MARKER
 import com.ssmmhh.jibam.data.source.local.entity.CategoryEntity.Companion.INCOME_TYPE_MARKER

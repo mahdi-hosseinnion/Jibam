@@ -7,20 +7,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.model.Category
-import com.ssmmhh.jibam.ui.main.transaction.feature_categories.addcategoires.AddCategoryFragment.Companion.EXPENSES
-import com.ssmmhh.jibam.ui.main.transaction.feature_categories.addcategoires.AddCategoryFragment.Companion.INCOME
-import com.ssmmhh.jibam.ui.main.transaction.feature_categories.viewcategories.state.ViewCategoriesStateEvent
-import com.ssmmhh.jibam.ui.main.transaction.feature_common.BaseFragment
+import com.ssmmhh.jibam.feature_categories.addcategoires.AddCategoryFragment.Companion.EXPENSES
+import com.ssmmhh.jibam.feature_categories.addcategoires.AddCategoryFragment.Companion.INCOME
+import com.ssmmhh.jibam.feature_categories.viewcategories.state.ViewCategoriesStateEvent
+import com.ssmmhh.jibam.feature_common.BaseFragment
 import com.ssmmhh.jibam.util.*
 import com.ssmmhh.jibam.data.source.local.entity.CategoryEntity.Companion.EXPENSES_TYPE_MARKER
 import com.ssmmhh.jibam.data.source.local.entity.CategoryEntity.Companion.INCOME_TYPE_MARKER
 import com.google.android.material.tabs.TabLayoutMediator
 import com.ssmmhh.jibam.databinding.FragmentViewCategoriesBinding
+import com.ssmmhh.jibam.feature_categories.viewcategories.ViewCategoriesFragmentDirections
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
@@ -175,7 +177,7 @@ class ViewCategoriesFragment(
 
             override fun cancel() {}
         }
-        uiCommunicationListener.onResponseReceived(
+        activityCommunicationListener.onResponseReceived(
             Response(
                 getString(R.string.are_you_sure_delete_category),
                 UIComponentType.AreYouSureDialog(
@@ -214,7 +216,7 @@ class ViewCategoriesFragment(
             override fun removeMessageFromStack() {}
         }
 
-        uiCommunicationListener.onResponseReceived(
+        activityCommunicationListener.onResponseReceived(
             Response(
                 getString(R.string.unable_to_recognize_category_type),
                 //TODO SHOW OK DIALOG

@@ -4,14 +4,15 @@ import android.content.SharedPreferences
 import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
-import com.ssmmhh.jibam.ui.main.transaction.feature_addedittransaction.detailedittransaction.DetailEditTransactionFragment
-import com.ssmmhh.jibam.ui.main.transaction.feature_addedittransaction.inserttransaction.InsertTransactionFragment
-import com.ssmmhh.jibam.ui.main.transaction.feature_categories.addcategoires.AddCategoryFragment
-import com.ssmmhh.jibam.ui.main.transaction.feature_categories.viewcategories.ViewCategoriesFragment
-import com.ssmmhh.jibam.ui.main.transaction.feature_chart.ChartFragment
-import com.ssmmhh.jibam.ui.main.transaction.feature_chart.DetailChartFragment
-import com.ssmmhh.jibam.ui.main.transaction.feature_setting.SettingFragment
-import com.ssmmhh.jibam.ui.main.transaction.feature_transactions.TransactionsFragment
+import com.ssmmhh.jibam.feature_aboutus.AboutUsFragment
+import com.ssmmhh.jibam.feature_addedittransaction.detailedittransaction.DetailEditTransactionFragment
+import com.ssmmhh.jibam.feature_addedittransaction.inserttransaction.InsertTransactionFragment
+import com.ssmmhh.jibam.feature_categories.addcategoires.AddCategoryFragment
+import com.ssmmhh.jibam.feature_categories.viewcategories.ViewCategoriesFragment
+import com.ssmmhh.jibam.feature_chart.ChartFragment
+import com.ssmmhh.jibam.feature_chart.DetailChartFragment
+import com.ssmmhh.jibam.feature_setting.SettingFragment
+import com.ssmmhh.jibam.feature_transactions.TransactionsFragment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.util.*
@@ -82,8 +83,8 @@ constructor(
                     sharedPrefsEditor
                 )
             }
-            com.ssmmhh.jibam.feature_aboutus.AboutUsFragment::class.java.name -> {
-                com.ssmmhh.jibam.feature_aboutus.AboutUsFragment(
+            AboutUsFragment::class.java.name -> {
+                AboutUsFragment(
                     viewModelFactory,
                     requestManager
                 )

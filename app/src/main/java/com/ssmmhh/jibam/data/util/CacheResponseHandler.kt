@@ -15,7 +15,7 @@ abstract class CacheResponseHandler<ViewState, Data>(
             is CacheResult.GenericError -> {
                 return DataState.error(
                     response = Response(
-                        message = "${stateEvent?.errorInfo()}\n\nReason: ${response.errorMessage}",
+                        message = "${stateEvent?.errorInfo}\n\nReason: ${response.errorMessage}",
                         uiComponentType = UIComponentType.Dialog,
                         messageType = MessageType.Error
                     ),
@@ -27,7 +27,7 @@ abstract class CacheResponseHandler<ViewState, Data>(
                 if (response.value == null) {
                     return DataState.error(
                         response = Response(
-                            message = "${stateEvent?.errorInfo()}\n\nReason: Data is NULL.",
+                            message = "${stateEvent?.errorInfo}\n\nReason: Data is NULL.",
                             uiComponentType = UIComponentType.Dialog,
                             messageType = MessageType.Error
                         ),
@@ -38,7 +38,7 @@ abstract class CacheResponseHandler<ViewState, Data>(
                         if ((convertToLong(response.value)) < 1) {
                             //error case in insert or update or delete
                             return DataState.error(
-                                buildResponse(message = "${stateEvent?.errorInfo()}\n\nReason: Unknown Database Error!")
+                                buildResponse(message = "${stateEvent?.errorInfo}\n\nReason: Unknown Database Error!")
                             )
                         }
                     }

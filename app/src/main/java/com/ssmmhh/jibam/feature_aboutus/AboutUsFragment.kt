@@ -12,7 +12,7 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.FragmentAboutUsBinding
-import com.ssmmhh.jibam.ui.main.transaction.feature_common.BaseFragment
+import com.ssmmhh.jibam.feature_common.BaseFragment
 import com.ssmmhh.jibam.util.localizeNumber
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview

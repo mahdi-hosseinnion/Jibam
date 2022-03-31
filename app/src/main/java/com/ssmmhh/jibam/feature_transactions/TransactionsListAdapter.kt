@@ -4,9 +4,11 @@ import android.content.res.Resources
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.*
 import com.bumptech.glide.RequestManager
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.LayoutTransacionHeaderBinding
 import com.ssmmhh.jibam.databinding.LayoutTransactionListItemBinding
@@ -18,6 +20,7 @@ import com.ssmmhh.jibam.data.model.TransactionsRecyclerViewItem.Companion.NO_RES
 import com.ssmmhh.jibam.data.model.TransactionsRecyclerViewItem.Companion.DATABASE_IS_EMPTY_VIEW_TYPE
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
 import com.ssmmhh.jibam.util.*
+import java.math.BigDecimal
 import java.util.*
 
 
