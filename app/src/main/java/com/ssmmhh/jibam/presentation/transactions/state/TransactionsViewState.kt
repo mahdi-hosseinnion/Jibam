@@ -1,4 +1,4 @@
-package com.ssmmhh.jibam.presentation.feature_transactions.state
+package com.ssmmhh.jibam.presentation.transactions.state
 
 import com.ssmmhh.jibam.data.model.Month
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto

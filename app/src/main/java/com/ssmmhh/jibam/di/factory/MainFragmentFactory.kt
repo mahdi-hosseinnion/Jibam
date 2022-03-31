@@ -12,7 +12,7 @@ import com.ssmmhh.jibam.presentation.categories.viewcategories.ViewCategoriesFra
 import com.ssmmhh.jibam.presentation.chart.ChartFragment
 import com.ssmmhh.jibam.presentation.chart.DetailChartFragment
 import com.ssmmhh.jibam.presentation.setting.SettingFragment
-import com.ssmmhh.jibam.presentation.feature_transactions.TransactionsFragment
+import com.ssmmhh.jibam.presentation.transactions.TransactionsFragment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.util.*

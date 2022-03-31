@@ -1,4 +1,4 @@
-package com.ssmmhh.jibam.presentation.feature_transactions
+package com.ssmmhh.jibam.presentation.transactions
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -34,8 +34,8 @@ import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
 import com.ssmmhh.jibam.data.source.local.entity.TransactionEntity
 import com.ssmmhh.jibam.data.source.repository.buildResponse
 import com.ssmmhh.jibam.presentation.common.BaseFragment
-import com.ssmmhh.jibam.presentation.feature_transactions.state.TransactionsStateEvent
-import com.ssmmhh.jibam.presentation.feature_transactions.state.TransactionsViewState
+import com.ssmmhh.jibam.presentation.transactions.state.TransactionsStateEvent
+import com.ssmmhh.jibam.presentation.transactions.state.TransactionsViewState
 import com.ssmmhh.jibam.util.*
 import com.ssmmhh.jibam.util.PreferenceKeys.APP_CALENDAR_PREFERENCE
 import com.ssmmhh.jibam.util.PreferenceKeys.PROMOTE_FAB_TRANSACTION_FRAGMENT

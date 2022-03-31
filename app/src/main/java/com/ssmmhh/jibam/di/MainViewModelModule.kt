@@ -9,7 +9,7 @@ import com.ssmmhh.jibam.presentation.addedittransaction.inserttransaction.Insert
 import com.ssmmhh.jibam.presentation.categories.addcategoires.AddCategoryViewModel
 import com.ssmmhh.jibam.presentation.categories.viewcategories.ViewCategoriesViewModel
 import com.ssmmhh.jibam.presentation.chart.ChartViewModel
-import com.ssmmhh.jibam.presentation.feature_transactions.TransactionsViewModel
+import com.ssmmhh.jibam.presentation.transactions.TransactionsViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap

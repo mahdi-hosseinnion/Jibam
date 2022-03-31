@@ -99,7 +99,7 @@ class AboutUsTest {
         onView(withId(R.id.developement_members)).check(matches(withText(R.string.developement_members)))
         onView(withId(R.id.about_app)).check(matches(withText(R.string.about_app)))
         //hardcore version number to test getVersion function too
-        val versionName = "1.1.0"
+        val versionName = "1.2.0"
         onView(withId(R.id.version_name)).check(
             matches(
                 withText(

@@ -1,4 +1,4 @@
-package com.ssmmhh.jibam.presentation.feature_transactions
+package com.ssmmhh.jibam.presentation.transactions
 
 import android.content.res.Resources
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto

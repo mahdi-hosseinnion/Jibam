@@ -2,7 +2,7 @@ package com.ssmmhh.jibam.util
 
 import android.content.res.Resources
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.presentation.feature_transactions.TransactionsListAdapter
+import com.ssmmhh.jibam.presentation.transactions.TransactionsListAdapter
 import java.util.*
 
 //  this algorithm for years and it is very accurate between 1901 and 2099.

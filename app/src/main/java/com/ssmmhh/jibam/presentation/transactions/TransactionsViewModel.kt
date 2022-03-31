@@ -1,4 +1,4 @@
-package com.ssmmhh.jibam.presentation.feature_transactions
+package com.ssmmhh.jibam.presentation.transactions
 
 import android.content.SharedPreferences
 import android.content.res.Resources
@@ -13,9 +13,9 @@ import com.ssmmhh.jibam.data.source.repository.tranasction.TransactionRepository
 import com.ssmmhh.jibam.data.util.DataState
 import com.ssmmhh.jibam.presentation.common.BaseViewModel
 import com.ssmmhh.jibam.presentation.common.MonthManger
-import com.ssmmhh.jibam.presentation.feature_transactions.state.TransactionsStateEvent
-import com.ssmmhh.jibam.presentation.feature_transactions.state.TransactionsViewState
-import com.ssmmhh.jibam.presentation.feature_transactions.state.TransactionsViewState.*
+import com.ssmmhh.jibam.presentation.transactions.state.TransactionsStateEvent
+import com.ssmmhh.jibam.presentation.transactions.state.TransactionsViewState
+import com.ssmmhh.jibam.presentation.transactions.state.TransactionsViewState.*
 import com.ssmmhh.jibam.util.isCalendarSolar
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
