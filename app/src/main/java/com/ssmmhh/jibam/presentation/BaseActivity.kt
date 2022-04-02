@@ -8,9 +8,9 @@ import android.view.inputmethod.InputMethodManager
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.ssmmhh.jibam.util.*
 import com.google.android.material.snackbar.Snackbar
 import com.ssmmhh.jibam.R
+import com.ssmmhh.jibam.data.util.*
 import com.ssmmhh.jibam.util.ActivityCommunicationListener
 import com.ssmmhh.jibam.ui.displayToast
 import kotlinx.coroutines.ExperimentalCoroutinesApi

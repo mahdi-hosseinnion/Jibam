@@ -1,7 +1,7 @@
 package com.ssmmhh.jibam.util
 
-import com.ssmmhh.jibam.util.Response
-import com.ssmmhh.jibam.util.StateMessageCallback
+import com.ssmmhh.jibam.data.util.Response
+import com.ssmmhh.jibam.data.util.StateMessageCallback
 
 
 interface ActivityCommunicationListener {

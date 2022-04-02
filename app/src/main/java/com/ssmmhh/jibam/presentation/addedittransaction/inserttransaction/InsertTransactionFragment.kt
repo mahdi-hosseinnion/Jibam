@@ -14,6 +14,10 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.model.Category
 import com.ssmmhh.jibam.data.source.local.entity.TransactionEntity
+import com.ssmmhh.jibam.data.util.DiscardOrSaveCallback
+import com.ssmmhh.jibam.data.util.MessageType
+import com.ssmmhh.jibam.data.util.StateMessageCallback
+import com.ssmmhh.jibam.data.util.UIComponentType
 import com.ssmmhh.jibam.presentation.addedittransaction.common.AddEditTransactionParentFragment
 import com.ssmmhh.jibam.presentation.addedittransaction.inserttransaction.state.InsertTransactionPresenterState
 import com.ssmmhh.jibam.presentation.addedittransaction.inserttransaction.state.InsertTransactionPresenterState.*

@@ -3,7 +3,7 @@ package com.ssmmhh.jibam.ui
 import android.app.Activity
 import android.widget.Toast
 import androidx.annotation.StringRes
-import com.ssmmhh.jibam.util.StateMessageCallback
+import com.ssmmhh.jibam.data.util.StateMessageCallback
 
 fun Activity.displayToast(
     @StringRes message:Int,

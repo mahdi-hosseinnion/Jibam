@@ -8,8 +8,8 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.ssmmhh.jibam.util.ActivityCommunicationListener
-import com.ssmmhh.jibam.util.StateMessage
-import com.ssmmhh.jibam.util.StateMessageCallback
+import com.ssmmhh.jibam.data.util.StateMessage
+import com.ssmmhh.jibam.data.util.StateMessageCallback
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 

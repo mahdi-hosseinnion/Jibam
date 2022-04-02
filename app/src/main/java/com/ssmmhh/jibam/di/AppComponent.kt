@@ -22,8 +22,6 @@ import javax.inject.Singleton
 @ExperimentalCoroutinesApi
 interface AppComponent {
 
-    val monthManger: MonthManger
-
     @Component.Builder
     interface Builder {
 

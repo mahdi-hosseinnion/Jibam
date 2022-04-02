@@ -1,4 +1,4 @@
-package com.ssmmhh.jibam.util
+package com.ssmmhh.jibam.data.util
 
 object ErrorHandling {
 

@@ -1,8 +1,6 @@
 package com.ssmmhh.jibam.data.util
 
-import com.ssmmhh.jibam.util.Response
 import com.ssmmhh.jibam.util.StateEvent
-import com.ssmmhh.jibam.util.StateMessage
 
 data class DataState<T>(
     var stateMessage: StateMessage? = null,
@@ -41,9 +39,5 @@ data class DataState<T>(
             )
         }
 
-/*        fun <T> loading(isLoading: Boolean): DataState<T> {
-            return DataState(
-            )
-        }*/
     }
 }

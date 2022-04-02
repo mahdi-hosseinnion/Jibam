@@ -3,6 +3,10 @@ package com.ssmmhh.jibam.util
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.ssmmhh.jibam.data.util.MessageType
+import com.ssmmhh.jibam.data.util.Response
+import com.ssmmhh.jibam.data.util.StateMessage
+import com.ssmmhh.jibam.data.util.UIComponentType
 import kotlinx.android.parcel.IgnoredOnParcel
 
 class MessageStack : ArrayList<StateMessage>() {

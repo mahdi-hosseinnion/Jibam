@@ -1,5 +1,7 @@
 package com.ssmmhh.jibam.util
 
+import com.ssmmhh.jibam.data.util.Response
+
 /**
  * Used as a wrapper for data that is exposed via a LiveData that represents an event.
  */

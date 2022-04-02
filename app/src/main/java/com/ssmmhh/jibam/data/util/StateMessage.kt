@@ -1,4 +1,4 @@
-package com.ssmmhh.jibam.util
+package com.ssmmhh.jibam.data.util
 
 import android.view.View
 
@@ -43,7 +43,7 @@ sealed class MessageType {
     object None : MessageType()
 }
 
-
+//TODO("Replace interface callbacks with kotlin Lambda")
 interface StateMessageCallback {
 
     fun removeMessageFromStack()
