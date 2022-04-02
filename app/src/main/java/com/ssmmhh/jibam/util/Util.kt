@@ -14,17 +14,7 @@ import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
 
-/*fun sortCategoriesWithPinned(categoryList: List<Category>?): List<Category>? {
-    if (categoryList == null) {
-        return null
-    }
-    val tempList = ArrayList(categoryList.sortedByDescending { it.ordering })
-    val pinedList = categoryList.filter { it.ordering < 0 }.sortedByDescending { it.ordering }
-    tempList.removeAll(pinedList)
-    tempList.addAll(0, pinedList)
-    return tempList
-}*/
-public fun Fragment.convertDpToPx(dp: Int): Int {
+fun Fragment.convertDpToPx(dp: Int): Int {
     val r = resources
     return TypedValue.applyDimension(
         TypedValue.COMPLEX_UNIT_DIP,
@@ -134,19 +124,6 @@ fun convertDoubleToString(text: String): String {//convert 13.0 to 13
         text
 }
 
-//fun convertDoubleToStringAndLocalized(text: String, locale: Locale): String {//convert 13.0 to 13
-//    //add farsi language numbers
-//    val formatter= Format.getInstance(locale)
-//
-//    if (text.length < 2) {
-//        return formatter.format(text)
-//
-//    }
-//    return if (text.substring(text.lastIndex.minus(1)) == ".0") //convert 13.0 to 13
-//        formatter.format(text.substring(0, text.lastIndex.minus(1)))
-//    else
-//        formatter.format(text)
-//}
 fun String.convertFarsiDigitsToEnglishDigits() =
     this.replace("۰", "0")
         .replace("۱", "1")

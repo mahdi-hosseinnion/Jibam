@@ -6,7 +6,7 @@ import com.ssmmhh.jibam.presentation.addedittransaction.common.CalculatorKeyboar
 import com.ssmmhh.jibam.presentation.addedittransaction.common.CalculatorKeyboard.Companion.PLUS
 import com.ssmmhh.jibam.presentation.addedittransaction.common.CalculatorKeyboard.Companion.TIMES
 
-//TODO divide by 0?
+//TODO (Add restriction to prevent divide by zero exception)
 class TextCalculator {
 
     companion object {

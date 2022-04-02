@@ -12,7 +12,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.util.*
 import com.ssmmhh.jibam.util.ActivityCommunicationListener
-import com.ssmmhh.jibam.ui.displayToast
+import com.ssmmhh.jibam.util.displayToast
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
