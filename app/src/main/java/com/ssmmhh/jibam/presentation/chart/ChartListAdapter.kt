@@ -17,7 +17,7 @@ import com.ssmmhh.jibam.util.separate3By3
 import java.util.*
 import kotlin.math.abs
 
-//TODO DELETE DIFFUTIL FROM HERE
+//TODO ("Remove diffUtil from this adapter")
 class ChartListAdapter(
     private val interaction: Interaction? = null,
     private val requestManager: RequestManager?,

@@ -27,7 +27,6 @@ import javax.inject.Inject
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-//@MainScope
 class TransactionsViewModel
 @Inject
 constructor(
@@ -112,34 +111,6 @@ constructor(
             _queryChannel.emit(query)
         }
     }
-
-/*
-    fun insertTransaction(newTransaction: Record) = viewModelScope.launch {
-        increaseLoading(INSERT_TRANSACTION)
-
-        val dataState = transactionRepository.insertTransaction(newTransaction)
-        handleNewDataState(dataState)
-
-        if (dataState.wasSuccessful()) {
-            _transactionInsertEvent.value = Event(Unit)
-        }
-
-        decreaseLoading(INSERT_TRANSACTION)
-    }
-
-    fun deleteTransaction(transaction: Record, showSuccessToast: Boolean) = viewModelScope.launch {
-        increaseLoading(DELETE_TRANSACTION)
-
-        val dataState = transactionRepository.deleteTransaction(transaction, showSuccessToast)
-        handleNewDataState(dataState)
-
-        if (dataState.wasSuccessful()) {
-            _transactionInsertEvent.value = Event(Unit)
-        }
-
-        decreaseLoading(DELETE_TRANSACTION)
-    }
-*/
 
     fun setRecentlyDeletedTrans(recentlyDeletedHeader: RecentlyDeletedTransaction?) {
         setViewState(

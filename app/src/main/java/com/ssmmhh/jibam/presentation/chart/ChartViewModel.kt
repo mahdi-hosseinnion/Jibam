@@ -19,7 +19,6 @@ import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @FlowPreview
-//@MainScope
 class ChartViewModel
 @Inject
 constructor(

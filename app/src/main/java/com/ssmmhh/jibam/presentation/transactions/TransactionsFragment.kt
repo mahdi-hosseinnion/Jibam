@@ -139,7 +139,6 @@ class TransactionsFragment(
             getString(R.string.navigation_drawer_cd)
         binding.transactionToolbar.topAppBarMonth.setNavigationOnClickListener {
             binding.drawerLayout.open()
-//            uiCommunicationListener.openDrawerMenu()
         }
 
         bottomSheetBehavior = BottomSheetBehavior.from(binding.mainStandardBottomSheet)
@@ -164,19 +163,6 @@ class TransactionsFragment(
 
         binding.addFab.setOnClickListener {
             navigateToAddTransactionFragment()
-        }
-        //TODO DELETE THIS LINE FOR FINAL PROJECT JUST OF TESTING
-        binding.txtBalance.setOnClickListener {
-//            insertRandomTransaction()
-        }
-        //TODO DELETE THIS LINE FOR FINAL PROJECT JUST OF TESTING
-        binding.txtExpenses.setOnClickListener {
-            //TODD JUST FOR TESTING
-//            resetPromoteState()
-        }
-        //TODO DELETE THIS LINE FOR FINAL PROJECT JUST OF TESTING
-        binding.txtIncome.setOnClickListener {
-//            showSummeryMoneyPromote()
         }
         binding.mainBottomSheetBackArrow.setOnClickListener {
             //check for search view
@@ -232,44 +218,6 @@ class TransactionsFragment(
         if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             binding.drawerLayout.closeDrawer(GravityCompat.START, animate)
         }
-    }
-
-    private fun resetPromoteState() {
-        sharedPrefsEditor.putBoolean(
-            PROMOTE_FAB_TRANSACTION_FRAGMENT,
-            true
-        ).apply()
-        sharedPrefsEditor.putBoolean(
-            PreferenceKeys.PROMOTE_ADD_TRANSACTION,
-            true
-        ).apply()
-        sharedPrefsEditor.putBoolean(
-            PreferenceKeys.PROMOTE_CATEGORY_LIST,
-            true
-        ).apply()
-        sharedPrefsEditor.putBoolean(
-            PreferenceKeys.PROMOTE_VIEW_CATEGORY_LIST,
-            true
-        ).apply()
-        sharedPrefsEditor.putBoolean(
-            PreferenceKeys.PROMOTE_ADD_CATEGORY_NAME,
-            true
-        ).apply()
-        sharedPrefsEditor.putBoolean(
-            PreferenceKeys.APP_INTRO_PREFERENCE,
-            true
-        ).apply()
-        sharedPrefsEditor.putBoolean(
-            PreferenceKeys.PROMOTE_SUMMERY_MONEY,
-            true
-        ).apply()
-        sharedPrefsEditor.putBoolean(
-            PreferenceKeys.PROMOTE_MONTH_MANGER,
-            true
-        ).apply()
-
-        Toast.makeText(requireContext(), "PROMOTE GUIDE STATE RESET", Toast.LENGTH_SHORT)
-            .show()
     }
 
     private fun enableSearchMode(query: String? = null) {
@@ -341,53 +289,6 @@ class TransactionsFragment(
         }
     }
 
-    //JUST FOR TEST
-    var startOfMonth = System.currentTimeMillis().div(1_000)
-    var endOfMonth = System.currentTimeMillis().div(1_000)
-
-    private fun insertRandomTransaction() {
-        val categoryId = Random.nextInt(1, 42)
-        var money = Random.nextInt(0, 1000).toBigDecimal()
-        //it just hardcoded TODO CHANGE IT LATER
-        //we mark money with "-" base of category id
-        val dateRange = 2_592_000_000L//30 day to millisecond
-        if (categoryId <= 30) {
-            money = money.negate()
-        }
-        if (Random.nextBoolean()) {
-            viewModel.launchNewJob(
-                TransactionsStateEvent.InsertTransaction(
-                    TransactionEntity(
-                        id = 0,
-                        money = money,
-                        memo = null,
-                        cat_id = categoryId,
-                        date = Random.nextLong(
-                            startOfMonth.toLong(),
-                            endOfMonth.toLong()
-                        )
-                    )
-                )
-            )
-        } else {
-            viewModel.launchNewJob(
-                TransactionsStateEvent.InsertTransaction(
-                    TransactionEntity(
-                        id = 0,
-                        money = money,
-                        memo = "memo ${Random.nextInt(451252)}",
-                        cat_id = categoryId,
-                        date = Random.nextLong(
-                            ((System.currentTimeMillis()).minus(dateRange)).div(1_000),
-                            ((System.currentTimeMillis())).div(1_000)
-                        )
-                    )
-                )
-            )
-        }
-    }
-
-
     private fun navigateToAddTransactionFragment() {
         //on category selected and bottomSheet hided
         val action =
@@ -442,8 +343,6 @@ class TransactionsFragment(
 
     private fun setMonthFieldsValues(month: Month) {
         binding.transactionToolbar.toolbarMonthChanger.toolbarMonth.text = month.nameOfMonth
-        startOfMonth = month.startOfMonth
-        endOfMonth = month.endOfMonth
     }
 
 
@@ -624,13 +523,6 @@ class TransactionsFragment(
             }
 
         })
-        //reset it
-//        onBottomSheetStateChanged(bottomSheetBehavior.state)
-//        if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
-//            onBottomSheetSlide(0f)
-//        }
-
-//        bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
 
     }
 
@@ -812,18 +704,6 @@ class TransactionsFragment(
             activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
     }
-    //TODO SAVE SEARCH VIEW
-/*    override fun onSaveInstanceState(outState: Bundle) {
-
-        //save searchResult and search state for screen rotation
-        val searchQuery =
-            if (searchViewState.isVisible()) (bottom_sheet_search_edt.text.toString())
-            else null
-
-        outState.putString(SEARCH_QUERY, searchQuery)
-
-        super.onSaveInstanceState(outState)
-    }*/
 
     private fun checkForGuidePromote() {
         if (sharedPreferences.getBoolean(PROMOTE_FAB_TRANSACTION_FRAGMENT, true)) {

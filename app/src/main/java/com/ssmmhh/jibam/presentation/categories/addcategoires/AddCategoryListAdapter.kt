@@ -189,18 +189,6 @@ class AddCategoryListAdapter(
         differ.submitList(newList)
         return removedHeader
     }
-//    // Prepare the images that will be displayed in the RecyclerView.
-//    // This also ensures if the network connection is lost, they will be in the cache
-//    fun preloadGlideImages(
-//        requestManager: RequestManager,
-//        list: List<CategoryImages>
-//    ){
-//        for(CategoryImages in list){
-//            requestManager
-//                .load(CategoryImages.image)
-//                .preload()
-//        }
-//    }
 
     fun submitList(
         categoryImageEntityList: List<CategoryImageEntity>?

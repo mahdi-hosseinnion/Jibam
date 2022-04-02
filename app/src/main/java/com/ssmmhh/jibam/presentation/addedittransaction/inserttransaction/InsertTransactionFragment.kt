@@ -152,7 +152,6 @@ constructor(
                 binding.categoryFab.show()
                 binding.fabSubmit.show()
                 disableContentInteraction(binding.edtMemo)
-//                activityCommunicationListener.hideSoftKeyboard()
                 showCustomKeyboard(binding.edtMoney)
             }
             is AddingNoteState -> {
@@ -260,11 +259,6 @@ constructor(
 
     override fun setToCombineCalender(field: Int, value: Int) {
         viewModel.setToCombineCalender(field, value)
-    }
-
-    override fun onMoneyEditTextFocusChanged(hasFocus: Boolean) {
-//        if (hasFocus)
-//            viewModel.setPresenterState(EnteringAmountOfMoneyState)
     }
 
     override fun onClickedOnMoneyEditText() {

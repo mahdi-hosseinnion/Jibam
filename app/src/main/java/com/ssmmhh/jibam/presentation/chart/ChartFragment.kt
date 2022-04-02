@@ -126,13 +126,7 @@ class ChartFragment(
 
         val filteredValues = chartData.filter { it.categoryType == category_type_marker }
 
-//        pie_chart.data=null
-//
-//        if (filteredValues.isNullOrEmpty()) {
-//            //TODO SHOW SNACKBAR TO TRY AGAIN
-//        } else {
         setDataToChartAndRecyclerView(filteredValues)
-//        }
     }
 
     private fun initPieChart() {
@@ -144,8 +138,6 @@ class ChartFragment(
         binding.pieChart.setNoDataTextColor(Color.RED)
         binding.pieChart.dragDecelerationFrictionCoef = 0.50f
 
-//        pie_chart.setCenterTextTypeface(tfLight)
-//        pie_chart.setCenterText(generateCenterSpannableText())
 
         binding.pieChart.isDrawHoleEnabled = true
         binding.pieChart.setHoleColor(

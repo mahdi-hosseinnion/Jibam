@@ -16,7 +16,7 @@ import com.ssmmhh.jibam.util.NUMBER_SEPARATOR
 import com.ssmmhh.jibam.util.localizeNumber
 import com.ssmmhh.jibam.util.remove3By3Separators
 
-//copy from this
+//sources:
 // https://stackoverflow.com/a/45005691/10362460
 //and
 //http://www.fampennings.nl/maarten/android/09keyboard/index.htm
@@ -25,34 +25,29 @@ import com.ssmmhh.jibam.util.remove3By3Separators
 class CalculatorKeyboard(
     context: Context,
     attributeSet: AttributeSet? = null
-//    defStyleAttr: Int = 0
 ) : LinearLayout(
     context,
     attributeSet
-//    defStyleAttr
 ), View.OnClickListener {
 
     var text = StringBuilder("")
 
     var calculatorInteraction: CalculatorInteraction? = null
 
-    var _resources: Resources? = null
+    private fun getString(@StringRes resId: Int): String = resources.getString(resId)
 
-    private fun _getString(@StringRes resId: Int): String {
-        return _resources?.getString(resId) ?: resources.getString(resId)
-    }
 
     private fun listOfNumbers(): CharArray =
         charArrayOf(
-            _getString(R.string._1)[0],
-            _getString(R.string._2)[0],
-            _getString(R.string._3)[0],
-            _getString(R.string._4)[0],
-            _getString(R.string._5)[0],
-            _getString(R.string._6)[0],
-            _getString(R.string._7)[0],
-            _getString(R.string._8)[0],
-            _getString(R.string._9)[0]
+            getString(R.string._1)[0],
+            getString(R.string._2)[0],
+            getString(R.string._3)[0],
+            getString(R.string._4)[0],
+            getString(R.string._5)[0],
+            getString(R.string._6)[0],
+            getString(R.string._7)[0],
+            getString(R.string._8)[0],
+            getString(R.string._9)[0]
         )
 
 
@@ -140,17 +135,17 @@ class CalculatorKeyboard(
 
     fun setTextToAllViews() {
         //text
-        mButton1.text = _getString(R.string._1)
-        mButton2.text = _getString(R.string._2)
-        mButton3.text = _getString(R.string._3)
-        mButton4.text = _getString(R.string._4)
-        mButton5.text = _getString(R.string._5)
-        mButton6.text = _getString(R.string._6)
-        mButton7.text = _getString(R.string._7)
-        mButton8.text = _getString(R.string._8)
-        mButton9.text = _getString(R.string._9)
-        mButton0.text = _getString(R.string._0)
-        mButton00.text = _getString(R.string._00)
+        mButton1.text = getString(R.string._1)
+        mButton2.text = getString(R.string._2)
+        mButton3.text = getString(R.string._3)
+        mButton4.text = getString(R.string._4)
+        mButton5.text = getString(R.string._5)
+        mButton6.text = getString(R.string._6)
+        mButton7.text = getString(R.string._7)
+        mButton8.text = getString(R.string._8)
+        mButton9.text = getString(R.string._9)
+        mButton0.text = getString(R.string._0)
+        mButton00.text = getString(R.string._00)
         // map buttons IDs to input strings
         keyValues = mapOf(
             R.id.btn_c to CLEAR,
@@ -161,17 +156,17 @@ class CalculatorKeyboard(
             R.id.btn_plus to PLUS,
             R.id.btn_period to PERIOD,
             R.id.btn_equal to "=",
-            R.id.btn_1 to _getString(R.string._1),
-            R.id.btn_2 to _getString(R.string._2),
-            R.id.btn_3 to _getString(R.string._3),
-            R.id.btn_4 to _getString(R.string._4),
-            R.id.btn_5 to _getString(R.string._5),
-            R.id.btn_6 to _getString(R.string._6),
-            R.id.btn_7 to _getString(R.string._7),
-            R.id.btn_8 to _getString(R.string._8),
-            R.id.btn_9 to _getString(R.string._9),
-            R.id.btn_0 to _getString(R.string._0),
-            R.id.btn_00 to _getString(R.string._00)
+            R.id.btn_1 to getString(R.string._1),
+            R.id.btn_2 to getString(R.string._2),
+            R.id.btn_3 to getString(R.string._3),
+            R.id.btn_4 to getString(R.string._4),
+            R.id.btn_5 to getString(R.string._5),
+            R.id.btn_6 to getString(R.string._6),
+            R.id.btn_7 to getString(R.string._7),
+            R.id.btn_8 to getString(R.string._8),
+            R.id.btn_9 to getString(R.string._9),
+            R.id.btn_0 to getString(R.string._0),
+            R.id.btn_00 to getString(R.string._00)
         )
     }
 
@@ -200,8 +195,7 @@ class CalculatorKeyboard(
         )
     }
 
-    //TODO BUG CANNOT RESULV WHEN CORSUR MOVE
-    // TODO this method need real refactoring
+    // TODO ("Refactor this function")
     override fun onClick(v: View?) {
         // do nothing if the InputConnection has not been set yet
         if (inputConnection == null || v == null) {
@@ -254,7 +248,7 @@ class CalculatorKeyboard(
 
                 if (text.isBlank()) {
                     //nothing inserted yet
-                    if (value.indexOfAny(listOfNumbers()) >= 0 || value == _getString(R.string._0)) {
+                    if (value.indexOfAny(listOfNumbers()) >= 0 || value == getString(R.string._0)) {
                         //contain number
                         inputConnection!!.commitText(value, 1)
                         text.append(value)
@@ -282,7 +276,7 @@ class CalculatorKeyboard(
                     }
 
                     //something inserted
-                    if (text.toString() == _getString(R.string._0)) {
+                    if (text.toString() == getString(R.string._0)) {
                         if (v.id == R.id.btn_period) {
                             //only . allowed after 0
                             inputConnection!!.commitText(value, 1)
@@ -328,10 +322,6 @@ class CalculatorKeyboard(
         val beforeCursorText = getTextBeforeCursor(currentText.length, 0)
         val afterCursorText = getTextAfterCursor(currentText.length, 0)
         deleteSurroundingText(beforeCursorText!!.length, afterCursorText!!.length)
-//        CharSequence currentText = inputConnection.getExtractedText(new ExtractedTextRequest(), 0).text;
-//        CharSequence beforCursorText = inputConnection.getTextBeforeCursor(currentText.length(), 0);
-//        CharSequence afterCursorText = inputConnection.getTextAfterCursor(currentText.length(), 0);
-//        inputConnection.deleteSurroundingText(beforCursorText.length(), afterCursorText.length());
     }
 
     private fun StringBuilder.removeLastIndex(): StringBuilder =

@@ -74,14 +74,11 @@ abstract class BaseViewModel<_ViewState, _StateEvent : StateEvent>() : ViewModel
     private suspend fun handleNewDataState(dataState: DataState<_ViewState>) {
         withContext(Dispatchers.Main) {
             ensureActive()
-            //        handleStateEvent(stateEvent).onEach{ dataState -> TODO("OR")
             dataState.data?.let { viewState ->
-//                        it.getContentIfNotHandled()?.let { viewState ->TODO ("OR")
                 ensureActive()
                 setViewState(viewState)
             }
             dataState.stateMessage.let { stateMessage ->
-//                        it.getContentIfNotHandled()?.let { viewState ->TODO ("OR")
                 stateMessage?.let {
                     ensureActive()
                     _messageStack.add(it)
@@ -152,12 +149,8 @@ abstract class BaseViewModel<_ViewState, _StateEvent : StateEvent>() : ViewModel
     }
 
     fun setViewState(viewState: _ViewState) {
-        //TODO FIX THIS PRBLE WITH getCurrentViewStateOrNew
-        //when we try to set data to viewState with launch(Main) app will lag if we try to call  getCurrentViewStateOrNew
-//        viewModelScope.launch(Main) {
         //other viewState data should maintain
         _viewState.value = updateViewState(viewState)
-//        }
     }
 
     abstract fun initNewViewState(): _ViewState

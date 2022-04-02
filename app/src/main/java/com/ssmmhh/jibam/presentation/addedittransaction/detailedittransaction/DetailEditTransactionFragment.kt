@@ -287,11 +287,6 @@ constructor(
         viewModel.setToCombineCalender(field, value)
     }
 
-    override fun onMoneyEditTextFocusChanged(hasFocus: Boolean) {
-//        if (hasFocus)
-//            viewModel.setPresenterState(EnteringAmountOfMoneyState)
-    }
-
     override fun onClickedOnMoneyEditText() {
         viewModel.setPresenterState(EnteringAmountOfMoneyState)
     }

@@ -14,7 +14,7 @@ import com.ssmmhh.jibam.databinding.LayoutCategoryListItemBinding
 import com.ssmmhh.jibam.data.model.Category
 import com.ssmmhh.jibam.util.EspressoIdlingResources
 
-//TODO REMOVE DIFF FROM THIS ADAPTER
+//TODO ("Remove diffUtil from this adapter b/c it does not change too often")
 class CategoryBottomSheetListAdapter(
     private val requestManager: RequestManager,
     private val interaction: Interaction? = null,
@@ -95,18 +95,6 @@ class CategoryBottomSheetListAdapter(
         return differ.currentList.size
     }
 
-    //    // Prepare the images that will be displayed in the RecyclerView.
-//    // This also ensures if the network connection is lost, they will be in the cache
-//    fun preloadGlideImages(
-//        requestManager: RequestManager,
-//        list: List<Category>
-//    ){
-//        for(Category in list){
-//            requestManager
-//                .load(Category.image)
-//                .preload()
-//        }
-//    }
     fun setSelectedCategory(categoryId: Int) {
         var categoryEntity1: Category? = null
         for (category in differ.currentList) {
@@ -150,8 +138,6 @@ class CategoryBottomSheetListAdapter(
             }
             if (item.id == selectedItemId && item.id > 0) {
                 setSelectedBackground(selectedItemId,item.image.backgroundColor)
-            } else {
-                setUnSelectedBackground()
             }
 
             binding.categoryName.text = item.getCategoryNameFromStringFile(context)
@@ -182,32 +168,13 @@ class CategoryBottomSheetListAdapter(
                 //change tint to white
                 binding.categoryImage.setColorFilter(
                     itemView.resources.getColor(R.color.white),
-                    android.graphics.PorterDuff.Mode.SRC_IN
+                    PorterDuff.Mode.SRC_IN
                 )
             } catch (e: Exception) {
                 Log.e("CategoryViewHolder", "setSelectedBackground: message: ${e.message}", e)
             }
         }
 
-        private fun setUnSelectedBackground() {
-            // set to selected mode
-/*            val circle_drawable = ResourcesCompat.getDrawable(
-                itemView.resources,
-                R.drawable.shape_category_item_circle,
-                null
-            )*/
-//            itemView.category_image.setBackgroundColor(
-//
-//                itemView.resources.getColor(
-//                    R.color.category_list_item_image_background_color
-//                )
-//            )
-//            //change tint to black
-//            itemView.category_image.setColorFilter(
-//                itemView.resources.getColor(R.color.black),
-//                android.graphics.PorterDuff.Mode.SRC_IN
-//            )
-        }
 
     }
 

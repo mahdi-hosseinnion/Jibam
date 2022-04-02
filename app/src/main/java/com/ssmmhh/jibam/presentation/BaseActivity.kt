@@ -166,12 +166,6 @@ abstract class BaseActivity : AppCompatActivity(),
             .show()
     }
 
-    //    .setNegativeButton(R.string.cancel,
-//    DialogInterface.OnClickListener
-//    {
-//        dialog, id ->
-//        // User cancelled the dialog
-//    })
     private fun displayErrorDialog(
         message: String?,
         stateMessageCallback: StateMessageCallback

@@ -12,7 +12,6 @@ import javax.inject.Inject
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-//@MainScope
 class ViewCategoriesViewModel
 @Inject
 constructor(

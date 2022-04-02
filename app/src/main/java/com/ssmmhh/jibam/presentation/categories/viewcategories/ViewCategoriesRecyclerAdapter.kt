@@ -83,19 +83,7 @@ class ViewCategoriesRecyclerAdapter(
 
         fun bind(holder: RecyclerView.ViewHolder, item: Category?) {
             if (item != null) {
-                //todo fix show promote
-//                Check that the view exists for the item
-//                if (adapterPosition == 0 &&
-//                    sharedPreferences.getBoolean(
-//                        PreferenceKeys.PROMOTE_VIEW_CATEGORY_LIST,
-//                        true
-//                    )
-//                ) {
-//
-//                    showPromote()
-//                }
                 itemView.apply {
-
                     binding.changeCategoryOrderHandle.setOnTouchListener { view, motionEvent ->
                         if (motionEvent.actionMasked == MotionEvent.ACTION_DOWN) {
                             categoryInteraction.onStartDrag(holder, item.type)
@@ -105,11 +93,6 @@ class ViewCategoriesRecyclerAdapter(
                     }
                     val categoryName = item.getCategoryNameFromStringFile(context)
                     binding.nameOfCategory.text = categoryName
-                    //FOR DEBUG
-//                    itemView.ordering.text = item.ordering.toString()
-//                    itemView.category_id.text = item.id.toString()
-//                    val color = if (item.ordering == adapterPosition) Color.BLACK else Color.RED
-//                    itemView.ordering.setTextColor(color)
 
                     binding.cardViewViewCategory.setCardBackgroundColor(
                         Color.parseColor(item.image.backgroundColor)
@@ -134,24 +117,6 @@ class ViewCategoriesRecyclerAdapter(
             }
         }
 
-        //todo fix show promote
-//        private fun showPromote(context: Context) {
-//            MaterialTapTargetPrompt.Builder(context)
-//                .setTarget(itemView.findViewById(R.id.root_transaction_item))
-//                .setPrimaryText(_getString(R.string.view_category_tap_target_primary))
-//                .setSecondaryText(_getString(R.string.view_category_tap_target_secondary))
-//                .setPromptBackground(RectanglePromptBackground())
-//                .setPromptFocal(RectanglePromptFocal())
-//                .setPromptStateChangeListener { _, state ->
-//                    if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED || state == MaterialTapTargetPrompt.STATE_DISMISSING) {
-//                        sharedPrefsEditor.putBoolean(
-//                            PreferenceKeys.PROMOTE_VIEW_CATEGORY_LIST,
-//                            false
-//                        ).apply()
-//                    }
-//                }
-//                .show()
-//        }
     }
 
     interface CategoryInteraction {

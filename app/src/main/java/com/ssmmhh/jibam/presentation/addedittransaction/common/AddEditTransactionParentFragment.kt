@@ -113,14 +113,8 @@ constructor(
         val ic: InputConnection = binding.edtMoney.onCreateInputConnection(EditorInfo())
         binding.keyboard.inputConnection = ic
         binding.keyboard.calculatorInteraction = this
-        binding.keyboard._resources = resources
         binding.keyboard.setTextToAllViews()
         //controll visibity
-
-        // Make the custom keyboard appear
-        binding.edtMoney.onFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
-            onMoneyEditTextFocusChanged(hasFocus)
-        }
 
         binding.edtMoney.setOnTouchListener { view, motionEvent ->
             val inType: Int = binding.edtMoney.getInputType() // Backup the input type
@@ -293,9 +287,6 @@ constructor(
                 calender.get(GregorianCalendar.MINUTE),
                 false
             )
-        //TODO MAKE farst time picker SUPPORT IN FARSI
-//        timePickerDialog.setButton(TimePickerDialog.BUTTON_POSITIVE,_getString(R.string.capital_ok),timePickerDialog)
-//        timePickerDialog.setButton(TimePickerDialog.BUTTON_NEGATIVE,_getString(R.string.capital_cancel),timePickerDialog)
         timePickerDialog.show()
     }
 
@@ -383,11 +374,9 @@ constructor(
 
     private fun changeFabBottomMargin(marginBottom: Int? = null) {
         val _16Dp = convertDpToPx(16)
+        //TODO ("Add slide animation to the fabSubmit while changing margin
         if (binding.fabSubmit.isShown) {
-            //TODO ADD SLIDE ANIMATION HERE
-//            fab_submit.hide()
             binding.fabSubmit.setMargins(_16Dp, _16Dp, _16Dp, marginBottom ?: _16Dp)
-//            fab_submit.show()
         } else {
             binding.fabSubmit.setMargins(_16Dp, _16Dp, _16Dp, marginBottom ?: _16Dp)
         }
@@ -427,7 +416,8 @@ constructor(
                         if (finalNumberText == binding.edtMoney.text.toString()
                                 .removeOperationSigns()
                         ) ""
-                        else finalNumberText.convertFarsiDigitsToEnglishDigits().toBigDecimalOrNull()
+                        else finalNumberText.convertFarsiDigitsToEnglishDigits()
+                            .toBigDecimalOrNull()
                             ?.let { separate3By3(it, currentLocale) }
                             ?: finalNumberText
                 }
@@ -443,7 +433,7 @@ constructor(
             val countOfSeparatorAfterChange = separated3By3Text.count { NUMBER_SEPARATOR == it }
             try {
                 //we use this code to determine 'newSelectionPosition' according to the count of
-                    // 'NUMBER_SEPARATOR' added to text
+                // 'NUMBER_SEPARATOR' added to text
                 val newSelectionPosition = selectionPositionBeforeChangeText.plus(
                     countOfSeparatorAfterChange.minus(countOfSeparatorBeforeChange)
                 )
@@ -501,8 +491,6 @@ constructor(
 
     abstract fun setToCombineCalender(field: Int, value: Int)
 
-    abstract fun onMoneyEditTextFocusChanged(hasFocus: Boolean)
-
     abstract fun onClickedOnMoneyEditText()
 
     abstract fun onClickedOnEmptyOfDetailContainer()
@@ -522,18 +510,8 @@ constructor(
         private const val TAG = "AddEditTransactionParen"
 
         private const val TIME_PATTERN = "KK:mm aa"
-
         //for shamsi date it's hard coded in SolarCalendar class
         private const val DATE_PATTERN = "MM/dd/yy (E)"
-
-
-        //errors
-        private enum class ErrorMessages {
-            PLEASE_SELECT_CATEGORY,
-            NEGATIVE_MONEY,
-            EMPTY_MONEY
-        }
-
 
     }
 }

@@ -71,7 +71,6 @@ class CategoryBottomSheetViewPagerAdapter(
     ) {
         recycler.apply {
             layoutManager = GridLayoutManager(context, 5)
-//            isNestedScrollingEnabled = false
             adapter = recyclerAdapter
         }
     }

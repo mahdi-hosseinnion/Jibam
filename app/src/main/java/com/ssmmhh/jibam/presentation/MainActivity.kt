@@ -49,7 +49,6 @@ class MainActivity : BaseActivity() {
         if (savedInstanceState == null) {
             firstSetup()
         }
-        uiSetup()
 
     }
 
@@ -64,11 +63,6 @@ class MainActivity : BaseActivity() {
         }
 
     }
-
-    private fun uiSetup() {
-//        navigation_view.setupWithNavController(navController)
-    }
-
 
     override fun inject() {
         (application as BaseApplication).appComponent.inject(this)
@@ -116,7 +110,6 @@ class MainActivity : BaseActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         hideSoftKeyboard()
-//        navController.navigateUp()
         return navController.navigateUp(appBarConfiguration) ||
                 super.onSupportNavigateUp()
     }
@@ -133,14 +126,4 @@ class MainActivity : BaseActivity() {
         navController.removeOnDestinationChangedListener(listener)
     }
 
-//    override fun changeDrawerState(closeIt: Boolean) {
-////        if (closeIt)
-////            drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-////        else
-////            drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-//    }
-//
-//    override fun openDrawerMenu() {
-////        drawer_layout.open()
-//    }
 }
