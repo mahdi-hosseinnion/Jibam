@@ -1,5 +1,6 @@
 package com.ssmmhh.jibam.presentation.categories.viewcategories
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ViewGroup
@@ -9,7 +10,6 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.LayoutViewCategoriesListItemBinding
 import com.ssmmhh.jibam.data.model.Category
-import com.ssmmhh.jibam.util.CategoriesImageBackgroundColors
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.List
@@ -112,10 +112,7 @@ class ViewCategoriesRecyclerAdapter(
 //                    itemView.ordering.setTextColor(color)
 
                     binding.cardViewViewCategory.setCardBackgroundColor(
-                        resources.getColor(
-                            CategoriesImageBackgroundColors.getCategoryColorById(item.id)
-
-                        )
+                        Color.parseColor(item.image.backgroundColor)
                     )
 
                     val categoryImageResourceId = item.image.getImageResourceId(context)

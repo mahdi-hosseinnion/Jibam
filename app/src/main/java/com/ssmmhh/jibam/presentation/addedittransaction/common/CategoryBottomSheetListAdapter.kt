@@ -1,5 +1,6 @@
 package com.ssmmhh.jibam.presentation.addedittransaction.common
 
+import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.util.Log
@@ -11,7 +12,6 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withC
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.LayoutCategoryListItemBinding
 import com.ssmmhh.jibam.data.model.Category
-import com.ssmmhh.jibam.util.CategoriesImageBackgroundColors
 import com.ssmmhh.jibam.util.EspressoIdlingResources
 
 //TODO REMOVE DIFF FROM THIS ADAPTER
@@ -145,11 +145,11 @@ class CategoryBottomSheetListAdapter(
         fun bind(item: Category, selectedItemId: Int?) = with(itemView) {
             itemView.setOnClickListener {
 
-                setSelectedBackground(item.id)
+                setSelectedBackground(item.id,item.image.backgroundColor)
                 interaction?.onItemSelected(adapterPosition, item)
             }
             if (item.id == selectedItemId && item.id > 0) {
-                setSelectedBackground(selectedItemId)
+                setSelectedBackground(selectedItemId,item.image.backgroundColor)
             } else {
                 setUnSelectedBackground()
             }
@@ -168,16 +168,14 @@ class CategoryBottomSheetListAdapter(
         }
 
 
-        private fun setSelectedBackground(categoryId: Int) {
+        private fun setSelectedBackground(categoryId: Int,backgroundColor:String) {
             try {
 
 
                 val circle_drawable = binding.categoryImageFrame.background as Drawable
 
                 circle_drawable?.setColorFilter(
-                    itemView.resources.getColor(
-                        CategoriesImageBackgroundColors.getCategoryColorById(categoryId)
-                    ), PorterDuff.Mode.MULTIPLY
+                   Color.parseColor(backgroundColor), PorterDuff.Mode.MULTIPLY
                 )
 
 

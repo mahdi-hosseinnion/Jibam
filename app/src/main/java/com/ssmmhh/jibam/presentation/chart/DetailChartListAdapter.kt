@@ -1,5 +1,6 @@
 package com.ssmmhh.jibam.presentation.chart
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -123,10 +124,7 @@ class DetailChartListAdapter(
         private fun loadImage(item: TransactionDto) {
 
             binding.cardView.setCardBackgroundColor(
-                itemView.resources.getColor(
-                    CategoriesImageBackgroundColors.getCategoryColorById(item.categoryId)
-
-                )
+                Color.parseColor(item.categoryImageBackgroundColor)
             )
 
             val categoryImageResourceId = item.getCategoryImageResourceId(itemView.context)

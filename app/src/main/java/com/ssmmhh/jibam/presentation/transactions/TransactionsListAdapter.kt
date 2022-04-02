@@ -1,6 +1,7 @@
 package com.ssmmhh.jibam.presentation.transactions
 
 import android.content.res.Resources
+import android.graphics.Color
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -331,9 +332,7 @@ class TransactionsListAdapter(
             }
 
             cardView.setCardBackgroundColor(
-                itemView.resources.getColor(
-                    CategoriesImageBackgroundColors.getCategoryColorById(item.categoryId)
-                )
+                Color.parseColor(item.image.backgroundColor)
             )
             val categoryImageResourceId = item.image.getImageResourceId(itemView.context)
             requestManager

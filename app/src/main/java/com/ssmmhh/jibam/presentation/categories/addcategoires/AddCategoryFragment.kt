@@ -1,6 +1,7 @@
 package com.ssmmhh.jibam.presentation.categories.addcategoires
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
@@ -228,9 +229,7 @@ class AddCategoryFragment(
 
         // set background
         binding.cardView.setCardBackgroundColor(
-            resources.getColor(
-                CategoriesImageBackgroundColors.getCategoryColorById(categoryImageEntity.id)
-            )
+            Color.parseColor(categoryImageEntity.image_background_color)
         )
         //load image
         requestManager

@@ -1,5 +1,6 @@
 package com.ssmmhh.jibam.presentation.categories.addcategoires
 
+import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.util.Log
@@ -13,7 +14,6 @@ import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.LayoutCategoryImagesHeaderBinding
 import com.ssmmhh.jibam.databinding.LayoutCategoryImagesListItemBinding
 import com.ssmmhh.jibam.data.source.local.entity.CategoryImageEntity
-import com.ssmmhh.jibam.util.CategoriesImageBackgroundColors
 
 
 class AddCategoryListAdapter(
@@ -263,7 +263,7 @@ class AddCategoryListAdapter(
             //set lister to new one
             currentSelectedItem = this@ImageViewHolder
             //change to new one
-            currentSelectedItem?.setSelectedBackground(item.id)
+            currentSelectedItem?.setSelectedBackground(item.id,item.image_background_color)
         }
 
         override fun restoreToDefaultBackground() {
@@ -283,16 +283,14 @@ class AddCategoryListAdapter(
             )
         }
 
-        override fun setSelectedBackground(categoryId: Int) {
+        override fun setSelectedBackground(categoryId: Int, backgroundColor: String) {
             try {
 
 
                 val circle_drawable = binding.categoryImagesFrame.background as Drawable
 
                 circle_drawable?.setColorFilter(
-                    itemView.resources.getColor(
-                        CategoriesImageBackgroundColors.getCategoryColorById(categoryId)
-                    ), PorterDuff.Mode.MULTIPLY
+                    Color.parseColor(backgroundColor), PorterDuff.Mode.MULTIPLY
                 )
 
 
@@ -332,7 +330,7 @@ class AddCategoryListAdapter(
         fun restoreToDefaultBackground()
 
         //color background(selected)
-        fun setSelectedBackground(categoryId: Int)
+        fun setSelectedBackground(categoryId: Int, backgroundColor: String)
 
     }
 

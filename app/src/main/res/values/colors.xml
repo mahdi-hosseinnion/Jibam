@@ -22,51 +22,7 @@
     <color name="keyBoardBackground">#FFEB3B</color>
     <color name="keyBoardPreviewTextColor">#BA68C8</color>
     <color name="keyBoardPreviewBackground">#F06292</color>
-<!--color material 300-->
-   <color name="category_background_color_1">#e57373</color>
-    <color name="category_background_color_2">#D7A05F</color>
-    <color name="category_background_color_3">#B49660</color>
-    <color name="category_background_color_4">#F06E64</color>
-    <color name="category_background_color_5">#64b5f6</color>
-    <color name="category_background_color_6">#9575cd</color>
-    <color name="category_background_color_7">#BA68BE</color>
-    <color name="category_background_color_8">#4DA499</color>
-    <color name="category_background_color_9">#BEC853</color>
-    <color name="category_background_color_10">#4696B4</color>
-    <color name="category_background_color_11">#78C3C8</color>
-    <color name="category_background_color_12">#90a4ae</color>
-    <color name="category_background_color_13">#819984</color>
-    <color name="category_background_color_14">#B4A942</color>
-    <color name="category_background_color_15">#a1887f</color>
-    <color name="category_background_color_16">#7986cb</color>
-    <color name="category_background_color_17">#B4BE6E</color>
-    <color name="category_background_color_18">#D4AA4F</color>
-<!--    color material 400-->
-    <color name="category_background_color_19">#ef5350</color>
-    <color name="category_background_color_20">#42a5f5</color>
-    <color name="category_background_color_21">#A5B73E</color>
-    <color name="category_background_color_22">#7e57c2</color>
-    <color name="category_background_color_23">#66bb6a</color>
-    <color name="category_background_color_24">#BAAF3C</color>
-    <color name="category_background_color_25">#ab47bc</color>
-    <color name="category_background_color_26">#5c6bc0</color>
-    <color name="category_background_color_27">#26a69a</color>
-    <color name="category_background_color_28">#9ccc65</color>
-    <color name="category_background_color_29">#ec407a</color>
-    <color name="category_background_color_30">#96BE3C</color>
-    <color name="category_background_color_31">#26c6da</color>
-    <color name="category_background_color_32">#ffa726</color>
-    <color name="category_background_color_33">#8d6e63</color>
-    <color name="category_background_color_34">#ff7043</color>
-    <color name="category_background_color_35">#78909c</color>
-    <color name="category_background_color_36">#29b6f6</color>
-    <!--    color material A200-->
 
-    <color name="category_background_color_37">#ff4081</color>
-    <color name="category_background_color_38">#e040fb</color>
-    <color name="category_background_color_39">#7c4dff</color>
-    <color name="category_background_color_40">#ff5252</color>
-    <color name="category_background_color_41">#536dfe</color>
     <color name="imageDefaultBackground">#e0e0e0</color>
 
     <color name="blue_500">#2196F3</color>
