@@ -1,4 +1,4 @@
-package com.ssmmhh.jibam.ui
+package com.ssmmhh.jibam.presentation
 
 import android.content.Context
 import android.content.SharedPreferences
