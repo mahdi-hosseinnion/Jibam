@@ -1,11 +1,11 @@
 package com.ssmmhh.jibam.ui
 
 import android.util.Log
-import com.ssmmhh.jibam.ui.main.transaction.feature_addedittransaction.common.CalculatorKeyboard
-import com.ssmmhh.jibam.ui.main.transaction.feature_addedittransaction.common.CalculatorKeyboard.Companion.DIVISION
-import com.ssmmhh.jibam.ui.main.transaction.feature_addedittransaction.common.CalculatorKeyboard.Companion.MINES
-import com.ssmmhh.jibam.ui.main.transaction.feature_addedittransaction.common.CalculatorKeyboard.Companion.PLUS
-import com.ssmmhh.jibam.ui.main.transaction.feature_addedittransaction.common.CalculatorKeyboard.Companion.TIMES
+import com.ssmmhh.jibam.presentation.addedittransaction.common.CalculatorKeyboard
+import com.ssmmhh.jibam.presentation.addedittransaction.common.CalculatorKeyboard.Companion.DIVISION
+import com.ssmmhh.jibam.presentation.addedittransaction.common.CalculatorKeyboard.Companion.MINES
+import com.ssmmhh.jibam.presentation.addedittransaction.common.CalculatorKeyboard.Companion.PLUS
+import com.ssmmhh.jibam.presentation.addedittransaction.common.CalculatorKeyboard.Companion.TIMES
 import com.ssmmhh.jibam.util.TextCalculator
 import io.mockk.every
 import io.mockk.mockkStatic
@@ -23,8 +23,6 @@ class TextCalculatorTest {
     //system under test
     var textCalculator: TextCalculator? = null
 
-    //    val maxRandomNumber = Int.MAX_VALUE.toLong()
-//    val minRandomNumber = Int.MAX_VALUE.minus(1000L)//should not be 0//
     val maxRandomNumber = 1_000_000L
     val minRandomNumber = 1L//should not be 0
 
@@ -81,8 +79,6 @@ class TextCalculatorTest {
 
     @RepeatedTest(value = 10)
     fun test_Plus_Operator_success() = runBlocking {
-//        val randomX = Random.nextLong(minRandomNumber, maxRandomNumber).convertToRandomDouble()
-//        val randomY = Random.nextLong(minRandomNumber, maxRandomNumber).convertToRandomDouble()
         val randomX = Int.MAX_VALUE.toLong().convertToRandomDouble()
         val randomY = Int.MAX_VALUE.minus(1).toLong().convertToRandomDouble()
         val textForCalculate = "$randomX${CalculatorKeyboard.PLUS}$randomY"
@@ -228,13 +224,9 @@ class TextCalculatorTest {
         Log.d("aa", "separate3By3AndRoundIt: start with $money")
 
         //seprate 3 by 3 part
-//        val finalResult = if (money > 1_000.0 && money < -1_000.0) {
-//            money.toString()
-//        } else {
         val formatter: DecimalFormat = NumberFormat.getInstance(Locale.US) as DecimalFormat
         formatter.applyPattern("#,###,###,###.###")
         val finalResult = formatter.format(money)
-//        }
         Log.d(
             "aa",
             "separate3By3AndRoundIt: final Result = $finalResult + ${finalResult.indexOf('.')}"
