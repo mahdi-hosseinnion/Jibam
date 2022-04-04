@@ -274,7 +274,6 @@ constructor(
             MonthPickerBottomSheet(
                 interaction = monthPickerInteraction,
                 isShamsi = sharedPreferences.isCalendarSolar(currentLocale),
-                _resources = _resources,
                 defaultMonth = getMonth(),
                 defaultYear = getYear(),
                 isDefaultMonthTheCurrentMonth = getMonth() == getCurrentMonth() && getYear() == getCurrentYear()

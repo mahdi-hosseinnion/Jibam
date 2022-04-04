@@ -289,7 +289,6 @@ class ChartFragment(
                 this@ChartFragment,
                 requestManager,
                 currentLocale,
-                resources,
                 colors
             )
             isNestedScrollingEnabled = false

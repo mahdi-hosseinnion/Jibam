@@ -22,7 +22,6 @@ class ChartListAdapter(
     private val interaction: Interaction? = null,
     private val requestManager: RequestManager?,
     private val currentLocale: Locale,
-    private val _resources: Resources,
     private val colors: List<Int>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -49,7 +48,7 @@ class ChartListAdapter(
                 parent,
                 false
             ),
-            interaction, requestManager, currentLocale, _resources, colors
+            interaction, requestManager, currentLocale, colors
         )
     }
 
@@ -78,7 +77,6 @@ class ChartListAdapter(
         private val interaction: Interaction?,
         val requestManager: RequestManager?,
         val currentLocale: Locale,
-        val _resources: Resources,
         val colors: List<Int>
     ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -92,7 +90,7 @@ class ChartListAdapter(
             binding.sumOfMoney.text = separate3By3(item.sumOfMoney.abs(), currentLocale)
 
             binding.txtPercentage.text =
-                ("${item.percentage.toString()}%").localizeNumber(_resources)
+                ("${item.percentage.toString()}%").localizeNumber(resources)
 
             binding.prgPercentage.progress = item.percentage.toInt()
             binding.prgPercentage.max = biggestPercentage.toInt()

@@ -15,7 +15,6 @@ class MonthPickerBottomSheet
 constructor(
     private val interaction: Interaction,
     private val isShamsi: Boolean,
-    private val _resources: Resources,
     private val defaultMonth: Int,
     private val defaultYear: Int,
     private val isDefaultMonthTheCurrentMonth: Boolean
@@ -69,9 +68,9 @@ constructor(
         }
         binding.monthNumberPicker.value = defaultMonth
         binding.yearNumberPicker.value = defaultYear
-        binding.confirmMonthPicker.text = _resources.getString(R.string.confirm)
+        binding.confirmMonthPicker.text = resources.getString(R.string.confirm)
         binding.backToCurrentMonthTxt.text =
-            _resources.getString(R.string.back_to_current_month)
+            resources.getString(R.string.back_to_current_month)
         binding.confirmMonthPicker.setOnClickListener {
             if (binding.yearNumberPicker.value != defaultYear
                 ||

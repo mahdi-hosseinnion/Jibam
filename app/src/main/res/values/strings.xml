@@ -308,7 +308,7 @@
     <!--    Error messages-->
     <string name="error_reason">"\n\nReason: "</string>
     <string name="unknown_error">Unknown error #02</string>
-    <string name="error_reason_data_is_null">\nReason: Data is NULL.</string>
+    <string name="error_reason_data_is_null">\n\nReason: The data is NULL.</string>
     <string name="error_reason_unknown_database_error">\n\nReason: Unknown database error!"</string>
     <string name="unable_to_get_categories_to_update_them">Unable to get categories to update them</string>
     <string name="there_is_no_category_in_database">There is no category in database</string>

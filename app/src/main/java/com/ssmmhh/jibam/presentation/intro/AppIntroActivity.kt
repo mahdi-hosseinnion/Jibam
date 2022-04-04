@@ -1,7 +1,6 @@
 package com.ssmmhh.jibam.presentation.intro
 
 import android.content.SharedPreferences
-import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import androidx.annotation.StringRes
@@ -27,38 +26,34 @@ class AppIntroActivity : AppIntro() {
     @Inject
     lateinit var sharedPreferences: SharedPreferences
 
-    @Inject
-    lateinit var _resources: Resources
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         inject()
         super.onCreate(savedInstanceState)
         // Call addSlide passing your Fragments.
         // You can use AppIntroFragment to use a pre-built fragment
-        this.setSkipText(_getString(R.string.skip))
-        this.setDoneText(_getString(R.string.done))
+        this.setSkipText(getString(R.string.skip))
+        this.setDoneText(getString(R.string.done))
 
         addSlide(
             AppIntroFragment.newInstance(
-                title = _getString(R.string.app_intro_slide_0_title),
-                description = _getString(R.string.app_intro_slide_0_description),
+                title = getString(R.string.app_intro_slide_0_title),
+                description = getString(R.string.app_intro_slide_0_description),
                 imageDrawable = R.drawable.ic_app_logo_svg,
                 backgroundDrawable = R.drawable.app_intro_back_slide_5,
             )
         )
         addSlide(
             AppIntroFragment.newInstance(
-                title = _getString(R.string.app_intro_slide_1_title),
-                description = _getString(R.string.app_intro_slide_1_description),
+                title = getString(R.string.app_intro_slide_1_title),
+                description = getString(R.string.app_intro_slide_1_description),
                 imageDrawable = R.drawable.ic_app_intro_transaction_list,
                 backgroundDrawable = R.drawable.app_intro_back_slide_3,
             )
         )
         addSlide(
             AppIntroFragment.newInstance(
-                title = _getString(R.string.app_intro_slide_2_title),
-                description = _getString(R.string.app_intro_slide_2_description),
+                title = getString(R.string.app_intro_slide_2_title),
+                description = getString(R.string.app_intro_slide_2_description),
                 imageDrawable = R.drawable.ic_app_intro_graph,
                 backgroundDrawable = R.drawable.app_intro_back_slide_2,
             )
@@ -90,13 +85,5 @@ class AppIntroActivity : AppIntro() {
         ).apply()
     }
 
-    private fun _getString(@StringRes resId: Int): String {
-        return try {
-            _resources.getString(resId)
-        } catch (e: Exception) {
-            Log.e(TAG, "_getString: resourceId: $resId & _resources: $_resources ", e)
-            getString(resId)
-        }
-    }
 }
 
