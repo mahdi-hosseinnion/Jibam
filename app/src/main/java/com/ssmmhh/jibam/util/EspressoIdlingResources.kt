@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.test.espresso.idling.CountingIdlingResource
 
 object EspressoIdlingResources {
-    //TODO PRIVATE THIS
     private const val TAG = "EspressoIdlingResources"
     private const val RESOURCE = "GLOBAL"
     private var count: Int = 0

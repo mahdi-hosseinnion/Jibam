@@ -100,7 +100,7 @@ constructor(
                             viewModel.clearStateMessage()
                         }
                     })
-                if (stateMessage.response.message == getString(R.string.transaction_successfully_inserted)) {
+                if (stateMessage.response.message.contentEquals(intArrayOf(R.string.transaction_successfully_inserted))) {
                     //transaction successfully inserted
                     activityCommunicationListener.hideSoftKeyboard()
                     navigateBack()
@@ -399,7 +399,7 @@ constructor(
             override fun cancel() {}
         }
         viewModel.addToMessageStack(
-            message = getString(R.string.you_changes_have_not_saved),
+            message = intArrayOf(R.string.you_changes_have_not_saved),
             uiComponentType = UIComponentType.DiscardOrSaveDialog(callback),
             messageType = MessageType.Info
         )

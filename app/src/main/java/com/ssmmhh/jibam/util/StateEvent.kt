@@ -1,8 +1,12 @@
 package com.ssmmhh.jibam.util
 
+
 interface StateEvent {
 
-    val errorInfo: String
+    /**
+     * state event error message represented in string resource id.
+     */
+    val errorInfo: Int
 
     val getId: String
 }

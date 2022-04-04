@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.util.*
 import com.ssmmhh.jibam.util.*
 import kotlinx.coroutines.*
@@ -103,7 +104,7 @@ abstract class BaseViewModel<_ViewState, _StateEvent : StateEvent>() : ViewModel
             }
 
     fun addToMessageStack(
-        message: String? = null,
+        message: IntArray? = null,
         throwable: Throwable? = null,
         uiComponentType: UIComponentType = UIComponentType.Toast,
         messageType: MessageType = MessageType.Error
@@ -112,10 +113,10 @@ abstract class BaseViewModel<_ViewState, _StateEvent : StateEvent>() : ViewModel
             return
         }
         var mMessage = message
-        if (mMessage == null && throwable != null) {
-            mMessage = throwable.message
-        }
         Log.e(TAG, "addToMessageStack: error: $mMessage ", throwable)
+        if (mMessage == null && throwable != null) {
+            mMessage = intArrayOf(R.string.unknown_error)
+        }
         _messageStack.add(
             StateMessage(
                 Response(

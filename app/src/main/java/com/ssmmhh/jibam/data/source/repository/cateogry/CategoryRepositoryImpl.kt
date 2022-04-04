@@ -1,7 +1,5 @@
 package com.ssmmhh.jibam.data.source.repository.cateogry
 
-import android.content.res.Resources
-import androidx.annotation.StringRes
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.model.Category
 import com.ssmmhh.jibam.data.source.local.dao.CategoriesDao
@@ -13,7 +11,8 @@ import com.ssmmhh.jibam.presentation.categories.addcategoires.state.AddCategoryS
 import com.ssmmhh.jibam.presentation.categories.addcategoires.state.AddCategoryViewState
 import com.ssmmhh.jibam.presentation.categories.viewcategories.state.ViewCategoriesStateEvent
 import com.ssmmhh.jibam.presentation.categories.viewcategories.state.ViewCategoriesViewState
-import com.ssmmhh.jibam.util.*
+import com.ssmmhh.jibam.util.Event
+import com.ssmmhh.jibam.util.StateEvent
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -21,7 +20,6 @@ class CategoryRepositoryImpl
 @Inject
 constructor(
     private val categoriesDao: CategoriesDao,
-    private val _resources: Resources
 ) : CategoryRepository {
 
     override fun getCategoryList(): Flow<List<CategoryDto>> =
@@ -45,7 +43,7 @@ constructor(
                 return if (resultObj.isNotEmpty()) {
                     DataState.data(
                         Response(
-                            message = "Successfully return all of categories",
+                            message = null,
                             uiComponentType = UIComponentType.None,
                             messageType = MessageType.Success
                         ),
@@ -55,7 +53,7 @@ constructor(
                 } else {
                     DataState.error(
                         Response(
-                            message = getString(R.string.getting_all_categories_error),
+                            message = intArrayOf(R.string.getting_all_categories_error),
                             uiComponentType = UIComponentType.Dialog,
                             messageType = MessageType.Error
                         ),
@@ -88,7 +86,7 @@ constructor(
                     DataState.data(
                         data = null,
                         response = Response(
-                            message = getString(R.string.category_successfully_inserted),
+                            message = intArrayOf(R.string.category_successfully_inserted),
                             uiComponentType = UIComponentType.Toast,
                             messageType = MessageType.Success
                         )
@@ -97,7 +95,7 @@ constructor(
                     //failure
                     DataState.error(
                         response = Response(
-                            message = getString(R.string.category_error_inserted),
+                            message = intArrayOf(R.string.category_error_inserted),
                             uiComponentType = UIComponentType.Dialog,
                             messageType = MessageType.Error
                         )
@@ -127,7 +125,7 @@ constructor(
                     //success
                     DataState.data(
                         response = Response(
-                            message = getString(R.string.category_successfully_deleted),
+                            message = intArrayOf(R.string.category_successfully_deleted),
                             uiComponentType = UIComponentType.Toast,
                             messageType = MessageType.Success
                         )
@@ -136,7 +134,7 @@ constructor(
                     //failure
                     DataState.error(
                         response = Response(
-                            message = getString(R.string.category_error_deleted),
+                            message = intArrayOf(R.string.category_error_deleted),
                             uiComponentType = UIComponentType.Dialog,
                             messageType = MessageType.Error
                         )
@@ -155,14 +153,14 @@ constructor(
         }
         if (allCategoriesResponse !is CacheResult.Success) {
             return changeCategoryOrderFailStateMessage(
-                "Unable to get categories to update them",
+                intArrayOf(R.string.unable_to_get_categories_to_update_them),
                 stateEvent
             )
         }
 
         val allCategories = allCategoriesResponse.value
             ?: return changeCategoryOrderFailStateMessage(
-                "There is no category in database",
+                intArrayOf(R.string.there_is_no_category_in_database),
                 stateEvent
             )
 
@@ -184,7 +182,7 @@ constructor(
         return if (didAllCategoriesUpdatedSuccessfully) {
             DataState.data(
                 response = Response(
-                    message = "Successfully update ordering",
+                    message = null,
                     uiComponentType = UIComponentType.None,
                     messageType = MessageType.Success
                 ),
@@ -193,14 +191,14 @@ constructor(
             )
         } else {
             changeCategoryOrderFailStateMessage(
-                "At least on of the categories order did not updated",
+                intArrayOf(R.string.at_least_on_of_the_categories_order_did_not_updated),
                 stateEvent
             )
         }
     }
 
     private fun changeCategoryOrderFailStateMessage(
-        message: String,
+        message: IntArray,
         stateEvent: ViewCategoriesStateEvent.ChangeCategoryOrder
     ): DataState<ViewCategoriesViewState> = DataState.error(
         response = Response(
@@ -217,10 +215,4 @@ constructor(
             categoriesDao.updateOrder(categoryId, newOrder)
         }
 
-
-    fun getString(@StringRes id: Int) = _resources.getString(id)
-
-    companion object {
-        const val CHANGE_CATEGORY_ORDER_SUCCESS = "Category order successfully changed"
-    }
 }

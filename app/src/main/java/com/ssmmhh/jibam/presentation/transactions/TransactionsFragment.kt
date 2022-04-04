@@ -448,7 +448,7 @@ class TransactionsFragment(
         }
         activityCommunicationListener.onResponseReceived(
             buildResponse(
-                getString(R.string.transaction_successfully_deleted),
+                intArrayOf(R.string.transaction_successfully_deleted),
                 UIComponentType.UndoSnackBar(undoCallback, binding.fragmentTransacionRoot),
                 MessageType.Info
             ), object : StateMessageCallback {
@@ -475,7 +475,7 @@ class TransactionsFragment(
                 )
             )
         } ?: viewModel.addToMessageStack(
-            message = "Something went wrong \n cannot return deleted transaction back",
+            message = intArrayOf(R.string.something_went_wrong_cannot_return_deleted_transaction_back),
             uiComponentType = UIComponentType.Dialog,
             messageType = MessageType.Error
         )

@@ -1,5 +1,6 @@
 package com.ssmmhh.jibam.data.util
 
+import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.source.repository.buildResponse
 import com.ssmmhh.jibam.util.*
 
@@ -15,7 +16,11 @@ abstract class CacheResponseHandler<ViewState, Data>(
             is CacheResult.GenericError -> {
                 return DataState.error(
                     response = Response(
-                        message = "${stateEvent?.errorInfo}\n\nReason: ${response.errorMessage}",
+                        message = intArrayOf(
+                            stateEvent?.errorInfo ?: R.string.empty,
+                            R.string.error_reason,
+                            response.errorMessage ?: R.string.empty
+                        ),
                         uiComponentType = UIComponentType.Dialog,
                         messageType = MessageType.Error
                     ),
@@ -27,7 +32,10 @@ abstract class CacheResponseHandler<ViewState, Data>(
                 if (response.value == null) {
                     return DataState.error(
                         response = Response(
-                            message = "${stateEvent?.errorInfo}\n\nReason: Data is NULL.",
+                            message = intArrayOf(
+                                stateEvent?.errorInfo ?: R.string.empty,
+                                R.string.error_reason_data_is_null,
+                            ),
                             uiComponentType = UIComponentType.Dialog,
                             messageType = MessageType.Error
                         ),
@@ -38,7 +46,12 @@ abstract class CacheResponseHandler<ViewState, Data>(
                         if ((convertToLong(response.value)) < 1) {
                             //error case in insert or update or delete
                             return DataState.error(
-                                buildResponse(message = "${stateEvent?.errorInfo}\n\nReason: Unknown Database Error!")
+                                buildResponse(
+                                    message = intArrayOf(
+                                        stateEvent?.errorInfo ?: R.string.empty,
+                                        R.string.error_reason_unknown_database_error,
+                                    )
+                                )
                             )
                         }
                     }

@@ -1,5 +1,6 @@
 package com.ssmmhh.jibam.presentation.chart.state
 
+import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.source.local.entity.TransactionEntity
 import com.ssmmhh.jibam.presentation.common.state.DeleteTransactionStateEvent
 import com.ssmmhh.jibam.presentation.common.state.InsertNewTransactionStateEvent
@@ -11,8 +12,8 @@ sealed class ChartStateEvent : StateEvent {
         override val transactionId: Int,
         override val showSuccessToast: Boolean = true
     ) : ChartStateEvent(), DeleteTransactionStateEvent {
-        override val errorInfo: String =
-            "Unable to delete transaction"
+        override val errorInfo: Int =
+            R.string.unable_to_delete_transaction
 
         override val getId: String =
             "DeleteTransaction $transactionId hash: ${this.hashCode()} " +
@@ -22,7 +23,7 @@ sealed class ChartStateEvent : StateEvent {
     data class InsertTransaction(
         override val transactionEntity: TransactionEntity
     ) : ChartStateEvent(), InsertNewTransactionStateEvent {
-        override val errorInfo: String = "Unable to insert transaction"
+        override val errorInfo: Int = R.string.unable_to_insert_transaction
 
         override val getId: String =
             "InsertTransaction $transactionEntity + ${this.hashCode()}"

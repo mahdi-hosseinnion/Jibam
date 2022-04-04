@@ -80,7 +80,7 @@ class AddCategoryFragment(
             //default value
             //TODO ADD ON OK Clicked to dialog
             viewModel.addToMessageStack(
-                message = getString(R.string.unable_to_recognize_category_type_pls_return_back),
+                message = intArrayOf(R.string.unable_to_recognize_category_type_pls_return_back),
                 uiComponentType = UIComponentType.Dialog,
                 messageType = MessageType.Error
             )
@@ -127,12 +127,12 @@ class AddCategoryFragment(
                 handleNewStateMessage(it) { viewModel.clearStateMessage() }
                 val message = it.response.message
 
-                if (message == getString(R.string.unable_to_recognize_category_type_pls_return_back)
+                if (message.contentEquals(intArrayOf(R.string.unable_to_recognize_category_type_pls_return_back))
                 ) {
                     navigateBack()
                 }
 
-                if (message == getString(R.string.category_successfully_inserted)
+                if (message.contentEquals(intArrayOf(R.string.category_successfully_inserted))
                 ) {
                     navigateBack()
                 }
@@ -306,7 +306,7 @@ class AddCategoryFragment(
             override fun cancel() {}
         }
         viewModel.addToMessageStack(
-            message = getString(R.string.you_changes_have_not_saved),
+            message = intArrayOf(R.string.you_changes_have_not_saved),
             uiComponentType = UIComponentType.DiscardOrSaveDialog(callback),
             messageType = MessageType.Info
         )

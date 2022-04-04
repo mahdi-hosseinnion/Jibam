@@ -24,7 +24,6 @@ class TransactionRepositoryImpl
 @Inject
 constructor(
     private val transactionDao: TransactionDao,
-    private val _resources: Resources
 ) : TransactionRepository {
 
     override fun getTransactionList(
@@ -95,9 +94,6 @@ constructor(
         toDate = toDate
     )
 
-
-    fun getString(@StringRes id: Int) = _resources.getString(id)
-
     override suspend fun insertTransaction(
         stateEvent: InsertNewTransactionStateEvent
     ): DataState<Long> {
@@ -114,7 +110,7 @@ constructor(
                 return if (resultObj > 0) {
                     DataState.data(
                         response = buildResponse(
-                            message = getString(R.string.transaction_successfully_inserted),
+                            message =intArrayOf(R.string.transaction_successfully_inserted),
                             UIComponentType.Toast,
                             MessageType.Success
                         ),
@@ -123,7 +119,7 @@ constructor(
                 } else {
                     DataState.error(
                         response = buildResponse(
-                            message = getString(R.string.transaction_error_inserted),
+                            message =intArrayOf(R.string.transaction_error_inserted),
                             UIComponentType.Toast,
                             MessageType.Success
                         ),
@@ -149,7 +145,7 @@ constructor(
                 return if (resultObj > 0) {
                     DataState.data(
                         response = buildResponse(
-                            message = getString(R.string.transaction_successfully_updated),
+                            message =intArrayOf(R.string.transaction_successfully_updated),
                             UIComponentType.Toast,
                             MessageType.Success
                         ),
@@ -158,7 +154,7 @@ constructor(
                 } else {
                     DataState.error(
                         response = buildResponse(
-                            message = getString(R.string.transaction_error_updated),
+                            message =intArrayOf(R.string.transaction_error_updated),
                             UIComponentType.Toast,
                             MessageType.Success
                         ),
@@ -189,7 +185,7 @@ constructor(
                     }
                     DataState.data(
                         response = Response(
-                            message = getString(R.string.transaction_successfully_deleted),
+                            message =intArrayOf(R.string.transaction_successfully_deleted),
                             uiComponentType = uiComponentType,
                             messageType = MessageType.Success
                         ),
@@ -199,7 +195,7 @@ constructor(
                 } else {
                     DataState.error(
                         response = Response(
-                            message = getString(R.string.transaction_error_deleted),
+                            message =intArrayOf(R.string.transaction_error_deleted),
                             uiComponentType = UIComponentType.Toast,
                             messageType = MessageType.Error
                         )
@@ -225,7 +221,7 @@ constructor(
             override suspend fun handleSuccess(resultObj: TransactionDto): DataState<DetailEditTransactionViewState> {
                 return DataState.data(
                     response = buildResponse(
-                        message = "Transaction Successfully returned",
+                        message = null,
                         UIComponentType.None,
                         MessageType.Success
                     ),

@@ -91,7 +91,7 @@ class DetailChartFragment(
         viewModel.stateMessage.observe(viewLifecycleOwner) {
             it?.let {
                 handleNewStateMessage(it) { viewModel.clearStateMessage() }
-                if (it.response.message == getString(R.string.transaction_successfully_deleted)) {
+                if (it.response.message.contentEquals(intArrayOf(R.string.transaction_successfully_deleted))) {
                     showDeleteUndoSnackBar()
                 }
             }
@@ -156,7 +156,7 @@ class DetailChartFragment(
             override fun undo() {
                 if (transaction == null) {
                     viewModel.addToMessageStack(
-                        message = getString(R.string.unable_to_restore_transaction),
+                        message = intArrayOf(R.string.unable_to_restore_transaction),
                         uiComponentType = UIComponentType.Dialog,
                         messageType = MessageType.Error
                     )
@@ -184,7 +184,7 @@ class DetailChartFragment(
         }
         activityCommunicationListener.onResponseReceived(
             buildResponse(
-                getString(R.string.transaction_successfully_deleted),
+                intArrayOf(R.string.transaction_successfully_deleted),
                 UIComponentType.UndoSnackBar(undoCallback, binding.detailChartFragmentRoot),
                 MessageType.Info
             ), object : StateMessageCallback {

@@ -1,12 +1,11 @@
 package com.ssmmhh.jibam.data.source.repository
 
+import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.util.CacheResult
 import com.ssmmhh.jibam.data.util.MessageType
 import com.ssmmhh.jibam.data.util.Response
 import com.ssmmhh.jibam.data.util.UIComponentType
 import com.ssmmhh.jibam.util.Constants.CACHE_TIMEOUT
-import com.ssmmhh.jibam.data.util.ErrorHandling.CACHE_ERROR_TIMEOUT
-import com.ssmmhh.jibam.data.util.ErrorHandling.UNKNOWN_ERROR
 import kotlinx.coroutines.*
 
 private const val TAG = "RepositoryExtensions"
@@ -24,10 +23,10 @@ suspend fun <T> safeCacheCall(
         } catch (throwable: Throwable) {
             when (throwable) {
                 is TimeoutCancellationException -> {
-                    CacheResult.GenericError(CACHE_ERROR_TIMEOUT)
+                    CacheResult.GenericError(R.string.cache_timeout)
                 }
                 else -> {
-                    CacheResult.GenericError(UNKNOWN_ERROR)
+                    CacheResult.GenericError(R.string.cache_unknown_error)
                 }
             }
         }
@@ -35,7 +34,7 @@ suspend fun <T> safeCacheCall(
 }
 
 fun buildResponse(
-    message: String?,
+    message: IntArray?,
     uiComponentType: UIComponentType = UIComponentType.Dialog,
     messageType: MessageType = MessageType.Error
 ): Response = Response(

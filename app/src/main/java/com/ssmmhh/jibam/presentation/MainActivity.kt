@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity(), ActivityCommunicationListener {
 
             is UIComponentType.AreYouSureDialog -> {
 
-                response.message?.let {
+                response.getStringMessage(this)?.let {
                     areYouSureDialog(
                         message = it,
                         callback = response.uiComponentType.callback,
@@ -120,7 +120,7 @@ class MainActivity : AppCompatActivity(), ActivityCommunicationListener {
 
             is UIComponentType.DiscardOrSaveDialog -> {
 
-                response.message?.let {
+                response.getStringMessage(this)?.let {
                     discardOrSaveDialog(
                         message = it,
                         callback = response.uiComponentType.callback,
@@ -130,7 +130,7 @@ class MainActivity : AppCompatActivity(), ActivityCommunicationListener {
             }
 
             is UIComponentType.Toast -> {
-                response.message?.let {
+                response.getStringMessage(this)?.let {
                     displayToast(
                         message = it,
                         stateMessageCallback = stateMessageCallback
@@ -147,7 +147,7 @@ class MainActivity : AppCompatActivity(), ActivityCommunicationListener {
 
             is UIComponentType.UndoSnackBar -> {
                 displayUndoSnackBar(
-                    message = response.message,
+                    message = response.getStringMessage(this),
                     undoCallback = response.uiComponentType.callback,
                     parentView = response.uiComponentType.parentView,
                     stateMessageCallback = stateMessageCallback
@@ -204,7 +204,7 @@ class MainActivity : AppCompatActivity(), ActivityCommunicationListener {
         stateMessageCallback: StateMessageCallback
     ) {
         Log.d(TAG, "displayDialog: ")
-        response.message?.let { message ->
+        response.getStringMessage(this)?.let { message ->
 
             when (response.messageType) {
 

@@ -7,7 +7,6 @@
     <string name="cash">Cash</string>
     <string name="with">With</string>
     <string name="select_category">Select category</string>
-    <string name="empty" />
     <string name="money">Money</string>
     <string name="note">Note</string>
     <string name="total_balance">Total</string>
@@ -301,7 +300,31 @@
     <string name="category_image">Category image</string>
     <string name="close_category_list">Close category list</string>
     <string name="invalid_number_error">Invalid number</string>
-<!--    content descriptions-->
+    <!--    content descriptions-->
+    <string name="empty">""</string>
+
     <string name="navigate_back_cd">Navigate back</string>
     <string name="navigation_drawer_cd">Navigation drawer</string>
+    <!--    Error messages-->
+    <string name="error_reason">"\n\nReason: "</string>
+    <string name="unknown_error">Unknown error #02</string>
+    <string name="error_reason_data_is_null">\nReason: Data is NULL.</string>
+    <string name="error_reason_unknown_database_error">\n\nReason: Unknown database error!"</string>
+    <string name="unable_to_get_categories_to_update_them">Unable to get categories to update them</string>
+    <string name="there_is_no_category_in_database">There is no category in database</string>
+    <string name="at_least_on_of_the_categories_order_did_not_updated">At least on of the categories order did not updated</string>
+    <string name="something_went_wrong_cannot_return_deleted_transaction_back">Something went wrong
+ cannot return deleted transaction back</string>
+    <string name="cache_timeout">Cache timeout</string>
+    <string name="cache_unknown_error">Unknown cache error</string>
+    <string name="unable_to_get_the_transaction">Unable to get the transaction</string>
+    <string name="unable_to_get_all_of_categories">Unable to get all of categories</string>
+    <string name="unable_to_update_transaction">Unable to update transaction</string>
+    <string name="unable_to_delete_transaction">Unable to delete transaction</string>
+    <string name="unable_to_insert_transaction">Unable to insert transaction</string>
+    <string name="unable_to_insert_this_category">Unable to insert this category</string>
+    <string name="unable_to_delete_category">Unable to delete category</string>
+    <string name="unable_to_change_order_of_selected_category">Unable to change order of selected category</string>
+    <string name="unable_to_get_categories_from_database">Unable to get categories from database</string>
+
 </resources>

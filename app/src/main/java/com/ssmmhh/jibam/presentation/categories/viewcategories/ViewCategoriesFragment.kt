@@ -178,7 +178,7 @@ class ViewCategoriesFragment(
         }
         activityCommunicationListener.onResponseReceived(
             Response(
-                getString(R.string.are_you_sure_delete_category),
+                intArrayOf(R.string.are_you_sure_delete_category),
                 UIComponentType.AreYouSureDialog(
                     callback
                 ), MessageType.Info
@@ -217,7 +217,7 @@ class ViewCategoriesFragment(
 
         activityCommunicationListener.onResponseReceived(
             Response(
-                getString(R.string.unable_to_recognize_category_type),
+                intArrayOf(R.string.unable_to_recognize_category_type),
                 //TODO SHOW OK DIALOG
                 UIComponentType.Dialog,
                 MessageType.Error

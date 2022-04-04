@@ -131,13 +131,12 @@ constructor(
                             viewModel.clearStateMessage()
                         }
                     })
-                if (stateMessage.response.message ==
-                    getString(R.string.transaction_successfully_deleted)
+                if (stateMessage.response.message.contentEquals(intArrayOf(R.string.transaction_successfully_deleted))
                 ) {
                     activityCommunicationListener.hideSoftKeyboard()
                     navigateBack()
                 }
-                if (stateMessage.response.message == getString(R.string.transaction_successfully_updated)) {
+                if (stateMessage.response.message.contentEquals(intArrayOf(R.string.transaction_successfully_updated))) {
                     //transaction successfully inserted
                     activityCommunicationListener.hideSoftKeyboard()
                     navigateBack()
@@ -333,7 +332,7 @@ constructor(
         if (transactionId == null) {
             //show toast error
             viewModel.addToMessageStack(
-                getString(R.string.unable_to_delete_no_transaction_found),
+                intArrayOf(R.string.unable_to_delete_no_transaction_found),
                 Throwable("$TAG : deleteTransaction: viewTransactionId is null!  viewTransactionId = $transactionId"),
                 UIComponentType.Toast,
                 MessageType.Error
@@ -347,7 +346,7 @@ constructor(
                 override fun cancel() {}
             }
             viewModel.addToMessageStack(
-                message = getString(R.string.are_you_sure_delete_transaction),
+                message = intArrayOf(R.string.are_you_sure_delete_transaction),
                 uiComponentType = UIComponentType.AreYouSureDialog(
                     callback
                 ),
@@ -446,7 +445,7 @@ constructor(
             override fun cancel() {}
         }
         viewModel.addToMessageStack(
-            message = getString(R.string.you_changes_have_not_saved),
+            message = intArrayOf(R.string.you_changes_have_not_saved),
             uiComponentType = UIComponentType.DiscardOrSaveDialog(callback),
             messageType = MessageType.Info
         )
