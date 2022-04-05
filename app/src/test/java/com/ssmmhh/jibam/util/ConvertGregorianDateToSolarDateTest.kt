@@ -1,7 +1,7 @@
 package com.ssmmhh.jibam.util
 
 import android.content.res.Resources
-import com.ssmmhh.jibam.util.SolarCalendar.ShamsiPatterns.TEST
+import com.ssmmhh.jibam.util.ConvertGregorianDateToSolarDate.ShamsiPatterns.TEST
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
@@ -10,11 +10,11 @@ import java.util.*
 
 //sources
 // https://programchi.ir/2018/04/27/%D8%A2%D9%85%D9%88%D8%B2%D8%B4-%D8%AA%D8%A7%D8%B1%DB%8C%D8%AE-%D8%B4%D9%85%D8%B3%DB%8C-%D8%AF%D8%B1-%D8%A8%D8%B1%D9%86%D8%A7%D9%85%D9%87-%D9%86%D9%88%DB%8C%D8%B3%DB%8C-%D8%A7%D9%86%D8%AF%D8%B1%D9%88/
-class SolarCalendarTest {
+class ConvertGregorianDateToSolarDateTest {
     private val testLocale = Locale("en", "IR")
     private val resources = Resources.getSystem()
     //system under test
-    val solarCalender = SolarCalendar
+    val solarCalender = ConvertGregorianDateToSolarDate
 
     val testCases = mapOf<Long, String>(//the unix time should be second
         3728817042 to "1466/12/09/اسفند/شنبه",
@@ -46,8 +46,8 @@ class SolarCalendarTest {
         val unixDate = k.times(1000L)
 
         val date = Date(unixDate)
-        val actualResult1 = solarCalender.calcSolarCalendar(date, TEST,resources,testLocale)
-        val actualResult2 = solarCalender.calcSolarCalendar(unixDate,TEST,resources,testLocale)
+        val actualResult1 = solarCalender.convert(date, TEST,resources,testLocale)
+        val actualResult2 = solarCalender.convert(unixDate,TEST,resources,testLocale)
         println("CHECK $k")
         println(
             "Georgian date -> " +
@@ -55,7 +55,7 @@ class SolarCalendarTest {
         )
         println(
             "Jalali date -> " +
-                    solarCalender.calcSolarCalendar(unixDate,TEST,resources,testLocale)
+                    solarCalender.convert(unixDate,TEST,resources,testLocale)
         )
 
         assertEquals(

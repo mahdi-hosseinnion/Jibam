@@ -283,6 +283,8 @@
     <string name="thursday">Thu</string>
     <string name="friday">Fri</string>
     <string name="saturday">Sat</string>
+    <string name="unknown_day">Unknown day</string>
+    <string name="unknown_month">Unknown month</string>
     <string name="sunday">Sun</string>
     <!--    https://github.com/alirezaafkar/SunDatePicker/blob/master/sundatepicker/src/main/res/values/strings.xml-->
     <string name="ok_btn">OK</string>

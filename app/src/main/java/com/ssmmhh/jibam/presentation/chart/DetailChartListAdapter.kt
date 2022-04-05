@@ -156,11 +156,11 @@ class DetailChartListAdapter(
 
         private fun dateWithPattern(date: Long): String {
             return if (isCalendarSolar) {
-                SolarCalendar.calcSolarCalendar(
-                    date.times(1000L),
-
-                    SolarCalendar.ShamsiPatterns.DETAIL_CHART_FRAGMENT, null, currentLocale
-                )
+                val solarDate = ConvertGregorianDateToSolarDate.convert(date.times(1000L))
+                val formattedYear = solarDate.formattedYear(currentLocale)
+                val formattedMonth = solarDate.formattedMonth(currentLocale)
+                val formattedDay = solarDate.formattedDay(currentLocale)
+                "$formattedYear/$formattedMonth/${formattedDay}"
             } else {
                 val df = Date(date.times(1000L))
                 SimpleDateFormat(DATE_PATTERN, currentLocale).format(df)

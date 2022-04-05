@@ -1,44 +1,25 @@
 package com.ssmmhh.jibam.util
 
-import android.content.res.Resources
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.presentation.transactions.TransactionsListAdapter
 import java.util.*
 
 //  this algorithm for years and it is very accurate between 1901 and 2099.
 //TIP this class only work in date between 2029-03-19/OR/1407/12/29 and 1370/1/1
 //b/c 1408 is kabise but 1407 is'nt kabise and 1403 is kabise its all about 33 year kabise in shamsi
-//tarikh
-//To solve this proble check this two project
+//calendar
+//To solve this problem check this two project
 //TODO USE JDF LIBRARY INSTEAD
 //https://jdf.scr.ir/jdf/kotlin
 //https://github.com/alirezaafkar/SunDatePicker/blob/master/sundatepicker/src/main/java/com/alirezaafkar/sundatepicker/components/JDF.java
 //https://github.com/persian-calendar/DroidPersianCalendar
-object SolarCalendar {
+object ConvertGregorianDateToSolarDate {
 
+    fun convert(unixTimeStamp: Long): SolarDate = convert(Date(unixTimeStamp))
 
-    private var date: Int = 0
-    private var month = 0
-    private var year = 0
-    private var strMonth: String? = null
-    private var strWeekDay: String? = null
-
-    fun calcSolarCalendar(
-        unixTimeStamp: Long,
-        pattern: ShamsiPatterns,
-        resources: Resources?,
-        loc: Locale
-    ): String =
-        calcSolarCalendar(Date(unixTimeStamp), pattern, resources, loc)
-
-    //    = Locale("en_US")
-    //TODO SHOULD RETURN HASHMAP or data class
-    fun calcSolarCalendar(
-        gregorianDate: Date,
-        pattern: ShamsiPatterns,
-        resources: Resources?,
-        loc: Locale
-    ): String {
+    fun convert(gregorianDate: Date): SolarDate {
+        val year: Int
+        var date: Int
+        val month: Int
         val ld: Int
         val miladiYear: Int = gregorianDate.year + 1900
         val miladiMonth: Int = gregorianDate.month + 1
@@ -169,119 +150,85 @@ object SolarCalendar {
                 year = miladiYear - 622
             }
         }
-        if (resources != null) {
-            strMonth = when (month) {
-                1 -> resources.getString(R.string.Farvardin)
-                2 -> resources.getString(R.string.Ordibehesht)
-                3 -> resources.getString(R.string.Khordad)
-                4 -> resources.getString(R.string.Tir)
-                5 -> resources.getString(R.string.Mordad)
-                6 -> resources.getString(R.string.Shahrivar)
-                7 -> resources.getString(R.string.Mehr)
-                8 -> resources.getString(R.string.Aban)
-                9 -> resources.getString(R.string.Azar)
-                10 -> resources.getString(R.string.Dey)
-                11 -> resources.getString(R.string.Bahman)
-                12 -> resources.getString(R.string.Esfand)
-                else -> "Unknown month"
-            }
-            strWeekDay = when (WeekDay) {
-                0 -> resources.getString(R.string.sunday)
-                1 -> resources.getString(R.string.monday)
-                2 -> resources.getString(R.string.tuesday)
-                3 -> resources.getString(R.string.wednesday)
-                4 -> resources.getString(R.string.thursday)
-                5 -> resources.getString(R.string.friday)
-                6 -> resources.getString(R.string.saturday)
-                else -> "Unknown day"
-            }
+        val strMonth: Int = when (month) {
+            1 -> R.string.Farvardin
+            2 -> R.string.Ordibehesht
+            3 -> R.string.Khordad
+            4 -> R.string.Tir
+            5 -> R.string.Mordad
+            6 -> R.string.Shahrivar
+            7 -> R.string.Mehr
+            8 -> R.string.Aban
+            9 -> R.string.Azar
+            10 -> R.string.Dey
+            11 -> R.string.Bahman
+            12 -> R.string.Esfand
+            else -> R.string.unknown_month
         }
-        //TODO REFACTOR THIS
-        return when (pattern) {
-            ShamsiPatterns.RECYCLER_VIEW -> {
-                "$strWeekDay, ${TransactionsListAdapter.DAY_OF_WEEK_MARKER}" +
-                        java.lang.String.format(loc, "%d", date) +
-                        " " +
-                        strMonth +
-                        " " +
-                        java.lang.String.format(loc, "%02d", year)
-            }
-            ShamsiPatterns.DETAIL_FRAGMENT -> {
-                "" + java.lang.String.format(loc, "%d", year) + "/" + java.lang.String.format(
-                    loc,
-                    "%d",
-                    month
-                ) + "/" +
-                        java.lang.String.format(loc, "%02d", date) + " (" + strWeekDay + ")"
-
-            }
-            ShamsiPatterns.DETAIL_CHART_FRAGMENT -> {
-                "" + java.lang.String.format(loc, "%d", year) + "/" + java.lang.String.format(
-                    loc,
-                    "%d",
-                    month
-                ) + "/" +
-                        java.lang.String.format(loc, "%02d", date)
-
-            }
-            ShamsiPatterns.YEAR_MONTH -> {
-                "${year}_${month}"
-            }
-            ShamsiPatterns.JUST_MONTH_NAME -> {
-                strMonth ?: "unknown"
-            }
-            ShamsiPatterns.JUST_MONTH_NUMBER -> {
-                month.toString()
-            }
-            ShamsiPatterns.JUST_YEAR_NUMBER -> {
-                year.toString()
-            }
-            ShamsiPatterns.TEST -> {
-                "$year/" + java.lang.String.format(
-                    loc, "%02d",
-                    month
-                ) + "/" + java.lang.String.format(
-                    loc,
-                    "%02d",
-                    date
-                ) + "/" + strMonth + "/" + strWeekDay
-            }
+        val strWeekDay: Int = when (WeekDay) {
+            0 -> R.string.sunday
+            1 -> R.string.monday
+            2 -> R.string.tuesday
+            3 -> R.string.wednesday
+            4 -> R.string.thursday
+            5 -> R.string.friday
+            6 -> R.string.saturday
+            else -> R.string.unknown_day
         }
+        return SolarDate(
+            strWeekDay = strWeekDay,
+            strMonth = strMonth,
+            year = year,
+            month = month,
+            day = date,
+        )
 
     }
 
-    //* CONST--------------
-    //////Shamsi
-    //min
-    const val minShamsiYear = 1370
-    const val minShamsiMonth = 1
-    const val minShamsiDay = 1
 
-    //max
+    //maximum and minimum date that this class support
     const val maxShamsiYear = 1407
     const val maxShamsiMonth = 12
     const val maxShamsiDay = 29
 
-    //////Gregorian
-    //min
+    const val minShamsiYear = 1370
+    const val minShamsiMonth = 1
+    const val minShamsiDay = 1
+
     const val minGregorianDate = 669554735_000
     const val maxGregorianYear = 2028
     const val minGregorianYear = 1992
-
-    //        const val minGregorianYear = 1991/03/21
-//        const val minGregorianMonth = 3
-//        const val minGregorianDay = 21
-    //max
     const val maxGregorianDate = 1868613935_000
 
-    //        const val maxGregorianYear = 2029/03/19
-//        const val maxGregorianMonth = 3
-//        const val maxGregorianDay = 19
-    //yea integer max value
-    enum class ShamsiPatterns {
-        RECYCLER_VIEW,
-        DETAIL_FRAGMENT, DETAIL_CHART_FRAGMENT, YEAR_MONTH, JUST_MONTH_NAME, JUST_MONTH_NUMBER, JUST_YEAR_NUMBER, TEST
-    }
+    data class SolarDate(
+        /**
+         * Name of day in week represented in string resource id.
+         */
+        val strWeekDay: Int,
+        /**
+         * Name of month represented in string resource id.
+         */
+        val strMonth: Int,
+        val day: Int,
+        val month: Int,
+        val year: Int,
+    ) {
+        /**
+         * Format year base on locale ex) convert 1401 to ۱۴۰۱ if locale is 'fa'
+         */
+        fun formattedYear(locale: Locale): String = String.format(locale, "%d", this.year)
 
+        /**
+         * Format year base on locale ex) convert 1 to ۱ if locale is 'fa'
+         */
+        fun formattedMonth(locale: Locale): String = String.format(locale, "%d", this.month)
+
+        /**
+         * Format year base on locale also add 0 before one digit numbers
+         *
+         * ex) convert 5 to ۰۵ if locale is 'fa' or 05 if locale is 'en'
+         */
+        fun formattedDay(locale: Locale): String = String.format(locale, "%02d", this.day)
+
+    }
 }
-///

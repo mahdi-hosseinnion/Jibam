@@ -221,14 +221,14 @@ constructor(
         DatePicker.Builder()
             .date(calender)
             .minDate(
-                SolarCalendar.minShamsiYear,
-                SolarCalendar.minShamsiMonth,
-                SolarCalendar.minShamsiDay
+                ConvertGregorianDateToSolarDate.minShamsiYear,
+                ConvertGregorianDateToSolarDate.minShamsiMonth,
+                ConvertGregorianDateToSolarDate.minShamsiDay
             )
             .maxDate(
-                SolarCalendar.maxShamsiYear,
-                SolarCalendar.maxShamsiMonth,
-                SolarCalendar.maxShamsiDay
+                ConvertGregorianDateToSolarDate.maxShamsiYear,
+                ConvertGregorianDateToSolarDate.maxShamsiMonth,
+                ConvertGregorianDateToSolarDate.maxShamsiDay
             )
             .build { id, calendar, day, month, year ->
                 removeDatePickerFromScreen()
@@ -267,8 +267,8 @@ constructor(
                 calender.get(Calendar.MONTH),
                 calender.get(Calendar.DAY_OF_MONTH)
             )
-        datePickerDialog.datePicker.minDate = SolarCalendar.minGregorianDate
-        datePickerDialog.datePicker.maxDate = SolarCalendar.maxGregorianDate
+        datePickerDialog.datePicker.minDate = ConvertGregorianDateToSolarDate.minGregorianDate
+        datePickerDialog.datePicker.maxDate = ConvertGregorianDateToSolarDate.maxGregorianDate
         datePickerDialog.show()
     }
 
@@ -322,12 +322,11 @@ constructor(
         )
 
         return if (calendarType == CALENDAR_SOLAR) {
-            SolarCalendar.calcSolarCalendar(
-                unixTimeInMillis,
-                SolarCalendar.ShamsiPatterns.DETAIL_FRAGMENT,
-                resources,
-                currentLocale
-            )
+            val date = ConvertGregorianDateToSolarDate.convert(unixTimeInMillis)
+            val formattedYear = date.formattedYear(currentLocale)
+            val formattedMonth = date.formattedMonth(currentLocale)
+            val formattedDay = date.formattedDay(currentLocale)
+            "$formattedYear/$formattedMonth/${formattedDay} (${getString(date.strWeekDay)})"
         } else {
             val df = Date(unixTimeInMillis)
             SimpleDateFormat(DATE_PATTERN, currentLocale).format(df)
@@ -510,6 +509,7 @@ constructor(
         private const val TAG = "AddEditTransactionParen"
 
         private const val TIME_PATTERN = "KK:mm aa"
+
         //for shamsi date it's hard coded in SolarCalendar class
         private const val DATE_PATTERN = "MM/dd/yy (E)"
 

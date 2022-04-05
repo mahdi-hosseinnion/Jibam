@@ -163,9 +163,9 @@ constructor(
         timeStamp: Long
     ): Long {
         //get month and year for given timeStamp
-        val shamsiDate = SolarCalendar.calcSolarCalendar(
+        val shamsiDate = ConvertGregorianDateToSolarDate.convert(
             timeStamp,
-            SolarCalendar.ShamsiPatterns.YEAR_MONTH,
+            ConvertGregorianDateToSolarDate.ShamsiPatterns.YEAR_MONTH,
             _resources,
             currentLocale
         )
@@ -178,9 +178,9 @@ constructor(
         timeStamp: Long
     ): Long {
         //get month and year for given timeStamp
-        val shamsiDate = SolarCalendar.calcSolarCalendar(
+        val shamsiDate = ConvertGregorianDateToSolarDate.convert(
             timeStamp,
-            SolarCalendar.ShamsiPatterns.YEAR_MONTH,
+            ConvertGregorianDateToSolarDate.ShamsiPatterns.YEAR_MONTH,
             _resources,
             currentLocale
         )
@@ -202,9 +202,9 @@ constructor(
     }
 
     private fun getShamsiMonthName(timeStamp: Long): String =
-        SolarCalendar.calcSolarCalendar(
+        ConvertGregorianDateToSolarDate.convert(
             timeStamp,
-            SolarCalendar.ShamsiPatterns.JUST_MONTH_NAME,
+            ConvertGregorianDateToSolarDate.ShamsiPatterns.JUST_MONTH_NAME,
             _resources,
             currentLocale
         )
@@ -220,9 +220,9 @@ constructor(
 
     fun getMonth(timeStamp: Long = _fromDate.value): Int {
         return if (sharedPreferences.isCalendarSolar(currentLocale)) {
-            SolarCalendar.calcSolarCalendar(
+            ConvertGregorianDateToSolarDate.convert(
                 timeStamp,
-                SolarCalendar.ShamsiPatterns.JUST_MONTH_NUMBER,
+                ConvertGregorianDateToSolarDate.ShamsiPatterns.JUST_MONTH_NUMBER,
                 _resources,
                 currentLocale
             ).toInt()
@@ -236,9 +236,9 @@ constructor(
 
     fun getYear(timeStamp: Long = _fromDate.value): Int {
         return if (sharedPreferences.isCalendarSolar(currentLocale)) {
-            SolarCalendar.calcSolarCalendar(
+            ConvertGregorianDateToSolarDate.convert(
                 timeStamp,
-                SolarCalendar.ShamsiPatterns.JUST_YEAR_NUMBER,
+                ConvertGregorianDateToSolarDate.ShamsiPatterns.JUST_YEAR_NUMBER,
                 _resources,
                 currentLocale
             ).toInt()

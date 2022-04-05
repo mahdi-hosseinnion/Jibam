@@ -3,7 +3,7 @@ package com.ssmmhh.jibam.presentation.transactions
 import android.content.res.Resources
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
 import com.ssmmhh.jibam.data.model.TransactionsRecyclerViewItem
-import com.ssmmhh.jibam.util.SolarCalendar
+import com.ssmmhh.jibam.util.ConvertGregorianDateToSolarDate
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.util.*
@@ -101,9 +101,9 @@ class AddHeaderToTransactions(
         val df: Date = Date(unixTimeStamp)
 
         return if (isSolarCalendar) {
-            SolarCalendar.calcSolarCalendar(
+            ConvertGregorianDateToSolarDate.convert(
                 df,
-                SolarCalendar.ShamsiPatterns.RECYCLER_VIEW,
+                ConvertGregorianDateToSolarDate.ShamsiPatterns.RECYCLER_VIEW,
                 resources,
                 currentLocale
             )

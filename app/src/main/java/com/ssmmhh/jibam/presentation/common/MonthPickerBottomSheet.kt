@@ -1,6 +1,5 @@
 package com.ssmmhh.jibam.presentation.common
 
-import android.content.res.Resources
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +8,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.BottomSheetMonthPickerBinding
 import com.ssmmhh.jibam.util.DateUtils
-import com.ssmmhh.jibam.util.SolarCalendar
+import com.ssmmhh.jibam.util.ConvertGregorianDateToSolarDate
 
 class MonthPickerBottomSheet
 constructor(
@@ -56,13 +55,13 @@ constructor(
         binding.monthNumberPicker.minValue = 1
         binding.monthNumberPicker.maxValue = 12
         if (isShamsi) {
-            binding.yearNumberPicker.minValue = SolarCalendar.minShamsiYear
-            binding.yearNumberPicker.maxValue = SolarCalendar.maxShamsiYear
+            binding.yearNumberPicker.minValue = ConvertGregorianDateToSolarDate.minShamsiYear
+            binding.yearNumberPicker.maxValue = ConvertGregorianDateToSolarDate.maxShamsiYear
             binding.monthNumberPicker.displayedValues =
                 DateUtils.shamsiMonths.map { strId -> getString(strId) }.toTypedArray()
         } else {
-            binding.yearNumberPicker.minValue = SolarCalendar.minGregorianYear
-            binding.yearNumberPicker.maxValue = SolarCalendar.maxGregorianYear
+            binding.yearNumberPicker.minValue = ConvertGregorianDateToSolarDate.minGregorianYear
+            binding.yearNumberPicker.maxValue = ConvertGregorianDateToSolarDate.maxGregorianYear
             binding.monthNumberPicker.displayedValues =
                 DateUtils.gregorianMonths.map { strId -> getString(strId) }.toTypedArray()
         }
