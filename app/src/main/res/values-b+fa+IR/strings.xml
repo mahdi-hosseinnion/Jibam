@@ -278,6 +278,18 @@
     <string name="November">نوامبر</string>
     <string name="December">دسامبر</string>
 
+    <string name="jan">ژانویه</string>
+    <string name="feb">فوریه</string>
+    <string name="mar">مارس</string>
+    <string name="apr">آوریل</string>
+    <string name="may">مه</string>
+    <string name="jun">ژوئن</string>
+    <string name="jul">ژوئیه</string>
+    <string name="aug">اوت</string>
+    <string name="sep">سپتامبر</string>
+    <string name="oct">اکتبر</string>
+    <string name="nov">نوامبر</string>
+    <string name="dec">دسامبر</string>
     <!--    days of week-->
     <string name="saturday">شنبه</string>
     <string name="sunday">يکشنبه</string>

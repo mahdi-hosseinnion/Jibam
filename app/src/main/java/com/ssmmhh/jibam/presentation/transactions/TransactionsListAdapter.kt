@@ -35,20 +35,8 @@ class TransactionsListAdapter(
         private const val TAG: String = "AppDebug"
 
         //MAKE THIS PERSIAN
-        const val YESTERDAY = "Yesterday"
-        const val TODAY = "Today"
-
-        private const val TRANSACTION_ITEM = 0
-
-        //list of supported patter
-        //https://stackoverflow.com/a/12781297/10362460
-//        "E MM/dd/yy",
-        //"^" is just marker
-        //TODO REMOVE THIS MAKER AND USE DIFFERNT STRING VAL for dayofweek
-        const val DAY_OF_WEEK_MARKER = '^'
-        const val HEADER_DATE_PATTERN = "E,$DAY_OF_WEEK_MARKER MMM dd yyyy"
-//        const val HEADER_DATE_PATTERN="MM/dd/yy (E)"
-
+        val YESTERDAY_MARKER = DateHolderWithWeekDay(-2, -2, -2, -2)
+        val TODAY_MARKER = DateHolderWithWeekDay(-3, -3, -3, -3)
     }
 
     val DIFF_CALLBACK = object : DiffUtil.ItemCallback<TransactionsRecyclerViewItem>() {
@@ -379,26 +367,18 @@ class TransactionsListAdapter(
             } ?: ""
 
             when (item.date) {
-                TODAY -> {
-                    headerDate.text = ""
-                    headerDayOfWeek.text = getStringFromItemView(R.string.today)
-                }
-                YESTERDAY -> {
-                    headerDate.text = ""
-                    headerDayOfWeek.text = getStringFromItemView(R.string.yesterday)
-                }
+//                TODAY_MARKER -> {
+//                    headerDate.text = ""
+//                    headerDayOfWeek.text = getStringFromItemView(R.string.today)
+//                }
+//                YESTERDAY_MARKER -> {
+//                    headerDate.text = ""
+//                    headerDayOfWeek.text = getStringFromItemView(R.string.yesterday)
+//                }
                 else -> {
-                    try {
-                        headerDayOfWeek.text = item.date.substring(
-                            0, item.date.indexOf(
-                                DAY_OF_WEEK_MARKER
-                            )
-                        )
-                        headerDate.text =
-                            item.date?.substring(item.date.indexOf(DAY_OF_WEEK_MARKER).plus(1))
-                    } catch (e: Exception) {
-                        headerDate.text = item.date
-                    }
+//                    headerDayOfWeek.text = item.date.getDayOfWeekName(itemView.context) + ","
+//                    headerDate.text = " ${item.date.day} ${item.date.month} ${item.date.year}"
+                    headerDate.text = item.date.toString()
                 }
             }
         }

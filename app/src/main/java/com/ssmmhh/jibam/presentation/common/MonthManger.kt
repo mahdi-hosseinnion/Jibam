@@ -18,7 +18,6 @@ class MonthManger
 @Inject
 constructor(
     private val currentLocale: Locale,
-    private val _resources: Resources,
     private val sharedPreferences: SharedPreferences
 ) {
     private val TAG = "MonthManger"
@@ -38,10 +37,13 @@ constructor(
         _fromDate,
         _toDate
     ) { from, to ->
+
         return@combine Month(
-            from.toSecond(),
-            to.toSecond(),
-            getMonthName(from)
+            startOfMonth = from.toSecond(),
+            endOfMonth = to.toSecond(),
+            monthNumber = getMonth(from),
+            isShamsi = sharedPreferences.isCalendarSolar(currentLocale),
+            year = getYearToDisplay(from)
         )
     }
 
@@ -91,7 +93,7 @@ constructor(
     fun getStartOfCurrentMonthShamsi(
         currentMonth: Int, currentYear: Int
     ): Long {
-        return DateUtils.shamsiToUnixTimeStamp(
+        return shamsiToUnixTimeStamp(
             jy = currentYear,
             jm = currentMonth,
             jd = 1
@@ -109,7 +111,7 @@ constructor(
             month = 1
             year = currentYear.plus(1)
         }
-        return DateUtils.shamsiToUnixTimeStamp(
+        return shamsiToUnixTimeStamp(
             jy = year,
             jm = month,
             jd = 1
@@ -118,7 +120,7 @@ constructor(
 
     fun getStartOfCurrentMonthGeorgian(
         currentMonth: Int, currentYear: Int
-    ): Long = DateUtils.gregorianToUnixTimestamp(year = currentYear, month = currentMonth, 1)
+    ): Long = gregorianToUnixTimestamp(year = currentYear, month = currentMonth, 1)
 
 
     fun getEndOfCurrentMonthGeorgian(
@@ -131,7 +133,7 @@ constructor(
             month = 1
             year = currentYear.plus(1)
         }
-        return DateUtils.gregorianToUnixTimestamp(
+        return gregorianToUnixTimestamp(
             year = year,
             month = month,
             day = 1
@@ -163,51 +165,24 @@ constructor(
         timeStamp: Long
     ): Long {
         //get month and year for given timeStamp
-        val shamsiDate = ConvertGregorianDateToSolarDate.convert(
-            timeStamp,
-            ConvertGregorianDateToSolarDate.ShamsiPatterns.YEAR_MONTH,
-            _resources,
-            currentLocale
-        )
-        val currentYear = shamsiDate.substring(0, shamsiDate.indexOf('_'))
-        val currentMonth = shamsiDate.substring(shamsiDate.indexOf('_').plus(1))
-        return getEndOfCurrentMonthShamsi(currentMonth.toInt(), currentYear.toInt())
+        val shamsiDate = unixTimeStampToShamsiDate(timeStamp)
+        return getEndOfCurrentMonthShamsi(shamsiDate.month, shamsiDate.year)
     }
 
     fun getStartOfCurrentMonthShamsi(
         timeStamp: Long
     ): Long {
         //get month and year for given timeStamp
-        val shamsiDate = ConvertGregorianDateToSolarDate.convert(
-            timeStamp,
-            ConvertGregorianDateToSolarDate.ShamsiPatterns.YEAR_MONTH,
-            _resources,
-            currentLocale
-        )
-        val currentYear = shamsiDate.substring(0, shamsiDate.indexOf('_'))
-        val currentMonth = shamsiDate.substring(shamsiDate.indexOf('_').plus(1))
-        return getStartOfCurrentMonthShamsi(currentMonth.toInt(), currentYear.toInt())
+        val shamsiDate = unixTimeStampToShamsiDate(timeStamp)
+        return getStartOfCurrentMonthShamsi(shamsiDate.month, shamsiDate.year)
     }
 
-    fun getMonthName(timeStamp: Long = _fromDate.value): String {
-        val name = if (sharedPreferences.isCalendarSolar(currentLocale)) {
-            getShamsiMonthName(timeStamp)
-        } else {
-            getGeorgianMonthName(timeStamp)
-        }
-        return if (getYear() != getYear(System.currentTimeMillis())) {
-            //if month is not in this year
-            name + "\n" + getYear().toString().localizeNumber(_resources)
-        } else name
+    fun getYearToDisplay(timeStamp: Long = _fromDate.value): Int? {
+        if (getYear(timeStamp) == getYear(System.currentTimeMillis())) return null
+        return getYear(timeStamp)
     }
 
-    private fun getShamsiMonthName(timeStamp: Long): String =
-        ConvertGregorianDateToSolarDate.convert(
-            timeStamp,
-            ConvertGregorianDateToSolarDate.ShamsiPatterns.JUST_MONTH_NAME,
-            _resources,
-            currentLocale
-        )
+    private fun getShamsiMonth(timeStamp: Long): Int = unixTimeStampToShamsiDate(timeStamp).month
 
 
     private fun getGeorgianMonthName(timeStamp: Long): String {
@@ -220,14 +195,12 @@ constructor(
 
     fun getMonth(timeStamp: Long = _fromDate.value): Int {
         return if (sharedPreferences.isCalendarSolar(currentLocale)) {
-            ConvertGregorianDateToSolarDate.convert(
+            unixTimeStampToShamsiDate(
                 timeStamp,
-                ConvertGregorianDateToSolarDate.ShamsiPatterns.JUST_MONTH_NUMBER,
-                _resources,
-                currentLocale
-            ).toInt()
+            ).month
         } else {
             val currentDate = Date(timeStamp)
+            //TODO ("use date.getMonth function")
             return (SimpleDateFormat("M", currentLocale).format(currentDate)).toInt()
         }
     }
@@ -236,14 +209,10 @@ constructor(
 
     fun getYear(timeStamp: Long = _fromDate.value): Int {
         return if (sharedPreferences.isCalendarSolar(currentLocale)) {
-            ConvertGregorianDateToSolarDate.convert(
-                timeStamp,
-                ConvertGregorianDateToSolarDate.ShamsiPatterns.JUST_YEAR_NUMBER,
-                _resources,
-                currentLocale
-            ).toInt()
+            unixTimeStampToShamsiDate(timeStamp).year
         } else {
             val currentDate = Date(timeStamp)
+            //TODO ("use date.getYear function")
             return (SimpleDateFormat("yyyy", currentLocale).format(currentDate)).toInt()
         }
     }

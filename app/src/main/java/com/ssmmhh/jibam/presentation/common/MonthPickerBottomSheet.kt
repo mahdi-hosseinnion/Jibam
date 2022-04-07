@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.BottomSheetMonthPickerBinding
-import com.ssmmhh.jibam.util.DateUtils
+import com.ssmmhh.jibam.util.*
 
 class MonthPickerBottomSheet
 constructor(
@@ -54,13 +54,13 @@ constructor(
         binding.monthNumberPicker.minValue = 1
         binding.monthNumberPicker.maxValue = 12
         if (isShamsi) {
-            binding.yearNumberPicker.minValue = ConvertGregorianDateToSolarDate.minShamsiYear
-            binding.yearNumberPicker.maxValue = ConvertGregorianDateToSolarDate.maxShamsiYear
+            binding.yearNumberPicker.minValue = minShamsiYear
+            binding.yearNumberPicker.maxValue = maxShamsiYear
             binding.monthNumberPicker.displayedValues =
                 DateUtils.shamsiMonths.map { strId -> getString(strId) }.toTypedArray()
         } else {
-            binding.yearNumberPicker.minValue = ConvertGregorianDateToSolarDate.minGregorianYear
-            binding.yearNumberPicker.maxValue = ConvertGregorianDateToSolarDate.maxGregorianYear
+            binding.yearNumberPicker.minValue = minGregorianYear
+            binding.yearNumberPicker.maxValue = maxGregorianYear
             binding.monthNumberPicker.displayedValues =
                 DateUtils.gregorianMonths.map { strId -> getString(strId) }.toTypedArray()
         }

@@ -342,7 +342,7 @@ class TransactionsFragment(
     }
 
     private fun setMonthFieldsValues(month: Month) {
-        binding.transactionToolbar.toolbarMonthChanger.toolbarMonth.text = month.nameOfMonth
+        binding.transactionToolbar.toolbarMonthChanger.toolbarMonth.text = month.getMonthName(resources)
     }
 
 

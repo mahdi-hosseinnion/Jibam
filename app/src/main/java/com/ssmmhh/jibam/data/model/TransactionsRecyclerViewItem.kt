@@ -2,6 +2,7 @@ package com.ssmmhh.jibam.data.model
 
 import android.content.Context
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
+import com.ssmmhh.jibam.util.DateHolderWithWeekDay
 import com.ssmmhh.jibam.util.getResourcesStringValueByName
 import java.math.BigDecimal
 
@@ -21,7 +22,7 @@ sealed class TransactionsRecyclerViewItem(
 
 
     data class Header(
-        val date: String,
+        val date: Long,
         val expensesSum: BigDecimal?,
         val incomeSum: BigDecimal?
     ) : TransactionsRecyclerViewItem(HEADER_VIEW_TYPE)

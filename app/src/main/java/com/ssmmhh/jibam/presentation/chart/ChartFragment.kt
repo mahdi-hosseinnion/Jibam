@@ -317,7 +317,7 @@ class ChartFragment(
         viewModel.viewState.observe(viewLifecycleOwner) { vs ->
             vs?.let { viewState ->
                 viewState.currentMonth?.let {
-                    binding.toolbar.toolbarMonthChanger.toolbarMonth.text = it.nameOfMonth
+                    binding.toolbar.toolbarMonthChanger.toolbarMonth.text = it.getMonthName(resources)
                 }
             }
         }

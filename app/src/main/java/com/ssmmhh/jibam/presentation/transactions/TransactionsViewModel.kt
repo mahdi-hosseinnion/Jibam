@@ -32,7 +32,6 @@ class TransactionsViewModel
 constructor(
     private val transactionRepository: TransactionRepository,
     private val monthManger: MonthManger,
-    private val resources: Resources,
     private val currentLocale: Locale,
     private val sharedPreferences: SharedPreferences
 ) : BaseViewModel<TransactionsViewState, TransactionsStateEvent>() {
@@ -74,8 +73,6 @@ constructor(
         ).handleLoadingAndException(GET_TRANSACTION_LIST)
             .map {
                 return@map AddHeaderToTransactions(
-                    currentLocale,
-                    resources,
                     sharedPreferences.isCalendarSolar(currentLocale)
                 ).addHeaderToTransactions(
                     it

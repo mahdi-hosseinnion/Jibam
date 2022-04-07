@@ -3,7 +3,6 @@ package com.ssmmhh.jibam.di
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import android.content.res.Resources
 import androidx.core.os.ConfigurationCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
@@ -88,13 +87,7 @@ object AppModule {
         return Glide.with(application)
             .setDefaultRequestOptions(requestOptions)
     }
-    //TODO remove resources from dependencies
-    @JvmStatic
-    @Singleton
-    @Provides
-    fun provideResources(application: Application): Resources {
-        return  application.resources
-    }
+
 
 }
 @Module
