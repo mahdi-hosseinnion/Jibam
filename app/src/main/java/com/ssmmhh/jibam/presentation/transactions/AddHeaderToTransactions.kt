@@ -3,7 +3,6 @@ package com.ssmmhh.jibam.presentation.transactions
 import android.content.res.Resources
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
 import com.ssmmhh.jibam.data.model.TransactionsRecyclerViewItem
-import com.ssmmhh.jibam.util.ConvertGregorianDateToSolarDate
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.util.*
