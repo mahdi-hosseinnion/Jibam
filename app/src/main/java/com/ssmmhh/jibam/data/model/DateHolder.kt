@@ -80,7 +80,7 @@ open class SolarHijriDateHolder(
 
     @Throws(OutOfRangeMonthNumberException::class)
     override fun getAbbreviationFormOfMonthName(resources: Resources): String =
-        resources.getString(getSolarHijriMonthNameResId())
+        getMonthName(resources)
 
     @Throws(OutOfRangeMonthNumberException::class)
     fun getSolarHijriMonthNameResId(): Int = when (month) {
@@ -198,11 +198,11 @@ data class GregorianDateHolderWithWeekDay(
  * valid range: 1 to 12.
  */
 class OutOfRangeMonthNumberException(val tag: String, val number: Int) :
-    Exception(message = "$tag: Month number: $number is out of valid month number range. valid range: 1 to 12")
+    Exception(message = "DateHolder: $tag: Month number: $number is out of valid month number range. valid range: 1 to 12")
 
 /**
  * An exception that throws when day of week number value is out of valid range.
  * valid range: 0 to 6.
  */
 class OutOfRangeDayOfWeekNumberException(val tag: String, val number: Int) :
-    Exception(message = "$tag: DayOfWeek number: $number is out of valid day of week number range. valid range: 0 to 6")
+    Exception(message = "DateHolder:  $tag: DayOfWeek number: $number is out of valid day of week number range. valid range: 0 to 6")
