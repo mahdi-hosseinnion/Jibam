@@ -1,7 +1,6 @@
 package com.ssmmhh.jibam.presentation.common
 
 import android.content.SharedPreferences
-import android.content.res.Resources
 import androidx.fragment.app.FragmentManager
 import com.ssmmhh.jibam.data.model.Month
 import com.ssmmhh.jibam.util.*
@@ -93,7 +92,7 @@ constructor(
     fun getStartOfCurrentMonthShamsi(
         currentMonth: Int, currentYear: Int
     ): Long {
-        return shamsiToUnixTimeStamp(
+        return convertSolarHijriToUnixTime(
             jy = currentYear,
             jm = currentMonth,
             jd = 1
@@ -111,7 +110,7 @@ constructor(
             month = 1
             year = currentYear.plus(1)
         }
-        return shamsiToUnixTimeStamp(
+        return convertSolarHijriToUnixTime(
             jy = year,
             jm = month,
             jd = 1
@@ -120,7 +119,7 @@ constructor(
 
     fun getStartOfCurrentMonthGeorgian(
         currentMonth: Int, currentYear: Int
-    ): Long = gregorianToUnixTimestamp(year = currentYear, month = currentMonth, 1)
+    ): Long = convertGregorianToUnixTime(year = currentYear, month = currentMonth, 1)
 
 
     fun getEndOfCurrentMonthGeorgian(
@@ -133,7 +132,7 @@ constructor(
             month = 1
             year = currentYear.plus(1)
         }
-        return gregorianToUnixTimestamp(
+        return convertGregorianToUnixTime(
             year = year,
             month = month,
             day = 1
@@ -165,7 +164,7 @@ constructor(
         timeStamp: Long
     ): Long {
         //get month and year for given timeStamp
-        val shamsiDate = unixTimeStampToShamsiDate(timeStamp)
+        val shamsiDate = convertUnixTimeToSolarHijri(timeStamp)
         return getEndOfCurrentMonthShamsi(shamsiDate.month, shamsiDate.year)
     }
 
@@ -173,7 +172,7 @@ constructor(
         timeStamp: Long
     ): Long {
         //get month and year for given timeStamp
-        val shamsiDate = unixTimeStampToShamsiDate(timeStamp)
+        val shamsiDate = convertUnixTimeToSolarHijri(timeStamp)
         return getStartOfCurrentMonthShamsi(shamsiDate.month, shamsiDate.year)
     }
 
@@ -182,7 +181,7 @@ constructor(
         return getYear(timeStamp)
     }
 
-    private fun getShamsiMonth(timeStamp: Long): Int = unixTimeStampToShamsiDate(timeStamp).month
+    private fun getShamsiMonth(timeStamp: Long): Int = convertUnixTimeToSolarHijri(timeStamp).month
 
 
     private fun getGeorgianMonthName(timeStamp: Long): String {
@@ -195,7 +194,7 @@ constructor(
 
     fun getMonth(timeStamp: Long = _fromDate.value): Int {
         return if (sharedPreferences.isCalendarSolar(currentLocale)) {
-            unixTimeStampToShamsiDate(
+            convertUnixTimeToSolarHijri(
                 timeStamp,
             ).month
         } else {
@@ -209,7 +208,7 @@ constructor(
 
     fun getYear(timeStamp: Long = _fromDate.value): Int {
         return if (sharedPreferences.isCalendarSolar(currentLocale)) {
-            unixTimeStampToShamsiDate(timeStamp).year
+            convertUnixTimeToSolarHijri(timeStamp).year
         } else {
             val currentDate = Date(timeStamp)
             //TODO ("use date.getYear function")

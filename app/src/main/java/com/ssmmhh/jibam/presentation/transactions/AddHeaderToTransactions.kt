@@ -2,8 +2,6 @@ package com.ssmmhh.jibam.presentation.transactions
 
 import com.ssmmhh.jibam.data.model.TransactionsRecyclerViewItem
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
-import com.ssmmhh.jibam.util.DateHolderWithWeekDay
-import com.ssmmhh.jibam.util.unixTimeStampToShamsiDate
 import java.math.BigDecimal
 import java.util.*
 

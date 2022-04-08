@@ -3,6 +3,7 @@ package com.ssmmhh.jibam.util
 import android.content.Context
 import android.content.res.Resources
 import com.ssmmhh.jibam.R
+import com.ssmmhh.jibam.data.model.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -16,7 +17,7 @@ License: GNU/LGPL _ Open Source & Free :: Version: 2.80 : [2020=1399]
 990=30*33 & 12053=(365*33)+(32/4) & 36524=(365*100)+(100/4)-(100/100)
 1461=(365*4)+(4/4) & 146097=(365*400)+(400/4)-(400/100)+(400/400)
 source: https://jdf.scr.ir/jdf/kotlin*/
-fun shamsiToGregorian(jy: Int, jm: Int, jd: Int): DateHolder {
+fun convertSolarHijriToGregorian(jy: Int, jm: Int, jd: Int): GregorianDateHolder {
     var jy1: Int = jy + 1595
     var days: Int =
         -355668 + (365 * jy1) + ((jy1 / 33) * 8) + (((jy1 % 33) + 3) / 4) + jd + (if (jm < 7) ((jm - 1) * 31) else (((jm - 7) * 30) + 186))
@@ -52,29 +53,29 @@ fun shamsiToGregorian(jy: Int, jm: Int, jd: Int): DateHolder {
     var gm: Int = 0
     while (gm < 13 && gd > sal_a[gm]) gd -= sal_a[gm++]
 
-    return DateHolder(
+    return GregorianDateHolder(
         year = gy,
         month = gm,
-        day = gd
+        dayOfMonthNumber = gd
     )
 }
 
 /**
  * outPut is unix time in milliseconds at 00:00:00
  */
-fun shamsiToUnixTimeStamp(jy: Int, jm: Int, jd: Int): Long {
-    val gregorianDate = shamsiToGregorian(jy, jm, jd)
-    return gregorianToUnixTimestamp(
+fun convertSolarHijriToUnixTime(jy: Int, jm: Int, jd: Int): Long {
+    val gregorianDate = convertSolarHijriToGregorian(jy, jm, jd)
+    return convertGregorianToUnixTime(
         year = gregorianDate.year,
         month = gregorianDate.month,
-        day = gregorianDate.day
+        day = gregorianDate.dayOfMonthNumber
     )
 }
 
 /**
 input date should be dd/MM/yyyy
  */
-fun gregorianToUnixTimestamp(year: Int, month: Int, day: Int): Long {
+fun convertGregorianToUnixTime(year: Int, month: Int, day: Int): Long {
     val strDate =
         "${day.toStringWith2Digit()}/${month.toStringWith2Digit()}/${year.toStringWith2Digit()}"
     val formatter: DateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.US)
@@ -82,18 +83,14 @@ fun gregorianToUnixTimestamp(year: Int, month: Int, day: Int): Long {
     return date.time
 }
 
-fun unixTimeStampToShamsiDate(unixTimeStamp: Long): DateHolderWithWeekDay =
+fun convertUnixTimeToSolarHijri(unixTimeStamp: Long): SolarHijriDateHolderWithWeekDay =
     gregorianToShamsiDate(Date(unixTimeStamp))
 
 /**
  * This function is accurate in dates between 2029-03-19 OR 1407/12/29 and 1370/1/1. Reason: after
  * every 33 years solar calendar will be kabise every 5 years instead of 4.
  */
-//
-//TIP this class only work in date between 2029-03-19 OR /1407/12/29 and 1370/1/1
-//b/c 1408 is kabise but 1407 is'nt kabise and 1403 is kabise its all about 33 year kabise in shamsi
-//calendar
-fun gregorianToShamsiDate(gregorianDate: Date): DateHolderWithWeekDay {
+fun gregorianToShamsiDate(gregorianDate: Date): SolarHijriDateHolderWithWeekDay {
     val year: Int
     var date: Int
     val month: Int
@@ -227,81 +224,14 @@ fun gregorianToShamsiDate(gregorianDate: Date): DateHolderWithWeekDay {
             year = miladiYear - 622
         }
     }
-    return DateHolderWithWeekDay(
+    return SolarHijriDateHolderWithWeekDay(
         //dayOfWeek number the day of the week represented by this date. The returned value
         // (0 = Sunday, 1 = Monday, 2 = Tuesday, 3 = Wednesday, 4 = Thursday, 5 = Friday, 6 = Saturday)
-        dayOfWeek = WeekDay,
+        dayOfWeekNumber = WeekDay,
         year = year,
         month = month,//Month number range (1 to 12). first one is farvardin and last one is esfand.
-        day = date,
+        dayOfMonthNumber = date,
     )
-
-}
-
-data class DateHolder(
-    val year: Int,
-    val month: Int,
-    val day: Int,
-) {
-    /**
-     * Format year base on locale ex) convert 1401 to ۱۴۰۱ if locale is 'fa'
-     */
-    fun formattedYear(locale: Locale): String = String.format(locale, "%d", this.year)
-
-    /**
-     * Format year base on locale ex) convert 1 to ۱ if locale is 'fa'
-     */
-    fun formattedMonth(locale: Locale): String = String.format(locale, "%d", this.month)
-
-    /**
-     * Format year base on locale also add 0 before one digit numbers
-     *
-     * ex) convert 5 to ۰۵ if locale is 'fa' or 05 if locale is 'en'
-     */
-    fun formattedDay(locale: Locale): String = String.format(locale, "%02d", this.day)
-}
-
-data class DateHolderWithWeekDay(
-    val year: Int,
-    val month: Int,
-    val day: Int,
-    //dayOfWeek number the day of the week represented by this date. The returned value
-    // (0 = Sunday, 1 = Monday, 2 = Tuesday, 3 = Wednesday, 4 = Thursday, 5 = Friday, 6 = Saturday)
-    val dayOfWeek: Int
-) {
-    /**
-     * Format year base on locale ex) convert 1401 to ۱۴۰۱ if locale is 'fa'
-     */
-    fun formattedYear(locale: Locale): String = String.format(locale, "%d", this.year)
-
-    /**
-     * Format year base on locale ex) convert 1 to ۱ if locale is 'fa'
-     */
-    fun formattedMonth(locale: Locale): String = String.format(locale, "%d", this.month)
-
-    /**
-     * Format year base on locale also add 0 before one digit numbers
-     *
-     * ex) convert 5 to ۰۵ if locale is 'fa' or 05 if locale is 'en'
-     */
-    fun formattedDay(locale: Locale): String = String.format(locale, "%02d", this.day)
-
-    fun getDayOfWeekName(context: Context): String = getDayOfWeekName(context.resources)
-
-    fun getDayOfWeekName(resources: Resources): String {
-        val resId = when (this.dayOfWeek) {
-            0 -> R.string.sunday
-            1 -> R.string.monday
-            2 -> R.string.tuesday
-            3 -> R.string.wednesday
-            4 -> R.string.thursday
-            5 -> R.string.friday
-            6 -> R.string.saturday
-            else -> R.string.unknown_day
-        }
-        return resources.getString(resId)
-    }
-
 
 }
 
