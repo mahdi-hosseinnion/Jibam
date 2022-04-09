@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import androidx.fragment.app.FragmentManager
 import com.ssmmhh.jibam.data.model.GregorianDateHolder
 import com.ssmmhh.jibam.data.model.Month
+import com.ssmmhh.jibam.data.model.SolarHijriDateHolder
 import com.ssmmhh.jibam.util.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -94,9 +95,11 @@ constructor(
         currentMonth: Int, currentYear: Int
     ): Long {
         return convertSolarHijriToUnixTime(
-            jy = currentYear,
-            jm = currentMonth,
-            jd = 1
+            SolarHijriDateHolder(
+                year = currentYear,
+                month = currentMonth,
+                day = 1
+            )
         )
     }
 
@@ -112,9 +115,11 @@ constructor(
             year = currentYear.plus(1)
         }
         return convertSolarHijriToUnixTime(
-            jy = year,
-            jm = month,
-            jd = 1
+            SolarHijriDateHolder(
+                year = year,
+                month = month,
+                day = 1
+            )
         )
     }
 

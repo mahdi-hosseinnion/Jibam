@@ -1,8 +1,6 @@
 package com.ssmmhh.jibam.util
 
 import com.ssmmhh.jibam.data.model.*
-import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -15,11 +13,8 @@ import java.util.*
  * @param jm, solar hijri month.
  * @param jd, solar hijri day.
  */
-fun convertSolarHijriToUnixTime(jy: Int, jm: Int, jd: Int): Long {
-    val gregorianDate = convertSolarHijriToGregorian(jy, jm, jd)
-    return convertGregorianDateToUnixTime(
-        gregorianDate
-    )
+fun convertSolarHijriToUnixTime(date: SolarHijriDateHolder): Long {
+    return convertGregorianDateToUnixTime(date = convertSolarHijriToGregorian(date))
 }
 
 /**
@@ -32,7 +27,10 @@ fun convertSolarHijriToUnixTime(jy: Int, jm: Int, jd: Int): Long {
  * @return Return an instance of [GregorianDateHolder] which contains year, month and day of month
  * in gregorian.
  */
-fun convertSolarHijriToGregorian(jy: Int, jm: Int, jd: Int): GregorianDateHolder {
+fun convertSolarHijriToGregorian(date: SolarHijriDateHolder): GregorianDateHolder {
+    val jy: Int = date.year
+    val jm: Int = date.month
+    val jd: Int = date.day
     var jy1: Int = jy + 1595
     var days: Int =
         -355668 + (365 * jy1) + ((jy1 / 33) * 8) + (((jy1 % 33) + 3) / 4) + jd + (if (jm < 7) ((jm - 1) * 31) else (((jm - 7) * 30) + 186))
@@ -79,22 +77,22 @@ fun convertSolarHijriToGregorian(jy: Int, jm: Int, jd: Int): GregorianDateHolder
  * Convert gregorian date to unix time using GregorianCalendar.
  * Date should be: year, month(first month value 1, last month 12), day(first day value: 1)
  *
- * @param dateHolder, The Gregorian date.
+ * @param date, The Gregorian date.
  * @param timeZone, Calendar's timezone. if it is null then uses the device default timeZone.
  * @return The unix time of gregorian date at 00:00:00 in seconds.
  */
 fun convertGregorianDateToUnixTime(
-    dateHolder: GregorianDateHolder,
+    date: GregorianDateHolder,
     timeZone: TimeZone? = null
 ): Long {
     val calendar = GregorianCalendar().apply {
         //Apply the timeZone if it's not null.
         timeZone?.let { setTimeZone(timeZone) }
         set(
-            dateHolder.year,
+            date.year,
             //GregorianCalendar month starts at 0.
-            dateHolder.month.minus(1),
-            dateHolder.day,
+            date.month.minus(1),
+            date.day,
             0,
             0,
             0
