@@ -94,7 +94,7 @@ constructor(
     fun getStartOfCurrentMonthShamsi(
         currentMonth: Int, currentYear: Int
     ): Long {
-        return convertSolarHijriToUnixTime(
+        return convertSolarHijriDateToUnixTime(
             SolarHijriDateHolder(
                 year = currentYear,
                 month = currentMonth,
@@ -114,7 +114,7 @@ constructor(
             month = 1
             year = currentYear.plus(1)
         }
-        return convertSolarHijriToUnixTime(
+        return convertSolarHijriDateToUnixTime(
             SolarHijriDateHolder(
                 year = year,
                 month = month,

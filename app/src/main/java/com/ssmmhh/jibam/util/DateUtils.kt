@@ -44,6 +44,7 @@ object DateUtils {
         R.string.November,
         R.string.December
     )
-
+    fun Long.toSeconds():Long = this.div(1_000)
+    fun Long.toMilliSeconds():Long = this.times(1_000)
 
 }

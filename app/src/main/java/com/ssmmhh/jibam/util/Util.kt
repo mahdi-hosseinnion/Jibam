@@ -23,7 +23,6 @@ fun Fragment.convertDpToPx(dp: Int): Int {
     ).toInt()
 }
 
-fun Long.toSeconds():Long = this.div(1_000)
 
 /**
  * remove ',' character that have been used for separate big number 3 by 3

@@ -1,6 +1,8 @@
 package com.ssmmhh.jibam.util
 
 import com.ssmmhh.jibam.data.model.*
+import com.ssmmhh.jibam.util.DateUtils.toMilliSeconds
+import com.ssmmhh.jibam.util.DateUtils.toSeconds
 import java.util.*
 
 
@@ -13,17 +15,57 @@ import java.util.*
  * @param jm, solar hijri month.
  * @param jd, solar hijri day.
  */
-fun convertSolarHijriToUnixTime(date: SolarHijriDateHolder): Long {
+fun convertSolarHijriDateToUnixTime(date: SolarHijriDateHolder): Long {
     return convertGregorianDateToUnixTime(date = convertSolarHijriToGregorian(date))
+}
+
+/**
+ * Convert gregorian date to unix time using GregorianCalendar.
+ * Date should be: year, month(first month value 1, last month 12), day(first day value: 1)
+ *
+ * @param date, The Gregorian date.
+ * @param timeZone, Calendar's timezone. if it is null then uses the device default timeZone.
+ * @return The unix time of gregorian date at 00:00:00 in seconds.
+ */
+fun convertGregorianDateToUnixTime(
+    date: GregorianDateHolder,
+    timeZone: TimeZone? = null
+): Long {
+    val calendar = GregorianCalendar().apply {
+        //Apply the timeZone if it's not null.
+        timeZone?.let { setTimeZone(timeZone) }
+        set(
+            date.year,
+            //GregorianCalendar month starts at 0.
+            date.month.minus(1),
+            date.day,
+            0,
+            0,
+            0
+        )
+    }
+    return (calendar.timeInMillis).toSeconds()
+}
+
+fun convertUnixTimeToSolarHijri(unixTimeStamp: Long): SolarHijriDateHolderWithWeekDay =
+    convertGregorianDateToShamsiDate(date = convertUnixTimeToGregorian(unixTimeStamp))
+
+fun convertUnixTimeToGregorian(unixTimeStamp: Long): GregorianDateHolder {
+    val calendar = GregorianCalendar().apply {
+        timeInMillis = unixTimeStamp.toMilliSeconds()
+    }
+    return GregorianDateHolder(
+        year = calendar.get(Calendar.YEAR),
+        month = calendar.get(Calendar.MONTH),
+        day = calendar.get(Calendar.DAY_OF_MONTH),
+    )
 }
 
 /**
  * Convert solar hijri date to corresponding gregorian date.
  * source: https://jdf.scr.ir/jdf/kotlin
  *
- * @param jy, solar hijri year.
- * @param jm, solar hijri month.
- * @param jd, solar hijri day.
+ * @param date, The solarHijri date.
  * @return Return an instance of [GregorianDateHolder] which contains year, month and day of month
  * in gregorian.
  */
@@ -74,184 +116,57 @@ fun convertSolarHijriToGregorian(date: SolarHijriDateHolder): GregorianDateHolde
 }
 
 /**
- * Convert gregorian date to unix time using GregorianCalendar.
- * Date should be: year, month(first month value 1, last month 12), day(first day value: 1)
+ * Convert gregorian date to corresponding solar hijri date.
+ * source: https://jdf.scr.ir/jdf/kotlin
  *
- * @param date, The Gregorian date.
- * @param timeZone, Calendar's timezone. if it is null then uses the device default timeZone.
- * @return The unix time of gregorian date at 00:00:00 in seconds.
+ * @param date, The gregorian date.
+ * @return Return an instance of [SolarHijriDateHolderWithWeekDay] which contains year, month and day of month
+ * in gregorian.
  */
-fun convertGregorianDateToUnixTime(
-    date: GregorianDateHolder,
-    timeZone: TimeZone? = null
-): Long {
-    val calendar = GregorianCalendar().apply {
-        //Apply the timeZone if it's not null.
-        timeZone?.let { setTimeZone(timeZone) }
+fun convertGregorianDateToShamsiDate(date: GregorianDateHolder): SolarHijriDateHolderWithWeekDay {
+    val gy: Int = date.year
+    val gm: Int = date.month
+    val gd: Int = date.day
+    var g_d_m: IntArray = intArrayOf(0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334)
+    var gy2: Int = if (gm > 2) (gy + 1) else gy
+    var days: Int =
+        355666 + (365 * gy) + ((gy2 + 3) / 4).toInt() - ((gy2 + 99) / 100).toInt() + ((gy2 + 399) / 400).toInt() + gd + g_d_m[gm - 1]
+    var jy: Int = -1595 + (33 * (days / 12053).toInt())
+    days %= 12053
+    jy += 4 * (days / 1461).toInt()
+    days %= 1461
+    if (days > 365) {
+        jy += ((days - 1) / 365).toInt()
+        days = (days - 1) % 365
+    }
+    var jm: Int;
+    var jd: Int;
+    if (days < 186) {
+        jm = 1 + (days / 31).toInt()
+        jd = 1 + (days % 31)
+    } else {
+        jm = 7 + ((days - 186) / 30).toInt()
+        jd = 1 + ((days - 186) % 30)
+    }
+    //Get day of week from GregorianCalendar.
+    val dayOfWeekNumber: Int = GregorianCalendar().apply {
         set(
             date.year,
-            //GregorianCalendar month starts at 0.
-            date.month.minus(1),
-            date.day,
-            0,
-            0,
-            0
+            date.month,
+            date.day
         )
-    }
-    return (calendar.timeInMillis).toSeconds()
-}
-
-fun convertUnixTimeToSolarHijri(unixTimeStamp: Long): SolarHijriDateHolderWithWeekDay =
-    gregorianToShamsiDate(Date(unixTimeStamp))
-
-/**
- * This function is accurate in dates between 2029-03-19 OR 1407/12/29 and 1370/1/1. Reason: after
- * every 33 years solar calendar will be kabise every 5 years instead of 4.
- */
-fun gregorianToShamsiDate(gregorianDate: Date): SolarHijriDateHolderWithWeekDay {
-    val year: Int
-    var date: Int
-    val month: Int
-    val ld: Int
-    val miladiYear: Int = gregorianDate.year + 1900
-    val miladiMonth: Int = gregorianDate.month + 1
-    val miladiDate: Int = gregorianDate.date
-    val WeekDay: Int = gregorianDate.day
-    val buf1 = IntArray(12)
-    val buf2 = IntArray(12)
-    buf1[0] = 0
-    buf1[1] = 31
-    buf1[2] = 59
-    buf1[3] = 90
-    buf1[4] = 120
-    buf1[5] = 151
-    buf1[6] = 181
-    buf1[7] = 212
-    buf1[8] = 243
-    buf1[9] = 273
-    buf1[10] = 304
-    buf1[11] = 334
-    buf2[0] = 0
-    buf2[1] = 31
-    buf2[2] = 60
-    buf2[3] = 91
-    buf2[4] = 121
-    buf2[5] = 152
-    buf2[6] = 182
-    buf2[7] = 213
-    buf2[8] = 244
-    buf2[9] = 274
-    buf2[10] = 305
-    buf2[11] = 335
-    if (miladiYear % 4 != 0) {
-        date = buf1[miladiMonth - 1] + miladiDate
-        if (date > 79) {
-            date = date - 79
-            if (date <= 186) {
-                when (date % 31) {
-                    0 -> {
-                        month = date / 31
-                        date = 31
-                    }
-                    else -> {
-                        month = date / 31 + 1
-                        date = date % 31
-                    }
-                }
-                year = miladiYear - 621
-            } else {
-                date = date - 186
-                when (date % 30) {
-                    0 -> {
-                        month = date / 30 + 6
-                        date = 30
-                    }
-                    else -> {
-                        month = date / 30 + 7
-                        date = date % 30
-                    }
-                }
-                year = miladiYear - 621
-            }
-        } else {
-            ld = if (miladiYear > 1996 && miladiYear % 4 == 1) {
-                11
-            } else {
-                10
-            }
-            date = date + ld
-            when (date % 30) {
-                0 -> {
-                    month = date / 30 + 9
-                    date = 30
-                }
-                else -> {
-                    month = date / 30 + 10
-                    date = date % 30
-                }
-            }
-            year = miladiYear - 622
-        }
-    } else {
-        date = buf2[miladiMonth - 1] + miladiDate
-        ld = if (miladiYear >= 1996) {
-            79
-        } else {
-            80
-        }
-        if (date > ld) {
-            date -= ld
-            if (date <= 186) {
-                when (date % 31) {
-                    0 -> {
-                        month = date / 31
-                        date = 31
-                    }
-                    else -> {
-                        month = date / 31 + 1
-                        date = date % 31
-                    }
-                }
-                year = miladiYear - 621
-            } else {
-                date -= 186
-                when (date % 30) {
-                    0 -> {
-                        month = date / 30 + 6
-                        date = 30
-                    }
-                    else -> {
-                        month = date / 30 + 7
-                        date = date % 30
-                    }
-                }
-                year = miladiYear - 621
-            }
-        } else {
-            date = date + 10
-            when (date % 30) {
-                0 -> {
-                    month = date / 30 + 9
-                    date = 30
-                }
-                else -> {
-                    month = date / 30 + 10
-                    date = date % 30
-                }
-            }
-            year = miladiYear - 622
-        }
-    }
+    }.get(Calendar.DAY_OF_WEEK)
     return SolarHijriDateHolderWithWeekDay(
         //dayOfWeek number the day of the week represented by this date. The returned value
         // (0 = Sunday, 1 = Monday, 2 = Tuesday, 3 = Wednesday, 4 = Thursday, 5 = Friday, 6 = Saturday)
-        dayOfWeekNumber = WeekDay,
-        year = year,
-        month = month,//Month number range (1 to 12). first one is farvardin and last one is esfand.
-        day = date,
+        dayOfWeekNumber = dayOfWeekNumber,
+        year = jy,
+        month = jm,//Month number range (1 to 12). first one is farvardin and last one is esfand.
+        day = jd,
     )
 
 }
+
 
 const val maxShamsiYear = 1407
 const val maxShamsiMonth = 12
