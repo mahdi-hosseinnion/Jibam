@@ -17,11 +17,7 @@ interface DateHolder {
      */
     val month: Int
 
-    /**
-     * Day of week number starting from 0 to 6.
-     * 0 is SUNDAY and 6 is SATURDAY
-     */
-    val dayOfMonthNumber: Int
+    val day: Int
 
 
     @Throws(OutOfRangeMonthNumberException::class)
@@ -72,7 +68,7 @@ interface DateHolderWithWeekDay : DateHolder {
 open class SolarHijriDateHolder(
     override val year: Int,
     override val month: Int,
-    override val dayOfMonthNumber: Int
+    override val day: Int
 ) : DateHolder {
     @Throws(OutOfRangeMonthNumberException::class)
     override fun getMonthName(resources: Resources): String =
@@ -109,7 +105,7 @@ open class SolarHijriDateHolder(
 open class GregorianDateHolder(
     override val year: Int,
     override val month: Int,
-    override val dayOfMonthNumber: Int
+    override val day: Int
 ) : DateHolder {
     @Throws(OutOfRangeMonthNumberException::class)
     override fun getMonthName(resources: Resources): String =
@@ -171,12 +167,12 @@ open class GregorianDateHolder(
 data class SolarHijriDateHolderWithWeekDay(
     override val year: Int,
     override val month: Int,
-    override val dayOfMonthNumber: Int,
+    override val day: Int,
     override val dayOfWeekNumber: Int
 ) : SolarHijriDateHolder(
     year = year,
     month = month,
-    dayOfMonthNumber = dayOfMonthNumber
+    day = day
 ), DateHolderWithWeekDay
 
 /**
@@ -185,12 +181,12 @@ data class SolarHijriDateHolderWithWeekDay(
 data class GregorianDateHolderWithWeekDay(
     override val year: Int,
     override val month: Int,
-    override val dayOfMonthNumber: Int,
+    override val day: Int,
     override val dayOfWeekNumber: Int
 ) : GregorianDateHolder(
     year = year,
     month = month,
-    dayOfMonthNumber = dayOfMonthNumber
+    day = day
 ), DateHolderWithWeekDay
 
 /**
@@ -198,11 +194,11 @@ data class GregorianDateHolderWithWeekDay(
  * valid range: 1 to 12.
  */
 class OutOfRangeMonthNumberException(val tag: String, val number: Int) :
-    Exception(message = "DateHolder: $tag: Month number: $number is out of valid month number range. valid range: 1 to 12")
+    Exception("DateHolder: $tag: Month number: $number is out of valid month number range. valid range: 1 to 12")
 
 /**
  * An exception that throws when day of week number value is out of valid range.
  * valid range: 0 to 6.
  */
 class OutOfRangeDayOfWeekNumberException(val tag: String, val number: Int) :
-    Exception(message = "DateHolder:  $tag: DayOfWeek number: $number is out of valid day of week number range. valid range: 0 to 6")
+    Exception("DateHolder:  $tag: DayOfWeek number: $number is out of valid day of week number range. valid range: 0 to 6")

@@ -6,7 +6,7 @@ import org.junit.jupiter.params.provider.ValueSource
 
 class DateUtilsTest {
 
-    @ParameterizedTest
+/*    @ParameterizedTest
     @ValueSource(
         strings = [
             //input      | expected
@@ -28,8 +28,8 @@ class DateUtilsTest {
         val day = input.substring(8, 10).toInt()
         assertEquals(
             expected,
-            DateUtils.shamsiToUnixTimeStamp(year, month, day).div(1_000).toString()
+            DateUtils.(year, month, day).div(1_000).toString()
         )
-    }
+    }*/
 
 }

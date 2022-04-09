@@ -1,22 +1,37 @@
 package com.ssmmhh.jibam.util
 
-import android.content.Context
-import android.content.res.Resources
-import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.model.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**  Gregorian & Jalali (Hijri_Shamsi,Solar) Date Converter Functions
-Author: JDF.SCR.IR =>> Download Full Version :  http://jdf.scr.ir/jdf
-License: GNU/LGPL _ Open Source & Free :: Version: 2.80 : [2020=1399]
----------------------------------------------------------------------
-355746=361590-5844 & 361590=(30*33*365)+(30*8) & 5844=(16*365)+(16/4)
-355666=355746-79-1 & 355668=355746-79+1 &  1595=605+990 &  605=621-16
-990=30*33 & 12053=(365*33)+(32/4) & 36524=(365*100)+(100/4)-(100/100)
-1461=(365*4)+(4/4) & 146097=(365*400)+(400/4)-(400/100)+(400/400)
-source: https://jdf.scr.ir/jdf/kotlin*/
+
+/**
+ * Convert Solar hijri to unix time.
+ * By first converting the date to gregorian with [convertSolarHijriToGregorian] function then
+ * uses [convertGregorianDateToUnixTime] function to convert gregorian date to unix time
+ *
+ * @param jy, solar hijri year.
+ * @param jm, solar hijri month.
+ * @param jd, solar hijri day.
+ */
+fun convertSolarHijriToUnixTime(jy: Int, jm: Int, jd: Int): Long {
+    val gregorianDate = convertSolarHijriToGregorian(jy, jm, jd)
+    return convertGregorianDateToUnixTime(
+        gregorianDate
+    )
+}
+
+/**
+ * Convert solar hijri date to corresponding gregorian date.
+ * source: https://jdf.scr.ir/jdf/kotlin
+ *
+ * @param jy, solar hijri year.
+ * @param jm, solar hijri month.
+ * @param jd, solar hijri day.
+ * @return Return an instance of [GregorianDateHolder] which contains year, month and day of month
+ * in gregorian.
+ */
 fun convertSolarHijriToGregorian(jy: Int, jm: Int, jd: Int): GregorianDateHolder {
     var jy1: Int = jy + 1595
     var days: Int =
@@ -56,31 +71,36 @@ fun convertSolarHijriToGregorian(jy: Int, jm: Int, jd: Int): GregorianDateHolder
     return GregorianDateHolder(
         year = gy,
         month = gm,
-        dayOfMonthNumber = gd
+        day = gd
     )
 }
 
 /**
- * outPut is unix time in milliseconds at 00:00:00
+ * Convert gregorian date to unix time using GregorianCalendar.
+ * Date should be: year, month(first month value 1, last month 12), day(first day value: 1)
+ *
+ * @param dateHolder, The Gregorian date.
+ * @param timeZone, Calendar's timezone. if it is null then uses the device default timeZone.
+ * @return The unix time of gregorian date at 00:00:00 in seconds.
  */
-fun convertSolarHijriToUnixTime(jy: Int, jm: Int, jd: Int): Long {
-    val gregorianDate = convertSolarHijriToGregorian(jy, jm, jd)
-    return convertGregorianToUnixTime(
-        year = gregorianDate.year,
-        month = gregorianDate.month,
-        day = gregorianDate.dayOfMonthNumber
-    )
-}
-
-/**
-input date should be dd/MM/yyyy
- */
-fun convertGregorianToUnixTime(year: Int, month: Int, day: Int): Long {
-    val strDate =
-        "${day.toStringWith2Digit()}/${month.toStringWith2Digit()}/${year.toStringWith2Digit()}"
-    val formatter: DateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.US)
-    val date = formatter.parse(strDate) as Date
-    return date.time
+fun convertGregorianDateToUnixTime(
+    dateHolder: GregorianDateHolder,
+    timeZone: TimeZone? = null
+): Long {
+    val calendar = GregorianCalendar().apply {
+        //Apply the timeZone if it's not null.
+        timeZone?.let { setTimeZone(timeZone) }
+        set(
+            dateHolder.year,
+            //GregorianCalendar month starts at 0.
+            dateHolder.month.minus(1),
+            dateHolder.day,
+            0,
+            0,
+            0
+        )
+    }
+    return (calendar.timeInMillis).toSeconds()
 }
 
 fun convertUnixTimeToSolarHijri(unixTimeStamp: Long): SolarHijriDateHolderWithWeekDay =
@@ -230,7 +250,7 @@ fun gregorianToShamsiDate(gregorianDate: Date): SolarHijriDateHolderWithWeekDay 
         dayOfWeekNumber = WeekDay,
         year = year,
         month = month,//Month number range (1 to 12). first one is farvardin and last one is esfand.
-        dayOfMonthNumber = date,
+        day = date,
     )
 
 }

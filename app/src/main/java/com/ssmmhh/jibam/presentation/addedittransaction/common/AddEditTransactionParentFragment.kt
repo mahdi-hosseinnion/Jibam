@@ -323,10 +323,10 @@ constructor(
 
         return if (calendarType == CALENDAR_SOLAR) {
             val date = convertUnixTimeToSolarHijri(unixTimeInMillis)
-            val formattedYear = date.formattedYear(currentLocale)
-            val formattedMonth = date.formattedMonth(currentLocale)
-            val formattedDay = date.formattedDay(currentLocale)
-            val dayOfWeekName = date.getDayOfWeekName(this.requireContext())
+            val formattedYear = date.year
+            val formattedMonth = date.month
+            val formattedDay = date.day
+            val dayOfWeekName = date.getDayOfWeekName(resources)
             "$formattedYear/$formattedMonth/${formattedDay} (${dayOfWeekName})"
         } else {
             val df = Date(unixTimeInMillis)

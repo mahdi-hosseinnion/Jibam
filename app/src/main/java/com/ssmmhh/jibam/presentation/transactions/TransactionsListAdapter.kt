@@ -35,8 +35,8 @@ class TransactionsListAdapter(
         private const val TAG: String = "AppDebug"
 
         //MAKE THIS PERSIAN
-        val YESTERDAY_MARKER = DateHolderWithWeekDay(-2, -2, -2, -2)
-        val TODAY_MARKER = DateHolderWithWeekDay(-3, -3, -3, -3)
+        val YESTERDAY_MARKER = GregorianDateHolderWithWeekDay(-2, -2, -2, -2)
+        val TODAY_MARKER = GregorianDateHolderWithWeekDay(-3, -3, -3, -3)
     }
 
     val DIFF_CALLBACK = object : DiffUtil.ItemCallback<TransactionsRecyclerViewItem>() {

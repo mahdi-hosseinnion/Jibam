@@ -1,12 +1,11 @@
-package com.ssmmhh.jibam.presentation
 
+package com.ssmmhh.jibam.presentation
+/*
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
 import androidx.test.core.app.ApplicationProvider
 import com.ssmmhh.jibam.presentation.common.MonthManger
-import com.ssmmhh.jibam.util.DateUtils.gregorianToUnixTimestamp
-import com.ssmmhh.jibam.util.DateUtils.shamsiToUnixTimeStamp
 import com.ssmmhh.jibam.util.PreferenceKeys
 import com.ssmmhh.jibam.util.mahdiLog
 import org.junit.jupiter.api.Assertions
@@ -287,4 +286,4 @@ class MonthMangerTest {
 
     }
 
-}
+}*/

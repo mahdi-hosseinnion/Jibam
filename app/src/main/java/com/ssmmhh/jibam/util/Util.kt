@@ -23,6 +23,8 @@ fun Fragment.convertDpToPx(dp: Int): Int {
     ).toInt()
 }
 
+fun Long.toSeconds():Long = this.div(1_000)
+
 /**
  * remove ',' character that have been used for separate big number 3 by 3
  * like 123,456,789 to 123456789
@@ -249,9 +251,10 @@ fun separateCalculatorText3By3(text: String, locale: Locale): String {
     var lastSectionNumber = value.substring(lastOperationPosition)
     //if selectedNumber size is grater then 3 it will be separate
     if (lastSectionNumber.length > 3) {
-        lastSectionNumber = lastSectionNumber.convertFarsiDigitsToEnglishDigits().toBigDecimalOrNull()
-            ?.let { separate3By3(it, locale) }
-            ?: lastSectionNumber
+        lastSectionNumber =
+            lastSectionNumber.convertFarsiDigitsToEnglishDigits().toBigDecimalOrNull()
+                ?.let { separate3By3(it, locale) }
+                ?: lastSectionNumber
     }
     //append the number to result
     result.append(lastSectionNumber)

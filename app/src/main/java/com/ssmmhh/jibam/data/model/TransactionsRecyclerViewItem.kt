@@ -2,7 +2,6 @@ package com.ssmmhh.jibam.data.model
 
 import android.content.Context
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
-import com.ssmmhh.jibam.util.DateHolderWithWeekDay
 import com.ssmmhh.jibam.util.getResourcesStringValueByName
 import java.math.BigDecimal
 

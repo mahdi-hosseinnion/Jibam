@@ -157,9 +157,9 @@ class DetailChartListAdapter(
         private fun dateWithPattern(date: Long): String {
             return if (isCalendarSolar) {
                 val solarDate = convertUnixTimeToSolarHijri(date.times(1000L))
-                val formattedYear = solarDate.formattedYear(currentLocale)
-                val formattedMonth = solarDate.formattedMonth(currentLocale)
-                val formattedDay = solarDate.formattedDay(currentLocale)
+                val formattedYear = solarDate.year
+                val formattedMonth = solarDate.month
+                val formattedDay = solarDate.day
                 "$formattedYear/$formattedMonth/${formattedDay}"
             } else {
                 val df = Date(date.times(1000L))

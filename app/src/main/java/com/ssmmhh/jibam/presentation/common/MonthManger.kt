@@ -2,6 +2,7 @@ package com.ssmmhh.jibam.presentation.common
 
 import android.content.SharedPreferences
 import androidx.fragment.app.FragmentManager
+import com.ssmmhh.jibam.data.model.GregorianDateHolder
 import com.ssmmhh.jibam.data.model.Month
 import com.ssmmhh.jibam.util.*
 import kotlinx.coroutines.flow.Flow
@@ -119,7 +120,9 @@ constructor(
 
     fun getStartOfCurrentMonthGeorgian(
         currentMonth: Int, currentYear: Int
-    ): Long = convertGregorianToUnixTime(year = currentYear, month = currentMonth, 1)
+    ): Long = convertGregorianDateToUnixTime(
+        GregorianDateHolder(year = currentYear, month = currentMonth, 1)
+    )
 
 
     fun getEndOfCurrentMonthGeorgian(
@@ -132,10 +135,12 @@ constructor(
             month = 1
             year = currentYear.plus(1)
         }
-        return convertGregorianToUnixTime(
-            year = year,
-            month = month,
-            day = 1
+        return convertGregorianDateToUnixTime(
+            GregorianDateHolder(
+                year = year,
+                month = month,
+                day = 1
+            )
         )
     }
 
