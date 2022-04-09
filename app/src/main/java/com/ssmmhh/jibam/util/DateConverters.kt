@@ -29,7 +29,10 @@ fun convertSolarHijriDateToUnixTime(date: SolarHijriDateHolder): Long {
  */
 fun convertGregorianDateToUnixTime(
     date: GregorianDateHolder,
-    timeZone: TimeZone? = null
+    timeZone: TimeZone? = null,
+    hourOfDay: Int = 0,
+    minute: Int = 0,
+    second: Int = 0
 ): Long {
     val calendar = GregorianCalendar().apply {
         //Apply the timeZone if it's not null.
@@ -39,9 +42,9 @@ fun convertGregorianDateToUnixTime(
             //GregorianCalendar month starts at 0.
             date.month.minus(1),
             date.day,
-            0,
-            0,
-            0
+            hourOfDay,
+            minute,
+            second
         )
     }
     return (calendar.timeInMillis).toSeconds()
@@ -73,7 +76,7 @@ fun convertSolarHijriToGregorian(date: SolarHijriDateHolder): GregorianDateHolde
     val jy: Int = date.year
     val jm: Int = date.month
     val jd: Int = date.day
-    var jy1: Int = jy + 1595
+    val jy1: Int = jy + 1595
     var days: Int =
         -355668 + (365 * jy1) + ((jy1 / 33) * 8) + (((jy1 % 33) + 3) / 4) + jd + (if (jm < 7) ((jm - 1) * 31) else (((jm - 7) * 30) + 186))
     var gy: Int = 400 * (days / 146097)
@@ -90,7 +93,7 @@ fun convertSolarHijriToGregorian(date: SolarHijriDateHolder): GregorianDateHolde
         days = (days - 1) % 365
     }
     var gd: Int = days + 1
-    var sal_a: IntArray = intArrayOf(
+    val sal_a: IntArray = intArrayOf(
         0,
         31,
         if ((gy % 4 == 0 && gy % 100 != 0) || (gy % 400 == 0)) 29 else 28,
@@ -105,7 +108,7 @@ fun convertSolarHijriToGregorian(date: SolarHijriDateHolder): GregorianDateHolde
         30,
         31
     )
-    var gm: Int = 0
+    var gm = 0
     while (gm < 13 && gd > sal_a[gm]) gd -= sal_a[gm++]
 
     return GregorianDateHolder(
