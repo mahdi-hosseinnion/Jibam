@@ -2,60 +2,93 @@ package com.ssmmhh.jibam.util
 
 import com.ssmmhh.jibam.data.model.GregorianDateHolder
 import com.ssmmhh.jibam.data.model.SolarHijriDateHolder
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.Arguments.arguments
+import org.junit.jupiter.params.provider.MethodSource
 import java.util.*
+import java.util.stream.Stream
+
 
 class DateConvertersTest {
 
-    @Test
-    fun convertGregorianDateToUnixTime_shouldReturnDatesUnixTime_whenWeGiveItADate() {
+    @ParameterizedTest
+    @MethodSource("provideConvertGregorianDateToUnixTimeTestDate")
+    fun convertGregorianDateToUnixTime_shouldReturnDatesUnixTime_whenWeGiveItADate(
+        gregorianDate: GregorianDateHolder,
+        expectedUnixTime: Long
+    ) {
         //Arrange
+        //A constant TimeZone GMT+0000
+        val timeZone = TimeZone.getTimeZone("GMT")
+        //Act
+        val actualResult = convertGregorianDateToUnixTime(gregorianDate, timeZone)
+        //Assert
+        assertEquals(expectedUnixTime, actualResult)
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideConvertSolarHijriToGregorianTestData")
+    fun convertSolarHijriToGregorian_shouldReturnGregorianDateCorrespondingToSolarHijriDate(
+        solarHijriDate: SolarHijriDateHolder,
+        gregorianDate: GregorianDateHolder
+    ) {
+        //Act
+        val actualResult = convertSolarHijriToGregorian(solarHijriDate)
+
+        //Assert
+        assertEquals(gregorianDate.year, actualResult.year)
+        assertEquals(gregorianDate.month, actualResult.month)
+        assertEquals(gregorianDate.day, actualResult.day)
+    }
+
+    companion object {
+
         /**
          * Map GregorianDateHolder time to corresponding unix time in seconds.
          * Unix time converter source: epochconverter.com
-         * TimeZone:  GMT+0000
          */
-        val timeZone = TimeZone.getTimeZone("GMT")
-        val testValues = mapOf<GregorianDateHolder, Long>(
-            GregorianDateHolder(year = 2022, month = 4, day = 9) to 1649462400,
-            GregorianDateHolder(year = 2038, month = 10, day = 9) to 2170195200,
-            GregorianDateHolder(year = 2010, month = 1, day = 19) to 1263859200,
-            GregorianDateHolder(year = 2000, month = 11, day = 19) to 974592000,
+        @JvmStatic
+        fun provideConvertGregorianDateToUnixTimeTestDate(): Stream<Arguments?>? = Stream.of(
+            arguments(GregorianDateHolder(year = 2022, month = 4, day = 9), 1649462400),
+            arguments(GregorianDateHolder(year = 2022, month = 4, day = 9), 1649462400),
+            arguments(GregorianDateHolder(year = 2038, month = 10, day = 9), 2170195200),
+            arguments(GregorianDateHolder(year = 2010, month = 1, day = 19), 1263859200),
+            arguments(GregorianDateHolder(year = 2000, month = 11, day = 19), 974592000),
         )
 
-        //Act and assert
-        testValues.forEach {
-            val actualResult = convertGregorianDateToUnixTime(it.key, timeZone)
-            assertEquals(it.value, actualResult)
-        }
-    }
-
-    @Test
-    fun convertSolarHijriToGregorian_shouldReturnGregorianDateCorrespondingToSolarHijriDate() {
-        //Arrange
         /**
          * Map SolarHijriDate time to corresponding GregorianDate.
          * Data source: time.ir
          */
-        val testData = mapOf(
+        @JvmStatic
+        fun provideConvertSolarHijriToGregorianTestData(): Stream<Arguments?>? = Stream.of(
             //A common year.
-            SolarHijriDateHolder(1401, 1, 20) to GregorianDateHolder(2022, 4, 9),
+            arguments(
+                SolarHijriDateHolder(1401, 1, 20),
+                GregorianDateHolder(2022, 4, 9)
+            ),
             //A leap year.
-            SolarHijriDateHolder(1399, 11, 3) to GregorianDateHolder(2021, 1, 22),
+            arguments(
+                SolarHijriDateHolder(1399, 11, 3),
+                GregorianDateHolder(2021, 1, 22)
+            ),
             //A 5 year leap.
-            SolarHijriDateHolder(1408, 8, 15) to GregorianDateHolder(2029, 11, 5),
+            arguments(
+                SolarHijriDateHolder(1408, 8, 15),
+                GregorianDateHolder(2029, 11, 5)
+            ),
             //A far away year in future.
-            SolarHijriDateHolder(1415, 12, 29) to GregorianDateHolder(2037, 3, 19),
-            //A far away year past future.
-            SolarHijriDateHolder(1380, 1, 3) to GregorianDateHolder(2001, 3, 23),
+            arguments(
+                SolarHijriDateHolder(1415, 12, 29),
+                GregorianDateHolder(2037, 3, 19)
+            ),
+            //A far away year in past.
+            arguments(
+                SolarHijriDateHolder(1380, 1, 3),
+                GregorianDateHolder(2001, 3, 23)
+            ),
         )
-        //Act and assert
-        testData.forEach {
-            val actualResult = convertSolarHijriToGregorian(it.key)
-            assertEquals(it.value.year, actualResult.year)
-            assertEquals(it.value.month, actualResult.month)
-            assertEquals(it.value.day, actualResult.day)
-        }
     }
 }

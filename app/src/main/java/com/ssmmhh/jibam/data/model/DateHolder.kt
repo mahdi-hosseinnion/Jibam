@@ -2,6 +2,7 @@ package com.ssmmhh.jibam.data.model
 
 import android.content.res.Resources
 import com.ssmmhh.jibam.R
+import java.util.*
 
 /**
  * An interface to represent date model classes for different calendars.
@@ -97,6 +98,11 @@ open class SolarHijriDateHolder(
             number = month
         )
     }
+    override fun toString(): String {
+        val fMonth = String.format("%02d", this.month)
+        val fDay = String.format("%02d", this.day)
+        return "$year/$fMonth/$fDay"
+    }
 }
 
 /**
@@ -158,6 +164,12 @@ open class GregorianDateHolder(
             tag = "getAbbreviationOfGregorianMonthNameResId",
             number = month
         )
+    }
+
+    override fun toString(): String {
+        val fMonth = String.format("%02d", this.month)
+        val fDay = String.format("%02d", this.day)
+        return "$year/$fMonth/$fDay"
     }
 }
 
