@@ -37,7 +37,7 @@ class DateConvertersTest {
         gregorianDate: GregorianDateHolder
     ) {
         //Act
-        val actualResult = convertSolarHijriToGregorian(solarHijriDate)
+        val actualResult = convertSolarHijriToGregorianDate(solarHijriDate)
 
         //Assert
         assertEquals(gregorianDate.year, actualResult.year)
@@ -67,7 +67,7 @@ class DateConvertersTest {
         gregorianDate: GregorianDateHolderWithWeekDay
     ) {
         //Act
-        val actualResult = convertUnixTimeToGregorian(
+        val actualResult = convertUnixTimeToGregorianDate(
             unixTimeStamp = unixTime,
             timeZone = gmtTimeZone
         )

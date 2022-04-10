@@ -8,7 +8,7 @@ import java.util.*
 
 /**
  * Convert Solar hijri to unix time.
- * By first converting the date to gregorian with [convertSolarHijriToGregorian] function then
+ * By first converting the date to gregorian with [convertSolarHijriToGregorianDate] function then
  * uses [convertGregorianDateToUnixTime] function to convert gregorian date to unix time
  *
  * @param jy, solar hijri year.
@@ -23,7 +23,7 @@ fun convertSolarHijriDateToUnixTime(
     second: Int = 0
 ): Long {
     return convertGregorianDateToUnixTime(
-        date = convertSolarHijriToGregorian(date),
+        date = convertSolarHijriToGregorianDate(date),
         hourOfDay = hourOfDay,
         minute = minute,
         second = second,
@@ -75,7 +75,7 @@ fun convertUnixTimeToSolarHijriDate(
     timeZone: TimeZone? = null
 ): SolarHijriDateHolderWithWeekDay =
     convertGregorianDateToSolarHijriDate(
-        date = convertUnixTimeToGregorian(
+        date = convertUnixTimeToGregorianDate(
             unixTimeStamp = unixTimeStamp,
             timeZone = timeZone
         )
@@ -90,7 +90,7 @@ fun convertUnixTimeToSolarHijriDate(
  * @return The equivalent gregorian date with month starting at 1 and day starting at 1 and dayOfWeek
  *  starting at SUNDAY which is 1 and ending at SATURDAY which is 7.
  */
-fun convertUnixTimeToGregorian(
+fun convertUnixTimeToGregorianDate(
     unixTimeStamp: Long,
     timeZone: TimeZone? = null,
 ): GregorianDateHolderWithWeekDay {
@@ -115,7 +115,7 @@ fun convertUnixTimeToGregorian(
  * @return Return an instance of [GregorianDateHolder] which contains year, month and day of month
  * in gregorian.
  */
-fun convertSolarHijriToGregorian(date: SolarHijriDateHolder): GregorianDateHolder {
+fun convertSolarHijriToGregorianDate(date: SolarHijriDateHolder): GregorianDateHolder {
     val jy: Int = date.year
     val jm: Int = date.month
     val jd: Int = date.day
@@ -176,22 +176,22 @@ fun convertGregorianDateToSolarHijriDate(date: GregorianDateHolderWithWeekDay): 
     var g_d_m: IntArray = intArrayOf(0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334)
     var gy2: Int = if (gm > 2) (gy + 1) else gy
     var days: Int =
-        355666 + (365 * gy) + ((gy2 + 3) / 4).toInt() - ((gy2 + 99) / 100).toInt() + ((gy2 + 399) / 400).toInt() + gd + g_d_m[gm - 1]
-    var jy: Int = -1595 + (33 * (days / 12053).toInt())
+        355666 + (365 * gy) + ((gy2 + 3) / 4) - ((gy2 + 99) / 100) + ((gy2 + 399) / 400) + gd + g_d_m[gm - 1]
+    var jy: Int = -1595 + (33 * (days / 12053))
     days %= 12053
-    jy += 4 * (days / 1461).toInt()
+    jy += 4 * (days / 1461)
     days %= 1461
     if (days > 365) {
-        jy += ((days - 1) / 365).toInt()
+        jy += ((days - 1) / 365)
         days = (days - 1) % 365
     }
-    var jm: Int;
-    var jd: Int;
+    val jm: Int
+    val jd: Int
     if (days < 186) {
-        jm = 1 + (days / 31).toInt()
+        jm = 1 + (days / 31)
         jd = 1 + (days % 31)
     } else {
-        jm = 7 + ((days - 186) / 30).toInt()
+        jm = 7 + ((days - 186) / 30)
         jd = 1 + ((days - 186) % 30)
     }
     return SolarHijriDateHolderWithWeekDay(
