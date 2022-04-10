@@ -95,6 +95,24 @@ class DateConvertersTest {
         assertEquals(solarHijriDateHolderWithWeekDay.dayOfWeekNumber, actualResult.dayOfWeekNumber)
     }
 
+    @ParameterizedTest
+    @MethodSource("provideConvertUnixTimeToSolarHijriDateTestDate")
+    fun convertUnixTimeToSolarHijriDate_shouldReturnSolarHijriDateEquivalentToUnixTime(
+        unixTime: Long,
+        solarHijriDate: SolarHijriDateHolderWithWeekDay
+    ) {
+        //Act
+        val actualResult = convertUnixTimeToSolarHijriDate(
+            unixTimeStamp = unixTime,
+            timeZone = gmtTimeZone
+        )
+        //Assert
+        assertEquals(solarHijriDate.year, actualResult.year)
+        assertEquals(solarHijriDate.month, actualResult.month)
+        assertEquals(solarHijriDate.day, actualResult.day)
+        assertEquals(solarHijriDate.dayOfWeekNumber, actualResult.dayOfWeekNumber)
+    }
+
     companion object {
 
         /**
@@ -199,6 +217,16 @@ class DateConvertersTest {
             ),
         )
 
+        /**
+         * Map unix time to corresponding solar hijri time in GMT.
+         * Data source: unixtimestamp.com
+         */
+        @JvmStatic
+        fun provideConvertUnixTimeToSolarHijriDateTestDate(): Stream<Arguments?>? = Stream.of(
+            arguments(1649158766, SolarHijriDateHolderWithWeekDay(1401, 1, 16, 3)),
+            arguments(981891566, SolarHijriDateHolderWithWeekDay(1379, 11, 23, 1)),
+            arguments(2424080366, SolarHijriDateHolderWithWeekDay(1425, 8, 3, 5)),
+        )
 
     }
 }
