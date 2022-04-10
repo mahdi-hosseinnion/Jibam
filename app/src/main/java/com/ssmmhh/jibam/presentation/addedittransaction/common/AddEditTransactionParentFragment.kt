@@ -31,6 +31,14 @@ import com.ssmmhh.jibam.util.PreferenceKeys.CALENDAR_SOLAR
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import com.ssmmhh.jibam.databinding.FragmentAddTransactionBinding
+import com.ssmmhh.jibam.util.DateUtils.maxGregorianDateInMilliSeconds
+import com.ssmmhh.jibam.util.DateUtils.maxSolarHijriDay
+import com.ssmmhh.jibam.util.DateUtils.maxSolarHijriMonth
+import com.ssmmhh.jibam.util.DateUtils.maxSolarHijriYear
+import com.ssmmhh.jibam.util.DateUtils.minGregorianDateInMilliSeconds
+import com.ssmmhh.jibam.util.DateUtils.minSolarHijriDay
+import com.ssmmhh.jibam.util.DateUtils.minSolarHijriMonth
+import com.ssmmhh.jibam.util.DateUtils.minSolarHijriYear
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
@@ -221,14 +229,14 @@ constructor(
         DatePicker.Builder()
             .date(calender)
             .minDate(
-                minShamsiYear,
-                minShamsiMonth,
-                minShamsiDay
+                minSolarHijriYear,
+                minSolarHijriMonth,
+                minSolarHijriDay
             )
             .maxDate(
-                maxShamsiYear,
-                maxShamsiMonth,
-                maxShamsiDay
+                maxSolarHijriYear,
+                maxSolarHijriMonth,
+                maxSolarHijriDay
             )
             .build { id, calendar, day, month, year ->
                 removeDatePickerFromScreen()
@@ -267,8 +275,8 @@ constructor(
                 calender.get(Calendar.MONTH),
                 calender.get(Calendar.DAY_OF_MONTH)
             )
-        datePickerDialog.datePicker.minDate = minGregorianDate
-        datePickerDialog.datePicker.maxDate = maxGregorianDate
+        datePickerDialog.datePicker.minDate = minGregorianDateInMilliSeconds
+        datePickerDialog.datePicker.maxDate = maxGregorianDateInMilliSeconds
         datePickerDialog.show()
     }
 

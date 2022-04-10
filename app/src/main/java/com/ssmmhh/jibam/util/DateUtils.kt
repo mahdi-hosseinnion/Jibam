@@ -44,7 +44,24 @@ object DateUtils {
         R.string.November,
         R.string.December
     )
-    fun Long.toSeconds():Long = this.div(1_000)
-    fun Long.toMilliSeconds():Long = this.times(1_000)
 
+    fun Long.toSeconds(): Long = this.div(1_000)
+    fun Long.toMilliSeconds(): Long = this.times(1_000)
+
+    /**
+     * Minimum and maximum acceptable dates in gregorian and solar hijri.
+     * This field usage is only for ui ex: MonthPickerBottomSheet's yearNumberPicker and
+     * time pickers max and min year.
+     */
+    const val maxSolarHijriYear = 1478
+    const val maxSolarHijriMonth = 12
+    const val maxSolarHijriDay = 29
+    const val minSolarHijriYear = 1380
+    const val minSolarHijriMonth = 1
+    const val minSolarHijriDay = 1
+
+    const val maxGregorianYear: Int = 2099
+    const val minGregorianYear: Int = 2000
+    const val maxGregorianDateInMilliSeconds: Long = 4102444799_000
+    const val minGregorianDateInMilliSeconds: Long = 946684830_000
 }

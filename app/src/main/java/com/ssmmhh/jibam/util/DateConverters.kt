@@ -206,15 +206,4 @@ fun convertGregorianDateToSolarHijriDate(date: GregorianDateHolderWithWeekDay): 
 }
 
 
-const val maxShamsiYear = 1407
-const val maxShamsiMonth = 12
-const val maxShamsiDay = 29
 
-const val minShamsiYear = 1370
-const val minShamsiMonth = 1
-const val minShamsiDay = 1
-
-const val minGregorianDate = 669554735_000
-const val maxGregorianYear = 2028
-const val minGregorianYear = 1992
-const val maxGregorianDate = 1868613935_000
