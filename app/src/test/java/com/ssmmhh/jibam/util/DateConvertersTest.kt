@@ -3,6 +3,7 @@ package com.ssmmhh.jibam.util
 import com.ssmmhh.jibam.data.model.GregorianDateHolder
 import com.ssmmhh.jibam.data.model.GregorianDateHolderWithWeekDay
 import com.ssmmhh.jibam.data.model.SolarHijriDateHolder
+import com.ssmmhh.jibam.data.model.SolarHijriDateHolderWithWeekDay
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -77,6 +78,23 @@ class DateConvertersTest {
         assertEquals(gregorianDate.dayOfWeekNumber, actualResult.dayOfWeekNumber)
     }
 
+    @ParameterizedTest
+    @MethodSource("provideConvertGregorianDateToShamsiDateTestData")
+    fun convertGregorianDateToShamsiDate_shouldReturnShamsiDateEquivalentToGregorianDate(
+        gregorianDateHolderWithWeekDay: GregorianDateHolderWithWeekDay,
+        solarHijriDateHolderWithWeekDay: SolarHijriDateHolderWithWeekDay
+    ) {
+        //Act
+        val actualResult = convertGregorianDateToSolarHijriDate(
+            date = gregorianDateHolderWithWeekDay
+        )
+        //Assert
+        assertEquals(solarHijriDateHolderWithWeekDay.year, actualResult.year)
+        assertEquals(solarHijriDateHolderWithWeekDay.month, actualResult.month)
+        assertEquals(solarHijriDateHolderWithWeekDay.day, actualResult.day)
+        assertEquals(solarHijriDateHolderWithWeekDay.dayOfWeekNumber, actualResult.dayOfWeekNumber)
+    }
+
     companion object {
 
         /**
@@ -147,6 +165,40 @@ class DateConvertersTest {
             arguments(1131165932, GregorianDateHolderWithWeekDay(2005, 11, 5, 7)),
             arguments(2030822103, GregorianDateHolderWithWeekDay(2034, 5, 9, 3)),
         )
+
+        /**
+         * Map gregorian date with weekday to corresponding solar date.
+         * Data source: time.ir
+         */
+        @JvmStatic
+        fun provideConvertGregorianDateToShamsiDateTestData(): Stream<Arguments?>? = Stream.of(
+            //Common year
+            arguments(
+                GregorianDateHolderWithWeekDay(2022, 4, 10, 1),
+                SolarHijriDateHolderWithWeekDay(1401, 1, 21, 1)
+            ),
+            //A leap year
+            arguments(
+                GregorianDateHolderWithWeekDay(2016, 8, 31, 4),
+                SolarHijriDateHolderWithWeekDay(1395, 6, 10, 4)
+            ),
+            //A 5 year leap
+            arguments(
+                GregorianDateHolderWithWeekDay(2030, 1, 21, 2),
+                SolarHijriDateHolderWithWeekDay(1408, 11, 2, 2)
+            ),
+            //A far away year in future.
+            arguments(
+                GregorianDateHolderWithWeekDay(2046, 8, 3, 6),
+                SolarHijriDateHolderWithWeekDay(1425, 5, 12, 6)
+            ),
+            //A far away year in past.
+            arguments(
+                GregorianDateHolderWithWeekDay(2005, 1, 6, 5),
+                SolarHijriDateHolderWithWeekDay(1383, 10, 17, 5)
+            ),
+        )
+
 
     }
 }

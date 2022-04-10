@@ -74,7 +74,7 @@ fun convertUnixTimeToSolarHijriDate(
     unixTimeStamp: Long,
     timeZone: TimeZone? = null
 ): SolarHijriDateHolderWithWeekDay =
-    convertGregorianDateToShamsiDate(
+    convertGregorianDateToSolarHijriDate(
         date = convertUnixTimeToGregorian(
             unixTimeStamp = unixTimeStamp,
             timeZone = timeZone
@@ -169,7 +169,7 @@ fun convertSolarHijriToGregorian(date: SolarHijriDateHolder): GregorianDateHolde
  * @return Return an instance of [SolarHijriDateHolderWithWeekDay] which contains year, month and day of month
  * in gregorian.
  */
-fun convertGregorianDateToShamsiDate(date: GregorianDateHolderWithWeekDay): SolarHijriDateHolderWithWeekDay {
+fun convertGregorianDateToSolarHijriDate(date: GregorianDateHolderWithWeekDay): SolarHijriDateHolderWithWeekDay {
     val gy: Int = date.year
     val gm: Int = date.month
     val gd: Int = date.day
