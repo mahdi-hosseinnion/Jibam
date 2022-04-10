@@ -62,17 +62,48 @@ fun convertGregorianDateToUnixTime(
     return (calendar.timeInMillis).toSeconds()
 }
 
-fun convertUnixTimeToSolarHijri(unixTimeStamp: Long): SolarHijriDateHolderWithWeekDay =
-    convertGregorianDateToShamsiDate(date = convertUnixTimeToGregorian(unixTimeStamp))
+/**
+ * Convert unix time stamp to solar hijri date by first converting the unix time to gregorain date
+ * then convert gregorian date to solar hijri date.
+ *
+ * @param unixTimeStamp, The unix timestamp in seconds.
+ * @param timeZone, The calendar timeZone, if it is null then uses device default timezone.
+ * @return The equivalent solar hijri date.
+ */
+fun convertUnixTimeToSolarHijriDate(
+    unixTimeStamp: Long,
+    timeZone: TimeZone? = null
+): SolarHijriDateHolderWithWeekDay =
+    convertGregorianDateToShamsiDate(
+        date = convertUnixTimeToGregorian(
+            unixTimeStamp = unixTimeStamp,
+            timeZone = timeZone
+        )
+    )
 
-fun convertUnixTimeToGregorian(unixTimeStamp: Long): GregorianDateHolder {
+/**
+ * Convert unix time stamp to solar hijri date by first converting the unix time to gregorain date
+ * then convert gregorian date to solar hijri date.
+ *
+ * @param unixTimeStamp, The unix timestamp in seconds.
+ * @param timeZone, The calendar timeZone, if it is null then uses device default timezone.
+ * @return The equivalent gregorian date with month starting at 1 and day starting at 1 and dayOfWeek
+ *  starting at SUNDAY which is 1 and ending at SATURDAY which is 7.
+ */
+fun convertUnixTimeToGregorian(
+    unixTimeStamp: Long,
+    timeZone: TimeZone? = null,
+): GregorianDateHolderWithWeekDay {
     val calendar = GregorianCalendar().apply {
+        //Apply the timeZone if it's not null.
+        timeZone?.let { setTimeZone(timeZone) }
         timeInMillis = unixTimeStamp.toMilliSeconds()
     }
-    return GregorianDateHolder(
+    return GregorianDateHolderWithWeekDay(
         year = calendar.get(Calendar.YEAR),
-        month = calendar.get(Calendar.MONTH),
+        month = calendar.get(Calendar.MONTH).plus(1),
         day = calendar.get(Calendar.DAY_OF_MONTH),
+        dayOfWeekNumber = calendar.get(Calendar.DAY_OF_WEEK)
     )
 }
 
@@ -138,7 +169,7 @@ fun convertSolarHijriToGregorian(date: SolarHijriDateHolder): GregorianDateHolde
  * @return Return an instance of [SolarHijriDateHolderWithWeekDay] which contains year, month and day of month
  * in gregorian.
  */
-fun convertGregorianDateToShamsiDate(date: GregorianDateHolder): SolarHijriDateHolderWithWeekDay {
+fun convertGregorianDateToShamsiDate(date: GregorianDateHolderWithWeekDay): SolarHijriDateHolderWithWeekDay {
     val gy: Int = date.year
     val gm: Int = date.month
     val gd: Int = date.day
@@ -163,18 +194,10 @@ fun convertGregorianDateToShamsiDate(date: GregorianDateHolder): SolarHijriDateH
         jm = 7 + ((days - 186) / 30).toInt()
         jd = 1 + ((days - 186) % 30)
     }
-    //Get day of week from GregorianCalendar.
-    val dayOfWeekNumber: Int = GregorianCalendar().apply {
-        set(
-            date.year,
-            date.month,
-            date.day
-        )
-    }.get(Calendar.DAY_OF_WEEK)
     return SolarHijriDateHolderWithWeekDay(
         //dayOfWeek number the day of the week represented by this date. The returned value
         // (0 = Sunday, 1 = Monday, 2 = Tuesday, 3 = Wednesday, 4 = Thursday, 5 = Friday, 6 = Saturday)
-        dayOfWeekNumber = dayOfWeekNumber,
+        dayOfWeekNumber = date.dayOfWeekNumber,
         year = jy,
         month = jm,//Month number range (1 to 12). first one is farvardin and last one is esfand.
         day = jd,

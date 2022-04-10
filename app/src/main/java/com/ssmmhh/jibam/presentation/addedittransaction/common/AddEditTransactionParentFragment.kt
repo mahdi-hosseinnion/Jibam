@@ -322,7 +322,7 @@ constructor(
         )
 
         return if (calendarType == CALENDAR_SOLAR) {
-            val date = convertUnixTimeToSolarHijri(unixTimeInMillis)
+            val date = convertUnixTimeToSolarHijriDate(unixTimeInMillis)
             val formattedYear = date.year
             val formattedMonth = date.month
             val formattedDay = date.day

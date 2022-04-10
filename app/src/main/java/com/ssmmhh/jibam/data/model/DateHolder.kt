@@ -49,13 +49,13 @@ interface DateHolderWithWeekDay : DateHolder {
 
     @Throws(OutOfRangeDayOfWeekNumberException::class)
     fun getDayOfWeekNameResId(): Int = when (dayOfWeekNumber) {
-        0 -> R.string.sunday
-        1 -> R.string.monday
-        2 -> R.string.tuesday
-        3 -> R.string.wednesday
-        4 -> R.string.thursday
-        5 -> R.string.friday
-        6 -> R.string.saturday
+        1 -> R.string.sunday
+        2 -> R.string.monday
+        3 -> R.string.tuesday
+        4 -> R.string.wednesday
+        5 -> R.string.thursday
+        6 -> R.string.friday
+        7 -> R.string.saturday
         else -> throw OutOfRangeDayOfWeekNumberException(
             tag = "OutOfRangeDayOfWeekNumberException",
             number = dayOfWeekNumber

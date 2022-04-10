@@ -1,6 +1,7 @@
 package com.ssmmhh.jibam.util
 
 import com.ssmmhh.jibam.data.model.GregorianDateHolder
+import com.ssmmhh.jibam.data.model.GregorianDateHolderWithWeekDay
 import com.ssmmhh.jibam.data.model.SolarHijriDateHolder
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
@@ -56,6 +57,24 @@ class DateConvertersTest {
         )
         //Assert
         assertEquals(unixTime, actualResult)
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideConvertUnixTimeToGregorianTestData")
+    fun convertUnixTimeToGregorian_shouldReturnGregorianDateEquivalentToUnixTime(
+        unixTime: Long,
+        gregorianDate: GregorianDateHolderWithWeekDay
+    ) {
+        //Act
+        val actualResult = convertUnixTimeToGregorian(
+            unixTimeStamp = unixTime,
+            timeZone = gmtTimeZone
+        )
+        //Assert
+        assertEquals(gregorianDate.year, actualResult.year)
+        assertEquals(gregorianDate.month, actualResult.month)
+        assertEquals(gregorianDate.day, actualResult.day)
+        assertEquals(gregorianDate.dayOfWeekNumber, actualResult.dayOfWeekNumber)
     }
 
     companion object {
@@ -117,5 +136,17 @@ class DateConvertersTest {
             arguments(SolarHijriDateHolder(1386, 11, 5), 1201219200),
             arguments(SolarHijriDateHolder(1422, 5, 9), 2321913600),
         )
+
+        /**
+         * Map unix time to corresponding gregorian time in GMT.
+         * Data source: unixtimestamp.com
+         */
+        @JvmStatic
+        fun provideConvertUnixTimeToGregorianTestData(): Stream<Arguments?>? = Stream.of(
+            arguments(1649569481, GregorianDateHolderWithWeekDay(2022, 4, 10, 1)),
+            arguments(1131165932, GregorianDateHolderWithWeekDay(2005, 11, 5, 7)),
+            arguments(2030822103, GregorianDateHolderWithWeekDay(2034, 5, 9, 3)),
+        )
+
     }
 }
