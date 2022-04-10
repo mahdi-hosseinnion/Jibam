@@ -12,6 +12,8 @@ import java.util.stream.Stream
 
 
 class DateConvertersTest {
+    //A constant TimeZone GMT+0000
+    private val gmtTimeZone: TimeZone = TimeZone.getTimeZone("GMT")
 
     @ParameterizedTest
     @MethodSource("provideConvertGregorianDateToUnixTimeTestDate")
@@ -19,11 +21,9 @@ class DateConvertersTest {
         gregorianDate: GregorianDateHolder,
         expectedUnixTime: Long
     ) {
-        //Arrange
-        //A constant TimeZone GMT+0000
-        val timeZone = TimeZone.getTimeZone("GMT")
+
         //Act
-        val actualResult = convertGregorianDateToUnixTime(gregorianDate, timeZone)
+        val actualResult = convertGregorianDateToUnixTime(gregorianDate, gmtTimeZone)
         //Assert
         assertEquals(expectedUnixTime, actualResult)
     }
@@ -41,6 +41,21 @@ class DateConvertersTest {
         assertEquals(gregorianDate.year, actualResult.year)
         assertEquals(gregorianDate.month, actualResult.month)
         assertEquals(gregorianDate.day, actualResult.day)
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideConvertSolarHijriDateToUnixTimeTestData")
+    fun convertSolarHijriDateToUnixTime_shouldReturnUnixTimeEquivalentToSolarHijriDate(
+        date: SolarHijriDateHolder,
+        unixTime: Long
+    ) {
+        //Act
+        val actualResult = convertSolarHijriDateToUnixTime(
+            date = date,
+            timeZone = gmtTimeZone
+        )
+        //Assert
+        assertEquals(unixTime, actualResult)
     }
 
     companion object {
@@ -89,6 +104,18 @@ class DateConvertersTest {
                 SolarHijriDateHolder(1380, 1, 3),
                 GregorianDateHolder(2001, 3, 23)
             ),
+        )
+
+        /**
+         * Map solar hijri date time to corresponding unix time at 00:00:00 in GMT.
+         * Data source: timestamp.ir
+         * Tip: timestamp.ir time zone is iran (Iran Standard Time) by default.
+         */
+        @JvmStatic
+        fun provideConvertSolarHijriDateToUnixTimeTestData(): Stream<Arguments?>? = Stream.of(
+            arguments(SolarHijriDateHolder(1401, 1, 21), 1649548800),
+            arguments(SolarHijriDateHolder(1386, 11, 5), 1201219200),
+            arguments(SolarHijriDateHolder(1422, 5, 9), 2321913600),
         )
     }
 }

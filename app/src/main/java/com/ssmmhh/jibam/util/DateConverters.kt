@@ -15,8 +15,20 @@ import java.util.*
  * @param jm, solar hijri month.
  * @param jd, solar hijri day.
  */
-fun convertSolarHijriDateToUnixTime(date: SolarHijriDateHolder): Long {
-    return convertGregorianDateToUnixTime(date = convertSolarHijriToGregorian(date))
+fun convertSolarHijriDateToUnixTime(
+    date: SolarHijriDateHolder,
+    timeZone: TimeZone? = null,
+    hourOfDay: Int = 0,
+    minute: Int = 0,
+    second: Int = 0
+): Long {
+    return convertGregorianDateToUnixTime(
+        date = convertSolarHijriToGregorian(date),
+        hourOfDay = hourOfDay,
+        minute = minute,
+        second = second,
+        timeZone = timeZone,
+    )
 }
 
 /**
