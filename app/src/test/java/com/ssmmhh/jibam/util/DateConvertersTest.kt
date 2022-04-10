@@ -12,7 +12,9 @@ import org.junit.jupiter.params.provider.MethodSource
 import java.util.*
 import java.util.stream.Stream
 
-
+/**
+ * Contain test for [DateConverters] functions.
+ */
 class DateConvertersTest {
     //A constant TimeZone GMT+0000
     private val gmtTimeZone: TimeZone = TimeZone.getTimeZone("GMT")
@@ -113,6 +115,9 @@ class DateConvertersTest {
         assertEquals(solarHijriDate.dayOfWeekNumber, actualResult.dayOfWeekNumber)
     }
 
+    /**
+     * Test data providers
+     */
     companion object {
 
         /**

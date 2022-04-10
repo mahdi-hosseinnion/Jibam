@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 /**
- * A bunch of utility function and variable for time
+ * A bunch of utility function and fields for time
  */
 object DateUtils {
 
@@ -50,7 +50,7 @@ object DateUtils {
 
     /**
      * Minimum and maximum acceptable dates in gregorian and solar hijri.
-     * This field usage is only for ui ex: MonthPickerBottomSheet's yearNumberPicker and
+     * These fields usage is only for presentation purpose ex: MonthPickerBottomSheet's yearNumberPicker and
      * time pickers max and min year.
      */
     const val maxSolarHijriYear = 1478

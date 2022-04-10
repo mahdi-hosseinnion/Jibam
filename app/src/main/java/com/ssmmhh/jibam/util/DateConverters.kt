@@ -7,13 +7,17 @@ import java.util.*
 
 
 /**
- * Convert Solar hijri to unix time.
- * By first converting the date to gregorian with [convertSolarHijriToGregorianDate] function then
- * uses [convertGregorianDateToUnixTime] function to convert gregorian date to unix time
+ * Convert Solar hijri to unix time By converting the date to gregorian with
+ * [convertSolarHijriToGregorianDate] function then uses [convertGregorianDateToUnixTime] function
+ * to convert gregorian date to unix time
  *
- * @param jy, solar hijri year.
- * @param jm, solar hijri month.
- * @param jd, solar hijri day.
+ * @param date, The solar date.
+ * @param timeZone, The calendar's time zone. if it's null then uses the device time zone.
+ * @param hourOfDay, The hour of day in 24-h format. default is 0.
+ * @param minute, The time minute.
+ * @param second, The time second.
+ *
+ * @return A long field which contains unix time of date and time in seconds.
  */
 fun convertSolarHijriDateToUnixTime(
     date: SolarHijriDateHolder,
@@ -33,10 +37,13 @@ fun convertSolarHijriDateToUnixTime(
 
 /**
  * Convert gregorian date to unix time using GregorianCalendar.
- * Date should be: year, month(first month value 1, last month 12), day(first day value: 1)
+ * Date should be: year, month number (starting at 1), day (starting at 1)
  *
  * @param date, The Gregorian date.
- * @param timeZone, Calendar's timezone. if it is null then uses the device default timeZone.
+ * @param timeZone, The calendar's time zone. if it's null then uses the device time zone.
+ * @param hourOfDay, The hour of day in 24-h format. default is 0.
+ * @param minute, The time minute.
+ * @param second, The time second.
  * @return The unix time of gregorian date at 00:00:00 in seconds.
  */
 fun convertGregorianDateToUnixTime(
@@ -63,12 +70,12 @@ fun convertGregorianDateToUnixTime(
 }
 
 /**
- * Convert unix time stamp to solar hijri date by first converting the unix time to gregorain date
- * then convert gregorian date to solar hijri date.
+ * Convert unix time stamp to solar hijri date by converting it to gregorian date then convert the
+ * gregorian date to solar hijri date.
  *
  * @param unixTimeStamp, The unix timestamp in seconds.
  * @param timeZone, The calendar timeZone, if it is null then uses device default timezone.
- * @return The equivalent solar hijri date.
+ * @return The equivalent solar hijri  with week day.
  */
 fun convertUnixTimeToSolarHijriDate(
     unixTimeStamp: Long,
@@ -82,8 +89,7 @@ fun convertUnixTimeToSolarHijriDate(
     )
 
 /**
- * Convert unix time stamp to solar hijri date by first converting the unix time to gregorain date
- * then convert gregorian date to solar hijri date.
+ * Convert unix time stamp to gregorian date with [java.util.GregorianCalendar()]
  *
  * @param unixTimeStamp, The unix timestamp in seconds.
  * @param timeZone, The calendar timeZone, if it is null then uses device default timezone.
@@ -108,14 +114,16 @@ fun convertUnixTimeToGregorianDate(
 }
 
 /**
- * Convert solar hijri date to corresponding gregorian date.
+ * Convert solar hijri date to equivalent gregorian date.
  * source: https://jdf.scr.ir/jdf/kotlin
  *
- * @param date, The solarHijri date.
- * @return Return an instance of [GregorianDateHolder] which contains year, month and day of month
- * in gregorian.
+ * @param date, The solar hijri date.
+ * @return An instance of [GregorianDateHolder] which contains year, month and day of month
+ * in gregorian date.
  */
-fun convertSolarHijriToGregorianDate(date: SolarHijriDateHolder): GregorianDateHolder {
+fun convertSolarHijriToGregorianDate(
+    date: SolarHijriDateHolder
+): GregorianDateHolder {
     val jy: Int = date.year
     val jm: Int = date.month
     val jd: Int = date.day
@@ -162,14 +170,16 @@ fun convertSolarHijriToGregorianDate(date: SolarHijriDateHolder): GregorianDateH
 }
 
 /**
- * Convert gregorian date to corresponding solar hijri date.
+ * Convert gregorian date to equivalent solar hijri date.
  * source: https://jdf.scr.ir/jdf/kotlin
  *
  * @param date, The gregorian date.
- * @return Return an instance of [SolarHijriDateHolderWithWeekDay] which contains year, month and day of month
- * in gregorian.
+ * @return An instance of [SolarHijriDateHolderWithWeekDay] which contains year, month, day
+ * and day of week in gregorian.
  */
-fun convertGregorianDateToSolarHijriDate(date: GregorianDateHolderWithWeekDay): SolarHijriDateHolderWithWeekDay {
+fun convertGregorianDateToSolarHijriDate(
+    date: GregorianDateHolderWithWeekDay
+): SolarHijriDateHolderWithWeekDay {
     val gy: Int = date.year
     val gm: Int = date.month
     val gd: Int = date.day
@@ -195,11 +205,10 @@ fun convertGregorianDateToSolarHijriDate(date: GregorianDateHolderWithWeekDay): 
         jd = 1 + ((days - 186) % 30)
     }
     return SolarHijriDateHolderWithWeekDay(
-        //dayOfWeek number the day of the week represented by this date. The returned value
-        // (0 = Sunday, 1 = Monday, 2 = Tuesday, 3 = Wednesday, 4 = Thursday, 5 = Friday, 6 = Saturday)
         dayOfWeekNumber = date.dayOfWeekNumber,
         year = jy,
-        month = jm,//Month number range (1 to 12). first one is farvardin and last one is esfand.
+        //Month number range (1 to 12). first one is farvardin and last one is esfand.
+        month = jm,
         day = jd,
     )
 
