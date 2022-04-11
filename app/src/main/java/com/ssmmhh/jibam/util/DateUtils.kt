@@ -1,6 +1,8 @@
 package com.ssmmhh.jibam.util
 
 import com.ssmmhh.jibam.R
+import com.ssmmhh.jibam.data.model.DateHolder
+import com.ssmmhh.jibam.data.model.DateHolderWithWeekDay
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -12,9 +14,19 @@ object DateUtils {
 
     fun getCurrentUnixTimeInMilliSeconds(): Long = System.currentTimeMillis()
 
-    fun getCurrentUnixTimeInSeconds(): Long = ((System.currentTimeMillis()).div(1_000))
+    fun getCurrentUnixTimeInSeconds(): Long = getCurrentUnixTimeInMilliSeconds().toSeconds()
 
     fun getCurrentTime(): Long = getCurrentUnixTimeInSeconds()
+
+    fun convertUnixTimeToDate(
+        unixTime: Long,
+        isCalendarSolarHijri: Boolean
+    ): DateHolderWithWeekDay =
+        if (isCalendarSolarHijri) {
+            convertUnixTimeToSolarHijriDate(unixTimeStamp = unixTime)
+        } else {
+            convertUnixTimeToGregorianDate(unixTimeStamp = unixTime)
+        }
 
     val shamsiMonths = arrayOf(
         R.string.Farvardin,

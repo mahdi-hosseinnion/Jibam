@@ -155,15 +155,11 @@ class DetailChartListAdapter(
         }
 
         private fun dateWithPattern(date: Long): String {
+            val dateHolder = DateUtils.convertUnixTimeToDate(date, isCalendarSolar)
             return if (isCalendarSolar) {
-                val solarDate = convertUnixTimeToSolarHijriDate(date.times(1000L))
-                val formattedYear = solarDate.year
-                val formattedMonth = solarDate.month
-                val formattedDay = solarDate.day
-                "$formattedYear/$formattedMonth/${formattedDay}"
+                "${dateHolder.year}/${dateHolder.month}/${dateHolder.year}"
             } else {
-                val df = Date(date.times(1000L))
-                SimpleDateFormat(DATE_PATTERN, currentLocale).format(df)
+                "${dateHolder.month}/${dateHolder.day}/${dateHolder.year}"
             }
         }
     }

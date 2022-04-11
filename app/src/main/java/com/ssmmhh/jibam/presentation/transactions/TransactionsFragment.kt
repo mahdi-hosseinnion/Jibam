@@ -342,7 +342,9 @@ class TransactionsFragment(
     }
 
     private fun setMonthFieldsValues(month: Month) {
-        binding.transactionToolbar.toolbarMonthChanger.toolbarMonth.text = month.getMonthName(resources)
+        val year = month.year?.let { "\n$it" } ?: ""
+        binding.transactionToolbar.toolbarMonthChanger.toolbarMonth.text =
+            resources.getString(month.monthNameResId) + year
     }
 
 

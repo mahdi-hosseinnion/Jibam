@@ -24,12 +24,18 @@ interface DateHolder {
     @Throws(OutOfRangeMonthNumberException::class)
     fun getMonthName(
         resources: Resources
-    ): String
+    ): String = resources.getString(getMonthNameResId())
 
     @Throws(OutOfRangeMonthNumberException::class)
     fun getAbbreviationFormOfMonthName(
         resources: Resources
-    ): String
+    ): String = resources.getString(getAbbreviationFormOfMonthNameResId())
+
+    @Throws(OutOfRangeMonthNumberException::class)
+    fun getMonthNameResId(): Int
+
+    @Throws(OutOfRangeMonthNumberException::class)
+    fun getAbbreviationFormOfMonthNameResId(): Int
 
 
 }
@@ -71,16 +77,9 @@ open class SolarHijriDateHolder(
     override val month: Int,
     override val day: Int
 ) : DateHolder {
-    @Throws(OutOfRangeMonthNumberException::class)
-    override fun getMonthName(resources: Resources): String =
-        resources.getString(getSolarHijriMonthNameResId())
 
     @Throws(OutOfRangeMonthNumberException::class)
-    override fun getAbbreviationFormOfMonthName(resources: Resources): String =
-        getMonthName(resources)
-
-    @Throws(OutOfRangeMonthNumberException::class)
-    fun getSolarHijriMonthNameResId(): Int = when (month) {
+    override fun getMonthNameResId(): Int = when (month) {
         1 -> R.string.Farvardin
         2 -> R.string.Ordibehesht
         3 -> R.string.Khordad
@@ -98,6 +97,11 @@ open class SolarHijriDateHolder(
             number = month
         )
     }
+
+    @Throws(OutOfRangeMonthNumberException::class)
+    override fun getAbbreviationFormOfMonthNameResId(): Int = getMonthNameResId()
+
+
     override fun toString(): String {
         val fMonth = String.format("%02d", this.month)
         val fDay = String.format("%02d", this.day)
@@ -114,15 +118,7 @@ open class GregorianDateHolder(
     override val day: Int
 ) : DateHolder {
     @Throws(OutOfRangeMonthNumberException::class)
-    override fun getMonthName(resources: Resources): String =
-        resources.getString(getGregorianMonthNameResId())
-
-    @Throws(OutOfRangeMonthNumberException::class)
-    override fun getAbbreviationFormOfMonthName(resources: Resources): String =
-        resources.getString(getAbbreviationFormOfGregorianMonthNameResId())
-
-    @Throws(OutOfRangeMonthNumberException::class)
-    fun getGregorianMonthNameResId(): Int = when (month) {
+    override fun getMonthNameResId(): Int = when (month) {
         1 -> R.string.January
         2 -> R.string.February
         3 -> R.string.March
@@ -147,7 +143,7 @@ open class GregorianDateHolder(
      * @throws OutOfRangeMonthNumberException
      */
     @Throws(OutOfRangeMonthNumberException::class)
-    fun getAbbreviationFormOfGregorianMonthNameResId(): Int = when (month) {
+    override fun getAbbreviationFormOfMonthNameResId(): Int = when (month) {
         1 -> R.string.jan
         2 -> R.string.feb
         3 -> R.string.mar
