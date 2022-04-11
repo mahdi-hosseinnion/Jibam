@@ -193,12 +193,11 @@ fun calculatePercentageAndRoundResult(value: BigDecimal, totalAmount: BigDecimal
     calculatePercentage(value, totalAmount).roundToOneDigit()
 
 /**
- * convert 1 to "01"
+ * This will format the numbers appropriately for the app locale, which may include using
+ * a different set of digits.
  */
-fun Int.toStringWith2Digit(): String = if (this < 10)
-    "0$this"
-else
-    this.toString()
+fun Int.toLocaleString(format: String = "%d"): String = String.format(format, this)
+fun Int.toLocaleStringWithTwoDigits(): String = this.toLocaleString("%02d")
 
 fun Locale.isFarsi(): Boolean = (language == Constants.PERSIAN_LANG_CODE)
 

@@ -331,9 +331,17 @@ constructor(
             isSolarCalendar
         )
         return if (isSolarCalendar) {
-            "${date.year}/${date.month}/${date.day} (${date.getDayOfWeekName(resources)})"
+            "${date.year.toLocaleString()}/${date.month.toLocaleStringWithTwoDigits()}/${date.day.toLocaleStringWithTwoDigits()} (${
+                date.getDayOfWeekName(
+                    resources
+                )
+            })"
         } else {
-            "${date.month}/${date.day}/${date.year} (${date.getDayOfWeekName(resources)})"
+            "${date.month.toLocaleStringWithTwoDigits()}/${date.day.toLocaleStringWithTwoDigits()}/${date.year.toLocaleString()} (${
+                date.getDayOfWeekName(
+                    resources
+                )
+            })"
 
         }
     }

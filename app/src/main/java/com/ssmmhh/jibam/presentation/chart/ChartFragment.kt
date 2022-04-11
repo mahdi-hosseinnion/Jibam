@@ -31,6 +31,7 @@ import com.ssmmhh.jibam.presentation.chart.ChartFragment.ChartState.*
 import com.ssmmhh.jibam.presentation.common.BaseFragment
 import com.ssmmhh.jibam.data.source.local.entity.CategoryEntity.Companion.EXPENSES_TYPE_MARKER
 import com.ssmmhh.jibam.data.source.local.entity.CategoryEntity.Companion.INCOME_TYPE_MARKER
+import com.ssmmhh.jibam.util.toLocaleString
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.util.*
@@ -317,7 +318,7 @@ class ChartFragment(
         viewModel.viewState.observe(viewLifecycleOwner) { vs ->
             vs?.let { viewState ->
                 viewState.currentMonth?.let {
-                    val year = it.year?.let { "\n$it" } ?: ""
+                    val year = it.year?.let { "\n${it.toLocaleString()}" } ?: ""
                     binding.toolbar.toolbarMonthChanger.toolbarMonth.text =
                         resources.getString(it.monthNameResId) +year
                 }

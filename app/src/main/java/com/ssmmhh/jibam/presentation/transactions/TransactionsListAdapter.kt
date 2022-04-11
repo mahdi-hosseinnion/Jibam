@@ -374,9 +374,9 @@ class TransactionsListAdapter(
 
         private fun getFormattedDate(date: DateHolder): String {
             return if (isCalendarSolar) {
-                "${date.day} ${date.getAbbreviationFormOfMonthName(itemView.context.resources)}"
+                "${date.day.toLocaleString()} ${date.getAbbreviationFormOfMonthName(itemView.context.resources)}"
             } else {
-                "${date.day} ${date.getAbbreviationFormOfMonthName(itemView.context.resources)}"
+                "${date.day.toLocaleString()} ${date.getAbbreviationFormOfMonthName(itemView.context.resources)}"
             }
         }
     }

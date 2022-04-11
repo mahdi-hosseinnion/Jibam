@@ -156,9 +156,9 @@ class DetailChartListAdapter(
         private fun dateWithPattern(date: Long): String {
             val dateHolder = DateUtils.convertUnixTimeToDate(date, isCalendarSolar)
             return if (isCalendarSolar) {
-                "${dateHolder.year}/${dateHolder.month}/${dateHolder.year}"
+                "${dateHolder.year.toLocaleString()}/${dateHolder.month.toLocaleStringWithTwoDigits()}/${dateHolder.day.toLocaleStringWithTwoDigits()}"
             } else {
-                "${dateHolder.month}/${dateHolder.day}/${dateHolder.year}"
+                "${dateHolder.month.toLocaleStringWithTwoDigits()}/${dateHolder.day.toLocaleStringWithTwoDigits()}/${dateHolder.year.toLocaleString()}"
             }
         }
     }

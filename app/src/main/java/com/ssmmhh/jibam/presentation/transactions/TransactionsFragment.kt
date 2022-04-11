@@ -343,7 +343,7 @@ class TransactionsFragment(
     }
 
     private fun setMonthFieldsValues(month: Month) {
-        val year = month.year?.let { "\n$it" } ?: ""
+        val year = month.year?.let { "\n${it.toLocaleString()}" } ?: ""
         binding.transactionToolbar.toolbarMonthChanger.toolbarMonth.text =
             resources.getString(month.monthNameResId) + year
     }
