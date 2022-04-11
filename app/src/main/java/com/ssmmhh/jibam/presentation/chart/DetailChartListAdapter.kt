@@ -28,7 +28,6 @@ class DetailChartListAdapter(
     private var biggestAmount: BigDecimal = data?.maxOf { (it.money).abs() } ?: BigDecimal.ZERO
 
     companion object {
-        private const val DATE_PATTERN = "MM/dd/yyyy"
 
         private const val EMPTY_LIST_MARKER = -2
         private val EMPTY_LIST_MARKER_TRANSACTION = TransactionDto(

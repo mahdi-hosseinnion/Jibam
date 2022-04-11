@@ -39,6 +39,7 @@ import com.ssmmhh.jibam.util.DateUtils.minGregorianDateInMilliSeconds
 import com.ssmmhh.jibam.util.DateUtils.minSolarHijriDay
 import com.ssmmhh.jibam.util.DateUtils.minSolarHijriMonth
 import com.ssmmhh.jibam.util.DateUtils.minSolarHijriYear
+import com.ssmmhh.jibam.util.DateUtils.toMilliSeconds
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
@@ -200,12 +201,12 @@ constructor(
 
     }
 
-    fun setDateToEditTexts(unixTimeInMillis: Long) {
+    fun setDateToEditTexts(unixTime: Long) {
         disableContentInteraction(binding.edtDateSp)
         disableContentInteraction(binding.edtTime)
 
-        val date = dateWithPattern(unixTimeInMillis)
-        val time = timeWithPattern(unixTimeInMillis)
+        val date = dateWithPattern(unixTime)
+        val time = timeWithPattern(unixTime)
 
         binding.edtDateSp.setText(date)
         binding.edtTime.setText(time)
@@ -324,27 +325,21 @@ constructor(
 
 
     private fun dateWithPattern(unixTimeInMillis: Long): String {
-        val calendarType = sharedPreferences.getString(
-            PreferenceKeys.APP_CALENDAR_PREFERENCE,
-            PreferenceKeys.calendarDefault(currentLocale)
+        val isSolarCalendar = sharedPreferences.isCalendarSolar(currentLocale)
+        val date = DateUtils.convertUnixTimeToDate(
+            unixTimeInMillis,
+            isSolarCalendar
         )
-
-        return if (calendarType == CALENDAR_SOLAR) {
-            val date =
-                DateUtils.convertUnixTimeToDate(unixTimeInMillis, calendarType == CALENDAR_SOLAR)
-            val formattedYear = date.year
-            val formattedMonth = date.month
-            val formattedDay = date.day
-            val dayOfWeekName = date.getDayOfWeekName(resources)
-            "$formattedYear/$formattedMonth/${formattedDay} (${dayOfWeekName})"
+        return if (isSolarCalendar) {
+            "${date.year}/${date.month}/${date.day} (${date.getDayOfWeekName(resources)})"
         } else {
-            val df = Date(unixTimeInMillis)
-            SimpleDateFormat(DATE_PATTERN, currentLocale).format(df)
+            "${date.month}/${date.day}/${date.year} (${date.getDayOfWeekName(resources)})"
+
         }
     }
 
-    private fun timeWithPattern(unixTimeInMillis: Long): String {
-        val df = Date(unixTimeInMillis)
+    private fun timeWithPattern(unixTime: Long): String {
+        val df = Date(unixTime.toMilliSeconds())
         return SimpleDateFormat(TIME_PATTERN, currentLocale).format(df)
     }
 

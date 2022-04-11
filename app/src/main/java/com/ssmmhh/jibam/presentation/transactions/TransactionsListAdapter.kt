@@ -29,14 +29,11 @@ class TransactionsListAdapter(
     private val requestManager: RequestManager?,
     private val interaction: Interaction? = null,
     private val currentLocale: Locale,
+    private var isCalendarSolar: Boolean,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         private const val TAG: String = "AppDebug"
-
-        //MAKE THIS PERSIAN
-        val YESTERDAY_MARKER = GregorianDateHolderWithWeekDay(-2, -2, -2, -2)
-        val TODAY_MARKER = GregorianDateHolderWithWeekDay(-3, -3, -3, -3)
     }
 
     val DIFF_CALLBACK = object : DiffUtil.ItemCallback<TransactionsRecyclerViewItem>() {
@@ -126,8 +123,8 @@ class TransactionsListAdapter(
                         parent,
                         false
                     ),
-                    interaction = interaction,
-                    currentLocale = currentLocale
+                    currentLocale = currentLocale,
+                    isCalendarSolar = isCalendarSolar
                 )
             }
             else -> {
@@ -337,8 +334,8 @@ class TransactionsListAdapter(
     class HeaderViewHolder
     constructor(
         val binding: LayoutTransacionHeaderBinding,
-        private val interaction: Interaction?,
-        private val currentLocale: Locale
+        private val currentLocale: Locale,
+        private val isCalendarSolar: Boolean,
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: TransactionsRecyclerViewItem.Header) = with(binding) {
@@ -366,30 +363,21 @@ class TransactionsListAdapter(
                 "${getStringFromItemView(R.string.income)}: $incomeText"
             } ?: ""
 
-            when (item.date) {
-//                TODAY_MARKER -> {
-//                    headerDate.text = ""
-//                    headerDayOfWeek.text = getStringFromItemView(R.string.today)
-//                }
-//                YESTERDAY_MARKER -> {
-//                    headerDate.text = ""
-//                    headerDayOfWeek.text = getStringFromItemView(R.string.yesterday)
-//                }
-                else -> {
-//                    headerDayOfWeek.text = item.date.getDayOfWeekName(itemView.context) + ","
-//                    headerDate.text = " ${item.date.day} ${item.date.month} ${item.date.year}"
-                    headerDate.text = item.date.toString()
-                }
-            }
+
+            val dateHolder = DateUtils.convertUnixTimeToDate(item.date, isCalendarSolar)
+            headerDayOfWeek.text =
+                dateHolder.getDayOfWeekName(itemView.context.resources) + ","
+            headerDate.text = getFormattedDate(dateHolder)
+
+
         }
 
-        private fun convertDpToPx(dp: Int): Int {
-            val r: Resources = itemView.resources
-            return TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                dp.toFloat(),
-                r.displayMetrics
-            ).toInt()
+        private fun getFormattedDate(date: DateHolder): String {
+            return if (isCalendarSolar) {
+                "${date.day} ${date.getAbbreviationFormOfMonthName(itemView.context.resources)}"
+            } else {
+                "${date.day} ${date.getAbbreviationFormOfMonthName(itemView.context.resources)}"
+            }
         }
     }
 

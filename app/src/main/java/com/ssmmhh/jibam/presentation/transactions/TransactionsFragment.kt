@@ -94,6 +94,7 @@ class TransactionsFragment(
     }
 
     override fun onDestroyView() {
+        bottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
         super.onDestroyView()
         _binding = null
     }
@@ -388,7 +389,8 @@ class TransactionsFragment(
             recyclerAdapter = TransactionsListAdapter(
                 requestManager,
                 this@TransactionsFragment,
-                currentLocale
+                currentLocale,
+                isCalendarSolar = sharedPreferences.isCalendarSolar(currentLocale)
             )
             addOnScrollListener(onScrollListener)
 

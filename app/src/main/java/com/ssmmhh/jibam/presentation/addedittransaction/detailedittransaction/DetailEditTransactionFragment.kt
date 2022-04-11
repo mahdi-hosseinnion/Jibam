@@ -23,6 +23,7 @@ import com.ssmmhh.jibam.presentation.addedittransaction.common.AddEditTransactio
 import com.ssmmhh.jibam.presentation.addedittransaction.detailedittransaction.state.DetailEditTransactionPresenterState
 import com.ssmmhh.jibam.presentation.addedittransaction.detailedittransaction.state.DetailEditTransactionPresenterState.*
 import com.ssmmhh.jibam.util.*
+import com.ssmmhh.jibam.util.DateUtils.toSeconds
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
@@ -251,7 +252,7 @@ constructor(
         }
 
         //set date to edit text
-        setDateToEditTexts(((transaction.date)).times(1_000))
+        setDateToEditTexts(((transaction.date)))
 
     }
 
@@ -275,7 +276,7 @@ constructor(
     }
 
     private fun setCombineFields(calendar: GregorianCalendar) {
-        setDateToEditTexts(calendar.timeInMillis)
+        setDateToEditTexts(calendar.timeInMillis.toSeconds())
     }
 
     override fun setToCombineCalender(year: Int, month: Int, day: Int) {

@@ -22,6 +22,7 @@ import com.ssmmhh.jibam.presentation.addedittransaction.common.AddEditTransactio
 import com.ssmmhh.jibam.presentation.addedittransaction.inserttransaction.state.InsertTransactionPresenterState
 import com.ssmmhh.jibam.presentation.addedittransaction.inserttransaction.state.InsertTransactionPresenterState.*
 import com.ssmmhh.jibam.util.*
+import com.ssmmhh.jibam.util.DateUtils.toSeconds
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.math.BigDecimal
@@ -222,7 +223,7 @@ constructor(
     }
 
     private fun setDateFields(calendar: GregorianCalendar) {
-        setDateToEditTexts(calendar.timeInMillis)
+        setDateToEditTexts(calendar.timeInMillis.toSeconds())
     }
 
     private fun setMemoFields(memo: String) {
