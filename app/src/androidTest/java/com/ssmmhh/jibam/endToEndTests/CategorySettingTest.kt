@@ -39,9 +39,6 @@ class CategorySettingTest {
     lateinit var sharedPrefEditor: SharedPreferences.Editor
 
     @Inject
-    lateinit var resources: Resources
-
-    @Inject
     lateinit var categoriesDao: CategoriesDao
 
     init {
@@ -93,9 +90,7 @@ class CategorySettingTest {
             matches(
                 hasDescendant(
                     withText(
-                        resources.getString(
-                            R.string.category_setting
-                        )
+                        R.string.category_setting
                     )
                 )
             )
@@ -105,7 +100,7 @@ class CategorySettingTest {
             matches(
                 tabLayoutWithTextAtPosition(
                     0,
-                    resources.getString(R.string.expenses)
+                    instrumentationContext.getString(R.string.expenses)
                 )
             )
         )
@@ -113,7 +108,7 @@ class CategorySettingTest {
             matches(
                 tabLayoutWithTextAtPosition(
                     1,
-                    resources.getString(R.string.income)
+                    instrumentationContext.getString(R.string.income)
                 )
             )
         )
@@ -177,9 +172,7 @@ class CategorySettingTest {
             matches(
                 hasDescendant(
                     withText(
-                        resources.getString(
                             R.string.add_expenses_category
-                        )
                     )
                 )
             )
@@ -209,9 +202,7 @@ class CategorySettingTest {
             matches(
                 hasDescendant(
                     withText(
-                        resources.getString(
                             R.string.add_income_category
-                        )
                     )
                 )
             )

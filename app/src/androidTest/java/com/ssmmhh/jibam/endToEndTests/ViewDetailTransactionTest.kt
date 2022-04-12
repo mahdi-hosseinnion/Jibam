@@ -43,13 +43,12 @@ class ViewDetailTransactionTest {
     lateinit var categoriesDao: CategoriesDao
 
     @Inject
-    lateinit var resources: Resources
-
-    @Inject
     lateinit var sharedPrefEditor: SharedPreferences.Editor
 
     @Inject
     lateinit var transactionsDao: TransactionDao
+
+    val resources: Resources = instrumentationContext.resources
 
     private val appContext = InstrumentationRegistry.getInstrumentation().targetContext
 
@@ -113,9 +112,8 @@ class ViewDetailTransactionTest {
             matches(
                 hasDescendant(
                     withText(
-                        resources.getString(
-                            R.string.details
-                        )
+                        R.string.details
+
                     )
                 )
             )
@@ -173,9 +171,7 @@ class ViewDetailTransactionTest {
             matches(
                 hasDescendant(
                     withText(
-                        resources.getString(
-                            R.string.details
-                        )
+                        R.string.details
                     )
                 )
             )

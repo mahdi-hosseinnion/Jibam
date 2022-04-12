@@ -43,9 +43,6 @@ class InsertTransactionTest {
     @Inject
     lateinit var sharedPrefEditor: SharedPreferences.Editor
 
-    @Inject
-    lateinit var resources: Resources
-
     init {
         //inject this class using dagger
         getTestBaseApplication().appComponent
@@ -86,9 +83,7 @@ class InsertTransactionTest {
             matches(
                 hasDescendant(
                     withText(
-                        resources.getString(
                             R.string.add_transaction
-                        )
                     )
                 )
             )
@@ -140,9 +135,7 @@ class InsertTransactionTest {
                 matches(
                     hasDescendant(
                         withText(
-                            resources.getString(
                                 R.string.add_transaction
-                            )
                         )
                     )
                 )
@@ -205,9 +198,7 @@ class InsertTransactionTest {
             matches(
                 hasDescendant(
                     withText(
-                        resources.getString(
                             R.string.add_transaction
-                        )
                     )
                 )
             )
@@ -280,9 +271,8 @@ class InsertTransactionTest {
                 matches(
                     hasDescendant(
                         withText(
-                            resources.getString(
                                 R.string.add_transaction
-                            )
+
                         )
                     )
                 )

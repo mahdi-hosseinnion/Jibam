@@ -33,7 +33,7 @@ import kotlin.random.Random
 @ExperimentalCoroutinesApi
 fun getTestBaseApplication(): TestBaseApplication = ApplicationProvider.getApplicationContext()
 
-val instrumentationContext: Context get() = InstrumentationRegistry.getInstrumentation().context
+val instrumentationContext: Context get() = InstrumentationRegistry.getInstrumentation().targetContext
 
 fun atPositionOnView(
     position: Int,

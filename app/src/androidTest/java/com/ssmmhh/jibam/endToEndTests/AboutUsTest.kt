@@ -16,6 +16,7 @@ import com.ssmmhh.jibam.util.EspressoIdlingResources
 import com.ssmmhh.jibam.util.PreferenceKeys
 import com.ssmmhh.jibam.utils.disableAllPromoteBanners
 import com.ssmmhh.jibam.utils.getTestBaseApplication
+import com.ssmmhh.jibam.utils.instrumentationContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import org.junit.After
@@ -35,10 +36,7 @@ class AboutUsTest {
 
     @Inject
     lateinit var sharedPrefEditor: SharedPreferences.Editor
-
-    @Inject
-    lateinit var resources: Resources
-
+    
     init {
         //inject this class using dagger
         getTestBaseApplication().appComponent
@@ -86,9 +84,7 @@ class AboutUsTest {
             ViewAssertions.matches(
                 hasDescendant(
                     withText(
-                        resources.getString(
-                            R.string.about
-                        )
+                        R.string.about
                     )
                 )
             )
@@ -103,7 +99,7 @@ class AboutUsTest {
         onView(withId(R.id.version_name)).check(
             matches(
                 withText(
-                    resources.getString(R.string.version) + ": $versionName"
+                    instrumentationContext.getString(R.string.version) + ": $versionName"
                 )
             )
         )

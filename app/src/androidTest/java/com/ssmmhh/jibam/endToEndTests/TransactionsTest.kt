@@ -22,6 +22,7 @@ import com.ssmmhh.jibam.util.separate3By3AndRoundIt
 import com.ssmmhh.jibam.utils.createRandomTransaction
 import com.ssmmhh.jibam.utils.disableAllPromoteBanners
 import com.ssmmhh.jibam.utils.getTestBaseApplication
+import com.ssmmhh.jibam.utils.instrumentationContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.first
@@ -52,9 +53,6 @@ class TransactionsTest {
 
     @Inject
     lateinit var monthManger: MonthManger
-
-    @Inject
-    lateinit var resources: Resources
 
     @Inject
     lateinit var currentLocale: Locale

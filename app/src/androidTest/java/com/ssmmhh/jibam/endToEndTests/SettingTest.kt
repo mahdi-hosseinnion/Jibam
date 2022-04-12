@@ -20,6 +20,7 @@ import com.ssmmhh.jibam.util.PreferenceKeys.CALENDAR_SOLAR
 import com.ssmmhh.jibam.utils.disableAllPromoteBanners
 import com.ssmmhh.jibam.utils.getTestBaseApplication
 import com.ssmmhh.jibam.utils.getTextFromTextView
+import com.ssmmhh.jibam.utils.instrumentationContext
 import com.ssmmhh.jibam.utils.repeatTests.Repeat
 import com.ssmmhh.jibam.utils.repeatTests.RepeatRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -51,9 +52,6 @@ class SettingTest {
 
     @Inject
     lateinit var locale: Locale
-
-    @Inject
-    lateinit var resources: Resources
 
     init {
         //inject this class using dagger
@@ -101,9 +99,7 @@ class SettingTest {
             matches(
                 hasDescendant(
                     withText(
-                        resources.getString(
-                            R.string.setting
-                        )
+                        R.string.setting
                     )
                 )
             )

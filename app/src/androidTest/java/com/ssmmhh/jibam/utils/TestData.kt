@@ -27,8 +27,6 @@ object TestData {
         val largestExpensesCategoryMoney = "292.7"
         val largestExpensesCategoryId = 15
         suspend fun largestExpensesCategoryName(
-            resources: Resources,
-            packageName: String,
             categoriesDao: CategoriesDao,
         ): String = categoriesDao.getCategoryById(
             largestExpensesCategoryId
@@ -41,8 +39,6 @@ object TestData {
         val largestIncomeCategoryMoney = "1${NUMBER_SEPARATOR}030"
         val largestIncomeCategoryId = 37
         suspend fun largestIncomeCategoryName(
-            resources: Resources,
-            packageName: String,
             categoriesDao: CategoriesDao,
         ): String = categoriesDao.getCategoryById(
             largestIncomeCategoryId

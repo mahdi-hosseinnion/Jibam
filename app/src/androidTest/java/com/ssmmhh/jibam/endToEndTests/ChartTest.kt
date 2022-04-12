@@ -20,10 +20,7 @@ import com.ssmmhh.jibam.presentation.chart.DetailChartListAdapter
 import com.ssmmhh.jibam.util.DateUtils
 import com.ssmmhh.jibam.util.EspressoIdlingResources
 import com.ssmmhh.jibam.util.PreferenceKeys
-import com.ssmmhh.jibam.utils.TestData
-import com.ssmmhh.jibam.utils.atPositionOnView
-import com.ssmmhh.jibam.utils.disableAllPromoteBanners
-import com.ssmmhh.jibam.utils.getTestBaseApplication
+import com.ssmmhh.jibam.utils.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.runBlocking
@@ -45,9 +42,6 @@ class ChartTest {
 
     @Inject
     lateinit var sharedPrefEditor: SharedPreferences.Editor
-
-    @Inject
-    lateinit var resources: Resources
 
     @Inject
     lateinit var currentLocale: Locale
@@ -110,9 +104,7 @@ class ChartTest {
             matches(
                 hasDescendant(
                     withText(
-                        resources.getString(
-                            R.string.expenses_chart_title
-                        )
+                        R.string.expenses_chart_title
                     )
                 )
             )
@@ -130,9 +122,7 @@ class ChartTest {
             matches(
                 hasDescendant(
                     withText(
-                        resources.getString(
-                            R.string.income_chart_title
-                        )
+                        R.string.income_chart_title
                     )
                 )
             )
@@ -154,8 +144,6 @@ class ChartTest {
 
         val largestExpensesCategoryName = TestData.ChartPageTestData.largestExpensesCategoryName(
             categoriesDao = categoriesDao,
-            resources = resources,
-            packageName = packageName
         )
         for (item in transactionsToInsert) {
             transactionsDao.insertTransaction(item)
@@ -275,8 +263,6 @@ class ChartTest {
 
         val largestIncomeCategoryName = TestData.ChartPageTestData.largestIncomeCategoryName(
             categoriesDao = categoriesDao,
-            resources = resources,
-            packageName = packageName
         )
         for (item in transactionsToInsert) {
             transactionsDao.insertTransaction(item)
