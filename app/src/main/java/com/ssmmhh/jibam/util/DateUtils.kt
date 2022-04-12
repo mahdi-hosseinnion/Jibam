@@ -28,6 +28,22 @@ object DateUtils {
             convertUnixTimeToGregorianDate(unixTimeStamp = unixTime)
         }
 
+    /**
+     * Get the midnight of the day base on unix time .
+     * @return The midnight of day in seconds.
+     */
+    fun getTheMidnightOfDay(unixTimeInSeconds: Long): Long {
+        val calendar = Calendar.getInstance().apply {
+            //set current time to calendar
+            timeInMillis = unixTimeInSeconds.toMilliSeconds()
+            //set hour to 00:00:00 midnight
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+        }
+        return calendar.timeInMillis.toSeconds()
+    }
+
     val shamsiMonths = arrayOf(
         R.string.Farvardin,
         R.string.Ordibehesht,
@@ -59,6 +75,8 @@ object DateUtils {
 
     fun Long.toSeconds(): Long = this.div(1_000)
     fun Long.toMilliSeconds(): Long = this.times(1_000)
+
+    const val DAY_IN_SECONDS: Long = 86_400
 
     /**
      * Minimum and maximum acceptable dates in gregorian and solar hijri.

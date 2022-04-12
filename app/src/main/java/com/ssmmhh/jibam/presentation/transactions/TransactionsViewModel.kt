@@ -72,11 +72,7 @@ constructor(
             query = query
         ).handleLoadingAndException(GET_TRANSACTION_LIST)
             .map {
-                return@map AddHeaderToTransactions(
-                    sharedPreferences.isCalendarSolar(currentLocale)
-                ).addHeaderToTransactions(
-                    it
-                )
+                return@map addHeaderToTransactions(it)
             }
 
     private val _summeryMoney: LiveData<SummaryMoney> =
