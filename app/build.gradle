@@ -61,6 +61,9 @@ android {
     buildFeatures {
         viewBinding true
     }
+    dataBinding {
+        enabled true
+    }
     testOptions {
         //for android test orchestrator
         execution 'ANDROIDX_TEST_ORCHESTRATOR'
