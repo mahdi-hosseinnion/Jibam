@@ -17,5 +17,6 @@ local.properties
 /.idea/tasks.xml
 /.idea/vcs.xml
 /.idea/gradle.xml
+/.idea/misc.xml
 /.idea/deploymentTargetDropDown.xml
 /.idea/dictionaries
