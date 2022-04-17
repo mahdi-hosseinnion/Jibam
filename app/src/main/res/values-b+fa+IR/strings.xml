@@ -134,7 +134,7 @@
         جیبم یک اپیکیشن اندروید است که به شما کمک میکند فعالیت های مالی خود را به راحتی رصد کنید.
         به کمک این اپیکیشن شما پول بیشتری پس انداز خواهید کرد.
     </string>
-    <string name="version">نسخه</string>
+    <string name="version1">نسخه: %s</string>
     <string name="testing_string">این فقط برای تست هسستش</string>
     <string name="developement_members">
     برنامه نویس

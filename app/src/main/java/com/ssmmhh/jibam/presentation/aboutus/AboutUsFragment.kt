@@ -25,25 +25,20 @@ class AboutUsFragment(
     private val requestManager: RequestManager
 ) : BaseFragment() {
 
-    private var _binding: FragmentAboutUsBinding? = null
-
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentAboutUsBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentAboutUsBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        binding = FragmentAboutUsBinding.inflate(inflater, container, false).apply {
+            versionName = this@AboutUsFragment.getVersionName()
+                //TODO("Use a different method to localize version number
+                .localizeNumber(resources)
+        }
+        return binding.root
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -53,9 +48,6 @@ class AboutUsFragment(
 
     private fun initUi() {
         binding.toolbar.topAppBarNormal.title = getString(R.string.about)
-        binding.versionName.text = getVersionName()?.let {
-            getString(R.string.version) + ": ${it.localizeNumber(resources)}"
-        }
         binding.toolbar.topAppBarNormal.setNavigationOnClickListener {
             navigateBack()
         }
@@ -88,15 +80,16 @@ class AboutUsFragment(
         }
     }
 
-    private fun getVersionName(): String? {
-        try {
-            val pInfo =
-                requireContext().packageManager.getPackageInfo(requireContext().packageName, 0)
-            return pInfo.versionName
+    private fun getVersionName(): String {
+        return try {
+            requireContext().run {
+                val pInfo = packageManager.getPackageInfo(packageName, 0)
+                pInfo.versionName
+            }
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
+            getString(R.string.unknown)
         }
-        return null
     }
 
 }

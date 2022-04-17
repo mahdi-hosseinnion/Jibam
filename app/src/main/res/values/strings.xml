@@ -142,10 +142,10 @@
     \n Amir hossein taherian
     </string>
     <string name="about_app">
-        Jibam is an android application that helps you track your financial activity efficiently
-        . With this application you will save more money
+        Jibam is an android application that helps you track your financial activity efficiently.
+        With this application, you could save more money.
     </string>
-    <string name="version">Version</string>
+    <string name="version1">Version: %s</string>
     <string name="unable_to_get_date">Unable to save the date please try again!</string>
     <!--    tap targets-->
     <string name="fab_tap_target_primary">Create your first transaction</string>
@@ -341,5 +341,6 @@
     <string name="unable_to_delete_category">Unable to delete category</string>
     <string name="unable_to_change_order_of_selected_category">Unable to change order of selected category</string>
     <string name="unable_to_get_categories_from_database">Unable to get categories from database</string>
+    <string name="unknown">unknown</string>
 
 </resources>
