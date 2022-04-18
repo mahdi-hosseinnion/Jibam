@@ -84,10 +84,7 @@ constructor(
                 )
             }
             AboutUsFragment::class.java.name -> {
-                AboutUsFragment(
-                    viewModelFactory,
-                    requestManager
-                )
+                AboutUsFragment()
             }
             ChartFragment::class.java.name -> {
                 ChartFragment(

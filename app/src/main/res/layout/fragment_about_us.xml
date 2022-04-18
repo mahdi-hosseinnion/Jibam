@@ -8,6 +8,11 @@
         <variable
             name="versionName"
             type="String" />
+
+        <variable
+            name="listener"
+            type="com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener" />
+
     </data>
 
     <LinearLayout
@@ -20,6 +25,7 @@
         <include
             android:id="@+id/toolbar"
             layout="@layout/layout_toolbar_with_back_btn_with_databinding"
+            app:listener="@{listener}"
             app:toolbarTitle="@{@string/about}" />
 
 

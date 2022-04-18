@@ -3,9 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="toolbarTitle"
             type="String" />
+
+        <variable
+            name="listener"
+            type="com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener" />
+
     </data>
 
     <com.google.android.material.appbar.AppBarLayout
@@ -20,6 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:navigationIcon="@drawable/ic_round_arrow_back_24"
+            app:navigationOnClickListener="@{listener::onClickOnNavigation}"
             app:title="@{toolbarTitle}">
 
             <ImageButton
@@ -31,6 +38,7 @@
                 android:clickable="true"
                 android:contentDescription="@string/delete"
                 android:focusable="true"
+                android:onClick="@{listener::onClickOnMenuButton}"
                 android:visibility="gone"
                 app:srcCompat="@drawable/ic_round_delete_24" />
         </com.google.android.material.appbar.MaterialToolbar>
