@@ -46,7 +46,6 @@ class AboutUsFragment(
     }
 
     private fun initUi() {
-        binding.toolbar.topAppBarNormal.title = getString(R.string.about)
         binding.toolbar.topAppBarNormal.setNavigationOnClickListener {
             navigateBack()
         }

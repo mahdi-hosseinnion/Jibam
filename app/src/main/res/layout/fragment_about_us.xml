@@ -19,7 +19,8 @@
 
         <include
             android:id="@+id/toolbar"
-            layout="@layout/layout_toolbar_with_back_btn" />
+            layout="@layout/layout_toolbar_with_back_btn_with_databinding"
+            app:toolbarTitle="@{@string/about}" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
