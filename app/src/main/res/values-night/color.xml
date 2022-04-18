@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="fragment_about_us_background_color_start">#373B44</color>
+    <color name="fragment_about_us_background_color_end">#4286f4</color>
+</resources>

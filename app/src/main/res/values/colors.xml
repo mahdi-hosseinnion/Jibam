@@ -18,6 +18,9 @@
     <color name="category_icon_foreground">#FFFFFF</color>
     <color name="header_item_background">#EEEEEE</color>
     <color name="transparent">#00000000</color>
+
+    <color name="fragment_about_us_background_color_start">#B2FEFA</color>
+    <color name="fragment_about_us_background_color_end">#0ED2F7</color>
 <!--    custom keyboard-->
     <color name="keyBoardBackground">#FFEB3B</color>
     <color name="keyBoardPreviewTextColor">#BA68C8</color>

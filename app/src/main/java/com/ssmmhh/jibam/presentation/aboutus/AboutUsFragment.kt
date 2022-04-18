@@ -42,7 +42,6 @@ class AboutUsFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setBackground()
         initUi()
     }
 
@@ -56,29 +55,6 @@ class AboutUsFragment(
     override fun handleStateMessages() {}
 
     override fun handleLoading() {}
-
-    private fun setBackground() {
-        try {
-            requestManager.load(R.drawable.about_us)
-                .into(
-                    object : CustomTarget<Drawable>() {
-                        override fun onResourceReady(
-                            resource: Drawable,
-                            transition: Transition<in Drawable>?
-                        ) {
-                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                                binding.aboutUsRoot.background = resource
-                            }
-                        }
-
-                        override fun onLoadCleared(placeholder: Drawable?) {}
-
-                    }
-                )
-        } catch (e: Exception) {
-
-        }
-    }
 
     private fun getVersionName(): String {
         return try {
