@@ -1,5 +1,6 @@
 package com.ssmmhh.jibam.presentation.aboutus
 
+import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -33,7 +34,7 @@ class AboutUsFragment() : BaseFragment(), ToolbarLayoutListener {
     ): View? {
         binding = FragmentAboutUsBinding.inflate(inflater, container, false).apply {
             listener = this@AboutUsFragment
-            versionName = this@AboutUsFragment.getVersionName()
+            versionName = this@AboutUsFragment.getVersionName(this@AboutUsFragment.requireContext())
                 //TODO("Use a different method to localize version number
                 .localizeNumber(resources)
         }
@@ -44,11 +45,10 @@ class AboutUsFragment() : BaseFragment(), ToolbarLayoutListener {
 
     override fun handleLoading() {}
 
-    private fun getVersionName(): String {
+    private fun getVersionName(context: Context): String {
         return try {
-            requireContext().run {
-                val pInfo = packageManager.getPackageInfo(packageName, 0)
-                pInfo.versionName
+            context.run {
+                packageManager.getPackageInfo(packageName, 0).versionName
             }
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()

@@ -96,10 +96,10 @@ class AboutUsTest {
         onView(withId(R.id.about_app)).check(matches(withText(R.string.about_app)))
         //hardcore version number to test getVersion function too
         val versionName = "1.2.0"
-        onView(withId(R.id.version_name)).check(
+        onView(withId(R.id.version_name_txt)).check(
             matches(
                 withText(
-                    instrumentationContext.getString(R.string.version) + ": $versionName"
+                    instrumentationContext.getString(R.string.version1,versionName)
                 )
             )
         )
