@@ -5,11 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.FragmentAboutUsBinding
 import com.ssmmhh.jibam.databinding.FragmentSettingBinding
 import com.ssmmhh.jibam.presentation.common.BaseFragment
+import com.ssmmhh.jibam.presentation.transactions.TransactionsViewModel
 import com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener
 import com.ssmmhh.jibam.util.PreferenceKeys
 import com.ssmmhh.jibam.util.PreferenceKeys.APP_CALENDAR_PREFERENCE
@@ -29,6 +31,9 @@ class SettingFragment(
     private val sharedPreferences: SharedPreferences,
     private val sharedPrefEditor: SharedPreferences.Editor
 ) : BaseFragment(), ToolbarLayoutListener {
+
+    private val viewModel by viewModels<SettingViewModel> { viewModelFactory }
+
     private lateinit var binding: FragmentSettingBinding
 
     override fun onCreateView(

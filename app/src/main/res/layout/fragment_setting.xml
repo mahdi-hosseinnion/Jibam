@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="listener"
             type="com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener" />
+
+        <variable
+            name="viewmodel"
+            type="com.ssmmhh.jibam.presentation.setting.SettingViewModel" />
     </data>
 
     <LinearLayout
@@ -19,9 +23,9 @@
 
         <include
             android:id="@+id/toolbar"
+            layout="@layout/layout_toolbar_with_back_btn_with_databinding"
             app:listener="@{listener}"
-            app:toolbarTitle="@{@string/setting}"
-            layout="@layout/layout_toolbar_with_back_btn_with_databinding" />
+            app:toolbarTitle="@{@string/setting}" />
 
         <TextView
             android:id="@+id/calender"

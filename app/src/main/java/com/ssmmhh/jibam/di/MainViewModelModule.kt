@@ -9,6 +9,7 @@ import com.ssmmhh.jibam.presentation.addedittransaction.inserttransaction.Insert
 import com.ssmmhh.jibam.presentation.categories.addcategoires.AddCategoryViewModel
 import com.ssmmhh.jibam.presentation.categories.viewcategories.ViewCategoriesViewModel
 import com.ssmmhh.jibam.presentation.chart.ChartViewModel
+import com.ssmmhh.jibam.presentation.setting.SettingViewModel
 import com.ssmmhh.jibam.presentation.transactions.TransactionsViewModel
 import dagger.Binds
 import dagger.Module
@@ -78,6 +79,13 @@ abstract class MainViewModelModule {
     @MainViewModelKey(AddCategoryViewModel::class)
     abstract fun bindAddCategoryViewModel(
         addCategoryViewModel: AddCategoryViewModel
+    ): ViewModel
+
+    @Binds
+    @IntoMap
+    @MainViewModelKey(SettingViewModel::class)
+    abstract fun bindSettingViewModel(
+        settingViewModel: SettingViewModel
     ): ViewModel
 
 }
