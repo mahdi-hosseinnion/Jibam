@@ -1,68 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#e0e0e0"
-    android:orientation="vertical"
-    tools:context=".presentation.setting.SettingFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/layout_toolbar_with_back_btn" />
+    <data>
 
-    <TextView
-        android:id="@+id/calender"
+        <variable
+            name="listener"
+            type="com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener" />
+    </data>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center|start"
-        android:background="#fff"
+        android:layout_height="match_parent"
+        android:background="#e0e0e0"
+        android:orientation="vertical"
+        tools:context=".presentation.setting.SettingFragment">
 
-        android:gravity="center|start"
-        android:paddingLeft="8dp"
-        android:paddingTop="16dp"
-        android:paddingRight="8dp"
-        android:paddingBottom="8dp"
-        android:text="@string/calendar"
-        android:textColor="@color/black"
-        android:textSize="20sp" />
+        <include
+            android:id="@+id/toolbar"
+            app:listener="@{listener}"
+            app:toolbarTitle="@{@string/setting}"
+            layout="@layout/layout_toolbar_with_back_btn_with_databinding" />
 
-    <RadioGroup
-        android:id="@+id/calender_radio_group"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#fff"
-        android:paddingStart="4dp"
-        android:paddingLeft="4dp">
-
-        <RadioButton
-            android:id="@+id/gregorian_rb"
+        <TextView
+            android:id="@+id/calender"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center|start"
-            android:layout_margin="8dp"
-            android:gravity="center|start"
-            android:text="@string/gregorian"
-            android:textSize="16sp" />
+            android:background="#fff"
 
-        <RadioButton
-            android:id="@+id/shamsi_rb"
+            android:gravity="center|start"
+            android:paddingLeft="8dp"
+            android:paddingTop="16dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="8dp"
+            android:text="@string/calendar"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <RadioGroup
+            android:id="@+id/calender_radio_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center|start"
-            android:layout_margin="8dp"
-            android:gravity="center|start"
-            android:text="@string/solar_hijri"
-            android:textSize="16sp" />
+            android:background="#fff"
+            android:paddingStart="4dp"
+            android:paddingLeft="4dp">
+
+            <RadioButton
+                android:id="@+id/gregorian_rb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|start"
+                android:layout_margin="8dp"
+                android:gravity="center|start"
+                android:text="@string/gregorian"
+                android:textSize="16sp" />
+
+            <RadioButton
+                android:id="@+id/shamsi_rb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|start"
+                android:layout_margin="8dp"
+                android:gravity="center|start"
+                android:text="@string/solar_hijri"
+                android:textSize="16sp" />
 
 
-    </RadioGroup>
+        </RadioGroup>
 
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#323232" />
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#323232" />
 
 
-</LinearLayout>
+    </LinearLayout>
+</layout>
