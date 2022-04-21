@@ -21,8 +21,6 @@ constructor(
     private val sharedPrefEditor: SharedPreferences.Editor
 ) : ViewModel(), Observable {
 
-    private val TAG = "SettingViewModel"
-
     //For two way binding
     private val callbacks: PropertyChangeRegistry by lazy { PropertyChangeRegistry() }
 
@@ -30,17 +28,12 @@ constructor(
 
     //Necessary For two way binding (field isGregorianChecked)
     @Bindable
-    fun getIsGregorianChecked(): Boolean {
-        Log.d(TAG, "getIsGregorianChecked: called")
-        return !isCalendarSolarHijri
-    }
+    fun getIsGregorianChecked(): Boolean = !isCalendarSolarHijri
 
     fun setIsGregorianChecked(isNewCalendarGregorian: Boolean) {
-        Log.d(TAG, "setIsGregorianChecked: called")
         //If boolean value is not the same as [isCalendarSolarHijri] so it does not need to change.
         // prevent infinite loop.
         if (isNewCalendarGregorian != isCalendarSolarHijri) return
-        Log.d(TAG, "setIsGregorianChecked: changed")
 
         isCalendarSolarHijri = !(isNewCalendarGregorian)
 
@@ -60,17 +53,12 @@ constructor(
 
     //Necessary For two way binding (field isSolarHijriChecked)
     @Bindable
-    fun getIsSolarHijriChecked(): Boolean  {
-        Log.d(TAG, "getIsSolarHijriChecked: called")
-        return isCalendarSolarHijri
-    }
+    fun getIsSolarHijriChecked(): Boolean = isCalendarSolarHijri
 
     fun setIsSolarHijriChecked(isNewCalendarSolar: Boolean) {
-        Log.d(TAG, "setIsSolarHijriChecked: called")
         // if new calendar value is solarHijri and saved valued is solar hijri then do nothing.
         // prevent infinite loop.
         if (isNewCalendarSolar == isCalendarSolarHijri) return
-        Log.d(TAG, "setIsSolarHijriChecked: change")
 
         isCalendarSolarHijri = isNewCalendarSolar
 
