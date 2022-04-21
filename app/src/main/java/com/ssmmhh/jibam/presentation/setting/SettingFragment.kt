@@ -27,14 +27,11 @@ import java.util.*
 @FlowPreview
 class SettingFragment(
     viewModelFactory: ViewModelProvider.Factory,
-    private val currentLocale: Locale,
-    private val sharedPreferences: SharedPreferences,
-    private val sharedPrefEditor: SharedPreferences.Editor
 ) : BaseFragment(), ToolbarLayoutListener {
 
-    private val viewModel by viewModels<SettingViewModel> { viewModelFactory }
-
     private lateinit var binding: FragmentSettingBinding
+
+    private val viewModel by viewModels<SettingViewModel> { viewModelFactory }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,45 +39,11 @@ class SettingFragment(
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSettingBinding.inflate(inflater, container, false).apply {
+            viewmodel = this@SettingFragment.viewModel
             listener = this@SettingFragment
         }
         return binding.root
     }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initUi()
-    }
-
-    private fun initUi() {
-        setDataToCalenderRadioGroup()
-        binding.gregorianRb.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                sharedPrefEditor.putString(APP_CALENDAR_PREFERENCE, CALENDAR_GREGORIAN)
-                sharedPrefEditor.apply()
-            }
-        }
-        binding.shamsiRb.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                sharedPrefEditor.putString(APP_CALENDAR_PREFERENCE, CALENDAR_SOLAR)
-                sharedPrefEditor.apply()
-            }
-        }
-    }
-
-    private fun setDataToCalenderRadioGroup() {
-        val calendar = sharedPreferences.getString(
-            APP_CALENDAR_PREFERENCE,
-            PreferenceKeys.calendarDefault(currentLocale)
-        )
-
-        if (calendar == CALENDAR_SOLAR) {
-            binding.shamsiRb.isChecked = true
-        } else {
-            binding.gregorianRb.isChecked = true
-        }
-    }
-
 
     override fun handleStateMessages() {}
 

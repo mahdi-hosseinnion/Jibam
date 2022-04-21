@@ -78,9 +78,6 @@ constructor(
             SettingFragment::class.java.name -> {
                 SettingFragment(
                     viewModelFactory,
-                    currentLocale,
-                    sharedPreferences,
-                    sharedPrefsEditor
                 )
             }
             AboutUsFragment::class.java.name -> {
