@@ -71,8 +71,6 @@ constructor(
                 ViewCategoriesFragment(
                     viewModelFactory,
                     requestManager,
-                    sharedPreferences,
-                    sharedPrefsEditor
                 )
             }
             SettingFragment::class.java.name -> {

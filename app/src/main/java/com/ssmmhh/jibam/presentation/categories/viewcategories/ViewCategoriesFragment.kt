@@ -1,6 +1,5 @@
 package com.ssmmhh.jibam.presentation.categories.viewcategories
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,17 +10,18 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
+import com.google.android.material.tabs.TabLayoutMediator
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.model.Category
+import com.ssmmhh.jibam.data.source.local.entity.CategoryEntity.Companion.EXPENSES_TYPE_MARKER
+import com.ssmmhh.jibam.data.source.local.entity.CategoryEntity.Companion.INCOME_TYPE_MARKER
+import com.ssmmhh.jibam.data.util.*
+import com.ssmmhh.jibam.databinding.FragmentViewCategoriesBinding
 import com.ssmmhh.jibam.presentation.categories.addcategoires.AddCategoryFragment.Companion.EXPENSES
 import com.ssmmhh.jibam.presentation.categories.addcategoires.AddCategoryFragment.Companion.INCOME
 import com.ssmmhh.jibam.presentation.categories.viewcategories.state.ViewCategoriesStateEvent
 import com.ssmmhh.jibam.presentation.common.BaseFragment
-import com.ssmmhh.jibam.data.source.local.entity.CategoryEntity.Companion.EXPENSES_TYPE_MARKER
-import com.ssmmhh.jibam.data.source.local.entity.CategoryEntity.Companion.INCOME_TYPE_MARKER
-import com.google.android.material.tabs.TabLayoutMediator
-import com.ssmmhh.jibam.data.util.*
-import com.ssmmhh.jibam.databinding.FragmentViewCategoriesBinding
+import com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
@@ -30,29 +30,21 @@ import kotlinx.coroutines.FlowPreview
 class ViewCategoriesFragment(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager,
-    private val sharedPreferences: SharedPreferences,
-    private val sharedPrefsEditor: SharedPreferences.Editor
-) : BaseFragment(), ViewCategoriesRecyclerAdapter.CategoryInteraction {
+) : BaseFragment(), ViewCategoriesRecyclerAdapter.CategoryInteraction, ToolbarLayoutListener {
+
+    private lateinit var binding: FragmentViewCategoriesBinding
 
     private val viewModel by viewModels<ViewCategoriesViewModel> { viewModelFactory }
-
-    private var _binding: FragmentViewCategoriesBinding? = null
-
-    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentViewCategoriesBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        binding = FragmentViewCategoriesBinding.inflate(inflater, container, false).apply {
+            listener = this@ViewCategoriesFragment
+        }
+        return binding.root
     }
 
     private val expensesItemTouchHelper by lazy {
@@ -86,10 +78,6 @@ class ViewCategoriesFragment(
     }
 
     private fun setupUi() {
-        binding.toolbar.topAppBarNormal.title = getString(R.string.category_setting)
-        binding.toolbar.topAppBarNormal.setNavigationOnClickListener {
-            navigateBack()
-        }
         //set titles
         val tabLayout =
             TabLayoutMediator(binding.tabLayout, binding.viewPagerViewCategories) { tab, position ->
@@ -224,4 +212,10 @@ class ViewCategoriesFragment(
             ), stateCallback
         )
     }
+
+    override fun onClickOnNavigation(view: View) {
+        navigateBack()
+    }
+
+    override fun onClickOnMenuButton(view: View) {}
 }
