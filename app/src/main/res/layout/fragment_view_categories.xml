@@ -8,6 +8,10 @@
         <variable
             name="listener"
             type="com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener" />
+
+        <variable
+            name="viewmodel"
+            type="com.ssmmhh.jibam.presentation.categories.viewcategories.ViewCategoriesViewModel" />
     </data>
 
     <LinearLayout
@@ -48,6 +52,7 @@
             android:background="?attr/colorPrimary"
             android:clickable="true"
             android:focusable="true"
+            android:onClick="@{(view) -> viewmodel.openAddCategory()}"
             app:liftOnScroll="false">
 
             <TextView
@@ -59,6 +64,7 @@
                 android:drawablePadding="0dp"
                 android:focusable="true"
                 android:gravity="center"
+                android:onClick="@{(view) -> viewmodel.openAddCategory()}"
                 android:paddingStart="28dp"
                 android:paddingEnd="28dp"
                 android:text="@string/add_new_category"

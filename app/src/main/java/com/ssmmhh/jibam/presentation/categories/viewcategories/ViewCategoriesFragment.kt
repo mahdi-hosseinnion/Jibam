@@ -1,6 +1,7 @@
 package com.ssmmhh.jibam.presentation.categories.viewcategories
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +23,7 @@ import com.ssmmhh.jibam.presentation.categories.addcategoires.AddCategoryFragmen
 import com.ssmmhh.jibam.presentation.categories.viewcategories.state.ViewCategoriesStateEvent
 import com.ssmmhh.jibam.presentation.common.BaseFragment
 import com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener
+import com.ssmmhh.jibam.util.EventObserver
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
@@ -32,9 +34,13 @@ class ViewCategoriesFragment(
     private val requestManager: RequestManager,
 ) : BaseFragment(), ViewCategoriesRecyclerAdapter.CategoryInteraction, ToolbarLayoutListener {
 
+    private val TAG = "ViewCategoriesFragment"
+
     private lateinit var binding: FragmentViewCategoriesBinding
 
     private val viewModel by viewModels<ViewCategoriesViewModel> { viewModelFactory }
+
+    private lateinit var viewPagerAdapter: ViewCategoriesViewPagerAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,6 +48,7 @@ class ViewCategoriesFragment(
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentViewCategoriesBinding.inflate(inflater, container, false).apply {
+            viewmodel = viewModel
             listener = this@ViewCategoriesFragment
         }
         return binding.root
@@ -58,21 +65,10 @@ class ViewCategoriesFragment(
         })
     }
 
-
-    //vars
-    private lateinit var viewPagerAdapter: ViewCategoriesViewPagerAdapter
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupViewPager()
         setupUi()
-
-        binding.addNewAppbar.setOnClickListener {
-            navigateToAddCategoryFragment()
-        }
-        binding.txtAddNewCategory.setOnClickListener {
-            navigateToAddCategoryFragment()
-        }
 
         subscribeObservers()
     }
@@ -135,6 +131,9 @@ class ViewCategoriesFragment(
                 }
             }
         }
+        viewModel.openAddCategoryEvent.observe(viewLifecycleOwner, EventObserver {
+            navigateToAddCategoryFragment()
+        })
     }
 
     private fun navigateToAddCategoryFragment() {
@@ -142,7 +141,10 @@ class ViewCategoriesFragment(
             0 -> EXPENSES
             1 -> INCOME
             else -> {
-                showUnableToRecognizeCategoryTypeError()
+                Log.e(
+                    TAG,
+                    "navigateToAddCategoryFragment: Invalid viewPagerViewCategories position"
+                )
                 return
             }
         }
@@ -196,21 +198,6 @@ class ViewCategoriesFragment(
         )
     }
 
-
-    private fun showUnableToRecognizeCategoryTypeError() {
-        val stateCallback = object : StateMessageCallback {
-            override fun removeMessageFromStack() {}
-        }
-
-        activityCommunicationListener.onResponseReceived(
-            Response(
-                intArrayOf(R.string.unable_to_recognize_category_type),
-                //TODO SHOW OK DIALOG
-                UIComponentType.Dialog,
-                MessageType.Error
-            ), stateCallback
-        )
-    }
 
     override fun onClickOnNavigation(view: View) {
         navigateBack()

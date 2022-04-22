@@ -1,12 +1,14 @@
 package com.ssmmhh.jibam.util
 
-import com.ssmmhh.jibam.data.util.Response
+import androidx.lifecycle.Observer
+
 
 /**
  * Used as a wrapper for data that is exposed via a LiveData that represents an event.
  */
 open class Event<out T>(private val content: T) {
 
+    @Suppress("MemberVisibilityCanBePrivate")
     var hasBeenHandled = false
         private set // Allow external read but not write
 
@@ -26,31 +28,17 @@ open class Event<out T>(private val content: T) {
      * Returns the content, even if it's already been handled.
      */
     fun peekContent(): T = content
-
-    override fun toString(): String {
-        return "Event(content=$content, hasBeenHandled=$hasBeenHandled)"
-    }
-
-    companion object{
-
-        private val TAG: String = "AppDebug"
-
-        // we don't want an event if the data is null
-        fun <T> dataEvent(data: T?): Event<T>?{
-            data?.let {
-                return Event(it)
-            }
-            return null
-        }
-
-        // we don't want an event if the response is null
-        fun responseEvent(response: Response?): Event<Response>?{
-            response?.let{
-                return Event(response)
-            }
-            return null
+}
+/**
+ * An [Observer] for [Event]s, simplifying the pattern of checking if the [Event]'s content has
+ * already been handled.
+ *
+ * [onEventUnhandledContent] is *only* called if the [Event]'s contents has not been handled.
+ */
+class EventObserver<T>(private val onEventUnhandledContent: (T) -> Unit) : Observer<Event<T>> {
+    override fun onChanged(event: Event<T>?) {
+        event?.getContentIfNotHandled()?.let {
+            onEventUnhandledContent(it)
         }
     }
-
-
 }
