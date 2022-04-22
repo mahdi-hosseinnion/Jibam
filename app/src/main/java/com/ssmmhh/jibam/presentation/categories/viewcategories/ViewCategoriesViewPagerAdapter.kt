@@ -1,10 +1,8 @@
 package com.ssmmhh.jibam.presentation.categories.viewcategories
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.ssmmhh.jibam.databinding.LayoutViewpagerListItemBinding
@@ -13,7 +11,6 @@ import kotlinx.coroutines.FlowPreview
 
 @FlowPreview
 class ViewCategoriesViewPagerAdapter(
-    private val context: Context,
     private var expensesItemTouchHelper: ItemTouchHelper,
     private var incomeItemTouchHelper: ItemTouchHelper,
     listOfCategoryEntities: List<Category>? = null,
@@ -48,16 +45,12 @@ class ViewCategoriesViewPagerAdapter(
         if (position == 0) {
             //expenses
             //init recycler
-            holder.binding.recyclerViewCategories.layoutManager = LinearLayoutManager(context)
-
             holder.binding.recyclerViewCategories.adapter = expensesRecyclerAdapter
             //attach touch helper for drag and drop reorder
             expensesItemTouchHelper.attachToRecyclerView(holder.binding.recyclerViewCategories)
         } else {
             //income
             //init recycler
-            holder.binding.recyclerViewCategories.layoutManager = LinearLayoutManager(context)
-
             holder.binding.recyclerViewCategories.adapter = incomeRecyclerAdapter
             //attach touch helper for drag and drop reorder
             incomeItemTouchHelper.attachToRecyclerView(holder.binding.recyclerViewCategories)

@@ -97,7 +97,6 @@ class ViewCategoriesFragment(
 
     private fun setupViewPager() {
         viewPagerAdapter = ViewCategoriesViewPagerAdapter(
-            this.requireContext(),
             listOfCategoryEntities = null,
             expensesItemTouchHelper = expensesItemTouchHelper,
             incomeItemTouchHelper = incomeItemTouchHelper,
