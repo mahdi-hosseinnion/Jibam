@@ -85,12 +85,6 @@ class ViewCategoriesFragment(
             }.attach()
     }
 
-    override fun onResume() {
-        super.onResume()
-        //if user add category and return from AddCategoryFragment data should be updated
-        viewModel.refreshCategoryList()
-    }
-
     private fun setupViewPager() {
         viewPagerAdapter = ViewCategoriesViewPagerAdapter(
             listOfCategoryEntities = null,
@@ -114,23 +108,21 @@ class ViewCategoriesFragment(
     override fun handleStateMessages() {
         viewModel.stateMessage.observe(viewLifecycleOwner) {
             it?.let { stateMessage ->
-                //refresh category list b/c if there is stateMessage it means
-                //something have been inserted or removed or order changed so we need to refresh to
-                //reflect changes
-                viewModel.refreshCategoryList()
                 handleNewStateMessage(it) { viewModel.clearStateMessage() }
             }
         }
     }
 
     private fun subscribeObservers() {
-        viewModel.viewState.observe(viewLifecycleOwner) { vs ->
-            vs?.let { viewState ->
-                viewState.categoryEntityList?.let {
-                    viewPagerAdapter.submitList(it)
-                }
-            }
+
+        viewModel.expensesCategories.observe(viewLifecycleOwner) {
+            viewPagerAdapter.submitExpensesCategoryList(it)
         }
+
+        viewModel.incomeCategories.observe(viewLifecycleOwner) {
+            viewPagerAdapter.submitIncomeCategoryList(it)
+        }
+
         viewModel.openAddCategoryEvent.observe(viewLifecycleOwner, EventObserver {
             navigateToAddCategoryFragment()
         })

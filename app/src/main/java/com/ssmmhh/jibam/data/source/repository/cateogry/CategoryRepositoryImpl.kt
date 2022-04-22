@@ -14,6 +14,7 @@ import com.ssmmhh.jibam.presentation.categories.viewcategories.state.ViewCategor
 import com.ssmmhh.jibam.util.Event
 import com.ssmmhh.jibam.util.StateEvent
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class CategoryRepositoryImpl
@@ -22,8 +23,8 @@ constructor(
     private val categoriesDao: CategoriesDao,
 ) : CategoryRepository {
 
-    override fun getCategoryList(): Flow<List<CategoryDto>> =
-        categoriesDao.observeCategories()
+    override fun observeAllOfCategories(): Flow<List<Category>> =
+        categoriesDao.observeCategories().map { it.map { categoryDto -> categoryDto.toCategory() } }
 
     override fun getCategoryImages(): Flow<List<CategoryImageEntity>> =
         categoriesDao.observeCategoriesImages()

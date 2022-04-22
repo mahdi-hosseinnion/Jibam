@@ -14,8 +14,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface CategoryRepository {
 
-    fun getCategoryList(
-    ): Flow<List<CategoryDto>>
+    fun observeAllOfCategories(
+    ): Flow<List<Category>>
 
     fun getCategoryImages(
     ): Flow<List<CategoryImageEntity>>

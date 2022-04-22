@@ -26,10 +26,4 @@ sealed class ViewCategoriesStateEvent : StateEvent {
 
     }
 
-    object GetAllOfCategories : ViewCategoriesStateEvent() {
-        override val errorInfo: Int = R.string.unable_to_get_categories_from_database
-
-        override val getId: String = "Getting all of categories ${this.hashCode()}"
-
-    }
 }

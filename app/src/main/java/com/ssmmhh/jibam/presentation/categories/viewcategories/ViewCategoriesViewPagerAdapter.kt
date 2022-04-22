@@ -58,9 +58,12 @@ class ViewCategoriesViewPagerAdapter(
 
     }
 
-    fun submitList(newData: List<Category>) {
-        expensesRecyclerAdapter.submitData(newData.filter { it.isExpensesCategory })
-        incomeRecyclerAdapter.submitData(newData.filter { it.isIncomeCategory })
+    fun submitExpensesCategoryList(newData: List<Category>) {
+        expensesRecyclerAdapter.submitData(newData)
+    }
+
+    fun submitIncomeCategoryList(newData: List<Category>) {
+        incomeRecyclerAdapter.submitData(newData)
     }
 
     override fun getItemCount(): Int = VIEWPAGER_SIZE
