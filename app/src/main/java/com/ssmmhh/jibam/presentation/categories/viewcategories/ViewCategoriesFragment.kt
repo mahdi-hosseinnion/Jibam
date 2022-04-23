@@ -116,10 +116,12 @@ class ViewCategoriesFragment(
     private fun subscribeObservers() {
 
         viewModel.expensesCategories.observe(viewLifecycleOwner) {
+            if (viewModel.isChangeReorderRunning) return@observe
             viewPagerAdapter.submitExpensesCategoryList(it)
         }
 
         viewModel.incomeCategories.observe(viewLifecycleOwner) {
+            if (viewModel.isChangeReorderRunning) return@observe
             viewPagerAdapter.submitIncomeCategoryList(it)
         }
 

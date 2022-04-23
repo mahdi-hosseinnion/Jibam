@@ -16,8 +16,6 @@ import kotlin.collections.List
 import kotlin.collections.indices
 import kotlin.collections.set
 
-//TODO ("Add diff util to make sure there is no lag in recycler view while reordering the list
-// especially from bottom to top")
 class ViewCategoriesRecyclerAdapter(
     private var listOfCategoryEntities: List<Category>?,
     private val interaction: CategoryInteraction,

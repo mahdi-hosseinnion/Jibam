@@ -3,6 +3,7 @@ package com.ssmmhh.jibam.presentation.categories.viewcategories
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.liveData
 import com.ssmmhh.jibam.data.model.Category
 import com.ssmmhh.jibam.data.source.repository.cateogry.CategoryRepository
 import com.ssmmhh.jibam.presentation.categories.viewcategories.state.ViewCategoriesStateEvent
@@ -12,8 +13,7 @@ import com.ssmmhh.jibam.data.util.DataState
 import com.ssmmhh.jibam.util.Event
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import java.util.*
 import javax.inject.Inject
 
@@ -46,6 +46,14 @@ constructor(
     private val _openAddCategoryEvent = MutableLiveData<Event<Unit>>()
     val openAddCategoryEvent: LiveData<Event<Unit>> = _openAddCategoryEvent
 
+    /**
+     * Observers should stop observing while reorder operation is happening, b/c categories order
+     * change one by one so observer emit new value after each order change thus they're gone be
+     * a slight lag in recycler view items.
+     */
+    var isChangeReorderRunning: Boolean = false
+        private set
+
     override fun initNewViewState(): ViewCategoriesViewState = ViewCategoriesViewState()
 
     override suspend fun getResultByStateEvent(stateEvent: ViewCategoriesStateEvent): DataState<ViewCategoriesViewState> =
@@ -53,9 +61,13 @@ constructor(
             is ViewCategoriesStateEvent.DeleteCategory -> categoryRepository.deleteCategory(
                 stateEvent
             )
-            is ViewCategoriesStateEvent.ChangeCategoryOrder -> categoryRepository.changeCategoryOrder(
-                stateEvent
-            )
+            is ViewCategoriesStateEvent.ChangeCategoryOrder -> {
+                isChangeReorderRunning = true
+                val result = categoryRepository.changeCategoryOrder(stateEvent)
+                isChangeReorderRunning = false
+                result
+            }
+
         }
 
     override fun updateViewState(newViewStateView: ViewCategoriesViewState): ViewCategoriesViewState {
