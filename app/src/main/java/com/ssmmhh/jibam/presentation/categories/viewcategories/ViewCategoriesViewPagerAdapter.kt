@@ -7,30 +7,47 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.ssmmhh.jibam.databinding.LayoutViewpagerListItemBinding
 import com.ssmmhh.jibam.data.model.Category
+import com.ssmmhh.jibam.data.source.local.entity.CategoryEntity
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
 @FlowPreview
+@ExperimentalCoroutinesApi
 class ViewCategoriesViewPagerAdapter(
-    private var expensesItemTouchHelper: ItemTouchHelper,
-    private var incomeItemTouchHelper: ItemTouchHelper,
-    listOfCategoryEntities: List<Category>? = null,
-    categoryInteraction: ViewCategoriesRecyclerAdapter.CategoryInteraction,
+    private val viewModel: ViewCategoriesViewModel,
     requestManager: RequestManager,
 ) : RecyclerView.Adapter<ViewCategoriesViewPagerAdapter.ViewPagerViewHolder>() {
 
-    private val expensesRecyclerAdapter: ViewCategoriesRecyclerAdapter =
+    private val expensesRecyclerAdapter: ViewCategoriesRecyclerAdapter by lazy {
         ViewCategoriesRecyclerAdapter(
-            listOfCategoryEntities = listOfCategoryEntities?.filter { it.isExpensesCategory },
-            interaction = categoryInteraction,
+            viewModel = viewModel,
             requestManager = requestManager,
+            startDragOnViewHolder = { viewHolder ->
+                expensesItemTouchHelper.startDrag(viewHolder)
+            }
         )
+    }
 
-    private val incomeRecyclerAdapter: ViewCategoriesRecyclerAdapter =
+    private val incomeRecyclerAdapter: ViewCategoriesRecyclerAdapter by lazy {
         ViewCategoriesRecyclerAdapter(
-            listOfCategoryEntities = listOfCategoryEntities?.filter { it.isIncomeCategory },
-            interaction = categoryInteraction,
+            viewModel = viewModel,
             requestManager = requestManager,
+            startDragOnViewHolder = { viewHolder ->
+                incomeItemTouchHelper.startDrag(viewHolder)
+            }
         )
+    }
+
+    private val expensesItemTouchHelper by lazy {
+        ItemTouchHelper(ViewCategoryItemTouchHelperCallback {
+            viewModel.newReorder(it, CategoryEntity.EXPENSES_TYPE_MARKER)
+        })
+    }
+    private val incomeItemTouchHelper by lazy {
+        ItemTouchHelper(ViewCategoryItemTouchHelperCallback {
+            viewModel.newReorder(it, CategoryEntity.INCOME_TYPE_MARKER)
+        })
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewPagerViewHolder =
         ViewPagerViewHolder(
@@ -43,17 +60,15 @@ class ViewCategoriesViewPagerAdapter(
 
     override fun onBindViewHolder(holder: ViewPagerViewHolder, position: Int) {
         if (position == 0) {
-            //expenses
-            //init recycler
-            holder.binding.recyclerViewCategories.adapter = expensesRecyclerAdapter
-            //attach touch helper for drag and drop reorder
-            expensesItemTouchHelper.attachToRecyclerView(holder.binding.recyclerViewCategories)
-        } else {
-            //income
-            //init recycler
-            holder.binding.recyclerViewCategories.adapter = incomeRecyclerAdapter
-            //attach touch helper for drag and drop reorder
-            incomeItemTouchHelper.attachToRecyclerView(holder.binding.recyclerViewCategories)
+            holder.bind(
+                adapter = expensesRecyclerAdapter,
+                itemTouchHelper = expensesItemTouchHelper
+            )
+        } else if (position == 1) {
+            holder.bind(
+                adapter = incomeRecyclerAdapter,
+                itemTouchHelper = incomeItemTouchHelper
+            )
         }
 
     }
@@ -68,8 +83,19 @@ class ViewCategoriesViewPagerAdapter(
 
     override fun getItemCount(): Int = VIEWPAGER_SIZE
 
-    class ViewPagerViewHolder(val binding: LayoutViewpagerListItemBinding) :
-        RecyclerView.ViewHolder(binding.root)
+    class ViewPagerViewHolder(
+        val binding: LayoutViewpagerListItemBinding,
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(
+            adapter: ViewCategoriesRecyclerAdapter,
+            itemTouchHelper: ItemTouchHelper,
+        ) = with(binding) {
+            recyclerViewCategories.adapter = adapter
+            //attach touch helper for drag and drop reorder
+            itemTouchHelper.attachToRecyclerView(recyclerViewCategories)
+        }
+    }
 
     companion object {
         private const val VIEWPAGER_SIZE = 2

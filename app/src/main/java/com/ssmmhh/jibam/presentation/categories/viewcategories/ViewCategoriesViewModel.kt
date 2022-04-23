@@ -3,13 +3,13 @@ package com.ssmmhh.jibam.presentation.categories.viewcategories
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
-import androidx.lifecycle.liveData
+import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.model.Category
 import com.ssmmhh.jibam.data.source.repository.cateogry.CategoryRepository
+import com.ssmmhh.jibam.data.util.*
 import com.ssmmhh.jibam.presentation.categories.viewcategories.state.ViewCategoriesStateEvent
 import com.ssmmhh.jibam.presentation.categories.viewcategories.state.ViewCategoriesViewState
 import com.ssmmhh.jibam.presentation.common.BaseViewModel
-import com.ssmmhh.jibam.data.util.DataState
 import com.ssmmhh.jibam.util.Event
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -85,6 +85,30 @@ constructor(
                 type
             )
         )
+    }
+
+    fun deleteCategory(id: Int) {
+        val callback = object : AreYouSureCallback {
+            override fun proceed() {
+                launchNewJob(
+                    ViewCategoriesStateEvent.DeleteCategory(
+                        id
+                    )
+                )
+            }
+
+            override fun cancel() {}
+        }
+        addToMessageStack(
+            StateMessage(
+                Response(
+                    intArrayOf(R.string.are_you_sure_delete_category),
+                    UIComponentType.AreYouSureDialog(callback),
+                    MessageType.Info
+                ),
+            )
+        )
+
     }
 
 

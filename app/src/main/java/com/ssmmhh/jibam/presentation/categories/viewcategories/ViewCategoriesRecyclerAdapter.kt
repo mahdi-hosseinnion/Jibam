@@ -10,17 +10,24 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.LayoutViewCategoriesListItemBinding
 import com.ssmmhh.jibam.data.model.Category
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.List
 import kotlin.collections.indices
 import kotlin.collections.set
 
-class ViewCategoriesRecyclerAdapter(
-    private var listOfCategoryEntities: List<Category>?,
-    private val interaction: CategoryInteraction,
+@FlowPreview
+@ExperimentalCoroutinesApi
+class ViewCategoriesRecyclerAdapter
+constructor(
+    private var listOfCategoryEntities: List<Category>? = null,
+    private val viewModel: ViewCategoriesViewModel,
     private val requestManager: RequestManager,
+    private val startDragOnViewHolder: (viewHolder: RecyclerView.ViewHolder) -> Unit,
 ) : RecyclerView.Adapter<ViewCategoriesRecyclerAdapter.ViewPagerRecyclerViewHolder>() {
+
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -32,12 +39,14 @@ class ViewCategoriesRecyclerAdapter(
                 parent,
                 false
             ),
-            categoryInteraction = interaction,
             requestManager = requestManager,
+            startDragOnViewHolder = startDragOnViewHolder,
         )
 
     override fun onBindViewHolder(holder: ViewPagerRecyclerViewHolder, position: Int) {
-        holder.bind(holder, listOfCategoryEntities?.get(position))
+        listOfCategoryEntities?.getOrNull(position)?.let { category ->
+            holder.bind(viewModel, holder, category)
+        }
     }
 
     override fun getItemCount(): Int = listOfCategoryEntities?.size ?: 0
@@ -49,7 +58,7 @@ class ViewCategoriesRecyclerAdapter(
             if (from == to) {
                 return
             }
-            //TODO BUG KHIZE IF THIIS CALLED AFTER GETORDER
+            //TODO ("ui test this")
             val fromObj = getItemAtPosition(from)
             val categories = ArrayList(list)
             //change position of main object(moved object)
@@ -77,53 +86,43 @@ class ViewCategoriesRecyclerAdapter(
 
     class ViewPagerRecyclerViewHolder(
         val binding: LayoutViewCategoriesListItemBinding,
-        private val categoryInteraction: CategoryInteraction,
         private val requestManager: RequestManager,
+        private val startDragOnViewHolder: (viewHolder: RecyclerView.ViewHolder) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(holder: RecyclerView.ViewHolder, item: Category?) {
-            if (item != null) {
-                itemView.apply {
-                    binding.changeCategoryOrderHandle.setOnTouchListener { view, motionEvent ->
-                        if (motionEvent.actionMasked == MotionEvent.ACTION_DOWN) {
-                            categoryInteraction.onStartDrag(holder, item.type)
-                        }
-                        performClick()
-                        return@setOnTouchListener false
-                    }
-                    val categoryName = item.getCategoryNameFromStringFile(context)
-                    binding.nameOfCategory.text = categoryName
-
-                    binding.cardViewViewCategory.setCardBackgroundColor(
-                        Color.parseColor(item.image.backgroundColor)
-                    )
-
-                    val categoryImageResourceId = item.image.getImageResourceId(context)
-
-                    requestManager
-                        .load(categoryImageResourceId)
-                        .centerInside()
-                        .transition(DrawableTransitionOptions.withCrossFade())
-                        .error(R.drawable.ic_error)
-                        .into(binding.categoryImage)
-
-                    binding.deleteCategory.setOnClickListener {
-                        categoryInteraction.onDeleteClicked(adapterPosition, item)
-                    }
+        fun bind(
+            viewModel: ViewCategoriesViewModel,
+            holder: RecyclerView.ViewHolder,
+            category: Category
+        ) = with(binding) {
+            viewmodel = viewModel
+            item = category
+            changeCategoryOrderHandle.setOnTouchListener { view, motionEvent ->
+                if (motionEvent.actionMasked == MotionEvent.ACTION_DOWN) {
+                    startDragOnViewHolder(holder)
                 }
-            } else {
-                binding.nameOfCategory.text =
-                    itemView.resources.getString(R.string.UNKNOWN_CATEGORY)
+                return@setOnTouchListener false
             }
+            val categoryName = category.getCategoryNameFromStringFile(itemView.context)
+            nameOfCategory.text = categoryName
+
+            cardViewViewCategory.setCardBackgroundColor(
+                Color.parseColor(category.image.backgroundColor)
+            )
+
+            val categoryImageResourceId = category.image.getImageResourceId(itemView.context)
+
+            requestManager
+                .load(categoryImageResourceId)
+                .centerInside()
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .error(R.drawable.ic_error)
+                .into(categoryImage)
+
+
         }
 
     }
 
-    interface CategoryInteraction {
-        fun onDeleteClicked(position: Int, categoryEntity: Category)
-
-        //called when ad view request a start of drag
-        fun onStartDrag(viewHolder: RecyclerView.ViewHolder, itemType: Int)
-    }
 
 }

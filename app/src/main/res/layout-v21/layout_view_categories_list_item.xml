@@ -1,84 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/root_transaction_item"
-    android:layout_width="match_parent"
-    android:layout_height="56dp"
-    android:orientation="horizontal"
-    android:paddingLeft="4dp"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    android:paddingRight="4dp">
+    <data>
 
-    <ImageView
-        android:id="@+id/delete_category"
-        android:layout_width="40dp"
-        android:layout_height="match_parent"
-        android:background="?attr/selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true"
-        android:paddingLeft="8dp"
-        android:paddingTop="16dp"
-        android:paddingRight="8dp"
-        android:paddingBottom="16dp"
-        app:srcCompat="@drawable/ic_round_delete_outline_24"
-        app:tint="@android:color/holo_red_light" />
+        <variable
+            name="viewmodel"
+            type="com.ssmmhh.jibam.presentation.categories.viewcategories.ViewCategoriesViewModel" />
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView_view_category"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="8dp"
-        android:foregroundGravity="center"
-        app:cardBackgroundColor="@color/background_gray"
-        card_view:cardCornerRadius="20dp">
+        <variable
+            name="item"
+            type="com.ssmmhh.jibam.data.model.Category" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/root_transaction_item"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:paddingLeft="4dp"
+
+        android:paddingRight="4dp">
 
         <ImageView
-            android:id="@+id/category_image"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:id="@+id/delete_category"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="@{(view) -> viewmodel.deleteCategory(item.id)}"
+            android:paddingLeft="8dp"
+            android:paddingTop="16dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="16dp"
+            app:srcCompat="@drawable/ic_round_delete_outline_24"
+            app:tint="@android:color/holo_red_light" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView_view_category"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_gravity="center"
-            android:layout_margin="8dp"
-            android:elevation="2dp"
-            android:scaleType="center"
-            app:tint="@color/white" />
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="8dp"
+            android:foregroundGravity="center"
+            app:cardBackgroundColor="@color/background_gray"
+            card_view:cardCornerRadius="20dp">
 
-    </androidx.cardview.widget.CardView>
+            <ImageView
+                android:id="@+id/category_image"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:elevation="2dp"
+                android:scaleType="center"
+                app:tint="@color/white" />
 
-
-    <TextView
-        android:id="@+id/nameOfCategory"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout_weight="70"
-        android:gravity="center|start"
-        android:maxLines="1"
-        android:padding="4dp"
-        android:paddingTop="8dp"
-        android:textColor="@color/black"
-        android:textSize="16dp"
-        android:textStyle="bold"
-        tools:text="Food" />
-
-    <ImageView
-        android:id="@+id/change_category_order_handle"
-        android:layout_width="40dp"
-        android:layout_height="match_parent"
-        android:background="?attr/selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true"
-        android:paddingLeft="8dp"
-        android:paddingTop="16dp"
-        android:paddingRight="8dp"
-        android:paddingBottom="16dp"
-        app:srcCompat="@drawable/ic_round_reorder_24"
-        app:tint="@color/black" />
+        </androidx.cardview.widget.CardView>
 
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/nameOfCategory"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="70"
+            android:gravity="center|start"
+            android:maxLines="1"
+            android:padding="4dp"
+            android:paddingTop="8dp"
+            android:textColor="@color/black"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            tools:text="Food" />
+
+        <ImageView
+            android:id="@+id/change_category_order_handle"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingLeft="8dp"
+            android:paddingTop="16dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="16dp"
+            app:srcCompat="@drawable/ic_round_reorder_24"
+            app:tint="@color/black" />
+
+
+    </LinearLayout>
+</layout>

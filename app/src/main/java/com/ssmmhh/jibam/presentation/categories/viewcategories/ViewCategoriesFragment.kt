@@ -32,7 +32,7 @@ import kotlinx.coroutines.FlowPreview
 class ViewCategoriesFragment(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager,
-) : BaseFragment(), ViewCategoriesRecyclerAdapter.CategoryInteraction, ToolbarLayoutListener {
+) : BaseFragment(), ToolbarLayoutListener {
 
     private val TAG = "ViewCategoriesFragment"
 
@@ -54,16 +54,6 @@ class ViewCategoriesFragment(
         return binding.root
     }
 
-    private val expensesItemTouchHelper by lazy {
-        ItemTouchHelper(ViewCategoryItemTouchHelperCallback {
-            viewModel.newReorder(it, EXPENSES_TYPE_MARKER)
-        })
-    }
-    private val incomeItemTouchHelper by lazy {
-        ItemTouchHelper(ViewCategoryItemTouchHelperCallback {
-            viewModel.newReorder(it, INCOME_TYPE_MARKER)
-        })
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -87,10 +77,7 @@ class ViewCategoriesFragment(
 
     private fun setupViewPager() {
         viewPagerAdapter = ViewCategoriesViewPagerAdapter(
-            listOfCategoryEntities = null,
-            expensesItemTouchHelper = expensesItemTouchHelper,
-            incomeItemTouchHelper = incomeItemTouchHelper,
-            categoryInteraction = this,
+            viewModel = viewModel,
             requestManager = requestManager,
         )
 
@@ -148,48 +135,6 @@ class ViewCategoriesFragment(
                 categoryType = categoryType
             )
         findNavController().navigate(action)
-    }
-
-
-    override fun onDeleteClicked(position: Int, categoryEntity: Category) {
-        val callback = object : AreYouSureCallback {
-            override fun proceed() {
-                deleteCategory(categoryEntity)
-            }
-
-            override fun cancel() {}
-        }
-        activityCommunicationListener.onResponseReceived(
-            Response(
-                intArrayOf(R.string.are_you_sure_delete_category),
-                UIComponentType.AreYouSureDialog(
-                    callback
-                ), MessageType.Info
-            ),
-            object : StateMessageCallback {
-                override fun removeMessageFromStack() {}
-            }
-        )
-    }
-
-    override fun onStartDrag(viewHolder: RecyclerView.ViewHolder, itemType: Int) {
-        if (itemType == 1) {
-            //expenses
-            expensesItemTouchHelper.startDrag(viewHolder)
-        }
-        if (itemType == 2) {
-            //income
-            incomeItemTouchHelper.startDrag(viewHolder)
-        }
-    }
-
-
-    fun deleteCategory(categoryEntity: Category) {
-        viewModel.launchNewJob(
-            ViewCategoriesStateEvent.DeleteCategory(
-                categoryEntity.id
-            )
-        )
     }
 
 
