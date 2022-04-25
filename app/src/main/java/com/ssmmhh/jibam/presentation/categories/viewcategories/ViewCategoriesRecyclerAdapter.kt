@@ -1,21 +1,14 @@
 package com.ssmmhh.jibam.presentation.categories.viewcategories
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.databinding.LayoutViewCategoriesListItemBinding
 import com.ssmmhh.jibam.data.model.Category
+import com.ssmmhh.jibam.databinding.LayoutViewCategoriesListItemBinding
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.List
-import kotlin.collections.indices
 import kotlin.collections.set
 
 @FlowPreview
@@ -24,7 +17,6 @@ class ViewCategoriesRecyclerAdapter
 constructor(
     private var listOfCategoryEntities: List<Category>? = null,
     private val viewModel: ViewCategoriesViewModel,
-    private val requestManager: RequestManager,
     private val startDragOnViewHolder: (viewHolder: RecyclerView.ViewHolder) -> Unit,
 ) : RecyclerView.Adapter<ViewCategoriesRecyclerAdapter.ViewPagerRecyclerViewHolder>() {
 
@@ -39,13 +31,12 @@ constructor(
                 parent,
                 false
             ),
-            requestManager = requestManager,
             startDragOnViewHolder = startDragOnViewHolder,
         )
 
     override fun onBindViewHolder(holder: ViewPagerRecyclerViewHolder, position: Int) {
         listOfCategoryEntities?.getOrNull(position)?.let { category ->
-            holder.bind(viewModel, holder, category)
+            holder.bind(viewModel, category)
         }
     }
 
@@ -85,41 +76,23 @@ constructor(
     }
 
     class ViewPagerRecyclerViewHolder(
-        val binding: LayoutViewCategoriesListItemBinding,
-        private val requestManager: RequestManager,
+        private val binding: LayoutViewCategoriesListItemBinding,
         private val startDragOnViewHolder: (viewHolder: RecyclerView.ViewHolder) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
             viewModel: ViewCategoriesViewModel,
-            holder: RecyclerView.ViewHolder,
             category: Category
         ) = with(binding) {
             viewmodel = viewModel
             item = category
+            executePendingBindings()
             changeCategoryOrderHandle.setOnTouchListener { view, motionEvent ->
                 if (motionEvent.actionMasked == MotionEvent.ACTION_DOWN) {
-                    startDragOnViewHolder(holder)
+                    startDragOnViewHolder(this@ViewPagerRecyclerViewHolder)
                 }
                 return@setOnTouchListener false
             }
-            val categoryName = category.getCategoryNameFromStringFile(itemView.context)
-            nameOfCategory.text = categoryName
-
-            cardViewViewCategory.setCardBackgroundColor(
-                Color.parseColor(category.image.backgroundColor)
-            )
-
-            val categoryImageResourceId = category.image.getImageResourceId(itemView.context)
-
-            requestManager
-                .load(categoryImageResourceId)
-                .centerInside()
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .error(R.drawable.ic_error)
-                .into(categoryImage)
-
-
         }
 
     }

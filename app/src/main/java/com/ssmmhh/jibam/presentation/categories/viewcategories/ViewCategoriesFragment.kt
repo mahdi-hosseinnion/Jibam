@@ -58,7 +58,6 @@ class ViewCategoriesFragment(
     private fun setupViewPager() {
         viewPagerAdapter = ViewCategoriesViewPagerAdapter(
             viewModel = viewModel,
-            requestManager = requestManager,
         )
         binding.viewPager.adapter = viewPagerAdapter
     }

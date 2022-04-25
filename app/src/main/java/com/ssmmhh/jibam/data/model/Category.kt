@@ -10,7 +10,14 @@ data class Category(
     val name: String,
     val ordering: Int,
     val image: Image
-){
+) {
+    /**
+     * Databinding does not support kotlin's default function arguments.
+     */
+    fun getCategoryNameFromStringFile(context: Context): String =
+        getCategoryNameFromStringFile(context, this.name)
+
+
     fun getCategoryNameFromStringFile(
         context: Context,
         defaultName: String = name

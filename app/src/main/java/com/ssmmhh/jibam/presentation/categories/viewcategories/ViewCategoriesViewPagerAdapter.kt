@@ -15,13 +15,11 @@ import kotlinx.coroutines.FlowPreview
 @ExperimentalCoroutinesApi
 class ViewCategoriesViewPagerAdapter(
     private val viewModel: ViewCategoriesViewModel,
-    requestManager: RequestManager,
 ) : RecyclerView.Adapter<ViewCategoriesViewPagerAdapter.ViewPagerViewHolder>() {
 
     private val expensesRecyclerAdapter: ViewCategoriesRecyclerAdapter by lazy {
         ViewCategoriesRecyclerAdapter(
             viewModel = viewModel,
-            requestManager = requestManager,
             startDragOnViewHolder = { viewHolder ->
                 expensesItemTouchHelper.startDrag(viewHolder)
             }
@@ -31,7 +29,6 @@ class ViewCategoriesViewPagerAdapter(
     private val incomeRecyclerAdapter: ViewCategoriesRecyclerAdapter by lazy {
         ViewCategoriesRecyclerAdapter(
             viewModel = viewModel,
-            requestManager = requestManager,
             startDragOnViewHolder = { viewHolder ->
                 incomeItemTouchHelper.startDrag(viewHolder)
             }

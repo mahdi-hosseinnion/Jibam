@@ -6,6 +6,8 @@
 
     <data>
 
+        <import type="android.graphics.Color" />
+
         <variable
             name="viewmodel"
             type="com.ssmmhh.jibam.presentation.categories.viewcategories.ViewCategoriesViewModel" />
@@ -21,7 +23,6 @@
         android:layout_height="56dp"
         android:orientation="horizontal"
         android:paddingLeft="4dp"
-
         android:paddingRight="4dp">
 
         <ImageView
@@ -49,7 +50,7 @@
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="8dp"
             android:foregroundGravity="center"
-            app:cardBackgroundColor="@color/background_gray"
+            app:cardBackgroundColor="@{Color.parseColor(item.image.backgroundColor)}"
             card_view:cardCornerRadius="20dp">
 
             <ImageView
@@ -59,6 +60,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="8dp"
                 android:scaleType="center"
+                app:loadWithResourceId="@{item.image.getImageResourceId(context)}"
                 app:tint="@color/white" />
 
         </androidx.cardview.widget.CardView>
@@ -74,6 +76,7 @@
             android:maxLines="1"
             android:padding="4dp"
             android:paddingTop="8dp"
+            android:text="@{item.getCategoryNameFromStringFile(context)}"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
