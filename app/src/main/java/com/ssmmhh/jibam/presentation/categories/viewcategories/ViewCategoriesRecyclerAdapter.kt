@@ -24,15 +24,14 @@ constructor(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): ViewPagerRecyclerViewHolder =
-        ViewPagerRecyclerViewHolder(
-            binding = LayoutViewCategoriesListItemBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            ),
-            startDragOnViewHolder = startDragOnViewHolder,
-        )
+    ): ViewPagerRecyclerViewHolder = ViewPagerRecyclerViewHolder(
+        binding = LayoutViewCategoriesListItemBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        ),
+        startDragOnViewHolder = startDragOnViewHolder,
+    )
 
     override fun onBindViewHolder(holder: ViewPagerRecyclerViewHolder, position: Int) {
         listOfCategoryEntities?.getOrNull(position)?.let { category ->
@@ -42,7 +41,8 @@ constructor(
 
     override fun getItemCount(): Int = listOfCategoryEntities?.size ?: 0
 
-    fun getItemAtPosition(position: Int): Category? = listOfCategoryEntities?.get(position)
+    private fun getItemAtPosition(position: Int): Category? =
+        listOfCategoryEntities?.getOrNull(position)
 
     fun onItemMoved(from: Int, to: Int) {
         listOfCategoryEntities?.let { list ->
