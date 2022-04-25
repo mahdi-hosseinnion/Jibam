@@ -139,7 +139,7 @@ class CategorySettingTest {
                 )
             )
             //swipe left then confirm next
-            onView(withId(R.id.viewPager_viewCategories)).perform(customSwipeLeft())
+            onView(withId(R.id.viewPager)).perform(customSwipeLeft())
 
             onView(
                 withId(R.id.recycler_viewCategories),
@@ -192,7 +192,7 @@ class CategorySettingTest {
         onView(withId(R.id.viewCategoriesFragment)).perform(click())
 
         //swipe to income page of viewPager
-        onView(withId(R.id.viewPager_viewCategories)).perform(customSwipeLeft())
+        onView(withId(R.id.viewPager)).perform(customSwipeLeft())
         //click on add new button to navigate to addCategoryFragment
         onView(withId(R.id.add_new_appbar)).waitTillViewIsDisplayed().perform(click())
 
@@ -279,7 +279,7 @@ class CategorySettingTest {
         onView(withId(R.id.viewCategoriesFragment)).perform(click())
 
         //swipe to income page of viewPager
-        onView(withId(R.id.viewPager_viewCategories)).perform(customSwipeLeft())
+        onView(withId(R.id.viewPager)).perform(customSwipeLeft())
         //click on add new button to navigate to addCategoryFragment
         onView(withId(R.id.add_new_appbar)).waitTillViewIsDisplayed().perform(click())
 
