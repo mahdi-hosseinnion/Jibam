@@ -18,17 +18,24 @@
             android:id="@+id/toolbar"
             layout="@layout/layout_toolbar_with_back_btn" />
 
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/insert_category_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:background="?attr/colorSurface">
+            android:layout_height="72dp"
+            android:background="@drawable/shape_rectangle_with_top_corners"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
-
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp">
+                android:layout_height="56dp">
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardView"
@@ -37,7 +44,7 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="12dp"
+                    android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
                     android:foregroundGravity="center"
                     card_view:cardBackgroundColor="#D297EA"
@@ -56,26 +63,30 @@
 
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/edt_categoryName"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:hint="@string/category_name"
                     android:textColor="?attr/colorOnSurface" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/add_category_fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:contentDescription="@string/save"
+                    android:focusable="true"
+                    android:scaleType="center"
+                    android:src="@drawable/ic_check_green_24dp"
+                    app:fabSize="mini"
+                    app:tint="?colorOnSurface" />
             </LinearLayout>
         </com.google.android.material.appbar.AppBarLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/insert_category_recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="4dp" />
     </LinearLayout>
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/add_category_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:text="@string/save"
-        card_view:icon="@drawable/ic_check_green_24dp" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

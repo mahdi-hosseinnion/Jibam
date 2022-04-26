@@ -3,31 +3,30 @@ package com.ssmmhh.jibam.presentation.categories.addcategoires
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.activity.addCallback
 import androidx.annotation.StringRes
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.snackbar.Snackbar
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.databinding.FragmentAddCategoryBinding
-import com.ssmmhh.jibam.data.source.local.entity.CategoryImageEntity
-import com.ssmmhh.jibam.presentation.categories.addcategoires.AddCategoryViewModel.Companion.INSERT_CATEGORY_SUCCESS_MARKER
-import com.ssmmhh.jibam.presentation.common.BaseFragment
-import com.ssmmhh.jibam.util.*
 import com.ssmmhh.jibam.data.source.local.entity.CategoryEntity.Companion.EXPENSES_TYPE_MARKER
 import com.ssmmhh.jibam.data.source.local.entity.CategoryEntity.Companion.INCOME_TYPE_MARKER
+import com.ssmmhh.jibam.data.source.local.entity.CategoryImageEntity
 import com.ssmmhh.jibam.data.util.DiscardOrSaveCallback
 import com.ssmmhh.jibam.data.util.MessageType
 import com.ssmmhh.jibam.data.util.UIComponentType
+import com.ssmmhh.jibam.databinding.FragmentAddCategoryBinding
+import com.ssmmhh.jibam.presentation.categories.addcategoires.AddCategoryViewModel.Companion.INSERT_CATEGORY_SUCCESS_MARKER
+import com.ssmmhh.jibam.presentation.common.BaseFragment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
@@ -97,11 +96,6 @@ class AddCategoryFragment(
         ) {
             checkForInsertionBeforeNavigateBack()
         }
-        binding.edtCategoryName.addTextChangedListener {
-            if (!binding.addCategoryFab.isShown) {
-                binding.addCategoryFab.show()
-            }
-        }
         /**
          * on clicks
          */
@@ -163,19 +157,6 @@ class AddCategoryFragment(
     }
 
     private fun initRecyclerView() {
-        val onScrollListener = object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-
-                super.onScrolled(recyclerView, dx, dy)
-                if (dy > 0) {
-                    binding.addCategoryFab?.hide()
-                } else {
-                    binding.addCategoryFab?.show()
-                }
-
-            }
-
-        }
 
         binding.insertCategoryRecyclerView.apply {
             val mLayoutManager =
@@ -194,8 +175,6 @@ class AddCategoryFragment(
                 }
             }
 
-            addOnScrollListener(onScrollListener)
-
             layoutManager = mLayoutManager
             adapter = recyclerAdapter
         }
@@ -205,7 +184,6 @@ class AddCategoryFragment(
 
     override fun onItemSelected(position: Int, categoryImageEntity: CategoryImageEntity) {
         viewModel.setCategoryImage(categoryImageEntity)
-        binding.addCategoryFab.show()
     }
 
     override fun restoreListPosition() {

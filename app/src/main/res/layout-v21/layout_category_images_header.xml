@@ -4,8 +4,6 @@
     android:id="@+id/root_transaction_header"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
-    android:layout_marginBottom="8dp"
     android:background="#EEEEFF"
     android:elevation="2dp"
     android:padding="8dp">
