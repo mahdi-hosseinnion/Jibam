@@ -3,6 +3,7 @@ package com.ssmmhh.jibam.presentation.categories.addcategoires
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -54,7 +55,9 @@ class AddCategoryFragment(
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAddCategoryBinding.inflate(inflater, container, false).apply {
+            viewmodel = viewModel
             listener = this@AddCategoryFragment
+            lifecycleOwner = this@AddCategoryFragment.viewLifecycleOwner
         }
         return binding.root
     }
@@ -75,9 +78,6 @@ class AddCategoryFragment(
         ) {
             checkForInsertionBeforeNavigateBack()
         }
-        /**
-         * on clicks
-         */
         binding.addCategoryFab.setOnClickListener {
             insertNewCategory()
         }
@@ -114,11 +114,18 @@ class AddCategoryFragment(
         }
         viewModel.viewState.observe(viewLifecycleOwner) { vs ->
             vs?.let { viewState ->
-                viewState.categoryImage?.let { setCategoryImageToImageView(it) }
                 viewState.categoryType?.let { setCategoryTypeToolbar(it) }
             }
         }
 
+    }
+
+    private fun setCategoryTypeToolbar(categoryType: Int) {
+        binding.toolbarTitle = when (categoryType) {
+            EXPENSES_TYPE_MARKER -> getString(R.string.add_expenses_category)
+            INCOME_TYPE_MARKER -> getString(R.string.add_income_category)
+            else -> getString(R.string.unknown)
+        }
     }
 
     override fun handleLoading() {
@@ -154,34 +161,6 @@ class AddCategoryFragment(
     }
 
     override fun restoreListPosition() {
-    }
-
-    private fun setCategoryTypeToolbar(categoryType: Int) {
-        binding.toolbarTitle = when (categoryType) {
-            EXPENSES_TYPE_MARKER -> getString(R.string.add_expenses_category)
-            INCOME_TYPE_MARKER -> getString(R.string.add_income_category)
-            else -> getString(R.string.unknown)
-        }
-    }
-
-    private fun setCategoryImageToImageView(categoryImageEntity: CategoryImageEntity) {
-        val categoryImageUrl = this.resources.getIdentifier(
-            "ic_cat_${categoryImageEntity.imageResName}",
-            "drawable",
-            this@AddCategoryFragment.requireActivity().packageName
-        )
-
-        // set background
-        binding.cardView.setCardBackgroundColor(
-            Color.parseColor(categoryImageEntity.image_background_color)
-        )
-        //load image
-        requestManager
-            .load(categoryImageUrl)
-            .centerInside()
-            .transition(DrawableTransitionOptions.withCrossFade())
-            .error(R.drawable.ic_error)
-            .into(binding.categoryImage)
     }
 
     private fun insertNewCategory() {

@@ -6,6 +6,12 @@
 
     <data>
 
+        <import type="android.graphics.Color" />
+
+        <variable
+            name="viewmodel"
+            type="com.ssmmhh.jibam.presentation.categories.addcategoires.AddCategoryViewModel" />
+
         <variable
             name="listener"
             type="com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener" />
@@ -62,7 +68,7 @@
                         android:layout_marginEnd="8dp"
                         android:layout_marginBottom="8dp"
                         android:foregroundGravity="center"
-                        card_view:cardBackgroundColor="#D297EA"
+                        card_view:cardBackgroundColor="@{Color.parseColor(viewmodel.viewState.categoryImage.image_background_color ?? `#D297EA`)}"
                         card_view:cardCornerRadius="20dp">
 
                         <ImageView
@@ -73,6 +79,7 @@
                             android:layout_margin="8dp"
                             android:contentDescription="@string/category_image"
                             android:scaleType="center"
+                            app:loadWithResourceId="@{viewmodel.viewState.categoryImage.getCategoryImageResourceId(context)}"
                             app:tint="@color/black" />
                     </androidx.cardview.widget.CardView>
 
