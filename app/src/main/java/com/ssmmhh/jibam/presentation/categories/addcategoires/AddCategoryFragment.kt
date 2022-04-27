@@ -27,6 +27,7 @@ import com.ssmmhh.jibam.data.util.UIComponentType
 import com.ssmmhh.jibam.databinding.FragmentAddCategoryBinding
 import com.ssmmhh.jibam.presentation.categories.addcategoires.AddCategoryViewModel.Companion.INSERT_CATEGORY_SUCCESS_MARKER
 import com.ssmmhh.jibam.presentation.common.BaseFragment
+import com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener
 import com.ssmmhh.jibam.util.localizeNumber
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -37,7 +38,7 @@ import kotlinx.coroutines.FlowPreview
 class AddCategoryFragment(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager
-) : BaseFragment(), AddCategoryListAdapter.Interaction {
+) : BaseFragment(), AddCategoryListAdapter.Interaction, ToolbarLayoutListener {
 
     private val args: AddCategoryFragmentArgs by navArgs()
 
@@ -52,7 +53,9 @@ class AddCategoryFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentAddCategoryBinding.inflate(inflater, container, false)
+        binding = FragmentAddCategoryBinding.inflate(inflater, container, false).apply {
+            listener = this@AddCategoryFragment
+        }
         return binding.root
     }
 
@@ -75,9 +78,6 @@ class AddCategoryFragment(
         /**
          * on clicks
          */
-        binding.toolbar?.topAppBarNormal?.setNavigationOnClickListener {
-            checkForInsertionBeforeNavigateBack()
-        }
         binding.addCategoryFab.setOnClickListener {
             insertNewCategory()
         }
@@ -157,13 +157,11 @@ class AddCategoryFragment(
     }
 
     private fun setCategoryTypeToolbar(categoryType: Int) {
-        binding.toolbar?.topAppBarNormal?.title =
-            if (categoryType == EXPENSES_TYPE_MARKER)
-                getString(R.string.add_expenses_category)
-            else if (categoryType == INCOME_TYPE_MARKER)
-                getString(R.string.add_income_category)
-            else
-                ""
+        binding.toolbarTitle = when (categoryType) {
+            EXPENSES_TYPE_MARKER -> getString(R.string.add_expenses_category)
+            INCOME_TYPE_MARKER -> getString(R.string.add_income_category)
+            else -> getString(R.string.unknown)
+        }
     }
 
     private fun setCategoryImageToImageView(categoryImageEntity: CategoryImageEntity) {
@@ -257,10 +255,14 @@ class AddCategoryFragment(
             messageType = MessageType.Info
         )
     }
+
+    override fun onClickOnNavigation(view: View) {
+        checkForInsertionBeforeNavigateBack()
+    }
+
+    override fun onClickOnMenuButton(view: View) {}
+
     companion object {
-        //TODO ("Use category expenses and income marker instead")
-        const val EXPENSES = 1
-        const val INCOME = 2
         const val RECYCLER_VIEW_SPAN_SIZE = 5
     }
 }

@@ -11,9 +11,8 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.RequestManager
 import com.google.android.material.tabs.TabLayoutMediator
 import com.ssmmhh.jibam.R
+import com.ssmmhh.jibam.data.source.local.entity.CategoryEntity
 import com.ssmmhh.jibam.databinding.FragmentViewCategoriesBinding
-import com.ssmmhh.jibam.presentation.categories.addcategoires.AddCategoryFragment.Companion.EXPENSES
-import com.ssmmhh.jibam.presentation.categories.addcategoires.AddCategoryFragment.Companion.INCOME
 import com.ssmmhh.jibam.presentation.common.BaseFragment
 import com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener
 import com.ssmmhh.jibam.util.EventObserver
@@ -108,8 +107,8 @@ class ViewCategoriesFragment(
     private fun navigateToAddCategoryFragment() {
         val errorMessage = "navigateToAddCategoryFragment: Invalid viewPagerViewCategories position"
         val categoryType = when (binding.viewPager.currentItem) {
-            0 -> EXPENSES
-            1 -> INCOME
+            0 -> CategoryEntity.EXPENSES_TYPE_MARKER
+            1 -> CategoryEntity.INCOME_TYPE_MARKER
             else -> {
                 Log.e(TAG, errorMessage)
                 return
