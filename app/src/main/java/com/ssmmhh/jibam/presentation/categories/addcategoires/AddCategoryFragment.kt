@@ -88,10 +88,6 @@ class AddCategoryFragment(
         binding.insertCategoryRecyclerView.apply {
             val mLayoutManager =
                 GridLayoutManager(this@AddCategoryFragment.context, RECYCLER_VIEW_SPAN_SIZE)
-            recyclerAdapter = AddCategoryListAdapter(
-                requestManager,
-                this@AddCategoryFragment,
-            )
             //control span size for full size item
             mLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
@@ -101,8 +97,11 @@ class AddCategoryFragment(
                     }
                 }
             }
-
             layoutManager = mLayoutManager
+            recyclerAdapter = AddCategoryListAdapter(
+                requestManager,
+                this@AddCategoryFragment,
+            )
             adapter = recyclerAdapter
         }
 
