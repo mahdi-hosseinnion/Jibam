@@ -27,6 +27,7 @@ import com.ssmmhh.jibam.data.util.UIComponentType
 import com.ssmmhh.jibam.databinding.FragmentAddCategoryBinding
 import com.ssmmhh.jibam.presentation.categories.addcategoires.AddCategoryViewModel.Companion.INSERT_CATEGORY_SUCCESS_MARKER
 import com.ssmmhh.jibam.presentation.common.BaseFragment
+import com.ssmmhh.jibam.util.localizeNumber
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
@@ -38,54 +39,29 @@ class AddCategoryFragment(
     private val requestManager: RequestManager
 ) : BaseFragment(), AddCategoryListAdapter.Interaction {
 
-    private val viewModel by viewModels<AddCategoryViewModel> { viewModelFactory }
-
     private val args: AddCategoryFragmentArgs by navArgs()
 
+    private val viewModel by viewModels<AddCategoryViewModel> { viewModelFactory }
+
+    private lateinit var binding: FragmentAddCategoryBinding
+
     private lateinit var recyclerAdapter: AddCategoryListAdapter
-
-    private var _binding: FragmentAddCategoryBinding? = null
-
-    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentAddCategoryBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        binding = FragmentAddCategoryBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        getCategoryTypeFromArgs(args.categoryType)
-
+        viewModel.setCategoryType(args.categoryType)
         setupUI()
         initRecyclerView()
         subscribeObservers()
-    }
-
-    private fun getCategoryTypeFromArgs(categoryType: Int) {
-
-        if (categoryType == -1) {
-            //default value
-            //TODO ADD ON OK Clicked to dialog
-            viewModel.addToMessageStack(
-                message = intArrayOf(R.string.unable_to_recognize_category_type_pls_return_back),
-                uiComponentType = UIComponentType.Dialog,
-                messageType = MessageType.Error
-            )
-        } else {
-            viewModel.setCategoryType(categoryType)
-        }
     }
 
     private fun setupUI() {
@@ -105,6 +81,44 @@ class AddCategoryFragment(
         binding.addCategoryFab.setOnClickListener {
             insertNewCategory()
         }
+    }
+
+    private fun initRecyclerView() {
+
+        binding.insertCategoryRecyclerView.apply {
+            val mLayoutManager =
+                GridLayoutManager(this@AddCategoryFragment.context, RECYCLER_VIEW_SPAN_SIZE)
+            recyclerAdapter = AddCategoryListAdapter(
+                requestManager,
+                this@AddCategoryFragment,
+            )
+            //control span size for full size item
+            mLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return when (recyclerAdapter.getItemViewType(position)) {
+                        AddCategoryListAdapter.HEADER_ITEM -> RECYCLER_VIEW_SPAN_SIZE//full size
+                        else -> 1//one of four part(grid view)
+                    }
+                }
+            }
+
+            layoutManager = mLayoutManager
+            adapter = recyclerAdapter
+        }
+
+    }
+
+    private fun subscribeObservers() {
+        viewModel.categoriesImageEntity.observe(viewLifecycleOwner) {
+            recyclerAdapter.submitList(it)
+        }
+        viewModel.viewState.observe(viewLifecycleOwner) { vs ->
+            vs?.let { viewState ->
+                viewState.categoryImage?.let { setCategoryImageToImageView(it) }
+                viewState.categoryType?.let { setCategoryTypeToolbar(it) }
+            }
+        }
+
     }
 
     override fun handleLoading() {
@@ -134,53 +148,6 @@ class AddCategoryFragment(
             }
         }
     }
-
-    private fun subscribeObservers() {
-        viewModel.categoriesImageEntity.observe(viewLifecycleOwner) {
-            recyclerAdapter.submitList(it)
-        }
-        viewModel.viewState.observe(viewLifecycleOwner) { vs ->
-            vs?.let { viewState ->
-                viewState.categoryImage?.let { setCategoryImageToImageView(it) }
-                viewState.categoryType?.let { setCategoryTypeToolbar(it) }
-            }
-        }
-
-    }
-
-
-    companion object {
-        //TODO ("Use category expenses and income marker instead")
-        const val EXPENSES = 1
-        const val INCOME = 2
-        const val RECYCLER_VIEW_SPAN_SIZE = 5
-    }
-
-    private fun initRecyclerView() {
-
-        binding.insertCategoryRecyclerView.apply {
-            val mLayoutManager =
-                GridLayoutManager(this@AddCategoryFragment.context, RECYCLER_VIEW_SPAN_SIZE)
-            recyclerAdapter = AddCategoryListAdapter(
-                requestManager,
-                this@AddCategoryFragment,
-            )
-            //control span size for full size item
-            mLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int {
-                    return when (recyclerAdapter.getItemViewType(position)) {
-                        AddCategoryListAdapter.HEADER_ITEM -> RECYCLER_VIEW_SPAN_SIZE//full size
-                        else -> 1//one of four part(grid view)
-                    }
-                }
-            }
-
-            layoutManager = mLayoutManager
-            adapter = recyclerAdapter
-        }
-
-    }
-
 
     override fun onItemSelected(position: Int, categoryImageEntity: CategoryImageEntity) {
         viewModel.setCategoryImage(categoryImageEntity)
@@ -290,5 +257,10 @@ class AddCategoryFragment(
             messageType = MessageType.Info
         )
     }
-
+    companion object {
+        //TODO ("Use category expenses and income marker instead")
+        const val EXPENSES = 1
+        const val INCOME = 2
+        const val RECYCLER_VIEW_SPAN_SIZE = 5
+    }
 }
