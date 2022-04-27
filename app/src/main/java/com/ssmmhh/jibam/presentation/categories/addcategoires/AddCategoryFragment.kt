@@ -199,7 +199,7 @@ class AddCategoryFragment(
             binding.addCategoryFragmentRoot,
             getString(resId),
             Snackbar.LENGTH_SHORT
-        ).show()
+        ).setAnchorView(binding.editTextAppBar).show()
     }
 
     private fun checkForInsertionBeforeNavigateBack() {
