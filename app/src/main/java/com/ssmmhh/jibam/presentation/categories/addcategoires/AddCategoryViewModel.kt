@@ -13,6 +13,7 @@ import com.ssmmhh.jibam.presentation.common.BaseViewModel
 import com.ssmmhh.jibam.data.util.DataState
 import java.util.*
 import javax.inject.Inject
+import kotlin.jvm.Throws
 
 class AddCategoryViewModel
 @Inject
@@ -42,17 +43,18 @@ constructor(
 
     val categoriesImageEntity: LiveData<List<CategoryImageEntity>> = _categoriesImageEntity
 
-    fun insertCategory(categoryName: String): Int {
+    @Throws(IllegalArgumentException::class)
+    fun insertCategory(categoryName: String) {
         val category = CategoryEntity(
             id = 0,
             ordering = 0,
             name = categoryName,
 
             type = getCurrentViewStateOrNew().categoryType
-                ?: return R.string.unable_to_recognize_category_type,
+                ?: throw IllegalArgumentException("AddCategoryViewModel: insertCategory: category type in view state  is null"),
 
             imageId = getCurrentViewStateOrNew().categoryImage?.id
-                ?: return R.string.pls_select_image_for_category
+                ?: throw IllegalArgumentException("AddCategoryViewModel: insertCategory: category image in view state  is null")
         )
         launchNewJob(
             AddCategoryStateEvent.InsertCategory(
@@ -60,7 +62,6 @@ constructor(
             )
         )
 
-        return INSERT_CATEGORY_SUCCESS_MARKER
     }
 
     fun setCategoryType(categoryType: Int) {
@@ -79,7 +80,4 @@ constructor(
         )
     }
 
-    companion object {
-        const val INSERT_CATEGORY_SUCCESS_MARKER = -1
-    }
 }

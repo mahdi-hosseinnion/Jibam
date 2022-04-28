@@ -309,7 +309,7 @@
 
     <string name="category_should_have_name">Category should have name</string>
     <string name="unable_to_recognize_category_type_pls_return_back">Unable to recognize category type</string>
-    <string name="pls_select_image_for_category">Select image for this category</string>
+    <string name="pls_select_image_for_category">Unable to insert category\nSelect image for this category</string>
     <string name="etc">etc</string>
     <string name="time">Time</string>
     <string name="category_image">Category image</string>

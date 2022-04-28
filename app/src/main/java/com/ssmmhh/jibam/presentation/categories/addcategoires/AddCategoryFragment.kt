@@ -1,14 +1,9 @@
 package com.ssmmhh.jibam.presentation.categories.addcategoires
 
-import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import androidx.activity.addCallback
 import androidx.annotation.StringRes
 import androidx.fragment.app.viewModels
@@ -16,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.RequestManager
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.snackbar.Snackbar
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.source.local.entity.CategoryEntity.Companion.EXPENSES_TYPE_MARKER
@@ -26,12 +20,12 @@ import com.ssmmhh.jibam.data.util.DiscardOrSaveCallback
 import com.ssmmhh.jibam.data.util.MessageType
 import com.ssmmhh.jibam.data.util.UIComponentType
 import com.ssmmhh.jibam.databinding.FragmentAddCategoryBinding
-import com.ssmmhh.jibam.presentation.categories.addcategoires.AddCategoryViewModel.Companion.INSERT_CATEGORY_SUCCESS_MARKER
 import com.ssmmhh.jibam.presentation.common.BaseFragment
 import com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener
-import com.ssmmhh.jibam.util.localizeNumber
+import com.ssmmhh.jibam.presentation.util.forceKeyboardToOpenForEditText
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import java.lang.IllegalArgumentException
 
 
 @FlowPreview
@@ -71,7 +65,7 @@ class AddCategoryFragment(
     }
 
     private fun setupUI() {
-        forceKeyBoardToOpenForEditText(binding.edtCategoryName)
+        forceKeyboardToOpenForEditText(requireActivity(), binding.edtCategoryName)
         //add on back pressed for if user insert something
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner
@@ -163,43 +157,38 @@ class AddCategoryFragment(
     }
 
     private fun insertNewCategory() {
-        if (isValidForInsertion()) {
-            binding.addCategoryFab.isEnabled = false
-            val viewModelResponse =
-                viewModel.insertCategory(binding.edtCategoryName.text.toString())
-
-            if (viewModelResponse != INSERT_CATEGORY_SUCCESS_MARKER) {
-                binding.addCategoryFab.isEnabled = true
-                showSnackBar(viewModelResponse)
-            }
-
+        if (!isValidForInsertion()) return
+        //Disable add category button so user won't be able to insert multiple category by click
+        //multiple times.
+        binding.addCategoryFab.isEnabled = false
+        try {
+            viewModel.insertCategory(binding.edtCategoryName.text.toString())
+        } catch (e: IllegalArgumentException) {
+            showSnackBar(R.string.pls_select_image_for_category)
+            binding.addCategoryFab.isEnabled = true
+            e.printStackTrace()
         }
+
 
     }
 
     private fun isValidForInsertion(): Boolean {
         if (binding.edtCategoryName.text.toString().isBlank()) {
             showSnackBar(R.string.category_should_have_name)
-            forceKeyBoardToOpenForEditText(binding.edtCategoryName)
+            forceKeyboardToOpenForEditText(requireActivity(), binding.edtCategoryName)
             return false
         }
         return true
     }
 
-
-    private fun forceKeyBoardToOpenForEditText(editText: EditText) {
-        editText.requestFocus()
-        val imm: InputMethodManager =
-            activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
-    }
-
     private fun showSnackBar(@StringRes resId: Int) {
-        Snackbar.make(
-            binding.addCategoryFragmentRoot,
-            getString(resId),
-            Snackbar.LENGTH_SHORT
-        ).setAnchorView(binding.editTextAppBar).show()
+        Snackbar
+            .make(
+                binding.addCategoryFragmentRoot,
+                getString(resId),
+                Snackbar.LENGTH_SHORT
+            ).setAnchorView(binding.editTextAppBar)
+            .show()
     }
 
     private fun checkForInsertionBeforeNavigateBack() {
