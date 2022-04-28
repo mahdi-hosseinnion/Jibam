@@ -30,6 +30,12 @@ constructor(
     // Two-way databinding, exposing MutableLiveData
     val categoryName = MutableLiveData<String>()
 
+    private val _categoryType: MutableLiveData<Int> = MutableLiveData()
+    val categoryType: LiveData<Int> = _categoryType
+
+    private val _categoryImage: MutableLiveData<CategoryImageEntity> = MutableLiveData()
+    val categoryImage: LiveData<CategoryImageEntity> = _categoryImage
+
     private val _isAddCategoryButtonEnabled = MutableLiveData(true)
     val isAddCategoryButtonEnabled: LiveData<Boolean> = _isAddCategoryButtonEnabled
 
@@ -58,28 +64,16 @@ constructor(
     }
 
     override fun updateViewState(newViewState: AddCategoryViewState): AddCategoryViewState {
-        val outDated = getCurrentViewStateOrNew()
-        return AddCategoryViewState(
-            categoryImage = newViewState.categoryImage ?: outDated.categoryImage,
-            categoryType = newViewState.categoryType ?: outDated.categoryType
-        )
+        return AddCategoryViewState()
     }
 
 
-    fun setCategoryType(categoryType: Int) {
-        setViewState(
-            AddCategoryViewState(
-                categoryType = categoryType
-            )
-        )
+    fun setCategoryType(type: Int) {
+        _categoryType.value = type
     }
 
     fun setCategoryImage(categoryImageEntity: CategoryImageEntity) {
-        setViewState(
-            AddCategoryViewState(
-                categoryImage = categoryImageEntity
-            )
-        )
+        _categoryImage.value = categoryImageEntity
     }
 
     fun insertCategory() {
@@ -100,13 +94,13 @@ constructor(
             return null
         }
 
-        val type = getCurrentViewStateOrNew().categoryType
+        val type = categoryType.value
         if (type == null) {
             addErrorToastToStackMessage(message = intArrayOf(R.string.unable_to_recognize_category_type))
             return null
         }
 
-        val imageId = getCurrentViewStateOrNew().categoryImage?.id
+        val imageId = categoryImage.value?.id
         if (imageId == null) {
             addErrorToastToStackMessage(message = intArrayOf(R.string.pls_select_image_for_category))
             return null

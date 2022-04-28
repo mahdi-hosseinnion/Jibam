@@ -64,7 +64,7 @@ class AddCategoryFragment(
 
     private fun setupUI() {
         forceKeyboardToOpenForEditText(requireActivity(), binding.edtCategoryName)
-        //add on back pressed for if user insert something
+        //Add listener for if user try to navigate back with device back button.
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner
         ) {
@@ -100,9 +100,8 @@ class AddCategoryFragment(
         viewModel.images.observe(viewLifecycleOwner) {
             recyclerAdapter.submitList(it)
         }
-        viewModel.viewState.observe(viewLifecycleOwner) { vs ->
-            vs?.let { viewState ->
-                viewState.categoryType?.let { setCategoryTypeToolbar(it) }
+        viewModel.categoryType.observe(viewLifecycleOwner) { it?.let { type ->
+                setCategoryTypeToolbar(type)
             }
         }
         viewModel.categorySuccessfullyInsertedEvent.observe(viewLifecycleOwner, EventObserver {
