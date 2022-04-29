@@ -81,7 +81,7 @@ class AddCategoryFragment(
             mLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
                     return when (recyclerAdapter.getItemViewType(position)) {
-                        AddCategoryListAdapter.HEADER_ITEM -> RECYCLER_VIEW_SPAN_SIZE//full size
+                        AddCategoryRecyclerViewItem.HEADER_VIEW_TYPE -> RECYCLER_VIEW_SPAN_SIZE//full size
                         else -> 1//one of four part(grid view)
                     }
                 }

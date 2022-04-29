@@ -15,6 +15,7 @@ import com.ssmmhh.jibam.data.util.MessageType
 import com.ssmmhh.jibam.data.util.UIComponentType
 import com.ssmmhh.jibam.util.Event
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -24,10 +25,20 @@ constructor(
     private val categoryRepository: CategoryRepository
 ) : BaseViewModel<AddCategoryViewState, AddCategoryStateEvent>() {
 
-    val images: LiveData<List<CategoryImageEntity>> =
-        categoryRepository.getCategoryImages().asLiveData()
+    val images: LiveData<List<AddCategoryRecyclerViewItem>> =
+        categoryRepository.getCategoryImages().map { items ->
+            val itemsGrouped = items.sortedBy { it.groupName }.groupBy { it.groupName }
+            val result = ArrayList<AddCategoryRecyclerViewItem>()
+            for ((groupName, images) in itemsGrouped) {
+                result.add(AddCategoryRecyclerViewItem.Header(groupName))
+                result.addAll(
+                    images.map { AddCategoryRecyclerViewItem.CategoryImage(it) }
+                )
+            }
+            return@map result
+        }.asLiveData()
 
-    // Two-way databinding, exposing MutableLiveData
+    // Two-way databinding, exposing MutableLive Data
     val categoryName = MutableLiveData<String>()
 
     private val _categoryType: MutableLiveData<Int> = MutableLiveData()

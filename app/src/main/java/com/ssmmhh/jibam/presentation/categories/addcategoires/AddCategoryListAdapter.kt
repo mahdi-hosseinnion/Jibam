@@ -15,61 +15,24 @@ import com.ssmmhh.jibam.databinding.LayoutCategoryImagesHeaderBinding
 import com.ssmmhh.jibam.databinding.LayoutCategoryImagesListItemBinding
 import com.ssmmhh.jibam.data.source.local.entity.CategoryImageEntity
 
-
 class AddCategoryListAdapter(
     private val viewModel: AddCategoryViewModel,
     private val requestManager: RequestManager?,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    private var data: List<AddCategoryRecyclerViewItem> = emptyList()
+
     private var currentSelectedItem: OnOthersSelectedListener? = null
 
     companion object {
-        private const val TAG = "AddCategoryListAdapter"
-
-        const val HEADER_ITEM = -3
-
-        private const val IMAGE_ITEM = 0
-
-        private val HEADER_MARKER = CategoryImageEntity(
-            HEADER_ITEM,
-            "",
-            "",
-            ""
-        )
-
         const val DEFAULT_CATEGORY_IMAGE_POSITION = 1
 
     }
 
-    val DIFF_CALLBACK = object : DiffUtil.ItemCallback<CategoryImageEntity>() {
-
-        override fun areItemsTheSame(
-            oldItem: CategoryImageEntity,
-            newItem: CategoryImageEntity
-        ): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(
-            oldItem: CategoryImageEntity,
-            newItem: CategoryImageEntity
-        ): Boolean {
-            return oldItem == newItem
-        }
-
-    }
-    private val differ =
-        AsyncListDiffer(
-            CategoryImagesRecyclerChangeCallback(this),
-            AsyncDifferConfig.Builder(DIFF_CALLBACK).build()
-        )
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-
         when (viewType) {
-
-            HEADER_ITEM -> {
+            AddCategoryRecyclerViewItem.HEADER_VIEW_TYPE -> {
                 return HeaderViewHolder(
                     binding = LayoutCategoryImagesHeaderBinding.inflate(
                         LayoutInflater.from(parent.context),
@@ -93,67 +56,29 @@ class AddCategoryListAdapter(
         }
     }
 
-    internal inner class CategoryImagesRecyclerChangeCallback(
-        private val adapter: AddCategoryListAdapter
-    ) : ListUpdateCallback {
-
-        override fun onChanged(position: Int, count: Int, payload: Any?) {
-            adapter.notifyItemRangeChanged(position, count, payload)
-        }
-
-        override fun onInserted(position: Int, count: Int) {
-            adapter.notifyItemRangeChanged(position, count)
-        }
-
-        override fun onMoved(fromPosition: Int, toPosition: Int) {
-            adapter.notifyDataSetChanged()
-        }
-
-        override fun onRemoved(position: Int, count: Int) {
-            adapter.notifyDataSetChanged()
-        }
-    }
-
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val item = data[position]
         when (holder) {
             is ImageViewHolder -> {
-                holder.bind(differ.currentList[position])
+                if (item is AddCategoryRecyclerViewItem.CategoryImage)
+                    holder.bind(item.categoryImage)
             }
             is HeaderViewHolder -> {
-                holder.bind(differ.currentList[position])
+                if (item is AddCategoryRecyclerViewItem.Header)
+                    holder.bind(item)
             }
         }
     }
 
-    override fun getItemViewType(position: Int): Int {
-        if (differ.currentList[position].id > -1) {
-            return IMAGE_ITEM
-        }
-        return differ.currentList[position].id
-    }
+    override fun getItemViewType(position: Int): Int = data[position].itemType
 
-    override fun getItemCount(): Int = differ.currentList.size
+    override fun getItemCount(): Int = data.size
 
     fun submitList(
-        categoryImageEntityList: List<CategoryImageEntity>?
+        images: List<AddCategoryRecyclerViewItem>
     ) {
-        //TODO rewrite this using group by
-        val finalList = ArrayList<CategoryImageEntity>()
-        categoryImageEntityList?.sortedBy { it.groupName }?.let {
-            var tempName = ""
-            //add category with maker for showing
-            for (item in it) {
-                if (item.groupName == tempName) {
-                    finalList.add(item)
-                } else {
-                    //add header
-                    tempName = item.groupName
-                    finalList.add(HEADER_MARKER.copy(groupName = tempName))
-                    finalList.add(item)
-                }
-            }
-        }
-        differ.submitList(finalList)
+        data = images
+        notifyDataSetChanged()
     }
 
     inner class ImageViewHolder
@@ -241,8 +166,8 @@ class AddCategoryListAdapter(
         val binding: LayoutCategoryImagesHeaderBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(headerName: CategoryImageEntity) = with(itemView) {
-            binding.headerName.text = headerName.getCategoryGroupNameFromStringFile(context)
+        fun bind(header: AddCategoryRecyclerViewItem.Header) = with(binding) {
+            headerName.text = header.getCategoryGroupNameFromStringFile(itemView.context)
         }
     }
 

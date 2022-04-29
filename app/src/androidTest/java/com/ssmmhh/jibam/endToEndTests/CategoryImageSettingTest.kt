@@ -33,7 +33,7 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 @FlowPreview
 @RunWith(AndroidJUnit4ClassRunner::class)
-class CategorySettingTest {
+class CategoryImageSettingTest {
 
     @Inject
     lateinit var sharedPrefEditor: SharedPreferences.Editor

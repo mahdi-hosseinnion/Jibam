@@ -34,7 +34,7 @@ interface TestAppComponent : AppComponent {
     fun inject(viewDetailTransactionTest: ViewDetailTransactionTest)
     fun inject(aboutUsTest: AboutUsTest)
     fun inject(settingTest: SettingTest)
-    fun inject(categorySettingTest: CategorySettingTest)
+    fun inject(categorySettingTest: CategoryImageSettingTest)
     fun inject(chartTest: ChartTest)
     fun inject(transactionsTest: TransactionsTest)
 }

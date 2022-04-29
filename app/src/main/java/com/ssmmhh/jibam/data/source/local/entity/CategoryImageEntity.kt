@@ -22,11 +22,6 @@ data class CategoryImageEntity(
     val image_background_color: String
 ) {
 
-    fun getCategoryGroupNameFromStringFile(
-        context: Context,
-        defaultName: String = groupName
-    ): String = getResourcesStringValueByName(context, this.groupName) ?: defaultName
-
     fun getCategoryImageResourceId(
         context: Context,
     ): Int = getCategoryImageResourceIdFromDrawableByCategoryImage(context, imageResName)
