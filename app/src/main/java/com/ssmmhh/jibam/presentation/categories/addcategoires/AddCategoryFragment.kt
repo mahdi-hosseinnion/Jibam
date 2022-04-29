@@ -31,7 +31,7 @@ import kotlinx.coroutines.FlowPreview
 class AddCategoryFragment(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager
-) : BaseFragment(), AddCategoryListAdapter.Interaction, ToolbarLayoutListener {
+) : BaseFragment(), ToolbarLayoutListener {
 
     private val args: AddCategoryFragmentArgs by navArgs()
 
@@ -88,8 +88,8 @@ class AddCategoryFragment(
             }
             layoutManager = mLayoutManager
             recyclerAdapter = AddCategoryListAdapter(
+                viewModel,
                 requestManager,
-                this@AddCategoryFragment,
             )
             adapter = recyclerAdapter
         }
@@ -100,7 +100,8 @@ class AddCategoryFragment(
         viewModel.images.observe(viewLifecycleOwner) {
             recyclerAdapter.submitList(it)
         }
-        viewModel.categoryType.observe(viewLifecycleOwner) { it?.let { type ->
+        viewModel.categoryType.observe(viewLifecycleOwner) {
+            it?.let { type ->
                 setCategoryTypeToolbar(type)
             }
         }
@@ -132,13 +133,6 @@ class AddCategoryFragment(
                 handleNewStateMessage(it) { viewModel.clearStateMessage() }
             }
         }
-    }
-
-    override fun onItemSelected(position: Int, categoryImageEntity: CategoryImageEntity) {
-        viewModel.setCategoryImage(categoryImageEntity)
-    }
-
-    override fun restoreListPosition() {
     }
 
     private fun checkForDismissDialogBeforeNavigatingBack() {

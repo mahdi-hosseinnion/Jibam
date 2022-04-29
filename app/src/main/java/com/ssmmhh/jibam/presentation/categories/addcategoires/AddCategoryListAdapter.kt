@@ -17,17 +17,14 @@ import com.ssmmhh.jibam.data.source.local.entity.CategoryImageEntity
 
 
 class AddCategoryListAdapter(
+    private val viewModel: AddCategoryViewModel,
     private val requestManager: RequestManager?,
-    private val interaction: Interaction? = null,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var currentSelectedItem: OnOthersSelectedListener? = null
 
     companion object {
         private const val TAG = "AddCategoryListAdapter"
-
-        const val YESTERDAY = "Yesterday"
-        const val TODAY = "Today"
 
         const val HEADER_ITEM = -3
 
@@ -74,22 +71,21 @@ class AddCategoryListAdapter(
 
             HEADER_ITEM -> {
                 return HeaderViewHolder(
-                    LayoutCategoryImagesHeaderBinding.inflate(
+                    binding = LayoutCategoryImagesHeaderBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
                         false
                     ),
-                    interaction = interaction,
                 )
             }
             else -> {
                 return ImageViewHolder(
-                    LayoutCategoryImagesListItemBinding.inflate(
+                    binding = LayoutCategoryImagesListItemBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
                         false
                     ),
-                    interaction = interaction,
+                    viewModel = viewModel,
                     requestManager = requestManager,
                 )
             }
@@ -129,13 +125,6 @@ class AddCategoryListAdapter(
         }
     }
 
-    private fun isHeader(position: Int): Boolean {
-        if (position <= itemCount) {
-            return differ.currentList[position].id < 0
-        }
-        return true
-    }
-
     override fun getItemViewType(position: Int): Int {
         if (differ.currentList[position].id > -1) {
             return IMAGE_ITEM
@@ -143,57 +132,12 @@ class AddCategoryListAdapter(
         return differ.currentList[position].id
     }
 
-    override fun getItemCount(): Int {
-        return differ.currentList.size
-    }
-
-    fun getCategoryImages(position: Int): CategoryImageEntity? = try {
-        differ.currentList[position]
-    } catch (e: Exception) {
-        null
-    }
-
-    fun insertCategoryImagesAt(
-        transaction: CategoryImageEntity,
-        position: Int?,
-        header: CategoryImageEntity?
-    ) {
-        val newList = differ.currentList.toMutableList()
-        if (position != null) {
-            if (header != null) {
-                newList.add(position.minus(1), header)
-            }
-            newList.add(position, transaction)
-        } else {
-            if (header != null) {
-                newList.add(header)
-            }
-            newList.add(transaction)
-        }
-        differ.submitList(newList)
-    }
-
-    fun removeAt(position: Int): CategoryImageEntity? {
-        val newList = differ.currentList.toMutableList()
-        val beforeCategoryImages = differ.currentList[position.minus(1)]
-        val afterCategoryImages = differ.currentList[position.plus(1)]
-
-        var removedHeader: CategoryImageEntity? = null
-
-        if (beforeCategoryImages.id == HEADER_ITEM &&
-            afterCategoryImages.id == HEADER_ITEM
-        ) {
-            removedHeader = newList.removeAt(position.minus(1))
-        }
-        newList.removeAt(position)
-        differ.submitList(newList)
-        return removedHeader
-    }
+    override fun getItemCount(): Int = differ.currentList.size
 
     fun submitList(
         categoryImageEntityList: List<CategoryImageEntity>?
     ) {
-
+        //TODO rewrite this using group by
         val finalList = ArrayList<CategoryImageEntity>()
         categoryImageEntityList?.sortedBy { it.groupName }?.let {
             var tempName = ""
@@ -215,8 +159,8 @@ class AddCategoryListAdapter(
     inner class ImageViewHolder
     constructor(
         val binding: LayoutCategoryImagesListItemBinding,
+        private val viewModel: AddCategoryViewModel,
         val requestManager: RequestManager?,
-        private val interaction: Interaction?,
     ) : RecyclerView.ViewHolder(binding.root), OnOthersSelectedListener {
 
         fun bind(item: CategoryImageEntity) = with(itemView)
@@ -244,14 +188,13 @@ class AddCategoryListAdapter(
         }
 
         private fun onClickedOnItem(item: CategoryImageEntity) {
-            Log.d(TAG, "onClickedOnItem: $item ")
-            interaction?.onItemSelected(adapterPosition, item)
+            viewModel.setCategoryImage(item)
             //set last selected item to
             currentSelectedItem?.restoreToDefaultBackground()
             //set lister to new one
             currentSelectedItem = this@ImageViewHolder
             //change to new one
-            currentSelectedItem?.setSelectedBackground(item.id,item.image_background_color)
+            currentSelectedItem?.setSelectedBackground(item.id, item.image_background_color)
         }
 
         override fun restoreToDefaultBackground() {
@@ -296,20 +239,11 @@ class AddCategoryListAdapter(
     class HeaderViewHolder
     constructor(
         val binding: LayoutCategoryImagesHeaderBinding,
-        private val interaction: Interaction?,
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(headerName: CategoryImageEntity) = with(itemView) {
             binding.headerName.text = headerName.getCategoryGroupNameFromStringFile(context)
         }
-    }
-
-
-    interface Interaction {
-
-        fun onItemSelected(position: Int, categoryImageEntity: CategoryImageEntity)
-
-        fun restoreListPosition()
     }
 
     interface OnOthersSelectedListener {
