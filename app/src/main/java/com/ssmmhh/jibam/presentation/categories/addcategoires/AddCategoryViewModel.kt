@@ -47,6 +47,9 @@ constructor(
     private val _categoryImage: MutableLiveData<CategoryImageEntity> = MutableLiveData()
     val categoryImage: LiveData<CategoryImageEntity> = _categoryImage
 
+    var selectedCategoryImageRecyclerViewPosition: Int? = null
+        private set
+
     private val _isAddCategoryButtonEnabled = MutableLiveData(true)
     val isAddCategoryButtonEnabled: LiveData<Boolean> = _isAddCategoryButtonEnabled
 
@@ -83,7 +86,8 @@ constructor(
         _categoryType.value = type
     }
 
-    fun setCategoryImage(categoryImageEntity: CategoryImageEntity) {
+    fun setCategoryImage(categoryImageEntity: CategoryImageEntity, position: Int?) {
+        selectedCategoryImageRecyclerViewPosition = position
         _categoryImage.value = categoryImageEntity
     }
 

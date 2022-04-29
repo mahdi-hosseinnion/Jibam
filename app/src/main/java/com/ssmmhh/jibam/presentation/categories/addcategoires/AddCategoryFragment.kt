@@ -13,7 +13,6 @@ import com.bumptech.glide.RequestManager
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.source.local.entity.CategoryEntity.Companion.EXPENSES_TYPE_MARKER
 import com.ssmmhh.jibam.data.source.local.entity.CategoryEntity.Companion.INCOME_TYPE_MARKER
-import com.ssmmhh.jibam.data.source.local.entity.CategoryImageEntity
 import com.ssmmhh.jibam.data.util.DiscardOrSaveCallback
 import com.ssmmhh.jibam.data.util.MessageType
 import com.ssmmhh.jibam.data.util.UIComponentType
@@ -97,13 +96,29 @@ class AddCategoryFragment(
     }
 
     private fun subscribeObservers() {
-        viewModel.images.observe(viewLifecycleOwner) {
-            recyclerAdapter.submitList(it)
+        viewModel.images.observe(viewLifecycleOwner) { list ->
+            recyclerAdapter.submitList(list)
+
+            //Select default image to image in first position if none is selected
+            if (viewModel.categoryImage.value == null) {
+                val firstCategoryImage =
+                    list.first { it is AddCategoryRecyclerViewItem.CategoryImage } as AddCategoryRecyclerViewItem.CategoryImage
+                viewModel.setCategoryImage(
+                    firstCategoryImage.categoryImage,
+                    null
+                )
+            }
         }
         viewModel.categoryType.observe(viewLifecycleOwner) {
             it?.let { type ->
                 setCategoryTypeToolbar(type)
             }
+        }
+        viewModel.categoryImage.observe(viewLifecycleOwner) {
+            recyclerAdapter.setCurrentlySelectedImageTo(
+                it.id,
+                viewModel.selectedCategoryImageRecyclerViewPosition
+            )
         }
         viewModel.categorySuccessfullyInsertedEvent.observe(viewLifecycleOwner, EventObserver {
             navigateBack()

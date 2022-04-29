@@ -6,14 +6,15 @@ import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.ColorRes
 import androidx.core.content.res.ResourcesCompat
-import androidx.recyclerview.widget.*
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.ssmmhh.jibam.R
+import com.ssmmhh.jibam.data.source.local.entity.CategoryImageEntity
 import com.ssmmhh.jibam.databinding.LayoutCategoryImagesHeaderBinding
 import com.ssmmhh.jibam.databinding.LayoutCategoryImagesListItemBinding
-import com.ssmmhh.jibam.data.source.local.entity.CategoryImageEntity
 
 class AddCategoryListAdapter(
     private val viewModel: AddCategoryViewModel,
@@ -22,13 +23,8 @@ class AddCategoryListAdapter(
 
     private var data: List<AddCategoryRecyclerViewItem> = emptyList()
 
-    private var currentSelectedItem: OnOthersSelectedListener? = null
-
-    companion object {
-        const val DEFAULT_CATEGORY_IMAGE_POSITION = 1
-
-    }
-
+    private var currentlySelectedImageId: Int? = null
+    private var currentlySelectedImagePosition: Int? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         when (viewType) {
@@ -61,7 +57,7 @@ class AddCategoryListAdapter(
         when (holder) {
             is ImageViewHolder -> {
                 if (item is AddCategoryRecyclerViewItem.CategoryImage)
-                    holder.bind(item.categoryImage)
+                    holder.bind(item.categoryImage, currentlySelectedImageId)
             }
             is HeaderViewHolder -> {
                 if (item is AddCategoryRecyclerViewItem.Header)
@@ -81,28 +77,38 @@ class AddCategoryListAdapter(
         notifyDataSetChanged()
     }
 
-    inner class ImageViewHolder
-    constructor(
-        val binding: LayoutCategoryImagesListItemBinding,
+    fun setCurrentlySelectedImageTo(id: Int, position: Int?) {
+        val previousImagePosition = currentlySelectedImagePosition
+        currentlySelectedImageId = id
+        currentlySelectedImagePosition = position
+        //Notify last position to change background to default.
+        if (position == null || previousImagePosition == null) {
+            notifyDataSetChanged()
+            return
+        }
+        notifyItemChanged(previousImagePosition)
+        notifyItemChanged(position)
+
+    }
+
+    class ImageViewHolder(
+        private val binding: LayoutCategoryImagesListItemBinding,
         private val viewModel: AddCategoryViewModel,
-        val requestManager: RequestManager?,
-    ) : RecyclerView.ViewHolder(binding.root), OnOthersSelectedListener {
+        private val requestManager: RequestManager?,
+    ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: CategoryImageEntity) = with(itemView)
-        {
-            restoreToDefaultBackground()
-
-            if (adapterPosition == DEFAULT_CATEGORY_IMAGE_POSITION && currentSelectedItem == null) {
-                //this viewHolder is the first image
-                onClickedOnItem(item)
-            }
-
+        fun bind(item: CategoryImageEntity, currentlySelectedImageId: Int?) = with(itemView) {
             itemView.setOnClickListener {
-                onClickedOnItem(item)
+                viewModel.setCategoryImage(item, adapterPosition)
             }
-
+            if (item.id == currentlySelectedImageId) {
+                setCategoryImageBackgroundColorTo(item.image_background_color)
+                setCategoryImageTintColorTo(R.color.white)
+            } else {
+                setCategoryImageBackgroundColorToDefaultColor()
+                setCategoryImageTintColorTo(R.color.black)
+            }
             val categoryImageResourceId = item.getCategoryImageResourceId(context)
-
             //load image
             requestManager
                 ?.load(categoryImageResourceId)
@@ -112,18 +118,7 @@ class AddCategoryListAdapter(
                 ?.into(binding.categoryImages)
         }
 
-        private fun onClickedOnItem(item: CategoryImageEntity) {
-            viewModel.setCategoryImage(item)
-            //set last selected item to
-            currentSelectedItem?.restoreToDefaultBackground()
-            //set lister to new one
-            currentSelectedItem = this@ImageViewHolder
-            //change to new one
-            currentSelectedItem?.setSelectedBackground(item.id, item.image_background_color)
-        }
-
-        override fun restoreToDefaultBackground() {
-
+        private fun setCategoryImageBackgroundColorToDefaultColor() {
             //set to default (gray) background
             val cricle_background = ResourcesCompat.getDrawable(
                 itemView.resources,
@@ -131,38 +126,24 @@ class AddCategoryListAdapter(
                 null
             )
             binding.categoryImagesFrame.background = cricle_background
+        }
 
-            //change image tint to black
-            binding.categoryImages.setColorFilter(
-                itemView.resources.getColor(R.color.black),
-                android.graphics.PorterDuff.Mode.SRC_IN
+        private fun setCategoryImageBackgroundColorTo(backgroundColor: String) {
+            val drawable = binding.categoryImagesFrame.background as Drawable
+            drawable.setColorFilter(
+                Color.parseColor(backgroundColor), PorterDuff.Mode.SRC
             )
         }
 
-        override fun setSelectedBackground(categoryId: Int, backgroundColor: String) {
-            try {
-
-
-                val circle_drawable = binding.categoryImagesFrame.background as Drawable
-
-                circle_drawable?.setColorFilter(
-                    Color.parseColor(backgroundColor), PorterDuff.Mode.MULTIPLY
-                )
-
-
-                //change tint to white
-                binding.categoryImages.setColorFilter(
-                    itemView.resources.getColor(R.color.white),
-                    android.graphics.PorterDuff.Mode.SRC_IN
-                )
-            } catch (e: Exception) {
-                Log.e("CategoryViewHolder", "setSelectedBackground: message: ${e.message}", e)
-            }
+        private fun setCategoryImageTintColorTo(@ColorRes color: Int) {
+            binding.categoryImages.setColorFilter(
+                itemView.resources.getColor(color),
+                PorterDuff.Mode.SRC_IN
+            )
         }
     }
 
-    class HeaderViewHolder
-    constructor(
+    class HeaderViewHolder(
         val binding: LayoutCategoryImagesHeaderBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -171,14 +152,5 @@ class AddCategoryListAdapter(
         }
     }
 
-    interface OnOthersSelectedListener {
-
-        //gray background(not selected)
-        fun restoreToDefaultBackground()
-
-        //color background(selected)
-        fun setSelectedBackground(categoryId: Int, backgroundColor: String)
-
-    }
 
 }

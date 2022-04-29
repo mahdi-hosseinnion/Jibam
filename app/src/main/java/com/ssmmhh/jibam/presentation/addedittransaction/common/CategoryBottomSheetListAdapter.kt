@@ -161,7 +161,7 @@ class CategoryBottomSheetListAdapter(
                 val circle_drawable = binding.categoryImageFrame.background as Drawable
 
                 circle_drawable?.setColorFilter(
-                   Color.parseColor(backgroundColor), PorterDuff.Mode.MULTIPLY
+                   Color.parseColor(backgroundColor), PorterDuff.Mode.SRC
                 )
 
 
