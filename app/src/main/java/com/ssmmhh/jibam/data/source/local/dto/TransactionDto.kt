@@ -3,13 +3,12 @@ package com.ssmmhh.jibam.data.source.local.dto
 import android.content.Context
 import androidx.room.ColumnInfo
 import androidx.room.TypeConverters
-import com.ssmmhh.jibam.data.model.Image
-import com.ssmmhh.jibam.data.model.TransactionsRecyclerViewItem
-import com.ssmmhh.jibam.data.source.local.typeconverter.BigDecimalTypeConverter
 import com.ssmmhh.jibam.data.source.local.entity.TransactionEntity
+import com.ssmmhh.jibam.data.source.local.typeconverter.BigDecimalTypeConverter
 import com.ssmmhh.jibam.util.getCategoryImageResourceIdFromDrawableByCategoryImage
 import com.ssmmhh.jibam.util.getResourcesStringValueByName
 import java.math.BigDecimal
+
 @TypeConverters(BigDecimalTypeConverter::class)
 data class TransactionDto(
     @ColumnInfo(name = "id")
@@ -51,17 +50,4 @@ data class TransactionDto(
         date = this.date
     )
 
-    fun toTransactionsRecyclerViewItem(): TransactionsRecyclerViewItem.Transaction =
-        TransactionsRecyclerViewItem.Transaction(
-            id = this.id,
-            money = this.money,
-            memo = this.memo,
-            categoryId = this.categoryId,
-            categoryName = this.categoryName,
-            image = Image(
-                resourceName = this.categoryImageResourceName,
-                backgroundColor = this.categoryImageBackgroundColor,
-            ),
-            date = this.date
-        )
 }

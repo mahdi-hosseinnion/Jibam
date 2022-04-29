@@ -2,7 +2,7 @@ package com.ssmmhh.jibam.presentation.transactions.state
 
 import com.ssmmhh.jibam.data.model.Month
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
-import com.ssmmhh.jibam.data.model.TransactionsRecyclerViewItem
+import com.ssmmhh.jibam.presentation.transactions.TransactionsRecyclerViewItem
 
 data class TransactionsViewState(
     var recentlyDeletedFields: RecentlyDeletedTransaction? = null,

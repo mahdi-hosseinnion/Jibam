@@ -1,6 +1,5 @@
 package com.ssmmhh.jibam.presentation.transactions
 
-import com.ssmmhh.jibam.data.model.TransactionsRecyclerViewItem
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
 import java.math.BigDecimal
 import java.util.*

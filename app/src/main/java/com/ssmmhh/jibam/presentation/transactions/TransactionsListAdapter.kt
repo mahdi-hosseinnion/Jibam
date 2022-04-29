@@ -14,11 +14,11 @@ import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.LayoutTransacionHeaderBinding
 import com.ssmmhh.jibam.databinding.LayoutTransactionListItemBinding
 import com.ssmmhh.jibam.data.model.*
-import com.ssmmhh.jibam.data.model.TransactionsRecyclerViewItem.Companion.TRANSACTION_VIEW_TYPE
-import com.ssmmhh.jibam.data.model.TransactionsRecyclerViewItem.Companion.HEADER_VIEW_TYPE
-import com.ssmmhh.jibam.data.model.TransactionsRecyclerViewItem.Companion.NO_MORE_RESULT_VIEW_TYPE
-import com.ssmmhh.jibam.data.model.TransactionsRecyclerViewItem.Companion.NO_RESULT_FOUND_VIEW_TYPE
-import com.ssmmhh.jibam.data.model.TransactionsRecyclerViewItem.Companion.DATABASE_IS_EMPTY_VIEW_TYPE
+import com.ssmmhh.jibam.presentation.transactions.TransactionsRecyclerViewItem.Companion.TRANSACTION_VIEW_TYPE
+import com.ssmmhh.jibam.presentation.transactions.TransactionsRecyclerViewItem.Companion.HEADER_VIEW_TYPE
+import com.ssmmhh.jibam.presentation.transactions.TransactionsRecyclerViewItem.Companion.NO_MORE_RESULT_VIEW_TYPE
+import com.ssmmhh.jibam.presentation.transactions.TransactionsRecyclerViewItem.Companion.NO_RESULT_FOUND_VIEW_TYPE
+import com.ssmmhh.jibam.presentation.transactions.TransactionsRecyclerViewItem.Companion.DATABASE_IS_EMPTY_VIEW_TYPE
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
 import com.ssmmhh.jibam.util.*
 import com.ssmmhh.jibam.util.DateUtils.DAY_IN_SECONDS

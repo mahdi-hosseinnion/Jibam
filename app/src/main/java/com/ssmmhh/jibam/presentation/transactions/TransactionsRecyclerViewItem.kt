@@ -1,6 +1,7 @@
-package com.ssmmhh.jibam.data.model
+package com.ssmmhh.jibam.presentation.transactions
 
 import android.content.Context
+import com.ssmmhh.jibam.data.model.Image
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
 import com.ssmmhh.jibam.util.getResourcesStringValueByName
 import java.math.BigDecimal
@@ -62,6 +63,21 @@ fun TransactionsRecyclerViewItem.Transaction.toTransaction(): TransactionDto = T
     categoryImageBackgroundColor = this.image.backgroundColor,
     date = this.date,
 )
+
+fun TransactionDto.toTransactionsRecyclerViewItem(): TransactionsRecyclerViewItem.Transaction =
+    TransactionsRecyclerViewItem.Transaction(
+        id = this.id,
+        money = this.money,
+        memo = this.memo,
+        categoryId = this.categoryId,
+        categoryName = this.categoryName,
+        image = Image(
+            resourceName = this.categoryImageResourceName,
+            backgroundColor = this.categoryImageBackgroundColor,
+        ),
+        date = this.date
+    )
+
 
 
 

@@ -8,7 +8,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.ssmmhh.jibam.data.model.Month
 import com.ssmmhh.jibam.data.model.SummaryMoney
-import com.ssmmhh.jibam.data.model.TransactionsRecyclerViewItem
+import com.ssmmhh.jibam.presentation.transactions.TransactionsRecyclerViewItem
 import com.ssmmhh.jibam.data.source.repository.tranasction.TransactionRepository
 import com.ssmmhh.jibam.data.util.DataState
 import com.ssmmhh.jibam.presentation.common.BaseViewModel
