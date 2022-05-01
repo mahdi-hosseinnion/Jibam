@@ -18,6 +18,7 @@ sealed class AddCategoryRecyclerViewItem(
         /**
          * Retrieve group name by searching in string files to translate category group name to
          * other languages.
+         * If there is not any matching string res then it will return [name].
          */
         fun getCategoryGroupNameFromStringFile(
             context: Context,

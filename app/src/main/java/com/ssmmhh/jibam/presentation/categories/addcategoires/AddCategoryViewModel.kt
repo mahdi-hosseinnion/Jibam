@@ -27,15 +27,7 @@ constructor(
 
     val images: LiveData<List<AddCategoryRecyclerViewItem>> =
         categoryRepository.getCategoryImages().map { items ->
-            val itemsGrouped = items.sortedBy { it.groupName }.groupBy { it.groupName }
-            val result = ArrayList<AddCategoryRecyclerViewItem>()
-            for ((groupName, images) in itemsGrouped) {
-                result.add(AddCategoryRecyclerViewItem.Header(groupName))
-                result.addAll(
-                    images.map { AddCategoryRecyclerViewItem.CategoryImage(it) }
-                )
-            }
-            return@map result
+            return@map groupImagesByGroupName(items)
         }.asLiveData()
 
     // Two-way databinding, exposing MutableLive Data
@@ -47,14 +39,13 @@ constructor(
     private val _categoryImage: MutableLiveData<CategoryImageEntity> = MutableLiveData()
     val categoryImage: LiveData<CategoryImageEntity> = _categoryImage
 
-    var selectedCategoryImageRecyclerViewPosition: Int? = null
+    var selectedImagePositionInRecyclerView: Int? = null
         private set
 
     private val _isAddCategoryButtonEnabled = MutableLiveData(true)
     val isAddCategoryButtonEnabled: LiveData<Boolean> = _isAddCategoryButtonEnabled
 
     private val _categorySuccessfullyInsertedEvent = MutableLiveData<Event<Unit>>()
-
     val categorySuccessfullyInsertedEvent: LiveData<Event<Unit>> =
         _categorySuccessfullyInsertedEvent
 
@@ -81,13 +72,25 @@ constructor(
         return AddCategoryViewState()
     }
 
+    private fun groupImagesByGroupName(list: List<CategoryImageEntity>): List<AddCategoryRecyclerViewItem> {
+        val listGroupedByGroupName: Map<String, List<CategoryImageEntity>> =
+            list.sortedBy { it.groupName }.groupBy { it.groupName }
+        val result = ArrayList<AddCategoryRecyclerViewItem>()
+        for ((groupName, images) in listGroupedByGroupName) {
+            result.add(AddCategoryRecyclerViewItem.Header(groupName))
+            result.addAll(
+                images.map { AddCategoryRecyclerViewItem.CategoryImage(it) }
+            )
+        }
+        return result
+    }
 
     fun setCategoryType(type: Int) {
         _categoryType.value = type
     }
 
     fun setCategoryImage(categoryImageEntity: CategoryImageEntity, position: Int?) {
-        selectedCategoryImageRecyclerViewPosition = position
+        selectedImagePositionInRecyclerView = position
         _categoryImage.value = categoryImageEntity
     }
 

@@ -115,7 +115,7 @@ class AddCategoryFragment(
         viewModel.categoryImage.observe(viewLifecycleOwner) {
             recyclerAdapter.setSelectedImageTo(
                 it.id,
-                viewModel.selectedCategoryImageRecyclerViewPosition
+                viewModel.selectedImagePositionInRecyclerView
             )
         }
         viewModel.categorySuccessfullyInsertedEvent.observe(viewLifecycleOwner, EventObserver {
