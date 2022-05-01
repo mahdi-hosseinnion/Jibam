@@ -65,7 +65,7 @@ constructor(
                 )
             }
             AddCategoryFragment::class.java.name -> {
-                AddCategoryFragment(viewModelFactory, requestManager)
+                AddCategoryFragment(viewModelFactory)
             }
             ViewCategoriesFragment::class.java.name -> {
                 ViewCategoriesFragment(

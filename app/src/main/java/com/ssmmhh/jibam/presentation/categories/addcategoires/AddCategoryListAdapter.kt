@@ -3,14 +3,11 @@ package com.ssmmhh.jibam.presentation.categories.addcategoires
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.ColorRes
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.RequestManager
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.source.local.entity.CategoryImageEntity
 import com.ssmmhh.jibam.databinding.LayoutCategoryImagesHeaderBinding
@@ -18,39 +15,39 @@ import com.ssmmhh.jibam.databinding.LayoutCategoryImagesListItemBinding
 
 class AddCategoryListAdapter(
     private val viewModel: AddCategoryViewModel,
-    private val requestManager: RequestManager?,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var data: List<AddCategoryRecyclerViewItem> = emptyList()
 
-    private var currentlySelectedImageId: Int? = null
-    private var currentlySelectedImagePosition: Int? = null
+    /**
+     * selected image id to change its background color.
+     */
+    private var selectedImageId: Int? = null
+
+    /**
+     * Stores selected image position so when the user changes the image we can use
+     * notifyItemChanged() instead of notifyDataSetChanged() to notify the new image bind function
+     * to update image's background.
+     */
+    private var selectedImagePosition: Int? = null
 
     class ImageViewHolder(
         private val binding: LayoutCategoryImagesListItemBinding,
         private val viewModel: AddCategoryViewModel,
-        private val requestManager: RequestManager?,
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: CategoryImageEntity, currentlySelectedImageId: Int?) = with(itemView) {
-            itemView.setOnClickListener {
-                viewModel.setCategoryImage(item, adapterPosition)
-            }
-            if (item.id == currentlySelectedImageId) {
+        fun bind(item: CategoryImageEntity, selectedImageId: Int?) = with(binding) {
+            this.viewmodel = viewModel
+            this.item = item
+            this.position = adapterPosition
+
+            if (item.id == selectedImageId) {
                 setCategoryImageBackgroundColorTo(item.image_background_color)
                 setCategoryImageTintColorTo(R.color.white)
             } else {
                 setCategoryImageBackgroundColorToDefaultColor()
                 setCategoryImageTintColorTo(R.color.black)
             }
-            val categoryImageResourceId = item.getCategoryImageResourceId(context)
-            //load image
-            requestManager
-                ?.load(categoryImageResourceId)
-                ?.centerInside()
-                ?.transition(withCrossFade())
-                ?.error(R.drawable.ic_error)
-                ?.into(binding.categoryImages)
         }
 
         private fun setCategoryImageBackgroundColorToDefaultColor() {
@@ -94,10 +91,10 @@ class AddCategoryListAdapter(
         notifyDataSetChanged()
     }
 
-    fun setCurrentlySelectedImageTo(id: Int, position: Int?) {
-        val previousImagePosition = currentlySelectedImagePosition
-        currentlySelectedImageId = id
-        currentlySelectedImagePosition = position
+    fun setSelectedImageTo(id: Int, position: Int?) {
+        val previousImagePosition = selectedImagePosition
+        selectedImageId = id
+        selectedImagePosition = position
         //Notify last position to change background to default.
         if (position == null || previousImagePosition == null) {
             notifyDataSetChanged()
@@ -127,7 +124,6 @@ class AddCategoryListAdapter(
                         false
                     ),
                     viewModel = viewModel,
-                    requestManager = requestManager,
                 )
             }
 
@@ -139,7 +135,7 @@ class AddCategoryListAdapter(
         when (holder) {
             is ImageViewHolder -> {
                 if (item is AddCategoryRecyclerViewItem.CategoryImage)
-                    holder.bind(item.categoryImage, currentlySelectedImageId)
+                    holder.bind(item.categoryImage, selectedImageId)
             }
             is HeaderViewHolder -> {
                 if (item is AddCategoryRecyclerViewItem.Header)

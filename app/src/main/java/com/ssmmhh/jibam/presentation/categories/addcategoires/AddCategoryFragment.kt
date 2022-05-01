@@ -9,7 +9,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
-import com.bumptech.glide.RequestManager
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.source.local.entity.CategoryEntity.Companion.EXPENSES_TYPE_MARKER
 import com.ssmmhh.jibam.data.source.local.entity.CategoryEntity.Companion.INCOME_TYPE_MARKER
@@ -29,7 +28,6 @@ import kotlinx.coroutines.FlowPreview
 @ExperimentalCoroutinesApi
 class AddCategoryFragment(
     viewModelFactory: ViewModelProvider.Factory,
-    private val requestManager: RequestManager
 ) : BaseFragment(), ToolbarLayoutListener {
 
     private val args: AddCategoryFragmentArgs by navArgs()
@@ -88,7 +86,6 @@ class AddCategoryFragment(
             layoutManager = mLayoutManager
             recyclerAdapter = AddCategoryListAdapter(
                 viewModel,
-                requestManager,
             )
             adapter = recyclerAdapter
         }
@@ -115,7 +112,7 @@ class AddCategoryFragment(
             }
         }
         viewModel.categoryImage.observe(viewLifecycleOwner) {
-            recyclerAdapter.setCurrentlySelectedImageTo(
+            recyclerAdapter.setSelectedImageTo(
                 it.id,
                 viewModel.selectedCategoryImageRecyclerViewPosition
             )

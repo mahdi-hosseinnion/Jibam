@@ -83,7 +83,7 @@
                             android:elevation="2dp"
                             android:scaleType="center"
                             app:loadWithResourceId="@{viewmodel.categoryImage.getCategoryImageResourceId(context)}"
-                            app:tint="@color/black" />
+                            app:tint="@color/white" />
                     </androidx.cardview.widget.CardView>
 
                     <androidx.appcompat.widget.AppCompatEditText
