@@ -98,8 +98,9 @@ class AddCategoryFragment(
 
             //Select default image to image in first position if none is selected
             if (viewModel.categoryImage.value == null) {
-                val firstCategoryImage =
-                    list.first { it is AddCategoryRecyclerViewItem.CategoryImage } as AddCategoryRecyclerViewItem.CategoryImage
+                val firstCategoryImage: AddCategoryRecyclerViewItem.CategoryImage =
+                    list.firstOrNull { it is AddCategoryRecyclerViewItem.CategoryImage }
+                            as AddCategoryRecyclerViewItem.CategoryImage? ?: return@observe
                 viewModel.setCategoryImage(
                     firstCategoryImage.categoryImage,
                     null

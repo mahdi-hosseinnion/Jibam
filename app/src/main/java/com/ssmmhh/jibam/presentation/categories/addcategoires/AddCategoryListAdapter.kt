@@ -92,6 +92,7 @@ class AddCategoryListAdapter(
     }
 
     fun setSelectedImageTo(id: Int, position: Int?) {
+        if (selectedImageId == id) return
         val previousImagePosition = selectedImagePosition
         selectedImageId = id
         selectedImagePosition = position
