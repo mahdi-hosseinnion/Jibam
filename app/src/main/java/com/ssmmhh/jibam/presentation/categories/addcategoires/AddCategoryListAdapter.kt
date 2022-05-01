@@ -26,71 +26,6 @@ class AddCategoryListAdapter(
     private var currentlySelectedImageId: Int? = null
     private var currentlySelectedImagePosition: Int? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        when (viewType) {
-            AddCategoryRecyclerViewItem.HEADER_VIEW_TYPE -> {
-                return HeaderViewHolder(
-                    binding = LayoutCategoryImagesHeaderBinding.inflate(
-                        LayoutInflater.from(parent.context),
-                        parent,
-                        false
-                    ),
-                )
-            }
-            else -> {
-                return ImageViewHolder(
-                    binding = LayoutCategoryImagesListItemBinding.inflate(
-                        LayoutInflater.from(parent.context),
-                        parent,
-                        false
-                    ),
-                    viewModel = viewModel,
-                    requestManager = requestManager,
-                )
-            }
-
-        }
-    }
-
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val item = data[position]
-        when (holder) {
-            is ImageViewHolder -> {
-                if (item is AddCategoryRecyclerViewItem.CategoryImage)
-                    holder.bind(item.categoryImage, currentlySelectedImageId)
-            }
-            is HeaderViewHolder -> {
-                if (item is AddCategoryRecyclerViewItem.Header)
-                    holder.bind(item)
-            }
-        }
-    }
-
-    override fun getItemViewType(position: Int): Int = data[position].itemType
-
-    override fun getItemCount(): Int = data.size
-
-    fun submitList(
-        images: List<AddCategoryRecyclerViewItem>
-    ) {
-        data = images
-        notifyDataSetChanged()
-    }
-
-    fun setCurrentlySelectedImageTo(id: Int, position: Int?) {
-        val previousImagePosition = currentlySelectedImagePosition
-        currentlySelectedImageId = id
-        currentlySelectedImagePosition = position
-        //Notify last position to change background to default.
-        if (position == null || previousImagePosition == null) {
-            notifyDataSetChanged()
-            return
-        }
-        notifyItemChanged(previousImagePosition)
-        notifyItemChanged(position)
-
-    }
-
     class ImageViewHolder(
         private val binding: LayoutCategoryImagesListItemBinding,
         private val viewModel: AddCategoryViewModel,
@@ -152,5 +87,69 @@ class AddCategoryListAdapter(
         }
     }
 
+    fun submitList(
+        images: List<AddCategoryRecyclerViewItem>
+    ) {
+        data = images
+        notifyDataSetChanged()
+    }
+
+    fun setCurrentlySelectedImageTo(id: Int, position: Int?) {
+        val previousImagePosition = currentlySelectedImagePosition
+        currentlySelectedImageId = id
+        currentlySelectedImagePosition = position
+        //Notify last position to change background to default.
+        if (position == null || previousImagePosition == null) {
+            notifyDataSetChanged()
+            return
+        }
+        notifyItemChanged(previousImagePosition)
+        notifyItemChanged(position)
+
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        when (viewType) {
+            AddCategoryRecyclerViewItem.HEADER_VIEW_TYPE -> {
+                return HeaderViewHolder(
+                    binding = LayoutCategoryImagesHeaderBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    ),
+                )
+            }
+            else -> {
+                return ImageViewHolder(
+                    binding = LayoutCategoryImagesListItemBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    ),
+                    viewModel = viewModel,
+                    requestManager = requestManager,
+                )
+            }
+
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val item = data[position]
+        when (holder) {
+            is ImageViewHolder -> {
+                if (item is AddCategoryRecyclerViewItem.CategoryImage)
+                    holder.bind(item.categoryImage, currentlySelectedImageId)
+            }
+            is HeaderViewHolder -> {
+                if (item is AddCategoryRecyclerViewItem.Header)
+                    holder.bind(item)
+            }
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int = data[position].itemType
+
+    override fun getItemCount(): Int = data.size
 
 }
