@@ -21,7 +21,7 @@ import com.ssmmhh.jibam.data.util.MessageType
 import com.ssmmhh.jibam.data.util.StateMessageCallback
 import com.ssmmhh.jibam.data.util.UIComponentType
 import com.ssmmhh.jibam.data.util.UndoCallback
-import com.ssmmhh.jibam.presentation.chart.ChartViewModel.Companion.FORCE_TO_NULL
+import com.ssmmhh.jibam.presentation.chart.DetailChartViewModel.Companion.FORCE_TO_NULL
 import com.ssmmhh.jibam.presentation.common.BaseFragment
 import com.ssmmhh.jibam.util.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -40,7 +40,7 @@ class DetailChartFragment(
 
     val args: DetailChartFragmentArgs by navArgs()
 
-    private val viewModel by viewModels<ChartViewModel> { viewModelFactory }
+    private val viewModel by viewModels<DetailChartViewModel> { viewModelFactory }
 
     private lateinit var recyclerAdapter: DetailChartListAdapter
 

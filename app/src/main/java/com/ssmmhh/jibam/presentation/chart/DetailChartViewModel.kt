@@ -19,24 +19,21 @@ import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @FlowPreview
-class ChartViewModel
+class DetailChartViewModel
 @Inject
 constructor(
     private val transactionRepository: TransactionRepository,
     private val monthManger: MonthManger
 ) : BaseViewModel<ChartViewState, ChartStateEvent>() {
 
-
-    private val _pieChartData: LiveData<List<ChartData>> =
+    fun getAllTransactionByCategoryId(categoryId: Int): LiveData<List<TransactionDto>> =
         monthManger.currentMonth.flatMapLatest {
-            setCurrentMonth(it)
-            transactionRepository.getPieChartData(
+            transactionRepository.getAllTransactionByCategoryId(
+                categoryId = categoryId,
                 fromDate = it.startOfMonth,
                 toDate = it.endOfMonth
             )
         }.asLiveData()
-
-    val pieChartData: LiveData<List<ChartData>> = _pieChartData
 
     override fun initNewViewState(): ChartViewState = ChartViewState()
 
@@ -80,6 +77,16 @@ constructor(
         )
     }
 
+    fun setRecentlyDeletedTrans(recentlyDeletedTransaction: TransactionDto) {
+        setViewState(
+            ChartViewState(
+                recentlyDeletedTransaction = recentlyDeletedTransaction
+            )
+        )
+    }
+
+    fun getRecentlyDeletedTrans(): TransactionDto? = viewState.value?.recentlyDeletedTransaction
+
     fun deleteTransaction(transactionId: Int) {
         launchNewJob(
             ChartStateEvent.DeleteTransaction(
@@ -89,22 +96,13 @@ constructor(
         )
     }
 
-    private fun setCurrentMonth(month: Month) {
-        setViewState(
-            ChartViewState(currentMonth = month)
+    fun insertRecentlyDeletedTrans(transaction: TransactionDto) {
+
+        launchNewJob(
+            ChartStateEvent.InsertTransaction(
+                transactionEntity = transaction.toTransactionEntity()
+            )
         )
-    }
-
-    fun showMonthPickerBottomSheet(parentFragmentManager: FragmentManager) {
-        monthManger.showMonthPickerBottomSheet(parentFragmentManager)
-    }
-
-    fun navigateToPreviousMonth() {
-        monthManger.navigateToPreviousMonth()
-    }
-
-    fun navigateToNextMonth() {
-        monthManger.navigateToNextMonth()
     }
 
     companion object {
