@@ -1,4 +1,4 @@
-package com.ssmmhh.jibam.presentation.chart
+package com.ssmmhh.jibam.presentation.chart.chart
 
 import android.graphics.Color
 import android.os.Bundle
@@ -25,17 +25,17 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.utils.MPPointF
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.databinding.FragmentChartBinding
 import com.ssmmhh.jibam.data.model.ChartData
-import com.ssmmhh.jibam.presentation.chart.ChartFragment.ChartState.*
-import com.ssmmhh.jibam.presentation.common.BaseFragment
 import com.ssmmhh.jibam.data.source.local.entity.CategoryEntity.Companion.EXPENSES_TYPE_MARKER
 import com.ssmmhh.jibam.data.source.local.entity.CategoryEntity.Companion.INCOME_TYPE_MARKER
+import com.ssmmhh.jibam.databinding.FragmentChartBinding
+import com.ssmmhh.jibam.presentation.chart.chart.ChartFragment.ChartState.EXPENSES_STATE
+import com.ssmmhh.jibam.presentation.chart.chart.ChartFragment.ChartState.INCOMES_STATE
+import com.ssmmhh.jibam.presentation.common.BaseFragment
 import com.ssmmhh.jibam.util.toLocaleString
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 //https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/main/java/com/xxmassdeveloper/mpchartexample/PieChartActivity.java
@@ -320,7 +320,7 @@ class ChartFragment(
                 viewState.currentMonth?.let {
                     val year = it.year?.let { "\n${it.toLocaleString()}" } ?: ""
                     binding.toolbar.toolbarMonthChanger.toolbarMonth.text =
-                        resources.getString(it.monthNameResId) +year
+                        resources.getString(it.monthNameResId) + year
                 }
             }
         }

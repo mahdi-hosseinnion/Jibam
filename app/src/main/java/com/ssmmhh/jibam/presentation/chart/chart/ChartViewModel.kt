@@ -1,17 +1,16 @@
-package com.ssmmhh.jibam.presentation.chart
+package com.ssmmhh.jibam.presentation.chart.chart
 
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import com.ssmmhh.jibam.data.model.ChartData
 import com.ssmmhh.jibam.data.model.Month
-import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
 import com.ssmmhh.jibam.data.source.repository.tranasction.TransactionRepository
-import com.ssmmhh.jibam.presentation.chart.state.ChartStateEvent
-import com.ssmmhh.jibam.presentation.chart.state.ChartViewState
+import com.ssmmhh.jibam.data.util.DataState
+import com.ssmmhh.jibam.presentation.chart.chart.state.ChartStateEvent
+import com.ssmmhh.jibam.presentation.chart.chart.state.ChartViewState
 import com.ssmmhh.jibam.presentation.common.BaseViewModel
 import com.ssmmhh.jibam.presentation.common.MonthManger
-import com.ssmmhh.jibam.data.util.DataState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.flatMapLatest
@@ -40,52 +39,13 @@ constructor(
 
     override fun initNewViewState(): ChartViewState = ChartViewState()
 
-    override suspend fun getResultByStateEvent(stateEvent: ChartStateEvent): DataState<ChartViewState> =
-        when (stateEvent) {
-            is ChartStateEvent.DeleteTransaction -> {
-                val result = transactionRepository.deleteTransaction(
-                    stateEvent
-                )
-                DataState(
-                    stateMessage = result.stateMessage,
-                    data = null,
-                    stateEvent = result.stateEvent
-                )
-            }
-            is ChartStateEvent.InsertTransaction -> {
-                val result = transactionRepository.insertTransaction(
-                    stateEvent
-                )
-                DataState(
-                    stateMessage = result.stateMessage,
-                    data = null,
-                    stateEvent = result.stateEvent
-                )
-            }
-        }
+    override suspend fun getResultByStateEvent(stateEvent: ChartStateEvent)
+            : DataState<ChartViewState> = DataState(stateEvent = stateEvent)
 
     override fun updateViewState(newViewState: ChartViewState): ChartViewState {
         val outDate = getCurrentViewStateOrNew()
-        //we should force this to null if user didn't want to restore transaction
-        val recentlyDeletedTransaction =
-            if (newViewState.recentlyDeletedTransaction?.memo == FORCE_TO_NULL)
-                null
-            else
-                newViewState.recentlyDeletedTransaction
-                    ?: outDate.recentlyDeletedTransaction
-
         return ChartViewState(
-            recentlyDeletedTransaction = recentlyDeletedTransaction,
             currentMonth = newViewState.currentMonth ?: outDate.currentMonth,
-        )
-    }
-
-    fun deleteTransaction(transactionId: Int) {
-        launchNewJob(
-            ChartStateEvent.DeleteTransaction(
-                transactionId = transactionId,
-                showSuccessToast = false
-            )
         )
     }
 

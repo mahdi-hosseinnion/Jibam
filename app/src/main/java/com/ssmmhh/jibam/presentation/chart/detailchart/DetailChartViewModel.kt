@@ -1,17 +1,14 @@
-package com.ssmmhh.jibam.presentation.chart
+package com.ssmmhh.jibam.presentation.chart.detailchart
 
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
-import com.ssmmhh.jibam.data.model.ChartData
-import com.ssmmhh.jibam.data.model.Month
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
 import com.ssmmhh.jibam.data.source.repository.tranasction.TransactionRepository
-import com.ssmmhh.jibam.presentation.chart.state.ChartStateEvent
-import com.ssmmhh.jibam.presentation.chart.state.ChartViewState
+import com.ssmmhh.jibam.data.util.DataState
+import com.ssmmhh.jibam.presentation.chart.detailchart.state.DetailChartStateEvent
+import com.ssmmhh.jibam.presentation.chart.detailchart.state.DetailChartViewState
 import com.ssmmhh.jibam.presentation.common.BaseViewModel
 import com.ssmmhh.jibam.presentation.common.MonthManger
-import com.ssmmhh.jibam.data.util.DataState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.flatMapLatest
@@ -24,7 +21,7 @@ class DetailChartViewModel
 constructor(
     private val transactionRepository: TransactionRepository,
     private val monthManger: MonthManger
-) : BaseViewModel<ChartViewState, ChartStateEvent>() {
+) : BaseViewModel<DetailChartViewState, DetailChartStateEvent>() {
 
     fun getAllTransactionByCategoryId(categoryId: Int): LiveData<List<TransactionDto>> =
         monthManger.currentMonth.flatMapLatest {
@@ -35,11 +32,11 @@ constructor(
             )
         }.asLiveData()
 
-    override fun initNewViewState(): ChartViewState = ChartViewState()
+    override fun initNewViewState(): DetailChartViewState = DetailChartViewState()
 
-    override suspend fun getResultByStateEvent(stateEvent: ChartStateEvent): DataState<ChartViewState> =
+    override suspend fun getResultByStateEvent(stateEvent: DetailChartStateEvent): DataState<DetailChartViewState> =
         when (stateEvent) {
-            is ChartStateEvent.DeleteTransaction -> {
+            is DetailChartStateEvent.DeleteTransaction -> {
                 val result = transactionRepository.deleteTransaction(
                     stateEvent
                 )
@@ -49,7 +46,7 @@ constructor(
                     stateEvent = result.stateEvent
                 )
             }
-            is ChartStateEvent.InsertTransaction -> {
+            is DetailChartStateEvent.InsertTransaction -> {
                 val result = transactionRepository.insertTransaction(
                     stateEvent
                 )
@@ -61,7 +58,7 @@ constructor(
             }
         }
 
-    override fun updateViewState(newViewState: ChartViewState): ChartViewState {
+    override fun updateViewState(newViewState: DetailChartViewState): DetailChartViewState {
         val outDate = getCurrentViewStateOrNew()
         //we should force this to null if user didn't want to restore transaction
         val recentlyDeletedTransaction =
@@ -71,15 +68,14 @@ constructor(
                 newViewState.recentlyDeletedTransaction
                     ?: outDate.recentlyDeletedTransaction
 
-        return ChartViewState(
+        return DetailChartViewState(
             recentlyDeletedTransaction = recentlyDeletedTransaction,
-            currentMonth = newViewState.currentMonth ?: outDate.currentMonth,
         )
     }
 
     fun setRecentlyDeletedTrans(recentlyDeletedTransaction: TransactionDto) {
         setViewState(
-            ChartViewState(
+            DetailChartViewState(
                 recentlyDeletedTransaction = recentlyDeletedTransaction
             )
         )
@@ -89,7 +85,7 @@ constructor(
 
     fun deleteTransaction(transactionId: Int) {
         launchNewJob(
-            ChartStateEvent.DeleteTransaction(
+            DetailChartStateEvent.DeleteTransaction(
                 transactionId = transactionId,
                 showSuccessToast = false
             )
@@ -99,7 +95,7 @@ constructor(
     fun insertRecentlyDeletedTrans(transaction: TransactionDto) {
 
         launchNewJob(
-            ChartStateEvent.InsertTransaction(
+            DetailChartStateEvent.InsertTransaction(
                 transactionEntity = transaction.toTransactionEntity()
             )
         )

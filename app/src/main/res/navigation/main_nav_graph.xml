@@ -126,7 +126,7 @@
     </fragment>
     <fragment
         android:id="@+id/chartFragment"
-        android:name="com.ssmmhh.jibam.presentation.chart.ChartFragment"
+        android:name="com.ssmmhh.jibam.presentation.chart.chart.ChartFragment"
         android:label=""
         tools:layout="@layout/fragment_chart">
         <action
@@ -146,7 +146,7 @@
     </fragment>
     <fragment
         android:id="@+id/detailChartFragment"
-        android:name="com.ssmmhh.jibam.presentation.chart.DetailChartFragment"
+        android:name="com.ssmmhh.jibam.presentation.chart.detailchart.DetailChartFragment"
         android:label=""
         tools:layout="@layout/fragment_detail_chart">
         <action

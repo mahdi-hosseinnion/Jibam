@@ -9,8 +9,8 @@ import com.ssmmhh.jibam.presentation.addedittransaction.detailedittransaction.De
 import com.ssmmhh.jibam.presentation.addedittransaction.inserttransaction.InsertTransactionFragment
 import com.ssmmhh.jibam.presentation.categories.addcategoires.AddCategoryFragment
 import com.ssmmhh.jibam.presentation.categories.viewcategories.ViewCategoriesFragment
-import com.ssmmhh.jibam.presentation.chart.ChartFragment
-import com.ssmmhh.jibam.presentation.chart.DetailChartFragment
+import com.ssmmhh.jibam.presentation.chart.chart.ChartFragment
+import com.ssmmhh.jibam.presentation.chart.detailchart.DetailChartFragment
 import com.ssmmhh.jibam.presentation.setting.SettingFragment
 import com.ssmmhh.jibam.presentation.transactions.TransactionsFragment
 import kotlinx.coroutines.ExperimentalCoroutinesApi

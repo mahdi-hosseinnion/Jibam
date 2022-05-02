@@ -1,7 +1,6 @@
 package com.ssmmhh.jibam.endToEndTests
 
 import android.content.SharedPreferences
-import android.content.res.Resources
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
@@ -15,8 +14,8 @@ import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.source.local.dao.CategoriesDao
 import com.ssmmhh.jibam.data.source.local.dao.TransactionDao
 import com.ssmmhh.jibam.presentation.MainActivity
-import com.ssmmhh.jibam.presentation.chart.ChartListAdapter
-import com.ssmmhh.jibam.presentation.chart.DetailChartListAdapter
+import com.ssmmhh.jibam.presentation.chart.chart.ChartListAdapter
+import com.ssmmhh.jibam.presentation.chart.detailchart.DetailChartListAdapter
 import com.ssmmhh.jibam.util.DateUtils
 import com.ssmmhh.jibam.util.EspressoIdlingResources
 import com.ssmmhh.jibam.util.PreferenceKeys

@@ -8,8 +8,8 @@ import com.ssmmhh.jibam.presentation.addedittransaction.detailedittransaction.De
 import com.ssmmhh.jibam.presentation.addedittransaction.inserttransaction.InsertTransactionViewModel
 import com.ssmmhh.jibam.presentation.categories.addcategoires.AddCategoryViewModel
 import com.ssmmhh.jibam.presentation.categories.viewcategories.ViewCategoriesViewModel
-import com.ssmmhh.jibam.presentation.chart.ChartViewModel
-import com.ssmmhh.jibam.presentation.chart.DetailChartViewModel
+import com.ssmmhh.jibam.presentation.chart.chart.ChartViewModel
+import com.ssmmhh.jibam.presentation.chart.detailchart.DetailChartViewModel
 import com.ssmmhh.jibam.presentation.setting.SettingViewModel
 import com.ssmmhh.jibam.presentation.transactions.TransactionsViewModel
 import dagger.Binds

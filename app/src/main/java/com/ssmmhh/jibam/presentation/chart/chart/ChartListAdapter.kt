@@ -1,6 +1,5 @@
-package com.ssmmhh.jibam.presentation.chart
+package com.ssmmhh.jibam.presentation.chart.chart
 
-import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,8 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.databinding.LayoutChartListItemBinding
 import com.ssmmhh.jibam.data.model.ChartData
+import com.ssmmhh.jibam.databinding.LayoutChartListItemBinding
 import com.ssmmhh.jibam.util.localizeNumber
 import com.ssmmhh.jibam.util.separate3By3
 import java.util.*

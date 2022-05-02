@@ -1,4 +1,4 @@
-package com.ssmmhh.jibam.presentation.chart
+package com.ssmmhh.jibam.presentation.chart.detailchart
 
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -8,11 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.databinding.LayoutChartListItemBinding
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
+import com.ssmmhh.jibam.databinding.LayoutChartListItemBinding
 import com.ssmmhh.jibam.util.*
 import java.math.BigDecimal
-import java.text.SimpleDateFormat
 import java.util.*
 
 class DetailChartListAdapter(
