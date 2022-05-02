@@ -93,17 +93,35 @@ class AddCategoryListAdapter(
 
     fun setSelectedImageTo(id: Int, position: Int?) {
         if (selectedImageId == id) return
-        val previousImagePosition = selectedImagePosition
+        val previousImageId = selectedImageId
+        var previousImagePosition = selectedImagePosition
         selectedImageId = id
         selectedImagePosition = position
         //Notify last position to change background to default.
-        if (position == null || previousImagePosition == null) {
-            notifyDataSetChanged()
-            return
+        if (previousImagePosition == null) {
+            previousImagePosition = getPositionOfImageWithIdInList(previousImageId)
         }
-        notifyItemChanged(previousImagePosition)
-        notifyItemChanged(position)
+        if (selectedImagePosition == null) {
+            selectedImagePosition =  getPositionOfImageWithIdInList(id)
+        }
+        previousImagePosition?.let { notifyItemChanged(it) }
+        selectedImagePosition?.let { notifyItemChanged(it) }
 
+    }
+
+    /**
+     * Iterate through [data] to find position of image with [id].
+     */
+    private fun getPositionOfImageWithIdInList(id: Int?): Int? {
+        if (id == null) return null
+        data.forEachIndexed { index, item ->
+            if (item is AddCategoryRecyclerViewItem.CategoryImage) {
+                if (item.categoryImage.id == id) {
+                    return index
+                }
+            }
+        }
+        return null
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
