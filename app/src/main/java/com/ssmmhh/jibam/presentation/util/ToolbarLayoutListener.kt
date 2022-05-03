@@ -17,3 +17,15 @@ interface ToolbarLayoutListener {
      */
     fun onClickOnMenuButton(view: View)
 }
+
+/**
+ * Two listeners for [toolbar_month_changer_with_databinding.xml] layout.
+ */
+interface MonthChangerToolbarLayoutListener {
+
+    fun onClickOnMonthName(view: View)
+
+    fun onClickOnPreviousMonthButton(view: View)
+
+    fun onClickOnNextMonthButton(view: View)
+}

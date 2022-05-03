@@ -32,6 +32,8 @@ import com.ssmmhh.jibam.databinding.FragmentChartBinding
 import com.ssmmhh.jibam.presentation.chart.chart.ChartFragment.ChartState.EXPENSES_STATE
 import com.ssmmhh.jibam.presentation.chart.chart.ChartFragment.ChartState.INCOMES_STATE
 import com.ssmmhh.jibam.presentation.common.BaseFragment
+import com.ssmmhh.jibam.presentation.util.MonthChangerToolbarLayoutListener
+import com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener
 import com.ssmmhh.jibam.util.toLocaleString
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -46,7 +48,11 @@ class ChartFragment(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager,
     private val currentLocale: Locale,
-) : BaseFragment(), OnChartValueSelectedListener, ChartListAdapter.Interaction {
+) : BaseFragment(),
+    OnChartValueSelectedListener,
+    ChartListAdapter.Interaction,
+    ToolbarLayoutListener,
+    MonthChangerToolbarLayoutListener {
 
     private val TAG = "ChartFragment"
 
@@ -69,7 +75,10 @@ class ChartFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentChartBinding.inflate(inflater, container, false)
+        binding = FragmentChartBinding.inflate(inflater, container, false).apply {
+            toolbarListener = this@ChartFragment
+            monthChangerListener = this@ChartFragment
+        }
         return binding.root
     }
 
@@ -77,19 +86,6 @@ class ChartFragment(
         super.onViewCreated(view, savedInstanceState)
         initPieChart()
         subscribeObservers()
-
-        binding.toolbar.topAppBarMonth.setNavigationOnClickListener {
-            navigateBack()
-        }
-        binding.toolbar.toolbarMonthChanger.toolbarMonth.setOnClickListener {
-            viewModel.showMonthPickerBottomSheet(parentFragmentManager)
-        }
-        binding.toolbar.toolbarMonthChanger.monthManagerPrevious.setOnClickListener {
-            viewModel.navigateToPreviousMonth()
-        }
-        binding.toolbar.toolbarMonthChanger.monthManagerNext.setOnClickListener {
-            viewModel.navigateToNextMonth()
-        }
         binding.fabSwap.setOnClickListener {
             swapChartCategory()
         }
@@ -107,11 +103,11 @@ class ChartFragment(
 
     private fun refreshChart() {
         val category_type_marker = if (currentChartState == INCOMES_STATE) {
-            binding.toolbar.topAppBarMonth.title = getString(R.string.income_chart_title)
+            binding.toolbarTitle = getString(R.string.income_chart_title)
 
             INCOME_TYPE_MARKER
         } else {
-            binding.toolbar.topAppBarMonth.title = getString(R.string.expenses_chart_title)
+            binding.toolbarTitle = getString(R.string.expenses_chart_title)
 
             EXPENSES_TYPE_MARKER
         }
@@ -310,8 +306,7 @@ class ChartFragment(
             vs?.let { viewState ->
                 viewState.currentMonth?.let {
                     val year = it.year?.let { "\n${it.toLocaleString()}" } ?: ""
-                    binding.toolbar.toolbarMonthChanger.toolbarMonth.text =
-                        resources.getString(it.monthNameResId) + year
+                    binding.toolbarMonthName = resources.getString(it.monthNameResId) + year
                 }
             }
         }
@@ -342,5 +337,23 @@ class ChartFragment(
     companion object {
         /** the max count of entry in pie chart */
         const val CHART_MAX_COUNT_OF_DATA = 8
+    }
+
+    override fun onClickOnNavigation(view: View) {
+        navigateBack()
+    }
+
+    override fun onClickOnMenuButton(view: View) {}
+
+    override fun onClickOnMonthName(view: View) {
+        viewModel.showMonthPickerBottomSheet(parentFragmentManager)
+    }
+
+    override fun onClickOnPreviousMonthButton(view: View) {
+        viewModel.navigateToPreviousMonth()
+    }
+
+    override fun onClickOnNextMonthButton(view: View) {
+        viewModel.navigateToNextMonth()
     }
 }

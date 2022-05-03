@@ -1,59 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".presentation.chart.chart.ChartFragment">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <data>
+
+        <variable
+            name="toolbarTitle"
+            type="String" />
+
+        <variable
+            name="toolbarMonthName"
+            type="String" />
+
+        <variable
+            name="toolbarListener"
+            type="com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener" />
+
+        <variable
+            name="monthChangerListener"
+            type="com.ssmmhh.jibam.presentation.util.MonthChangerToolbarLayoutListener" />
+
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        tools:context=".presentation.chart.chart.ChartFragment">
 
-        <include
-            android:id="@+id/toolbar"
-            layout="@layout/layout_toolbar_with_month_changer"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/mtrl_toolbar_default_height"
-            android:gravity="end"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
+            <include
+                layout="@layout/layout_toolbar_with_month_changer_with_databinding"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/mtrl_toolbar_default_height"
+                android:gravity="end"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:monthChangerListener="@{monthChangerListener}"
+                app:monthName="@{toolbarMonthName}"
+                app:toolbarListener="@{toolbarListener}"
+                app:toolbarTitle="@{toolbarTitle}" />
 
-                android:orientation="vertical">
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-
-                <com.github.mikephil.charting.charts.PieChart
-                    android:id="@+id/pie_chart"
-                    android:layout_width="match_parent"
-                    android:layout_height="336dp"
-                    android:layout_margin="8dp" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/chart_recycler"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="80dp" />
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
-    </LinearLayout>
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/fab_swap"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="16dp"
-        android:text="@string/swap_chart"
-        app:icon="@drawable/ic_baseline_swap_horiz_24" />
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+                    android:orientation="vertical">
+
+
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/pie_chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="336dp"
+                        android:layout_margin="8dp" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/chart_recycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="80dp" />
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+        </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/fab_swap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="16dp"
+            android:text="@string/swap_chart"
+            app:icon="@drawable/ic_baseline_swap_horiz_24" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>
