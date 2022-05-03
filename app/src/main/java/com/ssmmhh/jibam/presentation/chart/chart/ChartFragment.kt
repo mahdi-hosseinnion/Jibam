@@ -62,25 +62,16 @@ class ChartFragment(
 
     private var chartData: List<ChartData> = ArrayList()
 
-    private var _binding: FragmentChartBinding? = null
-
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentChartBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentChartBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        binding = FragmentChartBinding.inflate(inflater, container, false)
+        return binding.root
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
