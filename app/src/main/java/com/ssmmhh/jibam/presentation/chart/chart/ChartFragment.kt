@@ -26,11 +26,7 @@ import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.utils.MPPointF
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.model.ChartData
-import com.ssmmhh.jibam.data.source.local.entity.CategoryEntity.Companion.EXPENSES_TYPE_MARKER
-import com.ssmmhh.jibam.data.source.local.entity.CategoryEntity.Companion.INCOME_TYPE_MARKER
 import com.ssmmhh.jibam.databinding.FragmentChartBinding
-import com.ssmmhh.jibam.presentation.chart.chart.ChartFragment.ChartState.EXPENSES_STATE
-import com.ssmmhh.jibam.presentation.chart.chart.ChartFragment.ChartState.INCOMES_STATE
 import com.ssmmhh.jibam.presentation.common.BaseFragment
 import com.ssmmhh.jibam.presentation.util.MonthChangerToolbarLayoutListener
 import com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener
@@ -58,17 +54,18 @@ class ChartFragment(
 
     private val viewModel by viewModels<ChartViewModel> { viewModelFactory }
 
-
-    enum class ChartState {
-        EXPENSES_STATE,
-        INCOMES_STATE
-    }
-
-    private var currentChartState = EXPENSES_STATE
-
-    private var chartData: List<ChartData> = ArrayList()
-
     private lateinit var binding: FragmentChartBinding
+
+    private lateinit var recyclerAdapter: ChartListAdapter
+
+    private val colors =
+        ColorTemplate.VORDIPLOM_COLORS +
+                ColorTemplate.LIBERTY_COLORS +
+                ColorTemplate.MATERIAL_COLORS +
+                ColorTemplate.COLORFUL_COLORS +
+                ColorTemplate.JOYFUL_COLORS +
+                ColorTemplate.PASTEL_COLORS
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -76,6 +73,8 @@ class ChartFragment(
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentChartBinding.inflate(inflater, container, false).apply {
+            viewmodel = viewModel
+            this.lifecycleOwner = this@ChartFragment.viewLifecycleOwner
             toolbarListener = this@ChartFragment
             monthChangerListener = this@ChartFragment
         }
@@ -85,36 +84,8 @@ class ChartFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initPieChart()
+        initRecyclerView()
         subscribeObservers()
-        binding.fabSwap.setOnClickListener {
-            swapChartCategory()
-        }
-    }
-
-    private fun swapChartCategory() {
-        //swap the chart information
-        if (currentChartState == INCOMES_STATE) {
-            currentChartState = EXPENSES_STATE
-        } else {
-            currentChartState = INCOMES_STATE
-        }
-        refreshChart()
-    }
-
-    private fun refreshChart() {
-        val category_type_marker = if (currentChartState == INCOMES_STATE) {
-            binding.toolbarTitle = getString(R.string.income_chart_title)
-
-            INCOME_TYPE_MARKER
-        } else {
-            binding.toolbarTitle = getString(R.string.expenses_chart_title)
-
-            EXPENSES_TYPE_MARKER
-        }
-
-        val filteredValues = chartData.filter { it.categoryType == category_type_marker }
-
-        setDataToChartAndRecyclerView(filteredValues)
     }
 
     private fun initPieChart() {
@@ -195,12 +166,12 @@ class ChartFragment(
 
     private fun List<ChartData>.convertPieChartDataToPieEntry(): List<PieEntry> = this.map {
         PieEntry(
-            it.percentage.toFloat() ?: 0f,
+            it.percentage,
             it.getCategoryNameFromStringFile(requireContext())
         )
     }
 
-    private fun setDataToChartAndRecyclerView(values: List<ChartData>) {
+    private fun updateChartData(values: List<ChartData>) {
         val entries = ArrayList(values.convertPieChartDataToPieEntry())
         /**
          * we don't want ot show many entries of pie chart b/c the pie portion would be small
@@ -228,9 +199,9 @@ class ChartFragment(
         }
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
         // the chart.
-        val chartLabel = if (currentChartState == INCOMES_STATE)
-            getString(R.string.Income)
-        else getString(R.string.expenses)
+        val chartLabel = if (viewModel.isChartTypeExpenses.value == true)
+            getString(R.string.expenses)
+        else getString(R.string.Income)
 
         val dataSet = PieDataSet(entries, chartLabel)
         dataSet.setDrawIcons(false)
@@ -241,15 +212,8 @@ class ChartFragment(
         //set color
 
         // add a lot of colors
-        val colors = java.util.ArrayList<Int>()
-        for (c in ColorTemplate.VORDIPLOM_COLORS) colors.add(c)
-        for (c in ColorTemplate.LIBERTY_COLORS) colors.add(c)
-        for (c in ColorTemplate.MATERIAL_COLORS) colors.add(c)
-        for (c in ColorTemplate.COLORFUL_COLORS) colors.add(c)
-        for (c in ColorTemplate.JOYFUL_COLORS) colors.add(c)
-        for (c in ColorTemplate.PASTEL_COLORS) colors.add(c)
-        colors.add(ColorTemplate.getHoloBlue())
-        dataSet.colors = colors
+
+        dataSet.colors = colors.toList()
 
         val data = PieData(dataSet)
         data.setValueFormatter(PercentFormatter())
@@ -267,20 +231,18 @@ class ChartFragment(
         // undo all highlights
         binding.pieChart.highlightValues(null)
         binding.pieChart.invalidate()
-        initRecyclerView(values, colors)
     }
 
-    private fun initRecyclerView(values: List<ChartData>, colors: List<Int>) {
+    private fun initRecyclerView() {
         binding.chartRecycler.apply {
             layoutManager = LinearLayoutManager(this@ChartFragment.context)
-            val recyclerAdapter = ChartListAdapter(
+            recyclerAdapter = ChartListAdapter(
                 this@ChartFragment,
                 requestManager,
                 currentLocale,
-                colors
+                colors.toList()
             )
             isNestedScrollingEnabled = false
-            recyclerAdapter.submitList(values)
             adapter = recyclerAdapter
         }
     }
@@ -312,8 +274,8 @@ class ChartFragment(
         }
         viewModel.pieChartData.observe(viewLifecycleOwner) {
             it?.let { data ->
-                chartData = data
-                refreshChart()
+                updateChartData(data)
+                recyclerAdapter.submitList(data)
             }
         }
     }

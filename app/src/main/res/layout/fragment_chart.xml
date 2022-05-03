@@ -4,11 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
-        <variable
-            name="toolbarTitle"
-            type="String" />
-
+        <import type="com.ssmmhh.jibam.R"/>
         <variable
             name="toolbarMonthName"
             type="String" />
@@ -20,6 +16,10 @@
         <variable
             name="monthChangerListener"
             type="com.ssmmhh.jibam.presentation.util.MonthChangerToolbarLayoutListener" />
+
+        <variable
+            name="viewmodel"
+            type="com.ssmmhh.jibam.presentation.chart.chart.ChartViewModel" />
 
     </data>
 
@@ -45,7 +45,7 @@
                 app:monthChangerListener="@{monthChangerListener}"
                 app:monthName="@{toolbarMonthName}"
                 app:toolbarListener="@{toolbarListener}"
-                app:toolbarTitle="@{toolbarTitle}" />
+                app:toolbarTitle="@{viewmodel.isChartTypeExpenses ? context.getString(R.string.expenses_chart_title) : context.getString(R.string.income_chart_title)}" />
 
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
@@ -79,6 +79,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
             android:layout_margin="16dp"
+            android:onClick="@{(view) -> viewmodel.swapChartType()}"
             android:text="@string/swap_chart"
             app:icon="@drawable/ic_baseline_swap_horiz_24" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
