@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.RequestManager
-import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -104,7 +103,6 @@ class ChartFragment(
             // enable rotation of the chart by touch
             isRotationEnabled = true
             isHighlightPerTapEnabled = true
-            animateY(1000, Easing.EasingOption.EaseInOutQuad)
 
             //legend: list next to chart
             legend.verticalAlignment = Legend.LegendVerticalAlignment.CENTER
@@ -182,7 +180,7 @@ class ChartFragment(
     private fun updateChartData(values: List<ChartData>) {
         if (values.isEmpty()) {
             binding.pieChart.clear()
-            binding.pieChart.invalidate()
+            binding.pieChart.animateXY(CHART_ANIMATION_DURATION, CHART_ANIMATION_DURATION)
             return
         }
         pieDataSet.values = addEtcPieEntryIfThereAreTooManyEntries(
@@ -197,7 +195,7 @@ class ChartFragment(
         }
         // undo all highlights
         binding.pieChart.highlightValues(null)
-        binding.pieChart.invalidate()
+        binding.pieChart.animateXY(CHART_ANIMATION_DURATION, CHART_ANIMATION_DURATION)
     }
 
     /**
@@ -285,6 +283,7 @@ class ChartFragment(
     companion object {
         /** the max count of entry in pie chart */
         const val CHART_MAX_COUNT_OF_DATA = 8
+        const val CHART_ANIMATION_DURATION = 750
     }
 
 }
