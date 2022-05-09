@@ -1,5 +1,6 @@
 package com.ssmmhh.jibam.presentation.chart.chart
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +22,6 @@ class ChartListAdapter(
     private val interaction: Interaction? = null,
     private val requestManager: RequestManager?,
     private val currentLocale: Locale,
-    private val colors: List<Int>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var biggestPercentage: Float = 100.0f
@@ -47,7 +47,7 @@ class ChartListAdapter(
                 parent,
                 false
             ),
-            interaction, requestManager, currentLocale, colors
+            interaction, requestManager, currentLocale
         )
     }
 
@@ -76,7 +76,6 @@ class ChartListAdapter(
         private val interaction: Interaction?,
         val requestManager: RequestManager?,
         val currentLocale: Locale,
-        val colors: List<Int>
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: ChartData, biggestPercentage: Float) = with(itemView) {
@@ -95,11 +94,10 @@ class ChartListAdapter(
             binding.prgPercentage.max = biggestPercentage.toInt()
 
             val categoryImageResourceId = item.getCategoryImageResourceId(context)
-            try {
-                binding.cardView.setCardBackgroundColor((colors[adapterPosition]))
-            } catch (e: Exception) {
-                binding.cardView.setCardBackgroundColor(resources.getColor(R.color.category_list_item_image_background_color))
-            }
+
+            binding.cardView.setCardBackgroundColor(
+                Color.parseColor(item.categoryImage.backgroundColor)
+            )
 
             requestManager
                 ?.load(categoryImageResourceId)

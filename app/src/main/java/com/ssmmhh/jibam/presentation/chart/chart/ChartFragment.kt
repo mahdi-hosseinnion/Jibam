@@ -18,7 +18,6 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
-import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.utils.MPPointF
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.model.ChartData
@@ -53,16 +52,7 @@ class ChartFragment(
 
     private lateinit var recyclerAdapter: ChartListAdapter
 
-    private val colors =
-        ColorTemplate.VORDIPLOM_COLORS +
-                ColorTemplate.LIBERTY_COLORS +
-                ColorTemplate.MATERIAL_COLORS +
-                ColorTemplate.COLORFUL_COLORS +
-                ColorTemplate.JOYFUL_COLORS +
-                ColorTemplate.PASTEL_COLORS
-
     private lateinit var pieDataSet: PieDataSet
-    private lateinit var pieData: PieData
 
 
     override fun onCreateView(
@@ -140,30 +130,17 @@ class ChartFragment(
                     R.attr.colorOnSurface
                 )
             )
-            setEntryLabelTextSize(12f)
+            setEntryLabelTextSize(13f)
         }
     }
 
     private fun setupChartData() {
-        val chartLabel = if (viewModel.isChartTypeExpenses.value == true)
-            getString(R.string.expenses)
-        else
-            getString(R.string.Income)
-
-        pieDataSet = PieDataSet(null, chartLabel).apply {
+        pieDataSet = PieDataSet(null, "DataSet").apply {
             setDrawIcons(false)
-            sliceSpace = 3f
+            sliceSpace = 2f
             iconsOffset = MPPointF(0F, 40F)
-            selectionShift = 5f
-            colors = colors.toList()
+            selectionShift = 4f
         }
-
-        pieData = PieData().apply {
-            setValueFormatter(PercentFormatter())
-            setValueTextSize(13f)
-            setValueTextColor(resources.getColor(R.color.black))
-        }
-
     }
 
     private fun initRecyclerView() {
@@ -173,7 +150,6 @@ class ChartFragment(
                 this@ChartFragment,
                 requestManager,
                 currentLocale,
-                colors.toList()
             )
             isNestedScrollingEnabled = false
             adapter = recyclerAdapter
@@ -195,18 +171,32 @@ class ChartFragment(
                 recyclerAdapter.submitList(data)
             }
         }
+        viewModel.isChartTypeExpenses.observe(viewLifecycleOwner) {
+            pieDataSet.label = if (it == true)
+                getString(R.string.expenses)
+            else
+                getString(R.string.Income)
+        }
     }
 
     private fun updateChartData(values: List<ChartData>) {
-        if (values.isEmpty()) return
+        if (values.isEmpty()) {
+            binding.pieChart.clear()
+            binding.pieChart.invalidate()
+            return
+        }
         pieDataSet.values = addEtcPieEntryIfThereAreTooManyEntries(
             values = convertPieChartDataToPieEntry(values)
         )
-        pieData.dataSet = pieDataSet
-        binding.pieChart.data = pieData
+        pieDataSet.colors = values.map { Color.parseColor(it.categoryImage.backgroundColor) }
+
+        binding.pieChart.data = PieData(pieDataSet).apply {
+            setValueFormatter(PercentFormatter())
+            setValueTextSize(12f)
+            setValueTextColor(resources.getColor(R.color.black))
+        }
         // undo all highlights
         binding.pieChart.highlightValues(null)
-        binding.pieChart.notifyDataSetChanged()
         binding.pieChart.invalidate()
     }
 
