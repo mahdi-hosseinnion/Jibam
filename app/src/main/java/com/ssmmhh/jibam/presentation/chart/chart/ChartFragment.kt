@@ -15,13 +15,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.RequestManager
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
-import com.github.mikephil.charting.highlight.Highlight
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.utils.MPPointF
 import com.ssmmhh.jibam.R
@@ -45,7 +42,6 @@ class ChartFragment(
     private val requestManager: RequestManager,
     private val currentLocale: Locale,
 ) : BaseFragment(),
-    OnChartValueSelectedListener,
     ChartListAdapter.Interaction,
     ToolbarLayoutListener,
     MonthChangerToolbarLayoutListener {
@@ -83,85 +79,66 @@ class ChartFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initPieChart()
+        customizePieChart()
         initRecyclerView()
         subscribeObservers()
     }
 
-    private fun initPieChart() {
-        binding.pieChart.setUsePercentValues(false)
-        binding.pieChart.description.isEnabled = false
-        binding.pieChart.setExtraOffsets(2f, 2f, 2f, 2f)
-
-        binding.pieChart.setNoDataText(getString(R.string.no_chart_data_available))
-        binding.pieChart.setNoDataTextColor(Color.RED)
-        binding.pieChart.dragDecelerationFrictionCoef = 0.50f
-
-
-        binding.pieChart.isDrawHoleEnabled = true
-        binding.pieChart.setHoleColor(
-            getThemeAttributeColor(
-                this.requireContext(),
+    private fun customizePieChart() {
+        binding.pieChart.apply {
+            setUsePercentValues(false)
+            description.isEnabled = false
+            setExtraOffsets(2f, 2f, 2f, 2f)
+            //No data text
+            setNoDataText(getString(R.string.no_chart_data_available))
+            setNoDataTextColor(Color.RED)
+            dragDecelerationFrictionCoef = 0.50f
+            isDrawHoleEnabled = true
+            val surfaceColor = getThemeAttributeColor(
+                this.context,
                 R.attr.colorSurface
             )
-        )
+            setHoleColor(surfaceColor)
+            setTransparentCircleColor(surfaceColor)
 
-        binding.pieChart.setTransparentCircleColor(
-            getThemeAttributeColor(
-                this.requireContext(),
-                R.attr.colorSurface
+            setTransparentCircleAlpha(50)
+            holeRadius = 50f
+            transparentCircleRadius = holeRadius.plus(3)
+
+            setDrawCenterText(true)
+
+            rotationAngle = 0f
+            // enable rotation of the chart by touch
+            isRotationEnabled = true
+            isHighlightPerTapEnabled = true
+            animateY(1000, Easing.EaseInOutQuad)
+
+            //legend: list next to chart
+            legend.verticalAlignment = Legend.LegendVerticalAlignment.CENTER
+            legend.orientation = Legend.LegendOrientation.VERTICAL
+            //Change chart's legend position to fit left to right languages(ex: Persian) too.
+            val isLayoutDirectionLeftToRight =
+                (TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault())
+                        == ViewCompat.LAYOUT_DIRECTION_LTR)
+            legend.horizontalAlignment = if (isLayoutDirectionLeftToRight)
+                Legend.LegendHorizontalAlignment.RIGHT
+            else
+                Legend.LegendHorizontalAlignment.LEFT
+            legend.setDrawInside(false)
+            legend.xEntrySpace = 0f
+            legend.yEntrySpace = 2f
+            legend.form = Legend.LegendForm.CIRCLE
+            legend.yOffset = 0f
+            legend.textSize = 12f
+            // entry label styling
+            setEntryLabelColor(
+                getThemeAttributeColor(
+                    this.context,
+                    R.attr.colorOnSurface
+                )
             )
-        )
-        binding.pieChart.setTransparentCircleAlpha(50)
-
-        binding.pieChart.holeRadius = 42f
-        binding.pieChart.transparentCircleRadius = binding.pieChart.holeRadius.plus(3)
-
-        binding.pieChart.setDrawCenterText(true)
-
-        binding.pieChart.rotationAngle = 0f
-        // enable rotation of the chart by touch
-        binding.pieChart.isRotationEnabled = true
-        binding.pieChart.isHighlightPerTapEnabled = true
-
-        // pie_chart.setUnit(" €");
-        // pie_chart.setDrawUnitsInChart(true);
-
-        // add a selection listener
-        binding.pieChart.setOnChartValueSelectedListener(this)
-
-
-        binding.pieChart.animateY(1400, Easing.EaseInOutQuad)
-//         binding.    pieChart.spin(2000, 0, 360);
-        //legend: list next to chart
-        val isLeftToRight =
-            (TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == ViewCompat.LAYOUT_DIRECTION_LTR)
-        val l: Legend = binding.pieChart.legend
-        l.verticalAlignment = Legend.LegendVerticalAlignment.CENTER
-        if (isLeftToRight)
-            l.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
-        else
-            l.horizontalAlignment = Legend.LegendHorizontalAlignment.LEFT
-
-        l.orientation = Legend.LegendOrientation.VERTICAL
-        l.setDrawInside(false)
-        l.xEntrySpace = 0f
-        l.yEntrySpace = 0f
-        l.form = Legend.LegendForm.CIRCLE
-        l.yOffset = 0f
-        l.textSize = 12f
-
-
-        // entry label styling
-        binding.pieChart.setEntryLabelColor(
-            getThemeAttributeColor(
-                this.requireContext(),
-                R.attr.colorOnSurface
-            )
-        )
-//        pie_chart.setEntryLabelTypeface(tfRegular)
-        binding.pieChart.setEntryLabelTextSize(12f)
-
+            setEntryLabelTextSize(12f)
+        }
     }
 
     private fun List<ChartData>.convertPieChartDataToPieEntry(): List<PieEntry> = this.map {
@@ -278,13 +255,6 @@ class ChartFragment(
                 recyclerAdapter.submitList(data)
             }
         }
-    }
-
-    override fun onValueSelected(e: Entry?, h: Highlight?) {
-
-    }
-
-    override fun onNothingSelected() {
     }
 
     override fun onItemSelected(position: Int, item: ChartData) {
