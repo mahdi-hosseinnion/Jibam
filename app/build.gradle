@@ -133,7 +133,7 @@ dependencies {
 
     //Android chart view / graph view library
     //https://github.com/PhilJay/MPAndroidChart#gradle-setup
-    implementation 'com.github.PhilJay:MPAndroidChart:3.1.0'
+    implementation 'com.github.PhilJay:MPAndroidChart:3.0.3'
 
     //App intro library
     //https://github.com/AppIntro/AppIntro

@@ -2,7 +2,6 @@ package com.ssmmhh.jibam.presentation.chart.chart
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -62,6 +61,9 @@ class ChartFragment(
                 ColorTemplate.JOYFUL_COLORS +
                 ColorTemplate.PASTEL_COLORS
 
+    private lateinit var pieDataSet: PieDataSet
+    private lateinit var pieData: PieData
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -80,6 +82,7 @@ class ChartFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         customizePieChart()
+        setupChartData()
         initRecyclerView()
         subscribeObservers()
     }
@@ -111,7 +114,7 @@ class ChartFragment(
             // enable rotation of the chart by touch
             isRotationEnabled = true
             isHighlightPerTapEnabled = true
-            animateY(1000, Easing.EaseInOutQuad)
+            animateY(1000, Easing.EasingOption.EaseInOutQuad)
 
             //legend: list next to chart
             legend.verticalAlignment = Legend.LegendVerticalAlignment.CENTER
@@ -141,73 +144,26 @@ class ChartFragment(
         }
     }
 
-    private fun List<ChartData>.convertPieChartDataToPieEntry(): List<PieEntry> = this.map {
-        PieEntry(
-            it.percentage,
-            it.getCategoryNameFromStringFile(requireContext())
-        )
-    }
-
-    private fun updateChartData(values: List<ChartData>) {
-        val entries = ArrayList(values.convertPieChartDataToPieEntry())
-        /**
-         * we don't want ot show many entries of pie chart b/c the pie portion would be small
-         * and messy
-         */
-        if (entries.size > CHART_MAX_COUNT_OF_DATA) {
-            //get etc values from entries
-            //we need to should make new arraylist otherwise we will get java.util.ConcurrentModificationException
-            val etc: List<PieEntry> =
-                ArrayList(
-                    entries.subList(
-                        CHART_MAX_COUNT_OF_DATA.minus(1),
-                        entries.size
-                    )
-                )
-            //remove etc values from main data
-            entries.removeAll(etc)
-            //add all of etc object values to single one and add it to entries
-            val otherEntry = PieEntry(
-                (etc.sumOf { it.value.toDouble() }).toFloat(),
-                getString(R.string.etc)
-
-            )
-            entries.add(otherEntry)
-        }
-        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
-        // the chart.
+    private fun setupChartData() {
         val chartLabel = if (viewModel.isChartTypeExpenses.value == true)
             getString(R.string.expenses)
-        else getString(R.string.Income)
+        else
+            getString(R.string.Income)
 
-        val dataSet = PieDataSet(entries, chartLabel)
-        dataSet.setDrawIcons(false)
-
-        dataSet.sliceSpace = 3f
-        dataSet.iconsOffset = MPPointF(0F, 40F)
-        dataSet.selectionShift = 5f
-        //set color
-
-        // add a lot of colors
-
-        dataSet.colors = colors.toList()
-
-        val data = PieData(dataSet)
-        data.setValueFormatter(PercentFormatter())
-        data.setValueTextSize(13f)
-        data.setValueTextColor(resources.getColor(R.color.black))
-//        data.setValueTypeface(tfLight)
-        binding.pieChart.data = data
-        try {
-            if (values.isNullOrEmpty()) {
-                binding.pieChart.clear()
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "setDataToChartAndRecyclerView: ${e.message}", e)
+        pieDataSet = PieDataSet(null, chartLabel).apply {
+            setDrawIcons(false)
+            sliceSpace = 3f
+            iconsOffset = MPPointF(0F, 40F)
+            selectionShift = 5f
+            colors = colors.toList()
         }
-        // undo all highlights
-        binding.pieChart.highlightValues(null)
-        binding.pieChart.invalidate()
+
+        pieData = PieData().apply {
+            setValueFormatter(PercentFormatter())
+            setValueTextSize(13f)
+            setValueTextColor(resources.getColor(R.color.black))
+        }
+
     }
 
     private fun initRecyclerView() {
@@ -221,22 +177,6 @@ class ChartFragment(
             )
             isNestedScrollingEnabled = false
             adapter = recyclerAdapter
-        }
-    }
-
-    override fun handleLoading() {
-        viewModel.countOfActiveJobs.observe(
-            viewLifecycleOwner
-        ) {
-            showProgressBar(viewModel.areAnyJobsActive())
-        }
-    }
-
-    override fun handleStateMessages() {
-        viewModel.stateMessage.observe(viewLifecycleOwner) {
-            it?.let {
-                handleNewStateMessage(it) { viewModel.clearStateMessage() }
-            }
         }
     }
 
@@ -257,6 +197,74 @@ class ChartFragment(
         }
     }
 
+    private fun updateChartData(values: List<ChartData>) {
+        if (values.isEmpty()) return
+        pieDataSet.values = addEtcPieEntryIfThereAreTooManyEntries(
+            values = convertPieChartDataToPieEntry(values)
+        )
+        pieData.dataSet = pieDataSet
+        binding.pieChart.data = pieData
+        // undo all highlights
+        binding.pieChart.highlightValues(null)
+        binding.pieChart.notifyDataSetChanged()
+        binding.pieChart.invalidate()
+    }
+
+    /**
+     * Prevent the chart from showing more than [CHART_MAX_COUNT_OF_DATA] entries in the pie chart
+     * b/c the pie portion would be small and messy.
+     */
+    private fun addEtcPieEntryIfThereAreTooManyEntries(
+        values: List<PieEntry>,
+        maximumCountOfEntries: Int = CHART_MAX_COUNT_OF_DATA
+    ): List<PieEntry> {
+        val result = ArrayList(values)
+
+        if (result.size > maximumCountOfEntries) {
+            //get etc values from entries
+            val etc: List<PieEntry> =
+                ArrayList(
+                    result.subList(
+                        maximumCountOfEntries.minus(1),
+                        result.size
+                    )
+                )
+            //remove etc values from main data
+            result.removeAll(etc)
+            //add all of etc object values to single one and add it to entries
+            val otherEntry = PieEntry(
+                (etc.sumOf { it.value.toDouble() }).toFloat(),
+                getString(R.string.etc)
+
+            )
+            result.add(otherEntry)
+        }
+        return result
+    }
+
+    private fun convertPieChartDataToPieEntry(value: List<ChartData>): List<PieEntry> = value.map {
+        PieEntry(
+            it.percentage,
+            it.getCategoryNameFromStringFile(requireContext())
+        )
+    }
+
+    override fun handleLoading() {
+        viewModel.countOfActiveJobs.observe(
+            viewLifecycleOwner
+        ) {
+            showProgressBar(viewModel.areAnyJobsActive())
+        }
+    }
+
+    override fun handleStateMessages() {
+        viewModel.stateMessage.observe(viewLifecycleOwner) {
+            it?.let {
+                handleNewStateMessage(it) { viewModel.clearStateMessage() }
+            }
+        }
+    }
+
     override fun onItemSelected(position: Int, item: ChartData) {
         val action =
             ChartFragmentDirections.actionChartFragmentToDetailChartFragment(
@@ -264,11 +272,6 @@ class ChartFragment(
                 categoryName = item.getCategoryNameFromStringFile(requireContext())
             )
         findNavController().navigate(action)
-    }
-
-    companion object {
-        /** the max count of entry in pie chart */
-        const val CHART_MAX_COUNT_OF_DATA = 8
     }
 
     override fun onClickOnNavigation(view: View) {
@@ -288,4 +291,10 @@ class ChartFragment(
     override fun onClickOnNextMonthButton(view: View) {
         viewModel.navigateToNextMonth()
     }
+
+    companion object {
+        /** the max count of entry in pie chart */
+        const val CHART_MAX_COUNT_OF_DATA = 8
+    }
+
 }
