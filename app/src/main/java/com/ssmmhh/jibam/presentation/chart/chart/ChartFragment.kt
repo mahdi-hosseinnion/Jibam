@@ -28,6 +28,7 @@ import com.ssmmhh.jibam.util.toLocaleString
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 //https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/main/java/com/xxmassdeveloper/mpchartexample/PieChartActivity.java
@@ -71,7 +72,7 @@ class ChartFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         customizePieChart()
-        setupChartData()
+        initPieDataSet()
         initRecyclerView()
         subscribeObservers()
     }
@@ -132,7 +133,7 @@ class ChartFragment(
         }
     }
 
-    private fun setupChartData() {
+    private fun initPieDataSet() {
         pieDataSet = PieDataSet(null, "DataSet").apply {
             setDrawIcons(false)
             sliceSpace = 2f
@@ -184,7 +185,7 @@ class ChartFragment(
             return
         }
         pieDataSet.values = addEtcPieEntryIfThereAreTooManyEntries(
-            values = convertPieChartDataToPieEntry(values)
+            values = convertChartDataListToPieEntryList(values)
         )
         pieDataSet.colors = values.map { Color.parseColor(it.categoryImage.backgroundColor) }
 
@@ -206,36 +207,39 @@ class ChartFragment(
         values: List<PieEntry>,
         maximumCountOfEntries: Int = CHART_MAX_COUNT_OF_DATA
     ): List<PieEntry> {
-        val result = ArrayList(values)
-
-        if (result.size > maximumCountOfEntries) {
-            //get etc values from entries
-            val etc: List<PieEntry> =
-                ArrayList(
-                    result.subList(
-                        maximumCountOfEntries.minus(1),
-                        result.size
-                    )
-                )
-            //remove etc values from main data
-            result.removeAll(etc)
-            //add all of etc object values to single one and add it to entries
-            val otherEntry = PieEntry(
-                (etc.sumOf { it.value.toDouble() }).toFloat(),
-                getString(R.string.etc)
-
-            )
-            result.add(otherEntry)
+        if (values.size <= maximumCountOfEntries) {
+            return values
         }
+        val result = ArrayList(values)
+        //Create a new ArrayList to prevent 'ConcurrentModificationException' while removing and
+        //iterating through the [etc] list.
+        val etc: List<PieEntry> =
+            ArrayList(
+                result.subList(
+                    maximumCountOfEntries.minus(1),
+                    result.size
+                )
+            )
+        //remove etc values from main data
+        result.removeAll(etc)
+        //add all of etc object values to single one then add it to result
+        val otherEntry = PieEntry(
+            (etc.sumOf { it.value.toDouble() }).toFloat(),
+            getString(R.string.etc)
+
+        )
+        result.add(otherEntry)
+
         return result
     }
 
-    private fun convertPieChartDataToPieEntry(value: List<ChartData>): List<PieEntry> = value.map {
-        PieEntry(
-            it.percentage,
-            it.getCategoryNameFromStringFile(requireContext())
-        )
-    }
+    private fun convertChartDataListToPieEntryList(value: List<ChartData>): List<PieEntry> =
+        value.map {
+            PieEntry(
+                it.percentage,
+                it.getCategoryNameFromStringFile(requireContext())
+            )
+        }
 
     override fun handleLoading() {
         viewModel.countOfActiveJobs.observe(
