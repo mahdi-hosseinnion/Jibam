@@ -207,8 +207,8 @@ interface TransactionDao {
             ORDER BY ABS(SUM(money)) DESC 
             """
     )
-    suspend fun getSumOfEachCategoryMoney(
+    fun getSumOfEachCategoryMoney(
         fromDate: Long,
         toDate: Long
-    ): List<ChartDataDto>
+    ): Flow<List<ChartDataDto>>
 }

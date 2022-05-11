@@ -17,6 +17,7 @@ import com.ssmmhh.jibam.presentation.common.state.DeleteTransactionStateEvent
 import com.ssmmhh.jibam.presentation.common.state.InsertNewTransactionStateEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -42,16 +43,9 @@ constructor(
     override fun observeSumOfIncomesBetweenDates(fromDate: Long, toDate: Long): Flow<BigDecimal> =
         transactionDao.observeSumOfIncomesBetweenDates(fromDate, toDate)
 
-    override fun getPieChartData(fromDate: Long, toDate: Long): Flow<List<ChartData>> = flow {
-        emit(
-            calculatePercentage(
-                transactionDao.getSumOfEachCategoryMoney(
-                    fromDate = fromDate,
-                    toDate = toDate
-                )
-            )
-        )
-    }
+    override fun getPieChartData(fromDate: Long, toDate: Long): Flow<List<ChartData>> =
+        transactionDao.getSumOfEachCategoryMoney(fromDate = fromDate, toDate = toDate)
+            .map { calculatePercentage(it) }
 
     private fun calculatePercentage(values: List<ChartDataDto>): List<ChartData> {
         //calculate the sum of all of moneys for further percentage calculation
@@ -110,7 +104,7 @@ constructor(
                 return if (resultObj > 0) {
                     DataState.data(
                         response = buildResponse(
-                            message =intArrayOf(R.string.transaction_successfully_inserted),
+                            message = intArrayOf(R.string.transaction_successfully_inserted),
                             UIComponentType.Toast,
                             MessageType.Success
                         ),
@@ -119,7 +113,7 @@ constructor(
                 } else {
                     DataState.error(
                         response = buildResponse(
-                            message =intArrayOf(R.string.transaction_error_inserted),
+                            message = intArrayOf(R.string.transaction_error_inserted),
                             UIComponentType.Toast,
                             MessageType.Success
                         ),
@@ -145,7 +139,7 @@ constructor(
                 return if (resultObj > 0) {
                     DataState.data(
                         response = buildResponse(
-                            message =intArrayOf(R.string.transaction_successfully_updated),
+                            message = intArrayOf(R.string.transaction_successfully_updated),
                             UIComponentType.Toast,
                             MessageType.Success
                         ),
@@ -154,7 +148,7 @@ constructor(
                 } else {
                     DataState.error(
                         response = buildResponse(
-                            message =intArrayOf(R.string.transaction_error_updated),
+                            message = intArrayOf(R.string.transaction_error_updated),
                             UIComponentType.Toast,
                             MessageType.Success
                         ),
@@ -185,7 +179,7 @@ constructor(
                     }
                     DataState.data(
                         response = Response(
-                            message =intArrayOf(R.string.transaction_successfully_deleted),
+                            message = intArrayOf(R.string.transaction_successfully_deleted),
                             uiComponentType = uiComponentType,
                             messageType = MessageType.Success
                         ),
@@ -195,7 +189,7 @@ constructor(
                 } else {
                     DataState.error(
                         response = Response(
-                            message =intArrayOf(R.string.transaction_error_deleted),
+                            message = intArrayOf(R.string.transaction_error_deleted),
                             uiComponentType = UIComponentType.Toast,
                             messageType = MessageType.Error
                         )
