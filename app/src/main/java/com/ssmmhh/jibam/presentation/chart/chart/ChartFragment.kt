@@ -11,7 +11,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.RequestManager
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -20,6 +19,7 @@ import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.utils.MPPointF
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.model.ChartData
+import com.ssmmhh.jibam.data.model.Month
 import com.ssmmhh.jibam.databinding.FragmentChartBinding
 import com.ssmmhh.jibam.presentation.common.BaseFragment
 import com.ssmmhh.jibam.presentation.util.MonthChangerToolbarLayoutListener
@@ -29,7 +29,6 @@ import com.ssmmhh.jibam.util.toLocaleString
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 //https://github.com/PhilJay/MPAndroidChart/blob/master/MPChartExample/src/main/java/com/xxmassdeveloper/mpchartexample/PieChartActivity.java
@@ -152,13 +151,8 @@ class ChartFragment(
     }
 
     private fun subscribeObservers() {
-        viewModel.viewState.observe(viewLifecycleOwner) { vs ->
-            vs?.let { viewState ->
-                viewState.currentMonth?.let {
-                    val year = it.year?.let { "\n${it.toLocaleString()}" } ?: ""
-                    binding.toolbarMonthName = resources.getString(it.monthNameResId) + year
-                }
-            }
+        viewModel.currentMonth.observe(viewLifecycleOwner) { month ->
+            month?.let { setMonthNameToToolbar(month) }
         }
         viewModel.pieChartData.observe(viewLifecycleOwner) {
             it?.let { data ->
@@ -175,6 +169,11 @@ class ChartFragment(
         viewModel.navigateToChartDetailEvent.observe(viewLifecycleOwner, EventObserver {
             navigateToChartDetail(it)
         })
+    }
+
+    private fun setMonthNameToToolbar(month: Month) {
+        val year = month.year?.let { "\n${it.toLocaleString()}" } ?: ""
+        binding.toolbarMonthName = resources.getString(month.monthNameResId) + year
     }
 
     private fun updateChartData(values: List<ChartData>) {

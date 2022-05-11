@@ -1,7 +1,10 @@
 package com.ssmmhh.jibam.presentation.chart.chart
 
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asFlow
+import androidx.lifecycle.asLiveData
 import com.ssmmhh.jibam.data.model.ChartData
 import com.ssmmhh.jibam.data.model.Month
 import com.ssmmhh.jibam.data.source.repository.tranasction.TransactionRepository
@@ -13,7 +16,9 @@ import com.ssmmhh.jibam.presentation.common.MonthManger
 import com.ssmmhh.jibam.util.Event
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
@@ -28,11 +33,12 @@ constructor(
     private val _isChartTypeExpenses: MutableLiveData<Boolean> = MutableLiveData(true)
     val isChartTypeExpenses: LiveData<Boolean> = _isChartTypeExpenses
 
+    val currentMonth: LiveData<Month> = monthManger.currentMonth.asLiveData()
+
     private val _pieChartData: LiveData<List<ChartData>> = combine(
         monthManger.currentMonth,
         isChartTypeExpenses.asFlow()
     ) { month, _ ->
-        setCurrentMonth(month)
         return@combine (month)
     }.flatMapLatest {
 
@@ -56,22 +62,16 @@ constructor(
     private val _navigateToChartDetailEvent = MutableLiveData<Event<ChartData>>()
     val navigateToChartDetailEvent: LiveData<Event<ChartData>> = _navigateToChartDetailEvent
 
-    override fun initNewViewState(): ChartViewState = ChartViewState()
-
-    override suspend fun getResultByStateEvent(stateEvent: ChartStateEvent)
-            : DataState<ChartViewState> = DataState(stateEvent = stateEvent)
-
-    override fun updateViewState(newViewState: ChartViewState): ChartViewState {
-        val outDate = getCurrentViewStateOrNew()
-        return ChartViewState(
-            currentMonth = newViewState.currentMonth ?: outDate.currentMonth,
-        )
+    /**
+     * Reverse chart category type.
+     */
+    fun swapChartType() {
+        val oldValue: Boolean = _isChartTypeExpenses.value ?: true
+        _isChartTypeExpenses.value = !oldValue
     }
 
-    private fun setCurrentMonth(month: Month) {
-        setViewState(
-            ChartViewState(currentMonth = month)
-        )
+    fun openDetailChart(item: ChartData) {
+        _navigateToChartDetailEvent.value = Event(item)
     }
 
     fun showMonthPickerBottomSheet(parentFragmentManager: FragmentManager) {
@@ -86,19 +86,14 @@ constructor(
         monthManger.navigateToNextMonth()
     }
 
-    /**
-     * Reverse chart category type.
-     */
-    fun swapChartType() {
-        val oldValue: Boolean = _isChartTypeExpenses.value ?: true
-        _isChartTypeExpenses.value = !oldValue
+    override fun initNewViewState(): ChartViewState = ChartViewState()
+
+    override suspend fun getResultByStateEvent(stateEvent: ChartStateEvent)
+            : DataState<ChartViewState> = DataState(stateEvent = stateEvent)
+
+    override fun updateViewState(newViewState: ChartViewState): ChartViewState {
+        return ChartViewState()
     }
 
-    fun openDetailChart(item: ChartData){
-        _navigateToChartDetailEvent.value = Event(item)
-    }
 
-    companion object {
-        const val FORCE_TO_NULL = "FORCE THIS TO NULL"
-    }
 }
