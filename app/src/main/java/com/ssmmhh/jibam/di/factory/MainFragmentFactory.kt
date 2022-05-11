@@ -84,8 +84,6 @@ constructor(
             ChartFragment::class.java.name -> {
                 ChartFragment(
                     viewModelFactory,
-                    requestManager,
-                    currentLocale
                 )
             }
             DetailChartFragment::class.java.name -> {

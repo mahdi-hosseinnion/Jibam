@@ -21,8 +21,6 @@ import kotlin.math.abs
 @FlowPreview
 class ChartListAdapter(
     private val viewModel: ChartViewModel,
-    private val requestManager: RequestManager?,
-    private val currentLocale: Locale,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var data = emptyList<ChartData>()
@@ -38,8 +36,6 @@ class ChartListAdapter(
                 false
             ),
             viewModel,
-            requestManager,
-            currentLocale
         )
     }
 
@@ -67,38 +63,13 @@ class ChartListAdapter(
     constructor(
         private val binding: LayoutChartListItemBinding,
         private val viewModel: ChartViewModel,
-        private val requestManager: RequestManager?,
-        private val currentLocale: Locale,
     ) : RecyclerView.ViewHolder(binding.root) {
 
 
         fun bind(item: ChartData, biggestPercentage: Float) = with(binding) {
             this.viewmodel = viewModel
             this.item = item
-
-            txtDate.visibility = View.GONE
-            categoryName.text = item.getCategoryNameFromStringFile(root.context)
-            sumOfMoney.text = separate3By3(item.sumOfMoney.abs(), currentLocale)
-
-            txtPercentage.text =
-                ("${item.percentage.toString()}%").localizeNumber(root.resources)
-
-            prgPercentage.progress = item.percentage.toInt()
-            prgPercentage.max = biggestPercentage.toInt()
-
-            val categoryImageResourceId = item.getCategoryImageResourceId(root.context)
-
-            cardView.setCardBackgroundColor(
-                Color.parseColor(item.categoryImage.backgroundColor)
-            )
-
-            requestManager
-                ?.load(categoryImageResourceId)
-                ?.centerInside()
-                ?.transition(DrawableTransitionOptions.withCrossFade())
-                ?.error(R.drawable.ic_error)
-                ?.into(categoryImg)
-
+            this.biggestPercentage = biggestPercentage.toInt()
         }
     }
 }

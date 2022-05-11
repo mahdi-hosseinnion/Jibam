@@ -38,8 +38,6 @@ import kotlin.collections.ArrayList
 @FlowPreview
 class ChartFragment(
     viewModelFactory: ViewModelProvider.Factory,
-    private val requestManager: RequestManager,
-    private val currentLocale: Locale,
 ) : BaseFragment(),
     ToolbarLayoutListener,
     MonthChangerToolbarLayoutListener {
@@ -147,8 +145,6 @@ class ChartFragment(
             layoutManager = LinearLayoutManager(this@ChartFragment.context)
             recyclerAdapter = ChartListAdapter(
                 viewModel,
-                requestManager,
-                currentLocale,
             )
             isNestedScrollingEnabled = false
             adapter = recyclerAdapter

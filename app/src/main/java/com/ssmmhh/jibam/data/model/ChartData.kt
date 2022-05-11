@@ -15,6 +15,13 @@ data class ChartData(
     val categoryImage: Image,
     val percentage: Float
 ) {
+    /**
+     * Databinding does not support kotlin's default function arguments.
+     */
+    fun getCategoryNameFromStringFile(
+        context: Context,
+    ): String = getCategoryNameFromStringFile(context, this.categoryName)
+
     fun getCategoryNameFromStringFile(
         context: Context,
         defaultName: String = this.categoryName

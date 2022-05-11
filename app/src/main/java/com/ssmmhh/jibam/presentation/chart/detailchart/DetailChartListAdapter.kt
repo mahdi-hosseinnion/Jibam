@@ -9,7 +9,7 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
-import com.ssmmhh.jibam.databinding.LayoutChartListItemBinding
+import com.ssmmhh.jibam.databinding.LayoutChartDetailListItemBinding
 import com.ssmmhh.jibam.util.*
 import java.math.BigDecimal
 import java.util.*
@@ -52,7 +52,7 @@ class DetailChartListAdapter(
             )
         } else {
             DetailChartViewHolder(
-                binding = LayoutChartListItemBinding.inflate(
+                binding = LayoutChartDetailListItemBinding.inflate(
                     LayoutInflater.from(parent.context),
                     parent,
                     false
@@ -89,7 +89,7 @@ class DetailChartListAdapter(
 
 
     class DetailChartViewHolder(
-        val binding: LayoutChartListItemBinding,
+        val binding: LayoutChartDetailListItemBinding,
         private val interaction: Interaction?,
         private val isCalendarSolar: Boolean,
         private var requestManager: RequestManager,
