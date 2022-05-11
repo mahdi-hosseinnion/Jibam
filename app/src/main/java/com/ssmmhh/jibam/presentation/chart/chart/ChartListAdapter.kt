@@ -4,8 +4,6 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.AsyncListDiffer
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -17,27 +15,15 @@ import com.ssmmhh.jibam.util.separate3By3
 import java.util.*
 import kotlin.math.abs
 
-//TODO ("Remove diffUtil from this adapter")
 class ChartListAdapter(
     private val interaction: Interaction? = null,
     private val requestManager: RequestManager?,
     private val currentLocale: Locale,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    private var data = emptyList<ChartData>()
+
     private var biggestPercentage: Float = 100.0f
-
-    val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ChartData>() {
-
-        override fun areItemsTheSame(oldItem: ChartData, newItem: ChartData): Boolean =
-            oldItem.categoryId == newItem.categoryId
-
-        override fun areContentsTheSame(oldItem: ChartData, newItem: ChartData): Boolean =
-            oldItem == newItem
-
-
-    }
-    private val differ = AsyncListDiffer(this, DIFF_CALLBACK)
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
@@ -54,20 +40,19 @@ class ChartListAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is ChartViewHolder -> {
-                holder.bind(differ.currentList.get(position), biggestPercentage)
+                holder.bind(data[position], biggestPercentage)
             }
         }
     }
 
-    override fun getItemCount(): Int {
-        return differ.currentList.size
-    }
+    override fun getItemCount(): Int = data.size
 
     fun submitList(list: List<ChartData>) {
         if (!list.isNullOrEmpty()) {
             biggestPercentage = list.maxOf { abs(it.percentage) }
         }
-        differ.submitList(list)
+        data = list
+        notifyDataSetChanged()
     }
 
     class ChartViewHolder
