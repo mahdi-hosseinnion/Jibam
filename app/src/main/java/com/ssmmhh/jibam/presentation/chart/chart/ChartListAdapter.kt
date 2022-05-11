@@ -12,11 +12,15 @@ import com.ssmmhh.jibam.data.model.ChartData
 import com.ssmmhh.jibam.databinding.LayoutChartListItemBinding
 import com.ssmmhh.jibam.util.localizeNumber
 import com.ssmmhh.jibam.util.separate3By3
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import java.util.*
 import kotlin.math.abs
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 class ChartListAdapter(
-    private val interaction: Interaction? = null,
+    private val viewModel: ChartViewModel,
     private val requestManager: RequestManager?,
     private val currentLocale: Locale,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -33,7 +37,9 @@ class ChartListAdapter(
                 parent,
                 false
             ),
-            interaction, requestManager, currentLocale
+            viewModel,
+            requestManager,
+            currentLocale
         )
     }
 
@@ -55,32 +61,34 @@ class ChartListAdapter(
         notifyDataSetChanged()
     }
 
+    @ExperimentalCoroutinesApi
+    @FlowPreview
     class ChartViewHolder
     constructor(
-        val binding: LayoutChartListItemBinding,
-        private val interaction: Interaction?,
-        val requestManager: RequestManager?,
-        val currentLocale: Locale,
+        private val binding: LayoutChartListItemBinding,
+        private val viewModel: ChartViewModel,
+        private val requestManager: RequestManager?,
+        private val currentLocale: Locale,
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: ChartData, biggestPercentage: Float) = with(itemView) {
-            itemView.setOnClickListener {
-                interaction?.onItemSelected(adapterPosition, item)
-            }
-            binding.txtDate.visibility = View.GONE
 
-            binding.categoryName.text = item.getCategoryNameFromStringFile(context)
-            binding.sumOfMoney.text = separate3By3(item.sumOfMoney.abs(), currentLocale)
+        fun bind(item: ChartData, biggestPercentage: Float) = with(binding) {
+            this.viewmodel = viewModel
+            this.item = item
 
-            binding.txtPercentage.text =
-                ("${item.percentage.toString()}%").localizeNumber(resources)
+            txtDate.visibility = View.GONE
+            categoryName.text = item.getCategoryNameFromStringFile(root.context)
+            sumOfMoney.text = separate3By3(item.sumOfMoney.abs(), currentLocale)
 
-            binding.prgPercentage.progress = item.percentage.toInt()
-            binding.prgPercentage.max = biggestPercentage.toInt()
+            txtPercentage.text =
+                ("${item.percentage.toString()}%").localizeNumber(root.resources)
 
-            val categoryImageResourceId = item.getCategoryImageResourceId(context)
+            prgPercentage.progress = item.percentage.toInt()
+            prgPercentage.max = biggestPercentage.toInt()
 
-            binding.cardView.setCardBackgroundColor(
+            val categoryImageResourceId = item.getCategoryImageResourceId(root.context)
+
+            cardView.setCardBackgroundColor(
                 Color.parseColor(item.categoryImage.backgroundColor)
             )
 
@@ -89,12 +97,8 @@ class ChartListAdapter(
                 ?.centerInside()
                 ?.transition(DrawableTransitionOptions.withCrossFade())
                 ?.error(R.drawable.ic_error)
-                ?.into(binding.categoryImg)
+                ?.into(categoryImg)
 
         }
-    }
-
-    interface Interaction {
-        fun onItemSelected(position: Int, item: ChartData)
     }
 }

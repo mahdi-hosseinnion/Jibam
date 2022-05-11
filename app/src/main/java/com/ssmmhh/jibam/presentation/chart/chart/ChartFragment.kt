@@ -24,6 +24,7 @@ import com.ssmmhh.jibam.databinding.FragmentChartBinding
 import com.ssmmhh.jibam.presentation.common.BaseFragment
 import com.ssmmhh.jibam.presentation.util.MonthChangerToolbarLayoutListener
 import com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener
+import com.ssmmhh.jibam.util.EventObserver
 import com.ssmmhh.jibam.util.toLocaleString
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -40,7 +41,6 @@ class ChartFragment(
     private val requestManager: RequestManager,
     private val currentLocale: Locale,
 ) : BaseFragment(),
-    ChartListAdapter.Interaction,
     ToolbarLayoutListener,
     MonthChangerToolbarLayoutListener {
 
@@ -146,7 +146,7 @@ class ChartFragment(
         binding.chartRecycler.apply {
             layoutManager = LinearLayoutManager(this@ChartFragment.context)
             recyclerAdapter = ChartListAdapter(
-                this@ChartFragment,
+                viewModel,
                 requestManager,
                 currentLocale,
             )
@@ -176,6 +176,9 @@ class ChartFragment(
             else
                 getString(R.string.Income)
         }
+        viewModel.navigateToChartDetailEvent.observe(viewLifecycleOwner, EventObserver {
+            navigateToChartDetail(it)
+        })
     }
 
     private fun updateChartData(values: List<ChartData>) {
@@ -257,7 +260,7 @@ class ChartFragment(
         }
     }
 
-    override fun onItemSelected(position: Int, item: ChartData) {
+    private fun navigateToChartDetail(item: ChartData) {
         val action =
             ChartFragmentDirections.actionChartFragmentToDetailChartFragment(
                 categoryId = item.categoryId,

@@ -10,6 +10,7 @@ import com.ssmmhh.jibam.presentation.chart.chart.state.ChartStateEvent
 import com.ssmmhh.jibam.presentation.chart.chart.state.ChartViewState
 import com.ssmmhh.jibam.presentation.common.BaseViewModel
 import com.ssmmhh.jibam.presentation.common.MonthManger
+import com.ssmmhh.jibam.util.Event
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
@@ -52,6 +53,9 @@ constructor(
 
     val pieChartData: LiveData<List<ChartData>> = _pieChartData
 
+    private val _navigateToChartDetailEvent = MutableLiveData<Event<ChartData>>()
+    val navigateToChartDetailEvent: LiveData<Event<ChartData>> = _navigateToChartDetailEvent
+
     override fun initNewViewState(): ChartViewState = ChartViewState()
 
     override suspend fun getResultByStateEvent(stateEvent: ChartStateEvent)
@@ -88,6 +92,10 @@ constructor(
     fun swapChartType() {
         val oldValue: Boolean = _isChartTypeExpenses.value ?: true
         _isChartTypeExpenses.value = !oldValue
+    }
+
+    fun openDetailChart(item: ChartData){
+        _navigateToChartDetailEvent.value = Event(item)
     }
 
     companion object {
