@@ -1,8 +1,8 @@
 package com.ssmmhh.jibam.presentation.transactions
 
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
+import com.ssmmhh.jibam.util.DateUtils
 import java.math.BigDecimal
-import java.util.*
 
 
 fun addHeaderToTransactions(currentList: List<TransactionDto>): List<TransactionsRecyclerViewItem> {
@@ -13,9 +13,9 @@ fun addHeaderToTransactions(currentList: List<TransactionDto>): List<Transaction
     var headerDate = currentList[0].date
     var incomeSum = BigDecimal.ZERO
     var expensesSum = BigDecimal.ZERO
-    var tempList = ArrayList<TransactionsRecyclerViewItem>()
-    for (item in currentList) {
-        if (item.date == headerDate) {
+    val tempList = ArrayList<TransactionsRecyclerViewItem>()
+    currentList.forEach { item ->
+        if (item.date.isTheSameDayAs(headerDate)) {
             //make new header and items
             tempList.add(item.toTransactionsRecyclerViewItem())
             if (item.money >= BigDecimal.ZERO) { //income
@@ -69,4 +69,7 @@ private fun createHeader(
         )
     }
 }
+
+private fun Long.isTheSameDayAs(other: Long): Boolean =
+    (this.div(DateUtils.DAY_IN_SECONDS)) == other.div(DateUtils.DAY_IN_SECONDS)
 
