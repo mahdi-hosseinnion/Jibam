@@ -1,24 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/detail_chart_fragment_root"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    tools:context=".presentation.chart.detailchart.DetailChartFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <data>
+
+        <variable
+            name="viewmodel"
+            type="com.ssmmhh.jibam.presentation.chart.detailchart.DetailChartViewModel" />
+
+        <variable
+            name="toolbarListener"
+            type="com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener" />
+
+        <variable
+            name="toolbarTitle"
+            type="String" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/detail_chart_fragment_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-        <include
-            android:id="@+id/toolbar"
-            layout="@layout/layout_toolbar_with_back_btn" />
+        android:background="@color/white"
+        tools:context=".presentation.chart.detailchart.DetailChartFragment">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/detail_chart_recycler"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    </LinearLayout>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+            <include
+                android:id="@+id/toolbar"
+                app:listener="@{toolbarListener}"
+                app:toolbarTitle="@{toolbarTitle}"
+                layout="@layout/layout_toolbar_with_back_btn_with_databinding" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/detail_chart_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

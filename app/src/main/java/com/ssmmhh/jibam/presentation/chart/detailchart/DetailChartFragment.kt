@@ -23,6 +23,7 @@ import com.ssmmhh.jibam.data.util.UndoCallback
 import com.ssmmhh.jibam.databinding.FragmentDetailChartBinding
 import com.ssmmhh.jibam.presentation.chart.detailchart.DetailChartViewModel.Companion.FORCE_TO_NULL
 import com.ssmmhh.jibam.presentation.common.BaseFragment
+import com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener
 import com.ssmmhh.jibam.util.SwipeToDeleteCallback
 import com.ssmmhh.jibam.util.isCalendarSolar
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -37,7 +38,7 @@ class DetailChartFragment(
     private val requestManager: RequestManager,
     private val currentLocale: Locale,
     private val sharedPreferences: SharedPreferences
-) : BaseFragment(), DetailChartListAdapter.Interaction {
+) : BaseFragment(), DetailChartListAdapter.Interaction, ToolbarLayoutListener {
 
     val args: DetailChartFragmentArgs by navArgs()
 
@@ -45,39 +46,26 @@ class DetailChartFragment(
 
     private lateinit var recyclerAdapter: DetailChartListAdapter
 
-    private var _binding: FragmentDetailChartBinding? = null
-
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentDetailChartBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentDetailChartBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        binding = FragmentDetailChartBinding.inflate(inflater, container, false).apply {
+            viewmodel = viewModel
+            toolbarListener = this@DetailChartFragment
+            toolbarTitle = args.categoryName.replaceFirstChar { it.uppercase() }
+        }
+        return binding.root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupUi()
         initRecyclerView()
         subscribeObservers()
-    }
-
-    private fun setupUi() {
-        binding.toolbar.topAppBarNormal.title =
-            args.categoryName.replaceFirstChar { it.uppercase() }
-
-        binding.toolbar.topAppBarNormal.setNavigationOnClickListener {
-            navigateBack()
-        }
     }
 
     override fun handleLoading() {
@@ -208,5 +196,11 @@ class DetailChartFragment(
             )
         findNavController().navigate(action)
     }
+
+    override fun onClickOnNavigation(view: View) {
+        navigateBack()
+    }
+
+    override fun onClickOnMenuButton(view: View) {}
 
 }
