@@ -11,14 +11,16 @@ import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
 import com.ssmmhh.jibam.databinding.LayoutChartDetailListItemBinding
 import com.ssmmhh.jibam.util.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import java.math.BigDecimal
-import java.util.*
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 class DetailChartListAdapter(
-    private val interaction: Interaction? = null,
+    private val viewModel: DetailChartViewModel,
     private val isCalendarSolar: Boolean,
-    private var requestManager: RequestManager,
-    private var currentLocale: Locale,
+    private val requestManager: RequestManager,
     private var data: List<TransactionDto>? = null
 
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -26,96 +28,32 @@ class DetailChartListAdapter(
     private var totalAmount: BigDecimal = data?.sumOf { (it.money).abs() } ?: BigDecimal.ZERO
     private var biggestAmount: BigDecimal = data?.maxOf { (it.money).abs() } ?: BigDecimal.ZERO
 
-    companion object {
-
-        private const val EMPTY_LIST_MARKER = -2
-        private val EMPTY_LIST_MARKER_TRANSACTION = TransactionDto(
-            id = EMPTY_LIST_MARKER,
-            BigDecimal.ZERO,
-            "",
-            0,
-            "",
-            "",
-            "",
-            0
-        )
-
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return if (viewType == EMPTY_LIST_MARKER) {
-            GenericViewHolder(
-                LayoutInflater.from(parent.context)
-                    .inflate(R.layout.layout_detail_chart_empty_list_item, parent, false),
-                R.id.info_text,
-                R.string.no_transaction_found_with_this_category
-            )
-        } else {
-            DetailChartViewHolder(
-                binding = LayoutChartDetailListItemBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                ),
-                interaction,
-                isCalendarSolar,
-                requestManager,
-                currentLocale
-            )
-        }
-    }
-
-    override fun getItemCount() = data?.size ?: 0
-
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is DetailChartViewHolder) {
-            val item = data?.get(position) ?: return
-            holder.bind(item, totalAmount, biggestAmount)
-        }
-    }
-
-    fun swapData(data: List<TransactionDto>?) {
-        if (data.isNullOrEmpty()) {
-            this.data = arrayListOf(EMPTY_LIST_MARKER_TRANSACTION)
-        } else {
-            this.data = data
-            totalAmount = data.sumOf { (it.money).abs() }
-            biggestAmount = data.maxOf { (it.money).abs() }
-        }
-        notifyDataSetChanged()
-    }
-
-    fun getTransactionAt(position: Int): TransactionDto? = this.data?.get(index = position)
-
-
     class DetailChartViewHolder(
-        val binding: LayoutChartDetailListItemBinding,
-        private val interaction: Interaction?,
+        private val binding: LayoutChartDetailListItemBinding,
+        private val viewModel: DetailChartViewModel,
         private val isCalendarSolar: Boolean,
         private var requestManager: RequestManager,
-        private var currentLocale: Locale
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
             item: TransactionDto,
             totalAmount: BigDecimal,
             biggestAmount: BigDecimal
-        ) = with(itemView) {
+        ) = with(binding) {
+            this.viewmodel = viewModel
+            this.item = item
             loadImage(item)
             showPercentage(item.money, totalAmount, biggestAmount)
             //set text
             if (item.memo.isNullOrBlank()) {
-                binding.categoryName.text = item.getCategoryNameFromStringFile(context)
+                categoryName.text = item.getCategoryNameFromStringFile(binding.root.context)
             } else {
-                binding.categoryName.text = item.memo
+                categoryName.text = item.memo
             }
-            binding.sumOfMoney.text = (item.money).abs().toString().localizeNumber(resources)
-            binding.txtDate.visibility = View.VISIBLE
-            binding.txtDate.text = dateWithPattern(item.date)
+            sumOfMoney.text = (item.money).abs().toString().localizeNumber(binding.root.resources)
+            txtDate.visibility = View.VISIBLE
+            txtDate.text = dateWithPattern(item.date)
 
-            setOnClickListener {
-                interaction?.onItemSelected(adapterPosition, item)
-            }
         }
 
 
@@ -162,6 +100,48 @@ class DetailChartListAdapter(
         }
     }
 
+    fun submitData(data: List<TransactionDto>?) {
+        if (data.isNullOrEmpty()) {
+            this.data = arrayListOf(EMPTY_LIST_MARKER_TRANSACTION)
+        } else {
+            this.data = data
+            totalAmount = data.sumOf { (it.money).abs() }
+            biggestAmount = data.maxOf { (it.money).abs() }
+        }
+        notifyDataSetChanged()
+    }
+
+    fun getTransactionAt(position: Int): TransactionDto? = this.data?.getOrNull(index = position)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return if (viewType == EMPTY_LIST_MARKER) {
+            GenericViewHolder(
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.layout_detail_chart_empty_list_item, parent, false),
+                R.id.info_text,
+                R.string.no_transaction_found_with_this_category
+            )
+        } else {
+            DetailChartViewHolder(
+                binding = LayoutChartDetailListItemBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                ),
+                viewModel,
+                isCalendarSolar,
+                requestManager,
+            )
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (holder is DetailChartViewHolder) {
+            val item = data?.get(position) ?: return
+            holder.bind(item, totalAmount, biggestAmount)
+        }
+    }
+
     override fun getItemViewType(position: Int): Int {
         if (data?.get(position)?.id == EMPTY_LIST_MARKER) {
             return EMPTY_LIST_MARKER
@@ -169,10 +149,23 @@ class DetailChartListAdapter(
         return super.getItemViewType(position)
     }
 
-    interface Interaction {
-        fun onItemSelected(position: Int, item: TransactionDto)
+    override fun getItemCount() = data?.size ?: 0
+
+    companion object {
+
+        private const val EMPTY_LIST_MARKER = -2
+
+        private val EMPTY_LIST_MARKER_TRANSACTION = TransactionDto(
+            id = EMPTY_LIST_MARKER,
+            BigDecimal.ZERO,
+            "",
+            0,
+            "",
+            "",
+            "",
+            0
+        )
+
     }
-
-
 }
 

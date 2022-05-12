@@ -13,10 +13,10 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
-import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
 import com.ssmmhh.jibam.databinding.FragmentDetailChartBinding
 import com.ssmmhh.jibam.presentation.common.BaseFragment
 import com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener
+import com.ssmmhh.jibam.util.EventObserver
 import com.ssmmhh.jibam.util.SwipeToDeleteCallback
 import com.ssmmhh.jibam.util.isCalendarSolar
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -30,7 +30,7 @@ class DetailChartFragment(
     private val requestManager: RequestManager,
     private val currentLocale: Locale,
     private val sharedPreferences: SharedPreferences
-) : BaseFragment(), DetailChartListAdapter.Interaction, ToolbarLayoutListener {
+) : BaseFragment(), ToolbarLayoutListener {
 
     val args: DetailChartFragmentArgs by navArgs()
 
@@ -65,10 +65,9 @@ class DetailChartFragment(
             layoutManager = LinearLayoutManager(this@DetailChartFragment.context)
 
             recyclerAdapter = DetailChartListAdapter(
-                interaction = this@DetailChartFragment,
+                viewModel,
                 sharedPreferences.isCalendarSolar(currentLocale),
                 requestManager,
-                currentLocale
             )
 
             val swipeHandler =
@@ -92,8 +91,11 @@ class DetailChartFragment(
         viewModel.getAllTransactionByCategoryId(
             args.categoryId
         ).observe(viewLifecycleOwner) {
-            recyclerAdapter.swapData(it)
+            recyclerAdapter.submitData(it)
         }
+        viewModel.navigateToTransactionDetail.observe(viewLifecycleOwner, EventObserver {
+            navigateToAddTransactionFragment(it)
+        })
     }
 
     override fun handleLoading() {
@@ -110,10 +112,6 @@ class DetailChartFragment(
                 handleNewStateMessage(it) { viewModel.clearStateMessage() }
             }
         }
-    }
-
-    override fun onItemSelected(position: Int, item: TransactionDto) {
-        navigateToAddTransactionFragment(item.id)
     }
 
     private fun navigateToAddTransactionFragment(transactionId: Int) {

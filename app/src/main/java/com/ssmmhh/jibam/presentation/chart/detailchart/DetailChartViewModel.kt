@@ -1,6 +1,7 @@
 package com.ssmmhh.jibam.presentation.chart.detailchart
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
@@ -10,6 +11,7 @@ import com.ssmmhh.jibam.presentation.chart.detailchart.state.DetailChartStateEve
 import com.ssmmhh.jibam.presentation.chart.detailchart.state.DetailChartViewState
 import com.ssmmhh.jibam.presentation.common.BaseViewModel
 import com.ssmmhh.jibam.presentation.common.MonthManger
+import com.ssmmhh.jibam.util.Event
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.flatMapLatest
@@ -23,6 +25,9 @@ constructor(
     private val transactionRepository: TransactionRepository,
     private val monthManger: MonthManger
 ) : BaseViewModel<DetailChartViewState, DetailChartStateEvent>() {
+
+    private val _navigateToTransactionDetail = MutableLiveData<Event<Int>>()
+    val navigateToTransactionDetail: LiveData<Event<Int>> = _navigateToTransactionDetail
 
     fun getAllTransactionByCategoryId(categoryId: Int): LiveData<List<TransactionDto>> =
         monthManger.currentMonth.flatMapLatest {
@@ -124,6 +129,7 @@ constructor(
             )
         )
     }
+
     fun deleteTransaction(transactionToDelete: TransactionDto?) {
         if (transactionToDelete == null) {
             //show error to user
@@ -138,4 +144,7 @@ constructor(
         //show snackBar
     }
 
+    fun openTransactionDetail(item: TransactionDto) {
+        _navigateToTransactionDetail.value = Event(item.id)
+    }
 }
