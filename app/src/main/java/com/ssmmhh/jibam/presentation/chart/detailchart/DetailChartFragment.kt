@@ -53,37 +53,11 @@ class DetailChartFragment(
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
         subscribeObservers()
     }
-
-    override fun handleLoading() {
-        viewModel.countOfActiveJobs.observe(
-            viewLifecycleOwner
-        ) {
-            showProgressBar(viewModel.areAnyJobsActive())
-        }
-    }
-
-    override fun handleStateMessages() {
-        viewModel.stateMessage.observe(viewLifecycleOwner) {
-            it?.let {
-                handleNewStateMessage(it) { viewModel.clearStateMessage() }
-            }
-        }
-    }
-
-    private fun subscribeObservers() {
-        viewModel.getAllTransactionByCategoryId(
-            args.categoryId
-        ).observe(viewLifecycleOwner) {
-            recyclerAdapter.swapData(it)
-        }
-    }
-
 
     private fun initRecyclerView() {
         binding.detailChartRecycler.apply {
@@ -110,6 +84,31 @@ class DetailChartFragment(
             itemTouchHelper.attachToRecyclerView(this)
 
             adapter = recyclerAdapter
+        }
+    }
+
+
+    private fun subscribeObservers() {
+        viewModel.getAllTransactionByCategoryId(
+            args.categoryId
+        ).observe(viewLifecycleOwner) {
+            recyclerAdapter.swapData(it)
+        }
+    }
+
+    override fun handleLoading() {
+        viewModel.countOfActiveJobs.observe(
+            viewLifecycleOwner
+        ) {
+            showProgressBar(viewModel.areAnyJobsActive())
+        }
+    }
+
+    override fun handleStateMessages() {
+        viewModel.stateMessage.observe(viewLifecycleOwner) {
+            it?.let {
+                handleNewStateMessage(it) { viewModel.clearStateMessage() }
+            }
         }
     }
 
