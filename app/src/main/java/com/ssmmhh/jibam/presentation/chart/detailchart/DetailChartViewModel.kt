@@ -2,9 +2,10 @@ package com.ssmmhh.jibam.presentation.chart.detailchart
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
+import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
 import com.ssmmhh.jibam.data.source.repository.tranasction.TransactionRepository
-import com.ssmmhh.jibam.data.util.DataState
+import com.ssmmhh.jibam.data.util.*
 import com.ssmmhh.jibam.presentation.chart.detailchart.state.DetailChartStateEvent
 import com.ssmmhh.jibam.presentation.chart.detailchart.state.DetailChartViewState
 import com.ssmmhh.jibam.presentation.common.BaseViewModel
@@ -41,7 +42,7 @@ constructor(
                     stateEvent
                 )
                 DataState(
-                    stateMessage = result.stateMessage,
+                    stateMessage = getUndoSnackBarStateMessageForDeleteTransaction(),
                     data = null,
                     stateEvent = result.stateEvent
                 )
@@ -58,22 +59,45 @@ constructor(
             }
         }
 
-    override fun updateViewState(newViewState: DetailChartViewState): DetailChartViewState {
-        val outDate = getCurrentViewStateOrNew()
-        //we should force this to null if user didn't want to restore transaction
-        val recentlyDeletedTransaction =
-            if (newViewState.recentlyDeletedTransaction?.memo == FORCE_TO_NULL)
-                null
-            else
-                newViewState.recentlyDeletedTransaction
-                    ?: outDate.recentlyDeletedTransaction
+    private fun getUndoSnackBarStateMessageForDeleteTransaction(): StateMessage {
+        val undoCallback = object : UndoCallback {
+            override fun undo() {
 
-        return DetailChartViewState(
-            recentlyDeletedTransaction = recentlyDeletedTransaction,
+                getDeletedTransaction()?.let {
+                    //Insert deleted transaction
+                    insertTransaction(it)
+                } ?: run {
+                    //Show error
+                    addToMessageStack(
+                        message = intArrayOf(R.string.unable_to_restore_transaction),
+                        uiComponentType = UIComponentType.Dialog,
+                        messageType = MessageType.Error
+                    )
+                }
+            }
+
+            override fun onDismiss() {}
+        }
+
+        return StateMessage(
+            response = Response(
+                intArrayOf(R.string.transaction_successfully_deleted),
+                UIComponentType.UndoSnackBar(undoCallback),
+                MessageType.Info
+            )
         )
     }
 
-    fun setRecentlyDeletedTrans(recentlyDeletedTransaction: TransactionDto) {
+
+    override fun updateViewState(newViewState: DetailChartViewState): DetailChartViewState {
+        val outDate = getCurrentViewStateOrNew()
+        return DetailChartViewState(
+            recentlyDeletedTransaction = newViewState.recentlyDeletedTransaction
+                ?: outDate.recentlyDeletedTransaction
+        )
+    }
+
+    private fun setRecentlyDeletedTrans(recentlyDeletedTransaction: TransactionDto) {
         setViewState(
             DetailChartViewState(
                 recentlyDeletedTransaction = recentlyDeletedTransaction
@@ -81,7 +105,7 @@ constructor(
         )
     }
 
-    fun getRecentlyDeletedTrans(): TransactionDto? = viewState.value?.recentlyDeletedTransaction
+    fun getDeletedTransaction(): TransactionDto? = viewState.value?.recentlyDeletedTransaction
 
     fun deleteTransaction(transactionId: Int) {
         launchNewJob(
@@ -92,7 +116,7 @@ constructor(
         )
     }
 
-    fun insertRecentlyDeletedTrans(transaction: TransactionDto) {
+    fun insertTransaction(transaction: TransactionDto) {
 
         launchNewJob(
             DetailChartStateEvent.InsertTransaction(
@@ -113,7 +137,5 @@ constructor(
         deleteTransaction(transactionToDelete.id)
         //show snackBar
     }
-    companion object {
-        const val FORCE_TO_NULL = "FORCE THIS TO NULL"
-    }
+
 }

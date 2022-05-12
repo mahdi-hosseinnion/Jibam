@@ -13,22 +13,14 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
-import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
-import com.ssmmhh.jibam.data.source.repository.buildResponse
-import com.ssmmhh.jibam.data.util.MessageType
-import com.ssmmhh.jibam.data.util.StateMessageCallback
-import com.ssmmhh.jibam.data.util.UIComponentType
-import com.ssmmhh.jibam.data.util.UndoCallback
 import com.ssmmhh.jibam.databinding.FragmentDetailChartBinding
-import com.ssmmhh.jibam.presentation.chart.detailchart.DetailChartViewModel.Companion.FORCE_TO_NULL
 import com.ssmmhh.jibam.presentation.common.BaseFragment
 import com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener
 import com.ssmmhh.jibam.util.SwipeToDeleteCallback
 import com.ssmmhh.jibam.util.isCalendarSolar
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import java.math.BigDecimal
 import java.util.*
 
 @ExperimentalCoroutinesApi
@@ -80,9 +72,6 @@ class DetailChartFragment(
         viewModel.stateMessage.observe(viewLifecycleOwner) {
             it?.let {
                 handleNewStateMessage(it) { viewModel.clearStateMessage() }
-                if (it.response.message.contentEquals(intArrayOf(R.string.transaction_successfully_deleted))) {
-                    showDeleteUndoSnackBar()
-                }
             }
         }
     }
@@ -123,52 +112,6 @@ class DetailChartFragment(
             adapter = recyclerAdapter
         }
     }
-
-    private fun showDeleteUndoSnackBar() {
-        val transaction = viewModel.getRecentlyDeletedTrans()
-
-        val undoCallback = object : UndoCallback {
-            override fun undo() {
-                if (transaction == null) {
-                    viewModel.addToMessageStack(
-                        message = intArrayOf(R.string.unable_to_restore_transaction),
-                        uiComponentType = UIComponentType.Dialog,
-                        messageType = MessageType.Error
-                    )
-                    return
-                }
-                viewModel.insertRecentlyDeletedTrans(transaction)
-            }
-
-            override fun onDismiss() {
-                //TODO remove this
-                viewModel.setRecentlyDeletedTrans(
-                    // an empty transaction with force to null memo to remove transaction in viewmodel
-                    TransactionDto(
-                        0,
-                        BigDecimal.ZERO,
-                        memo = FORCE_TO_NULL,
-                        0,
-                        "",
-                        "",
-                        "",
-                        0
-                    )
-                )
-            }
-        }
-        activityCommunicationListener.onResponseReceived(
-            buildResponse(
-                intArrayOf(R.string.transaction_successfully_deleted),
-                UIComponentType.UndoSnackBar(undoCallback, binding.detailChartFragmentRoot),
-                MessageType.Info
-            ), object : StateMessageCallback {
-                override fun removeMessageFromStack() {
-                }
-            }
-        )
-    }
-
 
     override fun onItemSelected(position: Int, item: TransactionDto) {
         navigateToAddTransactionFragment(item.id)

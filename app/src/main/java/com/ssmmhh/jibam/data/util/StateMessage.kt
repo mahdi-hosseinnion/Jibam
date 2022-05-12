@@ -84,7 +84,7 @@ sealed class UIComponentType {
 
     class UndoSnackBar(
         val callback: UndoCallback,
-        val parentView: View
+        val parentView: View? = null
     ) : UIComponentType()
 
     object None : UIComponentType()

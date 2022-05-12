@@ -149,7 +149,7 @@ class MainActivity : AppCompatActivity(), ActivityCommunicationListener {
                 displayUndoSnackBar(
                     message = response.getStringMessage(this),
                     undoCallback = response.uiComponentType.callback,
-                    parentView = response.uiComponentType.parentView,
+                    parentView = response.uiComponentType.parentView ?: binding.root,
                     stateMessageCallback = stateMessageCallback
 
                 )
