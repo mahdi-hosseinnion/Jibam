@@ -85,7 +85,7 @@ class DetailChartListAdapter(
         notifyDataSetChanged()
     }
 
-    fun getTransaction(position: Int): TransactionDto? = this.data?.get(index = position)
+    fun getTransactionAt(position: Int): TransactionDto? = this.data?.get(index = position)
 
 
     class DetailChartViewHolder(

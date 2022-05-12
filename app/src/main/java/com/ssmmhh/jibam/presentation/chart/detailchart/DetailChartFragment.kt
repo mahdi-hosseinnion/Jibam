@@ -44,9 +44,9 @@ class DetailChartFragment(
 
     private val viewModel by viewModels<DetailChartViewModel> { viewModelFactory }
 
-    private lateinit var recyclerAdapter: DetailChartListAdapter
-
     private lateinit var binding: FragmentDetailChartBinding
+
+    private lateinit var recyclerAdapter: DetailChartListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -112,8 +112,8 @@ class DetailChartFragment(
                 object : SwipeToDeleteCallback(this@DetailChartFragment.requireContext()) {
                     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                         val adapter = binding.detailChartRecycler.adapter as DetailChartListAdapter
-                        val deletedTrans = adapter.getTransaction(viewHolder.adapterPosition)
-                        swipeDeleteTransaction(deletedTrans)
+                        val deletedTrans = adapter.getTransactionAt(viewHolder.adapterPosition)
+                        viewModel.deleteTransaction(deletedTrans)
                     }
                 }
 
@@ -122,20 +122,6 @@ class DetailChartFragment(
 
             adapter = recyclerAdapter
         }
-    }
-
-    private fun swipeDeleteTransaction(transactionToDelete: TransactionDto?) {
-        if (transactionToDelete == null) {
-            //show error to user
-            return
-        }
-        //add to recently deleted
-        viewModel.setRecentlyDeletedTrans(
-            transactionToDelete
-        )
-        //delete from database
-        viewModel.deleteTransaction(transactionToDelete.id)
-        //show snackBar
     }
 
     private fun showDeleteUndoSnackBar() {
@@ -189,7 +175,6 @@ class DetailChartFragment(
     }
 
     private fun navigateToAddTransactionFragment(transactionId: Int) {
-        //on category selected and bottomSheet hided
         val action =
             DetailChartFragmentDirections.actionDetailChartFragmentToDetailEditTransactionFragment(
                 transactionId = transactionId

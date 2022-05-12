@@ -100,7 +100,19 @@ constructor(
             )
         )
     }
-
+    fun deleteTransaction(transactionToDelete: TransactionDto?) {
+        if (transactionToDelete == null) {
+            //show error to user
+            return
+        }
+        //add to recently deleted
+        setRecentlyDeletedTrans(
+            transactionToDelete
+        )
+        //delete from database
+        deleteTransaction(transactionToDelete.id)
+        //show snackBar
+    }
     companion object {
         const val FORCE_TO_NULL = "FORCE THIS TO NULL"
     }
