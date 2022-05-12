@@ -12,7 +12,6 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.RequestManager
 import com.ssmmhh.jibam.databinding.FragmentDetailChartBinding
 import com.ssmmhh.jibam.presentation.common.BaseFragment
 import com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener
@@ -27,7 +26,6 @@ import java.util.*
 @FlowPreview
 class DetailChartFragment(
     viewModelFactory: ViewModelProvider.Factory,
-    private val requestManager: RequestManager,
     private val currentLocale: Locale,
     private val sharedPreferences: SharedPreferences
 ) : BaseFragment(), ToolbarLayoutListener {
@@ -67,7 +65,6 @@ class DetailChartFragment(
             recyclerAdapter = DetailChartListAdapter(
                 viewModel,
                 sharedPreferences.isCalendarSolar(currentLocale),
-                requestManager,
             )
 
             val swipeHandler =

@@ -1,16 +1,14 @@
 package com.ssmmhh.jibam.presentation.chart.detailchart
 
-import android.graphics.Color
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.RequestManager
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
 import com.ssmmhh.jibam.databinding.LayoutChartDetailListItemBinding
-import com.ssmmhh.jibam.util.*
+import com.ssmmhh.jibam.util.GenericViewHolder
+import com.ssmmhh.jibam.util.calculatePercentage
+import com.ssmmhh.jibam.util.calculatePercentageAndRoundResult
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.math.BigDecimal
@@ -20,9 +18,7 @@ import java.math.BigDecimal
 class DetailChartListAdapter(
     private val viewModel: DetailChartViewModel,
     private val isCalendarSolar: Boolean,
-    private val requestManager: RequestManager,
     private var data: List<TransactionDto>? = null
-
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var totalAmount: BigDecimal = data?.sumOf { (it.money).abs() } ?: BigDecimal.ZERO
@@ -31,8 +27,7 @@ class DetailChartListAdapter(
     class DetailChartViewHolder(
         private val binding: LayoutChartDetailListItemBinding,
         private val viewModel: DetailChartViewModel,
-        private val isCalendarSolar: Boolean,
-        private var requestManager: RequestManager,
+        private val _isCalendarSolar: Boolean,
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
@@ -42,61 +37,10 @@ class DetailChartListAdapter(
         ) = with(binding) {
             this.viewmodel = viewModel
             this.item = item
-            loadImage(item)
-            showPercentage(item.money, totalAmount, biggestAmount)
-            //set text
-            if (item.memo.isNullOrBlank()) {
-                categoryName.text = item.getCategoryNameFromStringFile(binding.root.context)
-            } else {
-                categoryName.text = item.memo
-            }
-            sumOfMoney.text = (item.money).abs().toString().localizeNumber(binding.root.resources)
-            txtDate.visibility = View.VISIBLE
-            txtDate.text = dateWithPattern(item.date)
+            this.isCalendarSolar = _isCalendarSolar
+            this.percentage = calculatePercentageAndRoundResult(item.money, totalAmount).toFloat()
+            this.progressBarMaximum = calculatePercentage(biggestAmount, totalAmount).toInt()
 
-        }
-
-
-        private fun loadImage(item: TransactionDto) {
-
-            binding.cardView.setCardBackgroundColor(
-                Color.parseColor(item.categoryImageBackgroundColor)
-            )
-
-            val categoryImageResourceId = item.getCategoryImageResourceId(itemView.context)
-            requestManager
-                .load(categoryImageResourceId)
-                .centerInside()
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .error(R.drawable.ic_error)
-                .into(binding.categoryImg)
-        }
-
-        private fun showPercentage(
-            money: BigDecimal,
-            totalAmount: BigDecimal,
-            biggestAmount: BigDecimal
-        ) {
-            val percentage = calculatePercentageAndRoundResult(
-                money,
-                totalAmount
-            )
-
-            binding.txtPercentage.text =
-                ("${percentage}%").localizeNumber(
-                    itemView.resources
-                )
-            binding.prgPercentage.progress = percentage.toInt()
-            binding.prgPercentage.max = calculatePercentage(biggestAmount, totalAmount).toInt()
-        }
-
-        private fun dateWithPattern(date: Long): String {
-            val dateHolder = DateUtils.convertUnixTimeToDate(date, isCalendarSolar)
-            return if (isCalendarSolar) {
-                "${dateHolder.year.toLocaleString()}/${dateHolder.month.toLocaleStringWithTwoDigits()}/${dateHolder.day.toLocaleStringWithTwoDigits()}"
-            } else {
-                "${dateHolder.month.toLocaleStringWithTwoDigits()}/${dateHolder.day.toLocaleStringWithTwoDigits()}/${dateHolder.year.toLocaleString()}"
-            }
         }
     }
 
@@ -130,7 +74,6 @@ class DetailChartListAdapter(
                 ),
                 viewModel,
                 isCalendarSolar,
-                requestManager,
             )
         }
     }

@@ -29,11 +29,17 @@ data class TransactionDto(
     val date: Long,
 ) {
 
+    /**
+     * Databinding does not support kotlin's default function arguments.
+     */
+    fun getCategoryNameFromStringFile(
+        context: Context,
+    ): String = getCategoryNameFromStringFile(context, this.categoryName)
+
     fun getCategoryNameFromStringFile(
         context: Context,
         defaultName: String = this.categoryName
-    ): String =
-        getResourcesStringValueByName(context, this.categoryName) ?: defaultName
+    ): String = getResourcesStringValueByName(context, this.categoryName) ?: defaultName
 
     fun getCategoryImageResourceId(
         context: Context,

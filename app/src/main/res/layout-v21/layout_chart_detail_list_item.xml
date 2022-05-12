@@ -6,6 +6,10 @@
 
     <data>
 
+        <import type="android.view.View" />
+
+        <import type="android.graphics.Color" />
+
         <variable
             name="viewmodel"
             type="com.ssmmhh.jibam.presentation.chart.detailchart.DetailChartViewModel" />
@@ -13,6 +17,19 @@
         <variable
             name="item"
             type="com.ssmmhh.jibam.data.source.local.dto.TransactionDto" />
+
+        <variable
+            name="isCalendarSolar"
+            type="Boolean" />
+
+        <variable
+            name="progressBarMaximum"
+            type="Integer" />
+
+        <variable
+            name="percentage"
+            type="Float" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -40,7 +57,7 @@
             app:layout_constraintEnd_toStartOf="@+id/linear"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            card_view:cardBackgroundColor="#D297EA"
+            card_view:cardBackgroundColor="@{Color.parseColor(item.categoryImageBackgroundColor)}"
             card_view:cardCornerRadius="20dp">
 
             <ImageView
@@ -51,6 +68,7 @@
                 android:layout_margin="8dp"
                 android:elevation="2dp"
                 android:scaleType="center"
+                app:loadWithResourceId="@{item.getCategoryImageResourceId(context)}"
                 app:tint="@color/black" />
 
         </androidx.cardview.widget.CardView>
@@ -84,6 +102,8 @@
                     android:textColor="#1E1E1E"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    app:alternativeText="@{item.getCategoryNameFromStringFile(context)}"
+                    app:preferredText="@{item.memo}"
                     tools:text="Food" />
 
                 <TextView
@@ -95,6 +115,7 @@
                     android:layout_marginRight="8dp"
                     android:gravity="center|start"
                     android:maxLines="1"
+                    android:text="@{(String.valueOf(percentage)+`%`)}"
                     android:textColor="#3C3C3C"
                     android:textSize="14sp"
                     tools:text="15.2%" />
@@ -114,6 +135,7 @@
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     android:textStyle="bold"
+                    app:groupNumberByThreeThenSetAsText="@{(item.money.abs())}"
                     tools:text="-$5,000" />
             </LinearLayout>
 
@@ -124,7 +146,9 @@
                 android:layout_height="8dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="2dp" />
+                android:layout_marginBottom="2dp"
+                android:max="@{progressBarMaximum}"
+                android:progress="@{Math.round(percentage)}" />
 
             <TextView
                 android:id="@+id/txt_date"
@@ -136,7 +160,8 @@
                 android:layout_marginBottom="4dp"
                 android:gravity="start|center"
                 android:textSize="12sp"
-                android:visibility="gone" />
+                app:isCalendarSolar="@{isCalendarSolar}"
+                app:normalDatePattern="@{item.date}" />
         </LinearLayout>
 
 

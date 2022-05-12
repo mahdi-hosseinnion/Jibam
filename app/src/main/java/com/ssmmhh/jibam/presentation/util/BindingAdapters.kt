@@ -8,7 +8,10 @@ import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.ssmmhh.jibam.R
+import com.ssmmhh.jibam.util.DateUtils
 import com.ssmmhh.jibam.util.separate3By3
+import com.ssmmhh.jibam.util.toLocaleString
+import com.ssmmhh.jibam.util.toLocaleStringWithTwoDigits
 import java.math.BigDecimal
 
 
@@ -38,4 +41,44 @@ fun groupNumberByThree(txt: TextView, number: BigDecimal) {
         number,
         ConfigurationCompat.getLocales(txt.context.resources.configuration)[0]
     )
+}
+
+/**
+ * Sets [preferredText] if its not null or empty otherwise sets [alternativeText] as textView's text.
+ */
+@BindingAdapter(
+    value = ["app:preferredText", "app:alternativeText"],
+    requireAll = true
+)
+fun setPreferredTextIfItsNotNullOrEmptyOtherwiseSetAlternativeText(
+    view: TextView,
+    preferredText: String?,
+    alternativeText: String,
+) {
+    view.text = if (preferredText.isNullOrBlank()) {
+        alternativeText
+    } else {
+        preferredText
+    }
+
+}
+
+/**
+ *  Convert unix time stamp to human readable date.
+ *  Solar hijri patter: month/day/year.
+ *  Gregorian pattern: year/month/day.
+ */
+@BindingAdapter(
+    value = ["app:normalDatePattern", "app:isCalendarSolar"],
+    requireAll = true
+)
+fun normalDatePattern(
+    view: TextView, date: Long, isCalendarSolar: Boolean,
+) {
+    val dateHolder = DateUtils.convertUnixTimeToDate(date, isCalendarSolar)
+    view.text = if (isCalendarSolar) {
+        "${dateHolder.year.toLocaleString()}/${dateHolder.month.toLocaleStringWithTwoDigits()}/${dateHolder.day.toLocaleStringWithTwoDigits()}"
+    } else {
+        "${dateHolder.month.toLocaleStringWithTwoDigits()}/${dateHolder.day.toLocaleStringWithTwoDigits()}/${dateHolder.year.toLocaleString()}"
+    }
 }
