@@ -72,7 +72,8 @@ class DetailChartFragment(
                 object : SwipeToDeleteCallback(this@DetailChartFragment.requireContext()) {
                     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                         val adapter = binding.detailChartRecycler.adapter as DetailChartListAdapter
-                        val deletedTrans = adapter.getTransactionAt(viewHolder.adapterPosition)
+                        val deletedTrans =
+                            adapter.getTransactionAt(viewHolder.adapterPosition) ?: return
                         viewModel.deleteTransaction(deletedTrans)
                     }
                 }

@@ -29,9 +29,6 @@ constructor(
     monthManger: MonthManger
 ) : BaseViewModel<DetailChartViewState, DetailChartStateEvent>() {
 
-    private val _navigateToTransactionDetail = MutableLiveData<Event<Int>>()
-    val navigateToTransactionDetail: LiveData<Event<Int>> = _navigateToTransactionDetail
-
     // Contains transaction's category id to query them from db.
     private val _categoryId = MutableLiveData<Int?>(null)
     val categoryId: LiveData<Int?> = _categoryId
@@ -50,6 +47,12 @@ constructor(
             )
         } ?: emptyFlow()
     }.asLiveData()
+
+    private val _navigateToTransactionDetail = MutableLiveData<Event<Int>>()
+    val navigateToTransactionDetail: LiveData<Event<Int>> = _navigateToTransactionDetail
+
+    //Contains the transaction that user deleted by swiping for snack bar 'undo' action.
+    private var deletedTransaction: TransactionDto? = null
 
     override fun initNewViewState(): DetailChartViewState = DetailChartViewState()
 
@@ -81,7 +84,7 @@ constructor(
         val undoCallback = object : UndoCallback {
             override fun undo() {
 
-                getDeletedTransaction()?.let {
+                deletedTransaction?.let {
                     //Insert deleted transaction
                     insertTransaction(it)
                 } ?: run {
@@ -94,7 +97,9 @@ constructor(
                 }
             }
 
-            override fun onDismiss() {}
+            override fun onDismiss() {
+                deletedTransaction = null
+            }
         }
 
         return StateMessage(
@@ -106,24 +111,9 @@ constructor(
         )
     }
 
-
     override fun updateViewState(newViewState: DetailChartViewState): DetailChartViewState {
-        val outDate = getCurrentViewStateOrNew()
-        return DetailChartViewState(
-            recentlyDeletedTransaction = newViewState.recentlyDeletedTransaction
-                ?: outDate.recentlyDeletedTransaction
-        )
+        return DetailChartViewState()
     }
-
-    private fun setRecentlyDeletedTrans(recentlyDeletedTransaction: TransactionDto) {
-        setViewState(
-            DetailChartViewState(
-                recentlyDeletedTransaction = recentlyDeletedTransaction
-            )
-        )
-    }
-
-    fun getDeletedTransaction(): TransactionDto? = viewState.value?.recentlyDeletedTransaction
 
     fun deleteTransaction(transactionId: Int) {
         launchNewJob(
@@ -143,18 +133,9 @@ constructor(
         )
     }
 
-    fun deleteTransaction(transactionToDelete: TransactionDto?) {
-        if (transactionToDelete == null) {
-            //show error to user
-            return
-        }
-        //add to recently deleted
-        setRecentlyDeletedTrans(
-            transactionToDelete
-        )
-        //delete from database
+    fun deleteTransaction(transactionToDelete: TransactionDto) {
+        deletedTransaction = transactionToDelete
         deleteTransaction(transactionToDelete.id)
-        //show snackBar
     }
 
     fun openTransactionDetail(item: TransactionDto) {
