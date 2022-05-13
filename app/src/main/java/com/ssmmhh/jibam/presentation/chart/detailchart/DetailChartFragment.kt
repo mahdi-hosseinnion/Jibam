@@ -55,6 +55,7 @@ class DetailChartFragment(
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
         subscribeObservers()
+        viewModel.start(categoryId = args.categoryId)
     }
 
     private fun initRecyclerView() {
@@ -85,9 +86,7 @@ class DetailChartFragment(
 
 
     private fun subscribeObservers() {
-        viewModel.getAllTransactionByCategoryId(
-            args.categoryId
-        ).observe(viewLifecycleOwner) {
+        viewModel.transactions.observe(viewLifecycleOwner) {
             recyclerAdapter.submitData(it)
         }
         viewModel.navigateToTransactionDetail.observe(viewLifecycleOwner, EventObserver {

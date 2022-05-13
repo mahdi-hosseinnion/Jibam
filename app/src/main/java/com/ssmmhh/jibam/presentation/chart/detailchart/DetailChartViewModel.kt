@@ -2,6 +2,7 @@ package com.ssmmhh.jibam.presentation.chart.detailchart
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.asLiveData
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
@@ -14,6 +15,8 @@ import com.ssmmhh.jibam.presentation.common.MonthManger
 import com.ssmmhh.jibam.util.Event
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import javax.inject.Inject
 
@@ -23,20 +26,30 @@ class DetailChartViewModel
 @Inject
 constructor(
     private val transactionRepository: TransactionRepository,
-    private val monthManger: MonthManger
+    monthManger: MonthManger
 ) : BaseViewModel<DetailChartViewState, DetailChartStateEvent>() {
 
     private val _navigateToTransactionDetail = MutableLiveData<Event<Int>>()
     val navigateToTransactionDetail: LiveData<Event<Int>> = _navigateToTransactionDetail
 
-    fun getAllTransactionByCategoryId(categoryId: Int): LiveData<List<TransactionDto>> =
-        monthManger.currentMonth.flatMapLatest {
+    // Contains transaction's category id to query them from db.
+    private val _categoryId = MutableLiveData<Int?>(null)
+    val categoryId: LiveData<Int?> = _categoryId
+
+    val transactions: LiveData<List<TransactionDto>> = combine(
+        monthManger.currentMonth,
+        categoryId.asFlow()
+    ) { month, categoryId ->
+        return@combine Pair(first = month, second = categoryId)
+    }.flatMapLatest {
+        it.second?.let { categoryId ->
             transactionRepository.getAllTransactionByCategoryId(
                 categoryId = categoryId,
-                fromDate = it.startOfMonth,
-                toDate = it.endOfMonth
+                fromDate = it.first.startOfMonth,
+                toDate = it.first.endOfMonth
             )
-        }.asLiveData()
+        } ?: emptyFlow()
+    }.asLiveData()
 
     override fun initNewViewState(): DetailChartViewState = DetailChartViewState()
 
@@ -146,5 +159,9 @@ constructor(
 
     fun openTransactionDetail(item: TransactionDto) {
         _navigateToTransactionDetail.value = Event(item.id)
+    }
+
+    fun start(categoryId: Int) {
+        _categoryId.value = categoryId
     }
 }
