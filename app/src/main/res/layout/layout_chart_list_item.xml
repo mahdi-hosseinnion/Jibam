@@ -105,7 +105,7 @@
                     android:layout_marginRight="8dp"
                     android:gravity="center|start"
                     android:maxLines="1"
-                    android:text="@{(String.valueOf(item.percentage)+`%`)}"
+                    android:text="@{(String.format(`%.1f`, item.percentage)+`%`)}"
                     android:textColor="#3C3C3C"
                     android:textSize="14sp"
                     tools:text="15.2%" />
