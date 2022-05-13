@@ -54,7 +54,33 @@ constructor(
     //Contains the transaction that user deleted by swiping for snack bar 'undo' action.
     private var deletedTransaction: TransactionDto? = null
 
-    override fun initNewViewState(): DetailChartViewState = DetailChartViewState()
+    fun start(categoryId: Int) {
+        _categoryId.value = categoryId
+    }
+
+    fun openTransactionDetail(item: TransactionDto) {
+        _navigateToTransactionDetail.value = Event(item.id)
+    }
+
+    fun deleteTransaction(transactionToDelete: TransactionDto) {
+        deletedTransaction = transactionToDelete
+
+        launchNewJob(
+            DetailChartStateEvent.DeleteTransaction(
+                transactionId = transactionToDelete.id,
+                showSuccessToast = false
+            )
+        )
+    }
+
+    fun insertTransaction(transaction: TransactionDto) {
+
+        launchNewJob(
+            DetailChartStateEvent.InsertTransaction(
+                transactionEntity = transaction.toTransactionEntity()
+            )
+        )
+    }
 
     override suspend fun getResultByStateEvent(stateEvent: DetailChartStateEvent): DataState<DetailChartViewState> =
         when (stateEvent) {
@@ -111,38 +137,9 @@ constructor(
         )
     }
 
-    override fun updateViewState(newViewState: DetailChartViewState): DetailChartViewState {
-        return DetailChartViewState()
-    }
+    override fun updateViewState(newViewState: DetailChartViewState): DetailChartViewState =
+        DetailChartViewState()
 
-    fun deleteTransaction(transactionId: Int) {
-        launchNewJob(
-            DetailChartStateEvent.DeleteTransaction(
-                transactionId = transactionId,
-                showSuccessToast = false
-            )
-        )
-    }
+    override fun initNewViewState(): DetailChartViewState = DetailChartViewState()
 
-    fun insertTransaction(transaction: TransactionDto) {
-
-        launchNewJob(
-            DetailChartStateEvent.InsertTransaction(
-                transactionEntity = transaction.toTransactionEntity()
-            )
-        )
-    }
-
-    fun deleteTransaction(transactionToDelete: TransactionDto) {
-        deletedTransaction = transactionToDelete
-        deleteTransaction(transactionToDelete.id)
-    }
-
-    fun openTransactionDetail(item: TransactionDto) {
-        _navigateToTransactionDetail.value = Event(item.id)
-    }
-
-    fun start(categoryId: Int) {
-        _categoryId.value = categoryId
-    }
 }
