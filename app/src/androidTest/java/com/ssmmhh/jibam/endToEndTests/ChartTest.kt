@@ -331,7 +331,7 @@ class ChartTest {
                 matches(
                     atPositionOnView(
                         transactionsThatHaveSameCategoryAsLargestOne.indexOf(item),
-                        withText(item.money.abs().toString()),
+                        withText(item.money.abs().toString().removeSuffix(".0")),
                         R.id.sumOfMoney
                     )
                 )
