@@ -24,6 +24,15 @@ fun Fragment.convertDpToPx(dp: Int): Int {
     ).toInt()
 }
 
+fun Context.convertDpToPx(dp: Int): Int {
+    val r = this.resources
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        dp.toFloat(),
+        r.displayMetrics
+    ).toInt()
+}
+
 
 /**
  * remove ',' character that have been used for separate big number 3 by 3

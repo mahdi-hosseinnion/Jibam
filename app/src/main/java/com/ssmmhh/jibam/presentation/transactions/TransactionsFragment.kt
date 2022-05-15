@@ -14,7 +14,6 @@ import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.GravityCompat
@@ -31,7 +30,6 @@ import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.FragmentTransactionBinding
 import com.ssmmhh.jibam.data.model.Month
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
-import com.ssmmhh.jibam.data.source.local.entity.TransactionEntity
 import com.ssmmhh.jibam.data.source.repository.buildResponse
 import com.ssmmhh.jibam.data.util.MessageType
 import com.ssmmhh.jibam.data.util.StateMessageCallback
@@ -52,7 +50,6 @@ import uk.co.samuelwall.materialtaptargetprompt.extras.backgrounds.RectangleProm
 import uk.co.samuelwall.materialtaptargetprompt.extras.focals.RectanglePromptFocal
 import java.math.BigDecimal
 import java.util.*
-import kotlin.random.Random
 
 @FlowPreview
 @ExperimentalCoroutinesApi
@@ -75,13 +72,11 @@ class TransactionsFragment(
 
     private var bottomSheetPeekHeight = 0
 
-    private val closeBottomWidth by lazy { convertDpToPx(56) }
-    private val bottomSheetRadios by lazy { convertDpToPx(16) }
-    private val normalAppBarHeight by lazy { convertDpToPx(40) }
-
     private var _binding: FragmentTransactionBinding? = null
 
     private val binding get() = _binding!!
+
+    private lateinit var transactionsBottomSheetAnimator: TransactionsBottomSheetAnimator
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -95,6 +90,7 @@ class TransactionsFragment(
 
     override fun onDestroyView() {
         bottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
+        bottomSheetBehavior.removeBottomSheetCallback(transactionsBottomSheetAnimator)
         super.onDestroyView()
         _binding = null
     }
@@ -106,7 +102,6 @@ class TransactionsFragment(
         }
 
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
-            onBottomSheetSlide(slideOffset)
         }
     }
     private val backStackForBottomSheet = object : OnBackPressedCallback(false) {
@@ -125,7 +120,6 @@ class TransactionsFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             backStackForBottomSheet
@@ -191,6 +185,21 @@ class TransactionsFragment(
             viewModel.navigateToNextMonth()
         }
         checkForGuidePromote()
+        initBottomSheetAnimator()
+
+    }
+
+    private fun initBottomSheetAnimator() {
+        transactionsBottomSheetAnimator = TransactionsBottomSheetAnimator(
+            context = this.requireContext(),
+            bottomSheet = binding.mainStandardBottomSheet,
+            bottomSheetAppBar = binding.lastTransacionAppBar,
+            backButton = binding.mainBottomSheetBackArrow,
+            searchButton = binding.mainBottomSheetSearchBtn,
+            bottomSheetTopHandler = binding.viewHastam,
+            bottomSheetTopHandlerPin = binding.viewHastam2,
+        )
+        bottomSheetBehavior.addBottomSheetCallback(transactionsBottomSheetAnimator)
     }
 
     private fun setupNavigationView() {
@@ -500,9 +509,9 @@ class TransactionsFragment(
         }
         //set bottom sheet peek height
         if (bottomSheetBehavior.state == STATE_EXPANDED)
-            resetIt(1f)
+            transactionsBottomSheetAnimator.setAnimationStateToExpandedMode()
         else if (bottomSheetBehavior.state == STATE_COLLAPSED) {
-            resetIt(0f)
+            transactionsBottomSheetAnimator.setAnimationStateToCollapsedMode()
         }
 
         binding.fragmentTransacionRoot.viewTreeObserver.addOnGlobalLayoutListener(object :
@@ -598,109 +607,6 @@ class TransactionsFragment(
 
     private var bottomSheetBackGround: GradientDrawable? = null
 
-    private fun onBottomSheetSlide(slideOffset: Float) {
-        binding.mainBottomSheetBackArrow.alpha = slideOffset
-
-        bottomSheetBackGround =
-            ResourcesCompat.getDrawable(
-                resources,
-                R.drawable.bottom_sheet_bg,
-                null
-            ) as GradientDrawable
-
-        val topHeight = if (slideOffset <= 1f)
-            (bottomSheetRadios * (1f - slideOffset))
-        else {
-            0f
-        }
-
-        //change bottom sheet raidus
-        bottomSheetBackGround?.cornerRadius = topHeight
-        bottomSheetBackGround?.let {
-            binding.mainStandardBottomSheet.background = it
-            binding.lastTransacionAppBar.background = it
-        }
-        //change app bar
-
-        //            last_transacion_app_bar.setPadding(topHeight.toInt(), 0, topHeight.toInt(), 0)
-        //change app bar height
-        val appbarViewParams = binding.lastTransacionAppBar.layoutParams
-        appbarViewParams.height =
-            (normalAppBarHeight + (bottomSheetRadios - topHeight.toInt()))
-        binding.lastTransacionAppBar.layoutParams = appbarViewParams
-        //change buttons height
-        val buttonsViewParams = binding.mainBottomSheetSearchBtn.layoutParams
-        buttonsViewParams.width =
-            (normalAppBarHeight + (bottomSheetRadios - topHeight.toInt()))
-
-        binding.mainBottomSheetSearchBtn.layoutParams = buttonsViewParams
-//            main_standardBottomSheet.setPadding(0, topHeight.toInt(), 0, 0)
-        //change top of bottomSheet height
-        val viewParams = binding.viewHastam.layoutParams
-        viewParams.height = topHeight.toInt()
-        binding.viewHastam.layoutParams = viewParams
-        binding.viewHastam2.alpha = (1f - slideOffset)
-
-        // make the toolbar close button animation
-        val closeButtonParams =
-            binding.mainBottomSheetBackArrow.layoutParams as ViewGroup.LayoutParams
-        closeButtonParams.width = (slideOffset * closeBottomWidth).toInt()
-        binding.mainBottomSheetBackArrow.layoutParams = closeButtonParams
-    }
-
-    private fun resetIt(slideOffset: Float) {
-
-        if (slideOffset == 1f) {//if its full screen then set it to liftable
-            binding.lastTransacionAppBar.isLiftOnScroll = false
-            binding.lastTransacionAppBar.setLiftable(false)
-        }
-
-        binding.mainBottomSheetBackArrow.alpha = slideOffset
-
-        bottomSheetBackGround =
-            ResourcesCompat.getDrawable(
-                resources,
-                R.drawable.bottom_sheet_bg,
-                null
-            ) as GradientDrawable
-
-        val topHeight = if (slideOffset <= 1f)
-            (bottomSheetRadios * (1f - slideOffset))
-        else {
-            0f
-        }
-
-        //change bottom sheet raidus
-        bottomSheetBackGround?.cornerRadius = topHeight
-        bottomSheetBackGround?.let {
-            binding.mainStandardBottomSheet.background = it
-            binding.lastTransacionAppBar.background = it
-        }
-        //            last_transacion_app_bar.setPadding(topHeight.toInt(), 0, topHeight.toInt(), 0)
-        //change app bar height
-        val appbarViewParams = binding.lastTransacionAppBar.layoutParams
-        appbarViewParams.height =
-            (normalAppBarHeight + (bottomSheetRadios - topHeight.toInt()))
-        binding.lastTransacionAppBar.layoutParams = appbarViewParams
-        //change buttons height
-        val buttonsViewParams = binding.mainBottomSheetSearchBtn.layoutParams
-        buttonsViewParams.width =
-            (normalAppBarHeight + (bottomSheetRadios - topHeight.toInt()))
-
-        binding.mainBottomSheetSearchBtn.layoutParams = buttonsViewParams
-//            main_standardBottomSheet.setPadding(0, topHeight.toInt(), 0, 0)
-        //change top of bottomSheet height
-        val viewParams = binding.viewHastam.layoutParams
-        viewParams.height = topHeight.toInt()
-        binding.viewHastam.layoutParams = viewParams
-        binding.viewHastam2.alpha = (1f - slideOffset)
-
-        // make the toolbar close button animation
-        val closeButtonParams =
-            binding.mainBottomSheetBackArrow.layoutParams as ViewGroup.LayoutParams
-        closeButtonParams.width = (slideOffset * closeBottomWidth).toInt()
-        binding.mainBottomSheetBackArrow.layoutParams = closeButtonParams
-    }
 
     private fun forceKeyBoardToOpenForMoneyEditText(editText: EditText) {
         editText.requestFocus()
