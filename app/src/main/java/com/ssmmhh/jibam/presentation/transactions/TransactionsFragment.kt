@@ -2,7 +2,6 @@ package com.ssmmhh.jibam.presentation.transactions
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -365,9 +364,9 @@ class TransactionsFragment(
                 super.onScrolled(recyclerView, dx, dy)
                 if (bottomSheetBehavior.state == STATE_EXPANDED) {
                     if (dy > 0) {
-                        binding.addFab?.hide()
+                        binding.addFab.hide()
                     } else {
-                        binding.addFab?.show()
+                        binding.addFab.show()
                     }
 
                 }
@@ -597,15 +596,7 @@ class TransactionsFragment(
             backStackForBottomSheet.isEnabled = false
         }
 
-        if (STATE_DRAGGING == newState) {
-            binding.addFab.hide()
-        } else {
-            binding.addFab.show()
-        }
-
     }
-
-    private var bottomSheetBackGround: GradientDrawable? = null
 
 
     private fun forceKeyBoardToOpenForMoneyEditText(editText: EditText) {
