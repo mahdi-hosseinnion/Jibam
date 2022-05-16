@@ -36,7 +36,7 @@
             android:orientation="vertical">
 
             <include
-                layout="@layout/layout_toolbar_with_month_changer_with_databinding"
+                layout="@layout/layout_toolbar_with_month_changer"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/mtrl_toolbar_default_height"
                 android:gravity="end"

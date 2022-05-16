@@ -35,6 +35,8 @@ import com.ssmmhh.jibam.databinding.FragmentTransactionBinding
 import com.ssmmhh.jibam.presentation.common.BaseFragment
 import com.ssmmhh.jibam.presentation.transactions.state.TransactionsStateEvent
 import com.ssmmhh.jibam.presentation.transactions.state.TransactionsViewState
+import com.ssmmhh.jibam.presentation.util.MonthChangerToolbarLayoutListener
+import com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener
 import com.ssmmhh.jibam.presentation.util.forceKeyboardToOpenForEditText
 import com.ssmmhh.jibam.util.*
 import com.ssmmhh.jibam.util.PreferenceKeys.APP_CALENDAR_PREFERENCE
@@ -51,7 +53,10 @@ class TransactionsFragment(
     private val currentLocale: Locale,
     private val sharedPreferences: SharedPreferences,
     private val sharedPrefsEditor: SharedPreferences.Editor
-) : BaseFragment(), TransactionsListAdapter.Interaction {
+) : BaseFragment(),
+    TransactionsListAdapter.Interaction,
+    ToolbarLayoutListener,
+    MonthChangerToolbarLayoutListener {
 
     private val TAG = "TransactionFragment"
 
@@ -73,7 +78,10 @@ class TransactionsFragment(
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentTransactionBinding.inflate(inflater, container, false).apply {
-
+            viewmodel = viewModel
+            this.lifecycleOwner = this@TransactionsFragment.viewLifecycleOwner
+            toolbarListener = this@TransactionsFragment
+            monthChangerListener = this@TransactionsFragment
         }
         return binding.root
     }
@@ -115,15 +123,6 @@ class TransactionsFragment(
         binding.bottomSheetSearchClear.setOnClickListener {
             binding.bottomSheetSearchEdt.setText("")
         }
-        binding.transactionToolbar.toolbarMonthChanger.toolbarMonth.setOnClickListener {
-            viewModel.showMonthPickerBottomSheet(parentFragmentManager)
-        }
-        binding.transactionToolbar.toolbarMonthChanger.monthManagerPrevious.setOnClickListener {
-            viewModel.navigateToPreviousMonth()
-        }
-        binding.transactionToolbar.toolbarMonthChanger.monthManagerNext.setOnClickListener {
-            viewModel.navigateToNextMonth()
-        }
 
     }
 
@@ -153,9 +152,7 @@ class TransactionsFragment(
             )
         binding.transactionToolbar.topAppBarMonth.navigationContentDescription =
             getString(R.string.navigation_drawer_cd)
-        binding.transactionToolbar.topAppBarMonth.setNavigationOnClickListener {
-            binding.drawerLayout.open()
-        }
+
     }
 
     private fun setupNavigationItemSelectedListener() {
@@ -565,5 +562,23 @@ class TransactionsFragment(
     }
 
     override fun restoreListPosition() {}
+
+    override fun onClickOnNavigation(view: View) {
+        binding.drawerLayout.open()
+    }
+
+    override fun onClickOnMenuButton(view: View) {}
+
+    override fun onClickOnMonthName(view: View) {
+        viewModel.showMonthPickerBottomSheet(parentFragmentManager)
+    }
+
+    override fun onClickOnPreviousMonthButton(view: View) {
+        viewModel.navigateToPreviousMonth()
+    }
+
+    override fun onClickOnNextMonthButton(view: View) {
+        viewModel.navigateToNextMonth()
+    }
 
 }
