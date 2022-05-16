@@ -97,7 +97,14 @@ class TransactionsFragment(
     private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
 
         override fun onStateChanged(bottomSheet: View, newState: Int) {
-            onBottomSheetStateChanged(newState)
+            backStackForBottomSheet.isEnabled = newState == STATE_EXPANDED
+            if (newState == STATE_EXPANDED && viewModel.isSearchVisible()) {
+                // If theres bug with search bar this line is dangerous and bugkhiz
+                //we should use this here b/c when user click on search and bottom sheet is in collapse state
+                // edit text will crash the appbar
+                binding.bottomSheetSearchEdt.visibility = View.VISIBLE
+                forceKeyBoardToOpenForMoneyEditText(binding.bottomSheetSearchEdt)
+            }
         }
 
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
@@ -138,7 +145,10 @@ class TransactionsFragment(
         bottomSheetBehavior = BottomSheetBehavior.from(binding.mainStandardBottomSheet)
 
         bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
-        onBottomSheetStateChanged(bottomSheetBehavior.state)
+        bottomSheetCallback.onStateChanged(
+            bottomSheet = binding.mainStandardBottomSheet,
+            newState = bottomSheetBehavior.state
+        )
         setupNavigationView()
         initRecyclerView()
         subscribeObservers()
@@ -577,18 +587,6 @@ class TransactionsFragment(
     }
 
     override fun restoreListPosition() {
-    }
-
-    private fun onBottomSheetStateChanged(newState: Int) {
-        backStackForBottomSheet.isEnabled = (newState == STATE_EXPANDED)
-        if (newState == STATE_EXPANDED && viewModel.isSearchVisible()) {
-            // If theres bug with search bar this line is dangerous and bugkhiz
-            //we should use this here b/c when user click on search and bottom sheet is in collapse state
-            // edit text will crash the appbar
-            binding.bottomSheetSearchEdt.visibility = View.VISIBLE
-            forceKeyBoardToOpenForMoneyEditText(binding.bottomSheetSearchEdt)
-        }
-
     }
 
 
