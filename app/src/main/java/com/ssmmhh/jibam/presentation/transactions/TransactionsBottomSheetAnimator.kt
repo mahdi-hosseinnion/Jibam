@@ -115,11 +115,13 @@ class TransactionsBottomSheetAnimator(
     }
 
     private fun setBottomSheetAppbarLiftableStateTo(state: Boolean) {
-        bottomSheetAppBar.isLiftOnScroll = false
-        bottomSheetAppBar.setLiftable(false)
+        bottomSheetAppBar.isLiftOnScroll = state
+        bottomSheetAppBar.setLiftable(state)
     }
 
-    override fun onStateChanged(bottomSheet: View, newState: Int) {}
+    override fun onStateChanged(bottomSheet: View, newState: Int) {
+        setBottomSheetAppbarLiftableStateTo(newState != BottomSheetBehavior.STATE_EXPANDED)
+    }
 
     override fun onSlide(bottomSheet: View, slideOffset: Float) {
         onBottomSheetSlide(slideOffset)

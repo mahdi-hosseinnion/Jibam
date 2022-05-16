@@ -199,6 +199,10 @@ class TransactionsFragment(
             bottomSheetTopHandlerPin = binding.viewHastam2,
         )
         bottomSheetBehavior.addBottomSheetCallback(transactionsBottomSheetAnimator)
+        transactionsBottomSheetAnimator.onStateChanged(
+            bottomSheet = binding.mainStandardBottomSheet,
+            newState = bottomSheetBehavior.state
+        )
     }
 
     private fun setupNavigationView() {
@@ -576,24 +580,13 @@ class TransactionsFragment(
     }
 
     private fun onBottomSheetStateChanged(newState: Int) {
-        if (STATE_EXPANDED == newState) {
-            if (viewModel.isSearchVisible()) {
-                // If theres bug with search bar this line is dangerous and bugkhiz
-                //we should use this here b/c when user click on search and bottom sheet is in collapse state
-                // edit text will crash the appbar
-                binding.bottomSheetSearchEdt.visibility = View.VISIBLE
-                forceKeyBoardToOpenForMoneyEditText(binding.bottomSheetSearchEdt)
-            }
-            binding.lastTransacionAppBar.isLiftOnScroll = false
-//            last_transacion_app_bar.liftOnScrollTargetViewId = R.id.transaction_recyclerView
-            binding.lastTransacionAppBar.setLiftable(false)
-            //enable backStack
-            backStackForBottomSheet.isEnabled = true
-        } else {
-            binding.lastTransacionAppBar.isLiftOnScroll = true
-            binding.lastTransacionAppBar.setLiftable(true)
-            //disable backStack
-            backStackForBottomSheet.isEnabled = false
+        backStackForBottomSheet.isEnabled = (newState == STATE_EXPANDED)
+        if (newState == STATE_EXPANDED && viewModel.isSearchVisible()) {
+            // If theres bug with search bar this line is dangerous and bugkhiz
+            //we should use this here b/c when user click on search and bottom sheet is in collapse state
+            // edit text will crash the appbar
+            binding.bottomSheetSearchEdt.visibility = View.VISIBLE
+            forceKeyBoardToOpenForMoneyEditText(binding.bottomSheetSearchEdt)
         }
 
     }
