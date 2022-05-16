@@ -2,8 +2,8 @@ package com.ssmmhh.jibam.presentation.transactions
 
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
+import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -17,6 +17,8 @@ import com.ssmmhh.jibam.util.convertDpToPx
  * Animate appbar size and radius change.
  * Animate search button size.
  * Animate handler/handler pin height and alpha.
+ *
+ * TODO("Implement a more smooth way to slide transaction title in app bar.")
  */
 class TransactionsBottomSheetAnimator(
     private val context: Context,
@@ -30,8 +32,8 @@ class TransactionsBottomSheetAnimator(
 
     private val TAG = "TransactionsBottomSheet"
 
-    private val backButtonWidth by lazy { context.convertDpToPx(56) }
-    private val bottomSheetCornerRadius by lazy { context.convertDpToPx(16) }
+    private val backButtonMaximumWidth by lazy { context.convertDpToPx(56) }
+    private val bottomSheetMaximumCornerRadius by lazy { context.convertDpToPx(16) }
     private val collapsedAppBarHeight by lazy { context.convertDpToPx(40) }
 
     private var lastSlideValue: Float? = null
@@ -65,43 +67,50 @@ class TransactionsBottomSheetAnimator(
         onBottomSheetSlide(0f)
     }
 
+    /**
+     * [slideOffset] value is floating number which is 0 when bottom sheet is in COLLAPSED and 1 when
+     * it is EXPANDED. In DRAGGING state is number between 0 to 1.
+     */
     private fun onBottomSheetSlide(slideOffset: Float) {
         if (lastSlideValue == slideOffset) return
 
-        backButton.alpha = slideOffset
-
-        val topHeight = if (slideOffset <= 1f)
-            (bottomSheetCornerRadius * (1f - slideOffset))
+        val cornerRadius = if (slideOffset <= 1f)
+            (bottomSheetMaximumCornerRadius * (1f - slideOffset))
         else {
             0f
         }
 
         //change bottom sheet radius
-        bottomSheetBackground.cornerRadius = topHeight
-        bottomSheetAppBarBackground.cornerRadius = topHeight
+        bottomSheetBackground.cornerRadius = cornerRadius
+        bottomSheetAppBarBackground.cornerRadius = cornerRadius
+
 
         //change app bar height
+        //Expanded bottom sheet app bar height should be [collapsedAppBarHeight] + [bottomSheetCornerRadius]
         val appbarViewParams = bottomSheetAppBar.layoutParams
         appbarViewParams.height =
-            (collapsedAppBarHeight + (bottomSheetCornerRadius - topHeight.toInt()))
+            (collapsedAppBarHeight + (bottomSheetMaximumCornerRadius - cornerRadius.toInt()))
+        //setLayoutParams had to be called for the app bar b/c it is the container of other views.
         bottomSheetAppBar.layoutParams = appbarViewParams
 
         //change buttons height
-        val buttonsViewParams = searchButton.layoutParams
-        buttonsViewParams.width =
-            (collapsedAppBarHeight + (bottomSheetCornerRadius - topHeight.toInt()))
-        searchButton.layoutParams = buttonsViewParams
+        searchButton.layoutParams.apply {
+            width =
+                (collapsedAppBarHeight + (bottomSheetMaximumCornerRadius - cornerRadius.toInt()))
+        }
 
         //change top of bottomSheet height
-        val viewParams = bottomSheetTopHandler.layoutParams
-        viewParams.height = topHeight.toInt()
-        bottomSheetTopHandler.layoutParams = viewParams
+        bottomSheetTopHandler.layoutParams.apply {
+            height = cornerRadius.toInt()
+        }
         bottomSheetTopHandlerPin.alpha = (1f - slideOffset)
 
-        // make the toolbar close button animation
-        val closeButtonParams = backButton.layoutParams as ViewGroup.LayoutParams
-        closeButtonParams.width = (slideOffset * backButtonWidth).toInt()
-        backButton.layoutParams = closeButtonParams
+        // make the toolbar back button animation
+        backButton.layoutParams.apply {
+            width = (slideOffset * backButtonMaximumWidth).toInt()
+        }
+        backButton.alpha = slideOffset
+
         lastSlideValue = slideOffset
     }
 
