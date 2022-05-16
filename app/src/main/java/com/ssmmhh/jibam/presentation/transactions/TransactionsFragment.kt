@@ -30,6 +30,7 @@ import com.ssmmhh.jibam.data.util.MessageType
 import com.ssmmhh.jibam.data.util.StateMessageCallback
 import com.ssmmhh.jibam.data.util.UIComponentType
 import com.ssmmhh.jibam.data.util.UndoCallback
+import com.ssmmhh.jibam.databinding.FragmentAboutUsBinding
 import com.ssmmhh.jibam.databinding.FragmentTransactionBinding
 import com.ssmmhh.jibam.presentation.common.BaseFragment
 import com.ssmmhh.jibam.presentation.transactions.state.TransactionsStateEvent
@@ -62,9 +63,7 @@ class TransactionsFragment(
 
     private var bottomSheetPeekHeight = 0
 
-    private var _binding: FragmentTransactionBinding? = null
-
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentTransactionBinding
 
     private lateinit var transactionsBottomSheetAnimator: TransactionsBottomSheetAnimator
 
@@ -73,9 +72,10 @@ class TransactionsFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentTransactionBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        binding = FragmentTransactionBinding.inflate(inflater, container, false).apply {
+
+        }
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -532,7 +532,6 @@ class TransactionsFragment(
         bottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
         bottomSheetBehavior.removeBottomSheetCallback(transactionsBottomSheetAnimator)
         super.onDestroyView()
-        _binding = null
     }
 
     override fun handleLoading() {
