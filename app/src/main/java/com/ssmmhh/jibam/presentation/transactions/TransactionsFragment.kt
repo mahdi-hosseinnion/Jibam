@@ -30,7 +30,6 @@ import com.ssmmhh.jibam.data.util.MessageType
 import com.ssmmhh.jibam.data.util.StateMessageCallback
 import com.ssmmhh.jibam.data.util.UIComponentType
 import com.ssmmhh.jibam.data.util.UndoCallback
-import com.ssmmhh.jibam.databinding.FragmentAboutUsBinding
 import com.ssmmhh.jibam.databinding.FragmentTransactionBinding
 import com.ssmmhh.jibam.presentation.common.BaseFragment
 import com.ssmmhh.jibam.presentation.transactions.state.TransactionsStateEvent
@@ -65,8 +64,6 @@ class TransactionsFragment(
     private lateinit var recyclerAdapter: TransactionsListAdapter
 
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
-
-    private var bottomSheetPeekHeight = 0
 
     private lateinit var binding: FragmentTransactionBinding
 
@@ -466,7 +463,7 @@ class TransactionsFragment(
 
     override fun onResume() {
         super.onResume()
-        closeDrawer(false)
+        closeDrawerIfItIsOpen(false)
 
         //check for calendar type
         checkForCalendarTypeChange()
@@ -474,31 +471,29 @@ class TransactionsFragment(
         if (bottomSheetBehavior.state == STATE_EXPANDED || viewModel.isSearchVisible()) {
             onBackPressedCallback.isEnabled = true
         }
-        //set bottom sheet peek height
+
         if (bottomSheetBehavior.state == STATE_EXPANDED)
             transactionsBottomSheetAnimator.setAnimationStateToExpandedMode()
         else if (bottomSheetBehavior.state == STATE_COLLAPSED) {
             transactionsBottomSheetAnimator.setAnimationStateToCollapsedMode()
         }
+        calculateTransactionsBottomSheetPeekHeight()
+    }
 
+    private fun calculateTransactionsBottomSheetPeekHeight() {
         binding.fragmentTransacionRoot.viewTreeObserver.addOnGlobalLayoutListener(object :
             ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
-                //TODO BIG BUG HERE
                 binding.fragmentTransacionRoot.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 val rootHeight = binding.fragmentTransacionRoot.height
                 val layoutHeight = binding.transactionFragmentView.height
-                if (bottomSheetPeekHeight < 1) {
-                    bottomSheetPeekHeight = rootHeight - layoutHeight
-                }
-                bottomSheetBehavior.peekHeight = bottomSheetPeekHeight
+                bottomSheetBehavior.peekHeight = (rootHeight - layoutHeight).coerceAtLeast(0)
             }
-
         })
 
     }
 
-    private fun closeDrawer(animate: Boolean = true) {
+    private fun closeDrawerIfItIsOpen(animate: Boolean = true) {
         if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             binding.drawerLayout.closeDrawer(GravityCompat.START, animate)
         }
