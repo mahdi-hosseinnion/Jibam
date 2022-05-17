@@ -1,14 +1,10 @@
 package com.ssmmhh.jibam.presentation.transactions
 
 import android.content.SharedPreferences
-import android.content.res.Resources
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.ssmmhh.jibam.data.model.Month
 import com.ssmmhh.jibam.data.model.SummaryMoney
-import com.ssmmhh.jibam.presentation.transactions.TransactionsRecyclerViewItem
 import com.ssmmhh.jibam.data.source.repository.tranasction.TransactionRepository
 import com.ssmmhh.jibam.data.util.DataState
 import com.ssmmhh.jibam.presentation.common.BaseViewModel
@@ -16,7 +12,6 @@ import com.ssmmhh.jibam.presentation.common.MonthManger
 import com.ssmmhh.jibam.presentation.transactions.state.TransactionsStateEvent
 import com.ssmmhh.jibam.presentation.transactions.state.TransactionsViewState
 import com.ssmmhh.jibam.presentation.transactions.state.TransactionsViewState.*
-import com.ssmmhh.jibam.util.isCalendarSolar
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
@@ -39,9 +34,11 @@ constructor(
         setSearchViewState(SearchViewState.INVISIBLE)
     }
 
-    //search stuff
-    // In our ViewModel
-    private var _queryChannel = MutableStateFlow("")
+    // Two-way databinding, exposing MutableLiveData
+    val searchQuery = MutableLiveData<String>("")
+
+    val isClearSearchQueryButtonVisible: LiveData<Boolean> =
+        searchQuery.map { !(it.isNullOrEmpty()) }
 
     //this is used just to refresh resource if calender type changed in setting
     //actual value of this flow does not matter
@@ -50,7 +47,8 @@ constructor(
 
     private val _transactions: LiveData<List<TransactionsRecyclerViewItem>> =
         combine(
-            _queryChannel,
+            //TODO Add flow.debounce to search query
+            searchQuery.asFlow(),
             monthManger.currentMonth,
             _calendarType
         ) { query, month, _ ->
@@ -97,12 +95,6 @@ constructor(
             expenses = expenses,
             income = income
         )
-    }
-
-    fun setSearchQuery(query: String) {
-        viewModelScope.launch {
-            _queryChannel.emit(query)
-        }
     }
 
     fun setRecentlyDeletedTrans(recentlyDeletedHeader: RecentlyDeletedTransaction?) {

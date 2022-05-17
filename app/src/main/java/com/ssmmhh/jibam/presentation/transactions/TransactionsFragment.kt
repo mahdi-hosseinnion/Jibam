@@ -385,25 +385,6 @@ class TransactionsFragment(
             resources.getString(month.monthNameResId) + year
     }
 
-    private val onSearchViewTextChangeListener = object : TextWatcher {
-        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-        }
-
-        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            if (p0.isNullOrEmpty()) {
-                binding.bottomSheetSearchClear.visibility = View.INVISIBLE
-            } else {
-                binding.bottomSheetSearchClear.visibility = View.VISIBLE
-            }
-            //search for something
-        }
-
-        override fun afterTextChanged(p0: Editable?) {
-            viewModel.setSearchQuery(p0.toString())
-        }
-    }
-
     private fun enableSearchMode(query: String? = null) {
         bottomSheetBehavior.state = STATE_EXPANDED
         //user shouldn't be able to drag down when searchView is enable
@@ -413,7 +394,6 @@ class TransactionsFragment(
 
         binding.bottomSheetSearchClear.visibility = View.INVISIBLE
 
-        binding.bottomSheetSearchEdt.addTextChangedListener(onSearchViewTextChangeListener)
         //invisible search stuff
         binding.mainBottomSheetSearchBtn.visibility = View.GONE
         binding.bottomSheetTitle.visibility = View.GONE
@@ -436,7 +416,6 @@ class TransactionsFragment(
         binding.bottomSheetSearchEdt.visibility = View.GONE
         binding.bottomSheetSearchClear.visibility = View.GONE
 
-        binding.bottomSheetSearchEdt.removeTextChangedListener(onSearchViewTextChangeListener)
         binding.bottomSheetSearchEdt.setText("")
         //visible search stuff
         binding.mainBottomSheetSearchBtn.visibility = View.VISIBLE
@@ -451,7 +430,7 @@ class TransactionsFragment(
         binding.transactionRecyclerView.isNestedScrollingEnabled = true
 
         //submit that
-        viewModel.setSearchQuery("")
+        binding.bottomSheetSearchEdt.setText("")
     }
 
     private fun navigateToAddTransactionFragment() {
