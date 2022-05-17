@@ -15,7 +15,6 @@ import com.ssmmhh.jibam.presentation.transactions.state.TransactionsViewState.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
@@ -47,8 +46,7 @@ constructor(
 
     private val _transactions: LiveData<List<TransactionsRecyclerViewItem>> =
         combine(
-            //TODO Add flow.debounce to search query
-            searchQuery.asFlow(),
+            searchQuery.asFlow().debounce(SEARCH_ACTION_DEBOUNCE_TIME),
             monthManger.currentMonth,
             _calendarType
         ) { query, month, _ ->
@@ -198,8 +196,10 @@ constructor(
 
 
     companion object {
+        private const val TAG = "TransactionsViewModel"
         private const val GET_TRANSACTION_LIST = "GET_TRANSACTION_LIST"
         private const val GET_SUM_OF_EXPENSES = "GET_SUM_OF_EXPENSES"
         private const val GET_SUM_OF_INCOME = "GET_SUM_OF_INCOME"
+        private const val SEARCH_ACTION_DEBOUNCE_TIME: Long = 250
     }
 }
