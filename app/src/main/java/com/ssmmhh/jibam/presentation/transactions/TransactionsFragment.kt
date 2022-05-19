@@ -2,7 +2,6 @@ package com.ssmmhh.jibam.presentation.transactions
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -230,6 +229,43 @@ class TransactionsFragment(
                 }
             }
         }
+        val swipeToDeleteHandler =
+            object : SwipeToDeleteCallback(this@TransactionsFragment.requireContext()) {
+                override fun onSwiped(
+                    viewHolder: RecyclerView.ViewHolder,
+                    direction: Int
+                ) {
+
+                    val adapter = binding.transactionRecyclerView.adapter as TransactionsListAdapter
+
+                    val deletedTrans = adapter.getTransaction(viewHolder.adapterPosition) ?: return
+                    //delete from list
+                    val removedHeader =
+                        adapter.removeTransactionAtPositionThenReturnItsHeaderIfItIsTheOnlyTransactionWithThatHeader(
+                            viewHolder.adapterPosition
+                        )
+                    //add to recently deleted
+                    val recentlyDeletedHeader =
+                        TransactionsViewState.RecentlyDeletedTransaction(
+                            deletedTrans,
+                            viewHolder.adapterPosition,
+                            removedHeader
+                        )
+                    viewModel.setRecentlyDeletedTrans(
+                        recentlyDeletedHeader
+                    )
+                    //delete from database
+                    viewModel.launchNewJob(
+                        TransactionsStateEvent.DeleteTransaction(
+                            transactionId = deletedTrans.id,
+                            showSuccessToast = false
+                        )
+                    )
+                    //show snackBar
+                    showUndoSnackBar()
+
+                }
+            }
         binding.transactionRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@TransactionsFragment.context)
             recyclerAdapter = TransactionsListAdapter(
@@ -240,44 +276,7 @@ class TransactionsFragment(
             )
             addOnScrollListener(onScrollListener)
 
-//            //swipe to delete
-            val swipeHandler =
-                object : SwipeToDeleteCallback(this@TransactionsFragment.requireContext()) {
-                    override fun onSwiped(
-                        viewHolder: RecyclerView.ViewHolder,
-                        direction: Int
-                    ) {
-
-                        val adapter =
-                            binding.transactionRecyclerView.adapter as TransactionsListAdapter
-                        val deletedTrans =
-                            adapter.getTransaction(viewHolder.adapterPosition) ?: return
-                        //delete from list
-                        val removedHeader = adapter.removeAt(viewHolder.adapterPosition)
-                        //add to recently deleted
-                        val recentlyDeletedHeader =
-                            TransactionsViewState.RecentlyDeletedTransaction(
-                                deletedTrans,
-                                viewHolder.adapterPosition,
-                                removedHeader
-                            )
-                        viewModel.setRecentlyDeletedTrans(
-                            recentlyDeletedHeader
-                        )
-                        //delete from database
-                        viewModel.launchNewJob(
-                            TransactionsStateEvent.DeleteTransaction(
-                                transactionId = deletedTrans.id,
-                                showSuccessToast = false
-                            )
-                        )
-                        //show snackBar
-                        showUndoSnackBar()
-
-                    }
-                }
-
-            val itemTouchHelper = ItemTouchHelper(swipeHandler)
+            val itemTouchHelper = ItemTouchHelper(swipeToDeleteHandler)
             itemTouchHelper.attachToRecyclerView(binding.transactionRecyclerView)
 
             binding.transactionRecyclerView.isNestedScrollingEnabled = true

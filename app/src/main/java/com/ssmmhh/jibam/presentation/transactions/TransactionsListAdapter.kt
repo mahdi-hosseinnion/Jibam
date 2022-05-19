@@ -1,9 +1,7 @@
 package com.ssmmhh.jibam.presentation.transactions
 
-import android.content.res.Resources
 import android.graphics.Color
 import android.util.Log
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,8 +20,6 @@ import com.ssmmhh.jibam.presentation.transactions.TransactionsRecyclerViewItem.C
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
 import com.ssmmhh.jibam.util.*
 import com.ssmmhh.jibam.util.DateUtils.DAY_IN_SECONDS
-import com.ssmmhh.jibam.util.DateUtils.toMilliSeconds
-import com.ssmmhh.jibam.util.DateUtils.toSeconds
 import java.math.BigDecimal
 import java.util.*
 
@@ -245,7 +241,11 @@ class TransactionsListAdapter(
             if (header != null) {
                 newList.add(position.minus(1), header)
             }
-            newList.add(position, transaction.toTransactionsRecyclerViewItem())
+            if (position < newList.size) {
+                newList.add(position, transaction.toTransactionsRecyclerViewItem())
+            } else {
+                newList.add(transaction.toTransactionsRecyclerViewItem())
+            }
         } else {
             if (header != null) {
                 newList.add(header)
@@ -255,29 +255,23 @@ class TransactionsListAdapter(
         differ.submitList(newList)
     }
 
-    fun removeAt(position: Int): TransactionsRecyclerViewItem.Header? {
+    fun removeTransactionAtPositionThenReturnItsHeaderIfItIsTheOnlyTransactionWithThatHeader(
+        position: Int
+    ): TransactionsRecyclerViewItem.Header? {
         val newList = differ.currentList.toMutableList()
-        val beforeTransactionsRecyclerViewItem = try {
-            differ.currentList[position.minus(1)]
-        } catch (e: Exception) {
-            null
-        }
-        val afterTransactionsRecyclerViewItem = try {
-            differ.currentList[position.plus(1)]
-        } catch (e: Exception) {
-            null
-        }
 
-        var removedHeader: TransactionsRecyclerViewItem.Header? = null
+        val previousPosition = position.minus(1)
+        val nextPosition = position.plus(1)
+        val previousItem = differ.currentList.getOrNull(previousPosition)
+        val nextItem = differ.currentList.getOrNull(nextPosition)
 
-        if (beforeTransactionsRecyclerViewItem is TransactionsRecyclerViewItem.Header &&
-            afterTransactionsRecyclerViewItem is TransactionsRecyclerViewItem.Header
-        ) {
-            trySafe {
-                removedHeader =
-                    newList.removeAt(position.minus(1)) as TransactionsRecyclerViewItem.Header
-            }
-        }
+        val removedHeader =
+            if (previousItem is TransactionsRecyclerViewItem.Header &&
+                nextItem is TransactionsRecyclerViewItem.Header
+            ) {
+                newList.removeAt(previousPosition)
+                previousItem
+            } else null
         newList.removeAt(position)
         differ.submitList(newList)
         return removedHeader
