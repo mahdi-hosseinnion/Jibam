@@ -3,10 +3,12 @@ package com.ssmmhh.jibam.presentation.transactions
 import android.content.SharedPreferences
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.*
+import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.model.Month
 import com.ssmmhh.jibam.data.model.SummaryMoney
+import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
 import com.ssmmhh.jibam.data.source.repository.tranasction.TransactionRepository
-import com.ssmmhh.jibam.data.util.DataState
+import com.ssmmhh.jibam.data.util.*
 import com.ssmmhh.jibam.presentation.common.BaseViewModel
 import com.ssmmhh.jibam.presentation.common.MonthManger
 import com.ssmmhh.jibam.presentation.transactions.state.TransactionsStateEvent
@@ -43,6 +45,9 @@ constructor(
 
     private val _navigateToAddTransactionEvent = MutableLiveData<Event<Unit>>()
     val navigateToAddTransactionEvent: LiveData<Event<Unit>> = _navigateToAddTransactionEvent
+
+    //Contains the transaction that user deleted by swiping, used for snack bar 'undo' action.
+    private var deletedTransactionItem: TransactionDto? = null
 
     //this is used just to refresh resource if calender type changed in setting
     //actual value of this flow does not matter
@@ -100,17 +105,6 @@ constructor(
         )
     }
 
-    fun setRecentlyDeletedTrans(recentlyDeletedHeader: RecentlyDeletedTransaction?) {
-        setViewState(
-            TransactionsViewState(
-                recentlyDeletedFields = recentlyDeletedHeader
-            )
-        )
-    }
-
-    fun getRecentlyDeletedTrans(): RecentlyDeletedTransaction? =
-        getCurrentViewStateOrNew().recentlyDeletedFields
-
     override fun initNewViewState(): TransactionsViewState = TransactionsViewState()
 
     override suspend fun getResultByStateEvent(stateEvent: TransactionsStateEvent): DataState<TransactionsViewState> =
@@ -129,7 +123,7 @@ constructor(
             is TransactionsStateEvent.DeleteTransaction -> {
                 val result = transactionRepository.deleteTransaction(stateEvent)
                 DataState(
-                    stateMessage = result.stateMessage,
+                    stateMessage = getUndoSnackBarStateMessageForDeleteTransaction(),
                     data = TransactionsViewState(
                         successfullyDeletedTransactionIndicator = result.data
                     ),
@@ -141,8 +135,6 @@ constructor(
     override fun updateViewState(newViewState: TransactionsViewState): TransactionsViewState {
         val outDate = getCurrentViewStateOrNew()
         return TransactionsViewState(
-            recentlyDeletedFields = newViewState.recentlyDeletedFields
-                ?: outDate.recentlyDeletedFields,
             insertedTransactionRawId = newViewState.insertedTransactionRawId
                 ?: outDate.insertedTransactionRawId,
             successfullyDeletedTransactionIndicator = newViewState.successfullyDeletedTransactionIndicator
@@ -150,6 +142,47 @@ constructor(
             currentMonth = newViewState.currentMonth ?: outDate.currentMonth,
             calendarType = newViewState.calendarType ?: outDate.calendarType,
         )
+    }
+
+    private fun getUndoSnackBarStateMessageForDeleteTransaction(): StateMessage {
+        val undoCallback = object : UndoCallback {
+            override fun undo() {
+
+                deletedTransactionItem?.let {
+                    //Insert deleted transaction
+                    insertDeletedTransaction(it)
+                } ?: run {
+                    //Show error
+                    addToMessageStack(
+                        message = intArrayOf(R.string.unable_to_restore_transaction),
+                        uiComponentType = UIComponentType.Dialog,
+                        messageType = MessageType.Error
+                    )
+                }
+            }
+
+            override fun onDismiss() {
+                //If you set [deletedTransactionItem] to null here there gone be bug when deleting
+                //multiple item fast.
+            }
+        }
+
+        return StateMessage(
+            response = Response(
+                intArrayOf(R.string.transaction_successfully_deleted),
+                UIComponentType.UndoSnackBar(undoCallback),
+                MessageType.Info
+            )
+        )
+    }
+
+    private fun insertDeletedTransaction(deletedTransaction: TransactionDto) {
+        launchNewJob(
+            TransactionsStateEvent.InsertTransaction(
+                deletedTransaction.toTransactionEntity()
+            )
+        )
+        deletedTransactionItem = null
     }
 
     fun getCalenderType(): String? = viewState.value?.calendarType
@@ -204,6 +237,21 @@ constructor(
 
     fun navigateToNextMonth() {
         monthManger.navigateToNextMonth()
+    }
+
+    fun deleteTransaction(
+        deletedTransaction: TransactionDto,
+    ) {
+        //add to recently deleted
+        deletedTransactionItem = deletedTransaction
+
+        //delete from database
+        launchNewJob(
+            TransactionsStateEvent.DeleteTransaction(
+                transactionId = deletedTransaction.id,
+                showSuccessToast = false
+            )
+        )
     }
 
 

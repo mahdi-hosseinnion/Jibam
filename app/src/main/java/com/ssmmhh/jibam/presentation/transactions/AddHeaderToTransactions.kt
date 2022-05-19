@@ -15,6 +15,12 @@ fun addHeaderToTransactions(currentList: List<TransactionDto>): List<Transaction
     var expensesSum = BigDecimal.ZERO
     val tempList = ArrayList<TransactionsRecyclerViewItem>()
     currentList.forEach { item ->
+        /**
+         * There is serious here.
+         * When there is differnt time zones like
+         * [1652716786,1652716772,1652643609,1652630378]
+         * These are all the same day in Iran day time but different day in GMT.
+         */
         if (item.date.isTheSameDayAs(headerDate)) {
             //make new header and items
             tempList.add(item.toTransactionsRecyclerViewItem())

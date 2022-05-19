@@ -22,14 +22,9 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior.*
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.model.Month
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
-import com.ssmmhh.jibam.data.source.repository.buildResponse
-import com.ssmmhh.jibam.data.util.MessageType
-import com.ssmmhh.jibam.data.util.StateMessageCallback
 import com.ssmmhh.jibam.data.util.UIComponentType
-import com.ssmmhh.jibam.data.util.UndoCallback
 import com.ssmmhh.jibam.databinding.FragmentTransactionBinding
 import com.ssmmhh.jibam.presentation.common.BaseFragment
-import com.ssmmhh.jibam.presentation.transactions.state.TransactionsStateEvent
 import com.ssmmhh.jibam.presentation.transactions.state.TransactionsViewState
 import com.ssmmhh.jibam.presentation.util.MonthChangerToolbarLayoutListener
 import com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener
@@ -235,35 +230,11 @@ class TransactionsFragment(
                     viewHolder: RecyclerView.ViewHolder,
                     direction: Int
                 ) {
-
                     val adapter = binding.transactionRecyclerView.adapter as TransactionsListAdapter
 
-                    val deletedTrans = adapter.getTransaction(viewHolder.adapterPosition) ?: return
-                    //delete from list
-                    val removedHeader =
-                        adapter.removeTransactionAtPositionThenReturnItsHeaderIfItIsTheOnlyTransactionWithThatHeader(
-                            viewHolder.adapterPosition
-                        )
-                    //add to recently deleted
-                    val recentlyDeletedHeader =
-                        TransactionsViewState.RecentlyDeletedTransaction(
-                            deletedTrans,
-                            viewHolder.adapterPosition,
-                            removedHeader
-                        )
-                    viewModel.setRecentlyDeletedTrans(
-                        recentlyDeletedHeader
-                    )
-                    //delete from database
-                    viewModel.launchNewJob(
-                        TransactionsStateEvent.DeleteTransaction(
-                            transactionId = deletedTrans.id,
-                            showSuccessToast = false
-                        )
-                    )
-                    //show snackBar
-                    showUndoSnackBar()
+                    val deletedTrans = adapter.removeItemAt(viewHolder.adapterPosition) ?: return
 
+                    viewModel.deleteTransaction(deletedTrans)
                 }
             }
         binding.transactionRecyclerView.apply {
@@ -282,53 +253,6 @@ class TransactionsFragment(
             binding.transactionRecyclerView.isNestedScrollingEnabled = true
             adapter = recyclerAdapter
         }
-
-    }
-
-    private fun showUndoSnackBar() {
-        val undoCallback = object : UndoCallback {
-            override fun undo() {
-                insertRecentlyDeletedTrans()
-            }
-
-            override fun onDismiss() {
-                viewModel.setRecentlyDeletedTrans(null)
-            }
-        }
-        activityCommunicationListener.onResponseReceived(
-            buildResponse(
-                intArrayOf(R.string.transaction_successfully_deleted),
-                UIComponentType.UndoSnackBar(undoCallback, binding.fragmentTransacionRoot),
-                MessageType.Info
-            ), object : StateMessageCallback {
-                override fun removeMessageFromStack() {
-                }
-            }
-        )
-    }
-
-    private fun insertRecentlyDeletedTrans() {
-        val recentlyDeletedFields =
-            viewModel.getCurrentViewStateOrNew().recentlyDeletedFields
-        recentlyDeletedFields?.recentlyDeletedTrans?.let {
-            //insert to list
-            recyclerAdapter.insertRemovedTransactionAt(
-                it,
-                recentlyDeletedFields.recentlyDeletedTransPosition,
-                recentlyDeletedFields.recentlyDeletedHeader
-            )
-            //insert into database
-            viewModel.launchNewJob(
-                TransactionsStateEvent.InsertTransaction(
-                    it.toTransactionEntity()
-                )
-            )
-        } ?: viewModel.addToMessageStack(
-            message = intArrayOf(R.string.something_went_wrong_cannot_return_deleted_transaction_back),
-            uiComponentType = UIComponentType.Dialog,
-            messageType = MessageType.Error
-        )
-        viewModel.setRecentlyDeletedTrans(null)
 
     }
 
@@ -490,7 +414,6 @@ class TransactionsFragment(
         viewModel.countOfActiveJobs.observe(
             viewLifecycleOwner
         ) {
-
             showProgressBar(viewModel.areAnyJobsActive())
         }
     }
@@ -498,7 +421,20 @@ class TransactionsFragment(
     override fun handleStateMessages() {
         viewModel.stateMessage.observe(viewLifecycleOwner) {
             it?.let {
-                handleNewStateMessage(it) { viewModel.clearStateMessage() }
+                //Change undo snack bar parent view to fragment's root
+                val message = if (it.response.uiComponentType is UIComponentType.UndoSnackBar) {
+                    it.copy(
+                        response = it.response.copy(
+                            uiComponentType = UIComponentType.UndoSnackBar(
+                                callback = it.response.uiComponentType.callback,
+                                parentView = binding.fragmentTransacionRoot
+                            )
+                        )
+                    )
+                } else {
+                    it
+                }
+                handleNewStateMessage(message) { viewModel.clearStateMessage() }
             }
         }
     }

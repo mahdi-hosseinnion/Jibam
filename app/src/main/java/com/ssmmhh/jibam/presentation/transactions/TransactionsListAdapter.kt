@@ -9,15 +9,15 @@ import androidx.recyclerview.widget.*
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.ssmmhh.jibam.R
+import com.ssmmhh.jibam.data.model.DateHolder
+import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
 import com.ssmmhh.jibam.databinding.LayoutTransacionHeaderBinding
 import com.ssmmhh.jibam.databinding.LayoutTransactionListItemBinding
-import com.ssmmhh.jibam.data.model.*
-import com.ssmmhh.jibam.presentation.transactions.TransactionsRecyclerViewItem.Companion.TRANSACTION_VIEW_TYPE
+import com.ssmmhh.jibam.presentation.transactions.TransactionsRecyclerViewItem.Companion.DATABASE_IS_EMPTY_VIEW_TYPE
 import com.ssmmhh.jibam.presentation.transactions.TransactionsRecyclerViewItem.Companion.HEADER_VIEW_TYPE
 import com.ssmmhh.jibam.presentation.transactions.TransactionsRecyclerViewItem.Companion.NO_MORE_RESULT_VIEW_TYPE
 import com.ssmmhh.jibam.presentation.transactions.TransactionsRecyclerViewItem.Companion.NO_RESULT_FOUND_VIEW_TYPE
-import com.ssmmhh.jibam.presentation.transactions.TransactionsRecyclerViewItem.Companion.DATABASE_IS_EMPTY_VIEW_TYPE
-import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
+import com.ssmmhh.jibam.presentation.transactions.TransactionsRecyclerViewItem.Companion.TRANSACTION_VIEW_TYPE
 import com.ssmmhh.jibam.util.*
 import com.ssmmhh.jibam.util.DateUtils.DAY_IN_SECONDS
 import java.math.BigDecimal
@@ -222,42 +222,11 @@ class TransactionsListAdapter(
 
     override fun getItemCount(): Int = differ.currentList.size
 
-
-    fun getTransaction(position: Int): TransactionDto? {
-        val item = differ.currentList[position]
-        return if (item is TransactionsRecyclerViewItem.Transaction)
-            item.toTransaction()
-        else
-            null
-    }
-
-    fun insertRemovedTransactionAt(
-        transaction: TransactionDto,
-        position: Int?,
-        header: TransactionsRecyclerViewItem.Header?
-    ) {
-        val newList = differ.currentList.toMutableList()
-        if (position != null) {
-            if (header != null) {
-                newList.add(position.minus(1), header)
-            }
-            if (position < newList.size) {
-                newList.add(position, transaction.toTransactionsRecyclerViewItem())
-            } else {
-                newList.add(transaction.toTransactionsRecyclerViewItem())
-            }
-        } else {
-            if (header != null) {
-                newList.add(header)
-            }
-            newList.add(transaction.toTransactionsRecyclerViewItem())
-        }
-        differ.submitList(newList)
-    }
-
-    fun removeTransactionAtPositionThenReturnItsHeaderIfItIsTheOnlyTransactionWithThatHeader(
-        position: Int
-    ): TransactionsRecyclerViewItem.Header? {
+    /**
+     * Remove transaction at [position].
+     * Remove transaction's header if its the last transaction with that header.
+     */
+    fun removeItemAt(position: Int): TransactionDto? {
         val newList = differ.currentList.toMutableList()
 
         val previousPosition = position.minus(1)
@@ -265,16 +234,17 @@ class TransactionsListAdapter(
         val previousItem = differ.currentList.getOrNull(previousPosition)
         val nextItem = differ.currentList.getOrNull(nextPosition)
 
-        val removedHeader =
-            if (previousItem is TransactionsRecyclerViewItem.Header &&
-                nextItem is TransactionsRecyclerViewItem.Header
-            ) {
-                newList.removeAt(previousPosition)
-                previousItem
-            } else null
-        newList.removeAt(position)
+        val deleteItem = newList.removeAt(position) ?: return null
+        //Remove header
+        if (previousItem is TransactionsRecyclerViewItem.Header &&
+            nextItem !is TransactionsRecyclerViewItem.Transaction
+        ) {
+            newList.remove(previousItem)
+        }
+
         differ.submitList(newList)
-        return removedHeader
+        return if (deleteItem is TransactionsRecyclerViewItem.Transaction) deleteItem.toTransaction() else null
+
     }
 
     fun submitList(

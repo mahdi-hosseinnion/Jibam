@@ -124,7 +124,8 @@ constructor(
             }
 
             override fun onDismiss() {
-                deletedTransaction = null
+                //If you set [deletedTransactionItem] to null here there gone be bug when deleting
+                //multiple item fast.
             }
         }
 
