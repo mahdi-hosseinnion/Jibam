@@ -29,15 +29,16 @@ constructor(
     private val currentLocale: Locale,
     private val sharedPreferences: SharedPreferences
 ) : BaseViewModel<TransactionsViewState, TransactionsStateEvent>() {
-    init {
-        setSearchViewState(SearchViewState.INVISIBLE)
-    }
 
     // Two-way databinding, exposing MutableLiveData
     val searchQuery = MutableLiveData<String>("")
 
     val isClearSearchQueryButtonVisible: LiveData<Boolean> =
         searchQuery.map { !(it.isNullOrEmpty()) }
+
+    private val _searchViewState: MutableLiveData<SearchViewState> =
+        MutableLiveData(SearchViewState.INVISIBLE)
+    val searchViewState: LiveData<SearchViewState> = _searchViewState.distinctUntilChanged()
 
     //this is used just to refresh resource if calender type changed in setting
     //actual value of this flow does not matter
@@ -142,7 +143,6 @@ constructor(
                 ?: outDate.insertedTransactionRawId,
             successfullyDeletedTransactionIndicator = newViewState.successfullyDeletedTransactionIndicator
                 ?: outDate.successfullyDeletedTransactionIndicator,
-            searchViewState = newViewState.searchViewState ?: outDate.searchViewState,
             currentMonth = newViewState.currentMonth ?: outDate.currentMonth,
             calendarType = newViewState.calendarType ?: outDate.calendarType,
         )
@@ -164,17 +164,17 @@ constructor(
         monthManger.refreshData()
     }
 
-    fun setSearchViewState(searchViewState: SearchViewState) {
-        setViewState(
-            TransactionsViewState(searchViewState = searchViewState)
-        )
+    fun enableSearchState() {
+        _searchViewState.value = SearchViewState.VISIBLE
     }
 
-    fun isSearchVisible(): Boolean =
-        getCurrentViewStateOrNew().searchViewState == SearchViewState.VISIBLE
+    fun disableSearchState() {
+        _searchViewState.value = SearchViewState.INVISIBLE
+    }
 
-    fun isSearchInVisible(): Boolean =
-        getCurrentViewStateOrNew().searchViewState == SearchViewState.INVISIBLE
+    fun isSearchVisible(): Boolean = _searchViewState.value == SearchViewState.VISIBLE
+
+    fun isSearchInvisible(): Boolean = _searchViewState.value == SearchViewState.INVISIBLE
 
     private fun setCurrentMonth(month: Month) {
         setViewState(

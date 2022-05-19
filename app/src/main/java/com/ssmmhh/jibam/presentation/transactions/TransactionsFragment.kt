@@ -2,8 +2,6 @@ package com.ssmmhh.jibam.presentation.transactions
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -97,25 +95,15 @@ class TransactionsFragment(
         initRecyclerView()
         subscribeObservers()
 
-        if (viewModel.isSearchVisible()) {
-            enableSearchMode()
-        }
-
         binding.addFab.setOnClickListener {
             navigateToAddTransactionFragment()
         }
         binding.mainBottomSheetBackArrow.setOnClickListener {
-            //check for search view
-            if (viewModel.isSearchVisible()) {
-                disableSearchMode()
-            } else {
-                binding.transactionRecyclerView.scrollToPosition(0)
-                bottomSheetBehavior.state = STATE_COLLAPSED
-            }
+            onBackPressedCallback.handleOnBackPressed()
         }
         //search view stuff
         binding.mainBottomSheetSearchBtn.setOnClickListener {
-            enableSearchMode()
+            viewModel.enableSearchState()
         }
         binding.bottomSheetSearchClear.setOnClickListener {
             binding.bottomSheetSearchEdt.setText("")
@@ -130,7 +118,7 @@ class TransactionsFragment(
         override fun handleOnBackPressed() {
             //check for search view
             if (viewModel.isSearchVisible()) {
-                disableSearchMode()
+                viewModel.disableSearchState()
             } else {
                 binding.transactionRecyclerView.scrollToPosition(0)
                 bottomSheetBehavior.state = STATE_COLLAPSED
@@ -243,7 +231,7 @@ class TransactionsFragment(
                 if (lastPosition == 0) {
                     //user should be able to only drag the bottom sheet down when it's in first
                     //position
-                    if (viewModel.isSearchInVisible()) {
+                    if (viewModel.isSearchInvisible()) {
                         //while searching you should not be able to drag down
                         bottomSheetBehavior.isDraggable = true
                     }
@@ -377,6 +365,18 @@ class TransactionsFragment(
             binding.txtIncome.text = separate3By3AndRoundIt(sm.income, currentLocale)
         }
 
+        viewModel.searchViewState.observe(viewLifecycleOwner) {
+            when (it) {
+                TransactionsViewState.SearchViewState.VISIBLE -> {
+                    enableSearchMode()
+                }
+                TransactionsViewState.SearchViewState.INVISIBLE -> {
+                    disableSearchMode()
+                }
+            }
+
+        }
+
     }
 
     private fun setMonthFieldsValues(month: Month) {
@@ -385,7 +385,7 @@ class TransactionsFragment(
             resources.getString(month.monthNameResId) + year
     }
 
-    private fun enableSearchMode(query: String? = null) {
+    private fun enableSearchMode() {
         bottomSheetBehavior.state = STATE_EXPANDED
         //user shouldn't be able to drag down when searchView is enable
         bottomSheetBehavior.isDraggable = false
@@ -394,15 +394,10 @@ class TransactionsFragment(
 
         binding.bottomSheetSearchClear.visibility = View.INVISIBLE
 
-        //invisible search stuff
+        //invisible the non-search stuff
         binding.mainBottomSheetSearchBtn.visibility = View.GONE
         binding.bottomSheetTitle.visibility = View.GONE
-        //this should come after all
-        viewModel.setSearchViewState(TransactionsViewState.SearchViewState.VISIBLE)
 
-        query?.let {
-            binding.bottomSheetSearchEdt.setText(it)
-        }
         if (bottomSheetBehavior.state == STATE_EXPANDED) {
             binding.bottomSheetSearchEdt.visibility = View.VISIBLE
             forceKeyboardToOpenForEditText(requireActivity(), binding.bottomSheetSearchEdt)
@@ -416,19 +411,14 @@ class TransactionsFragment(
         binding.bottomSheetSearchEdt.visibility = View.GONE
         binding.bottomSheetSearchClear.visibility = View.GONE
 
-        binding.bottomSheetSearchEdt.setText("")
-        //visible search stuff
+        //visible non-search stuff
         binding.mainBottomSheetSearchBtn.visibility = View.VISIBLE
         binding.bottomSheetTitle.visibility = View.VISIBLE
-
-        //this should come after all
-        viewModel.setSearchViewState(TransactionsViewState.SearchViewState.INVISIBLE)
 
         //make bottom sheet draggable again after disabling searchView
         bottomSheetBehavior.isDraggable = true
         //connect recyclerView to bottomSheet
         binding.transactionRecyclerView.isNestedScrollingEnabled = true
-
         //submit that
         binding.bottomSheetSearchEdt.setText("")
     }

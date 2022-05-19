@@ -8,11 +8,9 @@ data class TransactionsViewState(
     var recentlyDeletedFields: RecentlyDeletedTransaction? = null,
     var insertedTransactionRawId: Long? = null,
     var successfullyDeletedTransactionIndicator: Int? = null,
-    var searchViewState: SearchViewState? = null,
     var currentMonth: Month? = null,
-    var calendarType:String? =null
+    var calendarType: String? = null
 ) {
-
 
 
     data class RecentlyDeletedTransaction(
