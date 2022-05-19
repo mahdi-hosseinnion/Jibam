@@ -77,6 +77,7 @@ class TransactionsFragment(
             this.lifecycleOwner = this@TransactionsFragment.viewLifecycleOwner
             toolbarListener = this@TransactionsFragment
             monthChangerListener = this@TransactionsFragment
+            onBackPressedCallback = this@TransactionsFragment.onBackPressedCallback
         }
         return binding.root
     }
@@ -84,10 +85,6 @@ class TransactionsFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            onBackPressedCallback
-        )
         setToolbarNavigationToMenuIcon()
         setupNavigationItemSelectedListener()
         initBottomSheetBehavior()
@@ -95,24 +92,17 @@ class TransactionsFragment(
         initRecyclerView()
         subscribeObservers()
 
-        binding.addFab.setOnClickListener {
-            navigateToAddTransactionFragment()
-        }
-        binding.mainBottomSheetBackArrow.setOnClickListener {
-            onBackPressedCallback.handleOnBackPressed()
-        }
-        //search view stuff
-        binding.mainBottomSheetSearchBtn.setOnClickListener {
-            viewModel.enableSearchState()
-        }
-        binding.bottomSheetSearchClear.setOnClickListener {
-            binding.bottomSheetSearchEdt.setText("")
-        }
-
+        //Handle back 'button' calls for bottom sheet and search view
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            onBackPressedCallback
+        )
     }
 
     /**
      * Handle backstack for when the bottom sheet is in expanded state.
+     * Disable search mode if it is enable.
+     * Collapse bottom sheet if it is in expanded state.
      */
     private val onBackPressedCallback = object : OnBackPressedCallback(false) {
         override fun handleOnBackPressed() {
@@ -376,7 +366,9 @@ class TransactionsFragment(
             }
 
         }
-
+        viewModel.navigateToAddTransactionEvent.observe(viewLifecycleOwner, EventObserver {
+            navigateToAddTransactionFragment()
+        })
     }
 
     private fun setMonthFieldsValues(month: Month) {
@@ -499,7 +491,6 @@ class TransactionsFragment(
         viewModel.countOfActiveJobs.observe(
             viewLifecycleOwner
         ) {
-            Log.d(TAG, "handleLoading: activeJob: ${viewModel.getAllActiveJobs()}")
 
             showProgressBar(viewModel.areAnyJobsActive())
         }

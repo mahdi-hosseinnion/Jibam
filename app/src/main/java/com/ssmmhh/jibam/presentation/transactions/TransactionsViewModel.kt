@@ -12,6 +12,7 @@ import com.ssmmhh.jibam.presentation.common.MonthManger
 import com.ssmmhh.jibam.presentation.transactions.state.TransactionsStateEvent
 import com.ssmmhh.jibam.presentation.transactions.state.TransactionsViewState
 import com.ssmmhh.jibam.presentation.transactions.state.TransactionsViewState.*
+import com.ssmmhh.jibam.util.Event
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
@@ -39,6 +40,9 @@ constructor(
     private val _searchViewState: MutableLiveData<SearchViewState> =
         MutableLiveData(SearchViewState.INVISIBLE)
     val searchViewState: LiveData<SearchViewState> = _searchViewState.distinctUntilChanged()
+
+    private val _navigateToAddTransactionEvent = MutableLiveData<Event<Unit>>()
+    val navigateToAddTransactionEvent: LiveData<Event<Unit>> = _navigateToAddTransactionEvent
 
     //this is used just to refresh resource if calender type changed in setting
     //actual value of this flow does not matter
@@ -162,6 +166,14 @@ constructor(
         setCalenderType(value)
         _calendarType.value = value
         monthManger.refreshData()
+    }
+
+    fun openAddTransactionFragment() {
+        _navigateToAddTransactionEvent.value = Event(Unit)
+    }
+
+    fun clearSearchQuery() {
+        searchQuery.value = ""
     }
 
     fun enableSearchState() {
