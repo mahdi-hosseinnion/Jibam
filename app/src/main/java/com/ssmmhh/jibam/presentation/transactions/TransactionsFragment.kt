@@ -82,7 +82,6 @@ class TransactionsFragment(
         setToolbarNavigationToMenuIcon()
         setupNavigationItemSelectedListener()
         initBottomSheetBehavior()
-        initBottomSheetAnimator()
         initRecyclerView()
         subscribeObservers()
 
@@ -154,6 +153,7 @@ class TransactionsFragment(
             bottomSheet = binding.mainStandardBottomSheet,
             newState = bottomSheetBehavior.state
         )
+        initBottomSheetAnimator()
     }
 
     private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
@@ -269,12 +269,8 @@ class TransactionsFragment(
         viewModel.summeryMoney.observe(viewLifecycleOwner) { sm ->
             binding.txtBalance.text = separate3By3AndRoundIt(sm.balance, currentLocale)
 
-            if (sm.expenses != BigDecimal.ZERO) {
-                binding.txtExpenses.text =
-                    separate3By3AndRoundIt(sm.expenses.negate(), currentLocale)
-            } else {
-                binding.txtExpenses.text = separate3By3AndRoundIt(BigDecimal.ZERO, currentLocale)
-            }
+            binding.txtExpenses.text = separate3By3AndRoundIt(sm.expenses.negate(), currentLocale)
+
             binding.txtIncome.text = separate3By3AndRoundIt(sm.income, currentLocale)
         }
 
@@ -364,19 +360,6 @@ class TransactionsFragment(
         calculateTransactionsBottomSheetPeekHeight()
     }
 
-    private fun calculateTransactionsBottomSheetPeekHeight() {
-        binding.fragmentTransacionRoot.viewTreeObserver.addOnGlobalLayoutListener(object :
-            ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                binding.fragmentTransacionRoot.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                val rootHeight = binding.fragmentTransacionRoot.height
-                val layoutHeight = binding.transactionFragmentView.height
-                bottomSheetBehavior.peekHeight = (rootHeight - layoutHeight).coerceAtLeast(0)
-            }
-        })
-
-    }
-
     private fun closeDrawerIfItIsOpen(animate: Boolean = true) {
         if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             binding.drawerLayout.closeDrawer(GravityCompat.START, animate)
@@ -401,6 +384,19 @@ class TransactionsFragment(
         if (viewModelValue != prefValue && prefValue != null) {
             viewModel.calenderTypeHaveBeenChangedTo(prefValue)
         }
+
+    }
+
+    private fun calculateTransactionsBottomSheetPeekHeight() {
+        binding.fragmentTransacionRoot.viewTreeObserver.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                binding.fragmentTransacionRoot.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                val rootHeight = binding.fragmentTransacionRoot.height
+                val layoutHeight = binding.transactionFragmentView.height
+                bottomSheetBehavior.peekHeight = (rootHeight - layoutHeight).coerceAtLeast(0)
+            }
+        })
 
     }
 
