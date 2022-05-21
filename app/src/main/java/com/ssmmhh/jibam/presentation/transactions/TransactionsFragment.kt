@@ -367,14 +367,9 @@ class TransactionsFragment(
     }
 
     private fun checkIfTheCalendarHasChangedInSettings() {
-        Log.d("update calendar type", "checkIfTheCalendarHasChangedInSettings: called")
 
         findNavController().currentBackStackEntry?.savedStateHandle?.apply {
             get<Boolean>(DID_CALENDAR_TYPE_CHANGE)?.let { calendarTypeHasBeenChanged ->
-                Log.d(
-                    "update calendar type",
-                    "checkIfTheCalendarHasChangedInSettings: $calendarTypeHasBeenChanged"
-                )
                 if (calendarTypeHasBeenChanged) {
                     viewModel.calenderTypeHaveBeenChanged()
                     //calendar type change handled so set it back to false.

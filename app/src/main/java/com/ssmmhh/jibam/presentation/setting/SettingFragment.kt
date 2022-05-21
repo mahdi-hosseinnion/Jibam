@@ -1,7 +1,6 @@
 package com.ssmmhh.jibam.presentation.setting
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -60,10 +59,6 @@ class SettingFragment(
     override fun onClickOnMenuButton(view: View) {}
 
     private fun notifyThePreviousFragmentThatCalendarTypeHasChanged() {
-        Log.d(
-            "update calendar type",
-            "notifyThePreviousBackStackEntryThatCalendarTypeHasChanged: called"
-        )
         //Notifies the previous back stack that the calendar type has changed.
         findNavController().previousBackStackEntry?.savedStateHandle?.set(
             DID_CALENDAR_TYPE_CHANGE,
