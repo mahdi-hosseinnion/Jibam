@@ -1,13 +1,13 @@
 package com.ssmmhh.jibam.presentation.setting
 
 import android.content.SharedPreferences
-import android.util.Log
-import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import androidx.databinding.Observable
 import androidx.databinding.PropertyChangeRegistry
-import androidx.databinding.library.baseAdapters.BR
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.ssmmhh.jibam.util.Event
 import com.ssmmhh.jibam.util.PreferenceKeys
 import com.ssmmhh.jibam.util.isCalendarSolar
 import java.util.*
@@ -25,6 +25,9 @@ constructor(
     private val callbacks: PropertyChangeRegistry by lazy { PropertyChangeRegistry() }
 
     private var isCalendarSolarHijri: Boolean = (sharedPreferences.isCalendarSolar(locale))
+
+    private val _calendarTypeChangedEvent = MutableLiveData<Event<Unit>>()
+    val calendarTypeChangedEvent: LiveData<Event<Unit>> = _calendarTypeChangedEvent
 
     //Necessary For two way binding (field isGregorianChecked)
     @Bindable
@@ -46,6 +49,7 @@ constructor(
                 )
                 apply()
             }
+            _calendarTypeChangedEvent.value = Event(Unit)
         }
         // It's radio group so if one of radioButtons isChecked is changed the other one should change too
         notifyChange()
@@ -71,6 +75,7 @@ constructor(
                 )
                 apply()
             }
+            _calendarTypeChangedEvent.value = Event(Unit)
         }
         // It's radio group so if one of radioButtons isChecked is changed the other ones value should change too.
         notifyChange()

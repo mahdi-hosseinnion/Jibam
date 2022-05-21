@@ -6,7 +6,6 @@ data class TransactionsViewState(
     var insertedTransactionRawId: Long? = null,
     var successfullyDeletedTransactionIndicator: Int? = null,
     var currentMonth: Month? = null,
-    var calendarType: String? = null
 ) {
 
     data class TransactionsQueryRequirement(

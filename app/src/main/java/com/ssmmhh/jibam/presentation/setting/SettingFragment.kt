@@ -1,26 +1,19 @@
 package com.ssmmhh.jibam.presentation.setting
 
-import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.databinding.FragmentAboutUsBinding
+import androidx.navigation.fragment.findNavController
 import com.ssmmhh.jibam.databinding.FragmentSettingBinding
 import com.ssmmhh.jibam.presentation.common.BaseFragment
-import com.ssmmhh.jibam.presentation.transactions.TransactionsViewModel
 import com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener
-import com.ssmmhh.jibam.util.PreferenceKeys
-import com.ssmmhh.jibam.util.PreferenceKeys.APP_CALENDAR_PREFERENCE
-import com.ssmmhh.jibam.util.PreferenceKeys.CALENDAR_GREGORIAN
-import com.ssmmhh.jibam.util.PreferenceKeys.CALENDAR_SOLAR
-import com.ssmmhh.jibam.util.localizeNumber
+import com.ssmmhh.jibam.util.EventObserver
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import java.util.*
 
 
 @ExperimentalCoroutinesApi
@@ -45,6 +38,17 @@ class SettingFragment(
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        subscribeObservers()
+    }
+
+    private fun subscribeObservers() {
+        viewModel.calendarTypeChangedEvent.observe(viewLifecycleOwner, EventObserver {
+            notifyThePreviousFragmentThatCalendarTypeHasChanged()
+        })
+    }
+
     override fun handleStateMessages() {}
 
     override fun handleLoading() {}
@@ -55,4 +59,19 @@ class SettingFragment(
 
     override fun onClickOnMenuButton(view: View) {}
 
+    private fun notifyThePreviousFragmentThatCalendarTypeHasChanged() {
+        Log.d(
+            "update calendar type",
+            "notifyThePreviousBackStackEntryThatCalendarTypeHasChanged: called"
+        )
+        //Notifies the previous back stack that the calendar type has changed.
+        findNavController().previousBackStackEntry?.savedStateHandle?.set(
+            DID_CALENDAR_TYPE_CHANGE,
+            true
+        )
+    }
+
+    companion object {
+        const val DID_CALENDAR_TYPE_CHANGE = "didCalendarTypeChange"
+    }
 }

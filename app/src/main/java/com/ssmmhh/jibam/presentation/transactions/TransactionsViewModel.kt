@@ -13,7 +13,8 @@ import com.ssmmhh.jibam.presentation.common.BaseViewModel
 import com.ssmmhh.jibam.presentation.common.MonthManger
 import com.ssmmhh.jibam.presentation.transactions.state.TransactionsStateEvent
 import com.ssmmhh.jibam.presentation.transactions.state.TransactionsViewState
-import com.ssmmhh.jibam.presentation.transactions.state.TransactionsViewState.*
+import com.ssmmhh.jibam.presentation.transactions.state.TransactionsViewState.SearchViewState
+import com.ssmmhh.jibam.presentation.transactions.state.TransactionsViewState.TransactionsQueryRequirement
 import com.ssmmhh.jibam.util.Event
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -49,17 +50,11 @@ constructor(
     //Contains the transaction that user deleted by swiping, used for snack bar 'undo' action.
     private var deletedTransactionItem: TransactionDto? = null
 
-    //this is used just to refresh resource if calender type changed in setting
-    //actual value of this flow does not matter
-    private var _calendarType = MutableStateFlow("")
-
-
     private val _transactions: LiveData<List<TransactionsRecyclerViewItem>> =
         combine(
             searchQuery.asFlow().debounce(SEARCH_ACTION_DEBOUNCE_TIME),
             monthManger.currentMonth,
-            _calendarType
-        ) { query, month, _ ->
+        ) { query, month ->
             return@combine TransactionsQueryRequirement(query, month)
         }.flatMapLatest {
             getTransactionList(it.month.startOfMonth, it.month.endOfMonth, it.query)
@@ -140,7 +135,6 @@ constructor(
             successfullyDeletedTransactionIndicator = newViewState.successfullyDeletedTransactionIndicator
                 ?: outDate.successfullyDeletedTransactionIndicator,
             currentMonth = newViewState.currentMonth ?: outDate.currentMonth,
-            calendarType = newViewState.calendarType ?: outDate.calendarType,
         )
     }
 
@@ -185,19 +179,9 @@ constructor(
         deletedTransactionItem = null
     }
 
-    fun getCalenderType(): String? = viewState.value?.calendarType
-
-    fun setCalenderType(newValue: String?) {
-        setViewState(
-            TransactionsViewState(
-                calendarType = newValue
-            )
-        )
-    }
-
-    fun calenderTypeHaveBeenChangedTo(value: String) {
-        setCalenderType(value)
-        _calendarType.value = value
+    fun calenderTypeHaveBeenChanged() {
+        //When the month value changes, transactions will update too b/c transactions flow depends
+        // on the month value.
         monthManger.refreshData()
     }
 

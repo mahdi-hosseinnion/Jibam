@@ -2,6 +2,7 @@ package com.ssmmhh.jibam.presentation.transactions
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,15 +26,14 @@ import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
 import com.ssmmhh.jibam.data.util.UIComponentType
 import com.ssmmhh.jibam.databinding.FragmentTransactionBinding
 import com.ssmmhh.jibam.presentation.common.BaseFragment
+import com.ssmmhh.jibam.presentation.setting.SettingFragment.Companion.DID_CALENDAR_TYPE_CHANGE
 import com.ssmmhh.jibam.presentation.transactions.state.TransactionsViewState
 import com.ssmmhh.jibam.presentation.util.MonthChangerToolbarLayoutListener
 import com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener
 import com.ssmmhh.jibam.presentation.util.forceKeyboardToOpenForEditText
 import com.ssmmhh.jibam.util.*
-import com.ssmmhh.jibam.util.PreferenceKeys.APP_CALENDAR_PREFERENCE
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import java.math.BigDecimal
 import java.util.*
 
 @FlowPreview
@@ -346,7 +346,7 @@ class TransactionsFragment(
         closeDrawerIfItIsOpen(false)
 
         //check for calendar type
-        checkForCalendarTypeChange()
+        checkIfTheCalendarHasChangedInSettings()
         //enable backStack listener when user  navigate to next fragment or rotate screen
         if (bottomSheetBehavior.state == STATE_EXPANDED || viewModel.isSearchVisible()) {
             onBackPressedCallback.isEnabled = true
@@ -366,23 +366,21 @@ class TransactionsFragment(
         }
     }
 
-    private fun checkForCalendarTypeChange() {
+    private fun checkIfTheCalendarHasChangedInSettings() {
+        Log.d("update calendar type", "checkIfTheCalendarHasChangedInSettings: called")
 
-        val viewModelValue = viewModel.getCalenderType()
-        val prefValue = sharedPreferences.getString(
-            APP_CALENDAR_PREFERENCE,
-            PreferenceKeys.calendarDefault(currentLocale)
-        )
-
-        if (viewModelValue == prefValue) {
-            return
-        }
-        if (viewModelValue.isNullOrBlank()) {
-            viewModel.setCalenderType(prefValue)
-            return
-        }
-        if (viewModelValue != prefValue && prefValue != null) {
-            viewModel.calenderTypeHaveBeenChangedTo(prefValue)
+        findNavController().currentBackStackEntry?.savedStateHandle?.apply {
+            get<Boolean>(DID_CALENDAR_TYPE_CHANGE)?.let { calendarTypeHasBeenChanged ->
+                Log.d(
+                    "update calendar type",
+                    "checkIfTheCalendarHasChangedInSettings: $calendarTypeHasBeenChanged"
+                )
+                if (calendarTypeHasBeenChanged) {
+                    viewModel.calenderTypeHaveBeenChanged()
+                    //calendar type change handled so set it back to false.
+                    set(DID_CALENDAR_TYPE_CHANGE, false)
+                }
+            }
         }
 
     }
