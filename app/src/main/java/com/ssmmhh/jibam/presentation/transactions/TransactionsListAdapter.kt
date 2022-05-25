@@ -10,6 +10,7 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.model.DateHolder
+import com.ssmmhh.jibam.data.model.Transaction
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
 import com.ssmmhh.jibam.databinding.LayoutTransacionHeaderBinding
 import com.ssmmhh.jibam.databinding.LayoutTransactionListItemBinding
@@ -61,11 +62,11 @@ class TransactionsListAdapter(
             newItem: TransactionsRecyclerViewItem
         ): Boolean {
             return if (
-                oldItem is TransactionsRecyclerViewItem.Transaction
+                oldItem is TransactionsRecyclerViewItem.TransactionItem
                 &&
-                newItem is TransactionsRecyclerViewItem.Transaction
+                newItem is TransactionsRecyclerViewItem.TransactionItem
             )
-                oldItem.id == newItem.id
+                oldItem.transaction.id == newItem.transaction.id
             else
                 false
         }
@@ -187,8 +188,8 @@ class TransactionsListAdapter(
         when (holder) {
             is TransViewHolder -> {
                 val item = differ.currentList[position]
-                if (item is TransactionsRecyclerViewItem.Transaction)
-                    holder.bind(item, isHeader(position.plus(1)))
+                if (item is TransactionsRecyclerViewItem.TransactionItem)
+                    holder.bind(item.transaction, isHeader(position.plus(1)))
                 else {
                     Log.e(
                         TAG, "onBindViewHolder: View holder is TransViewHolder but the item" +
@@ -237,13 +238,13 @@ class TransactionsListAdapter(
         val deleteItem = newList.removeAt(position) ?: return null
         //Remove header
         if (previousItem is TransactionsRecyclerViewItem.Header &&
-            nextItem !is TransactionsRecyclerViewItem.Transaction
+            nextItem !is TransactionsRecyclerViewItem.TransactionItem
         ) {
             newList.remove(previousItem)
         }
 
         differ.submitList(newList)
-        return if (deleteItem is TransactionsRecyclerViewItem.Transaction) deleteItem.toTransaction() else null
+        return if (deleteItem is TransactionsRecyclerViewItem.TransactionItem) deleteItem.toTransaction() else null
 
     }
 
@@ -276,12 +277,12 @@ class TransactionsListAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
-            item: TransactionsRecyclerViewItem.Transaction,
+            item: Transaction,
             isNextItemHeader: Boolean = false
         ) = with(binding) {
 
             itemView.setOnClickListener {
-                interaction?.onClickedOnTransaction(adapterPosition, item.toTransaction())
+                interaction?.onClickedOnTransaction(adapterPosition, item)
             }
 
             if (isNextItemHeader) {
@@ -306,9 +307,9 @@ class TransactionsListAdapter(
             }
 
             cardView.setCardBackgroundColor(
-                Color.parseColor(item.image.backgroundColor)
+                Color.parseColor(item.categoryImage.backgroundColor)
             )
-            val categoryImageResourceId = item.image.getImageResourceId(itemView.context)
+            val categoryImageResourceId = item.categoryImage.getImageResourceId(itemView.context)
             requestManager
                 ?.load(categoryImageResourceId)
                 ?.centerInside()
@@ -388,7 +389,7 @@ class TransactionsListAdapter(
 
     interface Interaction {
 
-        fun onClickedOnTransaction(position: Int, item: TransactionDto)
+        fun onClickedOnTransaction(position: Int, item: Transaction)
 
         fun restoreListPosition()
     }

@@ -3,6 +3,8 @@ package com.ssmmhh.jibam.data.source.local.dto
 import android.content.Context
 import androidx.room.ColumnInfo
 import androidx.room.TypeConverters
+import com.ssmmhh.jibam.data.model.Image
+import com.ssmmhh.jibam.data.model.Transaction
 import com.ssmmhh.jibam.data.source.local.entity.TransactionEntity
 import com.ssmmhh.jibam.data.source.local.typeconverter.BigDecimalTypeConverter
 import com.ssmmhh.jibam.util.getCategoryImageResourceIdFromDrawableByCategoryImage
@@ -54,6 +56,19 @@ data class TransactionDto(
         memo = this.memo,
         cat_id = this.categoryId,
         date = this.date
+    )
+
+    fun toTransaction(): Transaction = Transaction(
+        id = this.id,
+        money = this.money,
+        memo = this.memo,
+        categoryId = this.categoryId,
+        categoryName = this.categoryName,
+        categoryImage = Image(
+            resourceName = categoryImageResourceName,
+            backgroundColor = categoryImageBackgroundColor
+        ),
+        date = this.date,
     )
 
 }

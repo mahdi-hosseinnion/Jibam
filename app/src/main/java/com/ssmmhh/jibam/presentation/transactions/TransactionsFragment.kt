@@ -22,6 +22,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.*
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.model.Month
+import com.ssmmhh.jibam.data.model.Transaction
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
 import com.ssmmhh.jibam.data.util.UIComponentType
 import com.ssmmhh.jibam.databinding.FragmentTransactionBinding
@@ -428,7 +429,7 @@ class TransactionsFragment(
         }
     }
 
-    override fun onClickedOnTransaction(position: Int, item: TransactionDto) {
+    override fun onClickedOnTransaction(position: Int, item: Transaction) {
         navigateToDetailTransactionFragment(item.id)
     }
 

@@ -1,23 +1,16 @@
 package com.ssmmhh.jibam.presentation.transactions
 
-import android.content.Context
 import com.ssmmhh.jibam.data.model.Image
+import com.ssmmhh.jibam.data.model.Transaction
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
-import com.ssmmhh.jibam.util.getResourcesStringValueByName
 import java.math.BigDecimal
 
 sealed class TransactionsRecyclerViewItem(
     val itemType: Int
 ) {
 
-    data class Transaction(
-        val id: Int,
-        val money: BigDecimal,
-        val memo: String?,
-        val categoryId: Int,
-        val categoryName: String,
-        val image: Image,
-        val date: Long,
+    data class TransactionItem(
+        val transaction: Transaction
     ) : TransactionsRecyclerViewItem(TRANSACTION_VIEW_TYPE)
 
 
@@ -43,39 +36,16 @@ sealed class TransactionsRecyclerViewItem(
 
 }
 
-val TransactionsRecyclerViewItem.isTransaction get() = this is TransactionsRecyclerViewItem.Transaction
+val TransactionsRecyclerViewItem.isTransaction get() = this is TransactionsRecyclerViewItem.TransactionItem
 
 val TransactionsRecyclerViewItem.isHeader get() = this is TransactionsRecyclerViewItem.Header
 
-fun TransactionsRecyclerViewItem.Transaction.getCategoryNameFromStringFile(
-    context: Context,
-    defaultName: String = categoryName
-): String = getResourcesStringValueByName(context, this.categoryName) ?: defaultName
+fun TransactionsRecyclerViewItem.TransactionItem.toTransaction(): TransactionDto =
+    transaction.toTransactionDto()
 
-
-fun TransactionsRecyclerViewItem.Transaction.toTransaction(): TransactionDto = TransactionDto(
-    id = this.id,
-    money = this.money,
-    memo = this.memo,
-    categoryId = this.categoryId,
-    categoryName = this.categoryName,
-    categoryImageResourceName = this.image.resourceName,
-    categoryImageBackgroundColor = this.image.backgroundColor,
-    date = this.date,
-)
-
-fun TransactionDto.toTransactionsRecyclerViewItem(): TransactionsRecyclerViewItem.Transaction =
-    TransactionsRecyclerViewItem.Transaction(
-        id = this.id,
-        money = this.money,
-        memo = this.memo,
-        categoryId = this.categoryId,
-        categoryName = this.categoryName,
-        image = Image(
-            resourceName = this.categoryImageResourceName,
-            backgroundColor = this.categoryImageBackgroundColor,
-        ),
-        date = this.date
+fun TransactionDto.toTransactionsRecyclerViewItem(): TransactionsRecyclerViewItem.TransactionItem =
+    TransactionsRecyclerViewItem.TransactionItem(
+        transaction = this.toTransaction()
     )
 
 
