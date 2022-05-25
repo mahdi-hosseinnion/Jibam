@@ -16,6 +16,12 @@ data class Transaction(
     val categoryImage: Image,
     val date: Long,
 ) {
+    /**
+     * Databinding does not support kotlin's default function arguments.
+     */
+    fun getCategoryNameFromStringFile(context: Context): String =
+        getCategoryNameFromStringFile(context, this.categoryName)
+
     fun getCategoryNameFromStringFile(
         context: Context,
         defaultName: String = categoryName

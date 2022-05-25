@@ -39,12 +39,12 @@ fun loadImageWithResourceIdGlide(view: ImageView, resId: Int) {
     value = ["app:groupNumberByThreeThenSetAsText", "app:prefixText"],
     requireAll = false
 )
-fun groupNumberByThree(txt: TextView, number: BigDecimal?, prefixText: String? = "") {
+fun groupNumberByThree(txt: TextView, number: BigDecimal?, prefixText: String?) {
     if (number == null) {
         txt.text = ""
         return
     }
-    txt.text = prefixText + separate3By3(
+    txt.text = (prefixText ?: "") + separate3By3(
         number,
         ConfigurationCompat.getLocales(txt.context.resources.configuration)[0]
     )

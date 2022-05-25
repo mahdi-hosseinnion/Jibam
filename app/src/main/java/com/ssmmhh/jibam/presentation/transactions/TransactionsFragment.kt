@@ -41,12 +41,9 @@ import java.util.*
 @ExperimentalCoroutinesApi
 class TransactionsFragment(
     viewModelFactory: ViewModelProvider.Factory,
-    private val requestManager: RequestManager,
     private val currentLocale: Locale,
     private val sharedPreferences: SharedPreferences,
-    private val sharedPrefsEditor: SharedPreferences.Editor
 ) : BaseFragment(),
-    TransactionsListAdapter.Interaction,
     ToolbarLayoutListener,
     MonthChangerToolbarLayoutListener {
 
@@ -241,9 +238,7 @@ class TransactionsFragment(
         binding.transactionRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@TransactionsFragment.context)
             recyclerAdapter = TransactionsListAdapter(
-                requestManager,
-                this@TransactionsFragment,
-                currentLocale,
+                viewModel,
                 isCalendarSolar = sharedPreferences.isCalendarSolar(currentLocale)
             )
             addOnScrollListener(onScrollListener)
@@ -288,6 +283,9 @@ class TransactionsFragment(
         }
         viewModel.navigateToAddTransactionEvent.observe(viewLifecycleOwner, EventObserver {
             navigateToAddTransactionFragment()
+        })
+        viewModel.navigateToDetailScreenEvent.observe(viewLifecycleOwner, EventObserver {
+            navigateToDetailTransactionFragment(it)
         })
     }
 
@@ -429,10 +427,6 @@ class TransactionsFragment(
         }
     }
 
-    override fun onClickedOnTransaction(position: Int, item: Transaction) {
-        navigateToDetailTransactionFragment(item.id)
-    }
-
     private fun navigateToDetailTransactionFragment(id: Int) {
         val action =
             TransactionsFragmentDirections.actionTransactionFragmentToDetailEditTransactionFragment(
@@ -440,8 +434,6 @@ class TransactionsFragment(
             )
         findNavController().navigate(action)
     }
-
-    override fun restoreListPosition() {}
 
     override fun onClickOnNavigation(view: View) {
         binding.drawerLayout.open()

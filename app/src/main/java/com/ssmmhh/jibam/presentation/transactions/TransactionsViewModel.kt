@@ -47,6 +47,9 @@ constructor(
     private val _navigateToAddTransactionEvent = MutableLiveData<Event<Unit>>()
     val navigateToAddTransactionEvent: LiveData<Event<Unit>> = _navigateToAddTransactionEvent
 
+    private val _navigateToDetailScreenEvent = MutableLiveData<Event<Int>>()
+    val navigateToDetailScreenEvent: LiveData<Event<Int>> = _navigateToDetailScreenEvent
+
     //Contains the transaction that user deleted by swiping, used for snack bar 'undo' action.
     private var deletedTransactionItem: TransactionDto? = null
 
@@ -187,6 +190,10 @@ constructor(
 
     fun openAddTransactionFragment() {
         _navigateToAddTransactionEvent.value = Event(Unit)
+    }
+
+    fun openDetailScreenFor(transactionId: Int) {
+        _navigateToDetailScreenEvent.value = Event(transactionId)
     }
 
     fun clearSearchQuery() {

@@ -39,10 +39,8 @@ constructor(
             TransactionsFragment::class.java.name -> {
                 TransactionsFragment(
                     viewModelFactory,
-                    requestManager,
                     currentLocale,
                     sharedPreferences,
-                    sharedPrefsEditor
                 )
             }
 

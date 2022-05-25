@@ -21,14 +21,15 @@ import com.ssmmhh.jibam.presentation.transactions.TransactionsRecyclerViewItem.C
 import com.ssmmhh.jibam.presentation.transactions.TransactionsRecyclerViewItem.Companion.TRANSACTION_VIEW_TYPE
 import com.ssmmhh.jibam.util.*
 import com.ssmmhh.jibam.util.DateUtils.DAY_IN_SECONDS
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import java.math.BigDecimal
 import java.util.*
 
-
+@FlowPreview
+@ExperimentalCoroutinesApi
 class TransactionsListAdapter(
-    private val requestManager: RequestManager?,
-    private val interaction: Interaction? = null,
-    private val currentLocale: Locale,
+    private val viewModel: TransactionsViewModel,
     private val isCalendarSolar: Boolean,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -131,9 +132,7 @@ class TransactionsListAdapter(
                         parent,
                         false
                     ),
-                    interaction = interaction,
-                    requestManager = requestManager,
-                    currentLocale = currentLocale,
+                    viewModel = viewModel,
                 )
             }
             HEADER_VIEW_TYPE -> {
@@ -156,9 +155,7 @@ class TransactionsListAdapter(
                         parent,
                         false
                     ),
-                    interaction = interaction,
-                    requestManager = requestManager,
-                    currentLocale = currentLocale,
+                    viewModel = viewModel,
                 )
             }
         }
@@ -262,62 +259,22 @@ class TransactionsListAdapter(
                 newList?.add(TransactionsRecyclerViewItem.NoMoreResult)
             }
         }
-        val commitCallback = Runnable {
-            // if process died must restore list position
-            // very annoying
-            interaction?.restoreListPosition()
-        }
-        differ.submitList(newList, commitCallback)
+        differ.submitList(newList)
     }
 
     class TransViewHolder
     constructor(
         val binding: LayoutTransactionListItemBinding,
-        val requestManager: RequestManager?,
-        private val currentLocale: Locale,
-        private val interaction: Interaction?,
+        private val viewModel: TransactionsViewModel,
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
             item: Transaction,
             isNextItemHeader: Boolean = false
         ) = with(binding) {
-
-            itemView.setOnClickListener {
-                interaction?.onClickedOnTransaction(adapterPosition, item)
-            }
-
-            if (isNextItemHeader) {
-                transactionDivider.visibility = View.GONE
-            } else {
-                transactionDivider.visibility = View.VISIBLE
-            }
-
-            if (item.memo.isNullOrBlank()) {
-                mainText.text = item.getCategoryNameFromStringFile(itemView.context)
-            } else {
-                mainText.text = item.memo
-            }
-            if (item.money >= BigDecimal.ZERO) {
-                //income
-                price.text = separate3By3(item.money, currentLocale)
-                price.setTextColor(itemView.resources.getColor(R.color.blue_500))
-            } else {
-                //expenses
-                price.text = separate3By3(item.money, currentLocale)
-                price.setTextColor(itemView.resources.getColor(R.color.red_500))
-            }
-
-            cardView.setCardBackgroundColor(
-                Color.parseColor(item.categoryImage.backgroundColor)
-            )
-            val categoryImageResourceId = item.categoryImage.getImageResourceId(itemView.context)
-            requestManager
-                ?.load(categoryImageResourceId)
-                ?.centerInside()
-                ?.transition(withCrossFade())
-                ?.error(R.drawable.ic_error)
-                ?.into(categoryImage)
+            this.viewmodel = viewModel
+            this.item = item
+            this.isNextItemHeader = isNextItemHeader
         }
 
     }
@@ -363,11 +320,4 @@ class TransactionsListAdapter(
         }
     }
 
-
-    interface Interaction {
-
-        fun onClickedOnTransaction(position: Int, item: Transaction)
-
-        fun restoreListPosition()
-    }
 }
