@@ -1,76 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/root_transaction_header"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/header_item_background"
-    android:paddingLeft="8dp"
-    android:paddingTop="4dp"
-    android:paddingRight="8dp"
-    android:paddingBottom="4dp">
+    xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
 
+        <import type="android.view.View" />
+        <import type="java.math.BigDecimal" />
 
-    <TextView
-        android:id="@+id/header_day_of_week"
-        android:layout_width="wrap_content"
+        <variable
+            name="item"
+            type="com.ssmmhh.jibam.presentation.transactions.TransactionsRecyclerViewItem.Header" />
+
+        <variable
+            name="date"
+            type="String" />
+
+        <variable
+            name="dayOfWeek"
+            type="String" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/root_transaction_header"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text=""
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Mon" />
-
-    <TextView
-        android:id="@+id/header_date"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginStart="4dp"
-        android:gravity="bottom|center"
-        android:text=""
-        android:textColor="#282828"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@id/header_day_of_week"
-        app:layout_constraintStart_toEndOf="@id/header_day_of_week"
-        app:layout_constraintTop_toTopOf="@id/header_day_of_week"
-        tools:text="12/13" />
+        android:background="@color/header_item_background"
+        android:paddingLeft="8dp"
+        android:paddingTop="4dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="4dp">
 
 
-    <TextView
-        android:id="@+id/header_income_sum"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_gravity="end|center"
-        android:layout_marginEnd="8dp"
-        android:gravity="bottom|center"
-        android:text=""
-        android:textColor="#282828"
+        <TextView
+            android:id="@+id/header_day_of_week"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@{dayOfWeek}"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Mon" />
 
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/header_expenses_sum"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.39"
-        tools:text="Income: 5000" />
+        <TextView
+            android:id="@+id/header_date"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="4dp"
+            android:gravity="bottom|center"
+            android:text="@{date}"
+            android:textColor="#282828"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@id/header_day_of_week"
+            app:layout_constraintStart_toEndOf="@id/header_day_of_week"
+            app:layout_constraintTop_toTopOf="@id/header_day_of_week"
+            tools:text="12/13" />
 
-    <TextView
-        android:id="@+id/header_expenses_sum"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_gravity="end"
-        android:layout_marginEnd="4dp"
-        android:gravity="bottom|center"
-        android:text=""
-        android:textColor="#282828"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Expenses: 1500" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/header_income_sum"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_gravity="end|center"
+            android:layout_marginEnd="8dp"
+            android:gravity="bottom|center"
+            android:text=""
+            android:textColor="#282828"
+            android:textSize="14sp"
+            android:visibility="@{(item.incomeSum != null &amp;&amp; item.incomeSum != BigDecimal.ZERO)  ? View.VISIBLE : View.GONE}"
+            app:groupNumberByThreeThenSetAsText="@{item.incomeSum}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/header_expenses_sum"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.39"
+            app:prefixText="@{@string/income+ `: `}"
+            tools:text="Income: 5000" />
+
+        <TextView
+            android:id="@+id/header_expenses_sum"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="4dp"
+            android:gravity="bottom|center"
+            android:textColor="#282828"
+            android:textSize="14sp"
+            android:visibility="@{(item.expensesSum != null &amp;&amp; item.expensesSum != BigDecimal.ZERO)  ? View.VISIBLE : View.GONE}"
+            app:groupNumberByThreeThenSetAsText="@{item.expensesSum}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:prefixText="@{@string/expenses + `: `}"
+            tools:text="Expenses: 1500" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

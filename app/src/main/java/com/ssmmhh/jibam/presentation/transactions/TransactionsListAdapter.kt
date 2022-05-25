@@ -29,33 +29,33 @@ class TransactionsListAdapter(
     private val requestManager: RequestManager?,
     private val interaction: Interaction? = null,
     private val currentLocale: Locale,
-    private var isCalendarSolar: Boolean,
+    private val isCalendarSolar: Boolean,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         private const val TAG: String = "TransactionsListAdapter"
     }
 
-    val startOfToday: Long by lazy {
+    private val startOfToday: Long by lazy {
         return@lazy DateUtils.getTheMidnightOfDay(
             unixTimeInSeconds = DateUtils.getCurrentUnixTimeInSeconds()
         )
     }
-    val startOfYesterday: Long by lazy {
+    private val startOfYesterday: Long by lazy {
         return@lazy DateUtils.getTheMidnightOfDay(
             unixTimeInSeconds = DateUtils.getCurrentUnixTimeInSeconds().minus(
                 DAY_IN_SECONDS
             )
         )
     }
-    val startOfTomorrow: Long by lazy {
+    private val startOfTomorrow: Long by lazy {
         return@lazy DateUtils.getTheMidnightOfDay(
             unixTimeInSeconds = DateUtils.getCurrentUnixTimeInSeconds().plus(
                 DAY_IN_SECONDS
             )
         )
     }
-    val DIFF_CALLBACK = object : DiffUtil.ItemCallback<TransactionsRecyclerViewItem>() {
+    private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<TransactionsRecyclerViewItem>() {
 
         override fun areItemsTheSame(
             oldItem: TransactionsRecyclerViewItem,
@@ -133,6 +133,7 @@ class TransactionsListAdapter(
                     ),
                     interaction = interaction,
                     requestManager = requestManager,
+                    currentLocale = currentLocale,
                 )
             }
             HEADER_VIEW_TYPE -> {
@@ -142,7 +143,6 @@ class TransactionsListAdapter(
                         parent,
                         false
                     ),
-                    currentLocale = currentLocale,
                     isCalendarSolar = isCalendarSolar,
                     startOfToday = startOfToday,
                     startOfYesterday = startOfYesterday,
@@ -158,6 +158,7 @@ class TransactionsListAdapter(
                     ),
                     interaction = interaction,
                     requestManager = requestManager,
+                    currentLocale = currentLocale,
                 )
             }
         }
@@ -269,10 +270,11 @@ class TransactionsListAdapter(
         differ.submitList(newList, commitCallback)
     }
 
-    inner class TransViewHolder
+    class TransViewHolder
     constructor(
         val binding: LayoutTransactionListItemBinding,
         val requestManager: RequestManager?,
+        private val currentLocale: Locale,
         private val interaction: Interaction?,
     ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -324,7 +326,6 @@ class TransactionsListAdapter(
     class HeaderViewHolder
     constructor(
         val binding: LayoutTransacionHeaderBinding,
-        private val currentLocale: Locale,
         private val isCalendarSolar: Boolean,
         private val startOfToday: Long,
         private val startOfYesterday: Long,
@@ -332,49 +333,25 @@ class TransactionsListAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: TransactionsRecyclerViewItem.Header) = with(binding) {
-            //money for expenses
-            headerExpensesSum.text =
-                item.expensesSum?.let {
-                    if (it == BigDecimal.ZERO) return@let ""
-
-                    val expensesText = separate3By3(
-                        it,
-                        currentLocale
-                    )
-                    "${getStringFromItemView(R.string.expenses)}: $expensesText"
-                } ?: ""
-
-
-            //cat_id for income
-            headerIncomeSum.text = item.incomeSum?.let {
-                if (it == BigDecimal.ZERO) return@let ""
-
-                val incomeText = separate3By3(
-                    item.incomeSum,
-                    currentLocale
-                )
-                "${getStringFromItemView(R.string.income)}: $incomeText"
-            } ?: ""
-
-            when (item.date) {
+            this.item = item
+            var date = ""
+            val dayOfWeek = when (item.date) {
                 //Yesterday unix time range
                 in startOfYesterday until startOfToday -> {
-                    headerDate.text = ""
-                    headerDayOfWeek.text = getStringFromItemView(R.string.yesterday)
+                    getStringFromItemView(R.string.yesterday)
                 }
                 //Today unix time range
                 in startOfToday until startOfTomorrow -> {
-                    headerDate.text = ""
-                    headerDayOfWeek.text = getStringFromItemView(R.string.today)
+                    getStringFromItemView(R.string.today)
                 }
                 else -> {
                     val dateHolder = DateUtils.convertUnixTimeToDate(item.date, isCalendarSolar)
-                    headerDayOfWeek.text =
-                        dateHolder.getDayOfWeekName(itemView.context.resources) + ","
-                    headerDate.text = getFormattedDate(dateHolder)
+                    date = getFormattedDate(dateHolder)
+                    dateHolder.getDayOfWeekName(itemView.context.resources) + ","
                 }
             }
-
+            this.date = date
+            this.dayOfWeek = dayOfWeek
         }
 
         private fun getFormattedDate(date: DateHolder): String {

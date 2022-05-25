@@ -35,9 +35,16 @@ fun loadImageWithResourceIdGlide(view: ImageView, resId: Int) {
         .into(view)
 }
 
-@BindingAdapter("app:groupNumberByThreeThenSetAsText")
-fun groupNumberByThree(txt: TextView, number: BigDecimal) {
-    txt.text = separate3By3(
+@BindingAdapter(
+    value = ["app:groupNumberByThreeThenSetAsText", "app:prefixText"],
+    requireAll = false
+)
+fun groupNumberByThree(txt: TextView, number: BigDecimal?, prefixText: String? = "") {
+    if (number == null) {
+        txt.text = ""
+        return
+    }
+    txt.text = prefixText + separate3By3(
         number,
         ConfigurationCompat.getLocales(txt.context.resources.configuration)[0]
     )
