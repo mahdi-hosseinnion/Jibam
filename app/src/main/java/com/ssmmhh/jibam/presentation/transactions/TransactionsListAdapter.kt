@@ -34,18 +34,105 @@ class TransactionsListAdapter(
         private const val TAG: String = "TransactionsListAdapter"
     }
 
-    private val startOfToday: Long by lazy {
+    /**
+     * Represent the exact unix time of current date at (00:00). used to show 'Today' in header text.
+     */
+    private val startOfTodayInSeconds: Long by lazy {
         return@lazy DateUtils.getTheMidnightOfDateInSecond(
             unixTimeInSeconds = DateUtils.getCurrentUnixTimeInSeconds()
         )
     }
     private val startOfYesterday: Long by lazy {
-        return@lazy startOfToday.minus(DAY_IN_SECONDS)
+        return@lazy startOfTodayInSeconds.minus(DAY_IN_SECONDS)
     }
     private val startOfTomorrow: Long by lazy {
-        return@lazy startOfToday.plus(DAY_IN_SECONDS)
+        return@lazy startOfTodayInSeconds.plus(DAY_IN_SECONDS)
     }
 
+    class TransViewHolder(
+        private val binding: LayoutTransactionListItemBinding,
+        private val viewModel: TransactionsViewModel,
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(
+            item: Transaction,
+            isNextItemHeader: Boolean = false
+        ) = with(binding) {
+            this.viewmodel = viewModel
+            this.item = item
+            this.isNextItemHeader = isNextItemHeader
+        }
+
+    }
+
+    class HeaderViewHolder(
+        private val binding: LayoutTransacionHeaderBinding,
+        private val isCalendarSolar: Boolean,
+        private val startOfToday: Long,
+        private val startOfYesterday: Long,
+        private val startOfTomorrow: Long,
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(item: TransactionsRecyclerViewItem.Header) = with(binding) {
+            this.item = item
+            var date = ""
+            val dayOfWeek = when (item.date) {
+                //Yesterday unix time range
+                in startOfYesterday until startOfToday -> {
+                    getStringFromItemView(R.string.yesterday)
+                }
+                //Today unix time range
+                in startOfToday until startOfTomorrow -> {
+                    getStringFromItemView(R.string.today)
+                }
+                else -> {
+                    val dateHolder = DateUtils.convertUnixTimeToDate(item.date, isCalendarSolar)
+                    date = getFormattedDate(dateHolder)
+                    dateHolder.getDayOfWeekName(itemView.context.resources) + ","
+                }
+            }
+            this.date = date
+            this.dayOfWeek = dayOfWeek
+        }
+
+        private fun getFormattedDate(date: DateHolder): String {
+            return if (isCalendarSolar) {
+                "${date.day.toLocaleString()} ${date.getAbbreviationFormOfMonthName(itemView.context.resources)}"
+            } else {
+                "${date.day.toLocaleString()} ${date.getAbbreviationFormOfMonthName(itemView.context.resources)}"
+            }
+        }
+    }
+
+    /**
+     * Remove transaction at [position].
+     * Remove transaction's header if its the last transaction with that header.
+     */
+    fun removeItemAt(position: Int): TransactionDto? {
+        val newList = currentList.toMutableList()
+
+        val previousPosition = position.minus(1)
+        val nextPosition = position.plus(1)
+        val previousItem = currentList.getOrNull(previousPosition)
+        val nextItem = currentList.getOrNull(nextPosition)
+
+        val deleteItem = newList.removeAt(position) ?: return null
+        //Remove header
+        if (previousItem is TransactionsRecyclerViewItem.Header &&
+            nextItem !is TransactionsRecyclerViewItem.TransactionItem
+        ) {
+            newList.remove(previousItem)
+        }
+
+        submitList(newList)
+        return if (deleteItem is TransactionsRecyclerViewItem.TransactionItem) deleteItem.toTransaction() else null
+
+    }
+
+    private fun isHeader(position: Int): Boolean =
+        if (position < itemCount)
+            currentList[position].isHeader
+        else true
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
@@ -103,7 +190,7 @@ class TransactionsListAdapter(
                         false
                     ),
                     isCalendarSolar = isCalendarSolar,
-                    startOfToday = startOfToday,
+                    startOfToday = startOfTodayInSeconds,
                     startOfYesterday = startOfYesterday,
                     startOfTomorrow = startOfTomorrow,
                 )
@@ -148,98 +235,9 @@ class TransactionsListAdapter(
         }
     }
 
-    private fun isHeader(position: Int): Boolean =
-        if (position < itemCount)
-            currentList[position].isHeader
-        else true
-
     override fun getItemViewType(position: Int): Int = currentList[position].itemType
 
     override fun getItemCount(): Int = currentList.size
-
-    /**
-     * Remove transaction at [position].
-     * Remove transaction's header if its the last transaction with that header.
-     */
-    fun removeItemAt(position: Int): TransactionDto? {
-        val newList = currentList.toMutableList()
-
-        val previousPosition = position.minus(1)
-        val nextPosition = position.plus(1)
-        val previousItem = currentList.getOrNull(previousPosition)
-        val nextItem = currentList.getOrNull(nextPosition)
-
-        val deleteItem = newList.removeAt(position) ?: return null
-        //Remove header
-        if (previousItem is TransactionsRecyclerViewItem.Header &&
-            nextItem !is TransactionsRecyclerViewItem.TransactionItem
-        ) {
-            newList.remove(previousItem)
-        }
-
-        submitList(newList)
-        return if (deleteItem is TransactionsRecyclerViewItem.TransactionItem) deleteItem.toTransaction() else null
-
-    }
-
-
-    class TransViewHolder
-    constructor(
-        val binding: LayoutTransactionListItemBinding,
-        private val viewModel: TransactionsViewModel,
-    ) : RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(
-            item: Transaction,
-            isNextItemHeader: Boolean = false
-        ) = with(binding) {
-            this.viewmodel = viewModel
-            this.item = item
-            this.isNextItemHeader = isNextItemHeader
-        }
-
-    }
-
-
-    class HeaderViewHolder
-    constructor(
-        val binding: LayoutTransacionHeaderBinding,
-        private val isCalendarSolar: Boolean,
-        private val startOfToday: Long,
-        private val startOfYesterday: Long,
-        private val startOfTomorrow: Long,
-    ) : RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(item: TransactionsRecyclerViewItem.Header) = with(binding) {
-            this.item = item
-            var date = ""
-            val dayOfWeek = when (item.date) {
-                //Yesterday unix time range
-                in startOfYesterday until startOfToday -> {
-                    getStringFromItemView(R.string.yesterday)
-                }
-                //Today unix time range
-                in startOfToday until startOfTomorrow -> {
-                    getStringFromItemView(R.string.today)
-                }
-                else -> {
-                    val dateHolder = DateUtils.convertUnixTimeToDate(item.date, isCalendarSolar)
-                    date = getFormattedDate(dateHolder)
-                    dateHolder.getDayOfWeekName(itemView.context.resources) + ","
-                }
-            }
-            this.date = date
-            this.dayOfWeek = dayOfWeek
-        }
-
-        private fun getFormattedDate(date: DateHolder): String {
-            return if (isCalendarSolar) {
-                "${date.day.toLocaleString()} ${date.getAbbreviationFormOfMonthName(itemView.context.resources)}"
-            } else {
-                "${date.day.toLocaleString()} ${date.getAbbreviationFormOfMonthName(itemView.context.resources)}"
-            }
-        }
-    }
 
 }
 
