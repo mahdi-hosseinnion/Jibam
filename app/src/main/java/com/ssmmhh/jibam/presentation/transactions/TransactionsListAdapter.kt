@@ -35,23 +35,15 @@ class TransactionsListAdapter(
     }
 
     private val startOfToday: Long by lazy {
-        return@lazy DateUtils.getTheMidnightOfDay(
+        return@lazy DateUtils.getTheMidnightOfDateInSecond(
             unixTimeInSeconds = DateUtils.getCurrentUnixTimeInSeconds()
         )
     }
     private val startOfYesterday: Long by lazy {
-        return@lazy DateUtils.getTheMidnightOfDay(
-            unixTimeInSeconds = DateUtils.getCurrentUnixTimeInSeconds().minus(
-                DAY_IN_SECONDS
-            )
-        )
+        return@lazy startOfToday.minus(DAY_IN_SECONDS)
     }
     private val startOfTomorrow: Long by lazy {
-        return@lazy DateUtils.getTheMidnightOfDay(
-            unixTimeInSeconds = DateUtils.getCurrentUnixTimeInSeconds().plus(
-                DAY_IN_SECONDS
-            )
-        )
+        return@lazy startOfToday.plus(DAY_IN_SECONDS)
     }
 
 

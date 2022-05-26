@@ -29,10 +29,10 @@ object DateUtils {
         }
 
     /**
-     * Get the midnight of the day base on unix time .
-     * @return The midnight of day in seconds.
+     * Get the midnight of the date base on unix time .
+     * @return The midnight of date in seconds.
      */
-    fun getTheMidnightOfDay(unixTimeInSeconds: Long): Long {
+    fun getTheMidnightOfDateInSecond(unixTimeInSeconds: Long): Long {
         val calendar = Calendar.getInstance().apply {
             //set current time to calendar
             timeInMillis = unixTimeInSeconds.toMilliSeconds()
