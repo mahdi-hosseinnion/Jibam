@@ -51,7 +51,7 @@ suspend fun addHeaderToTransactions(currentList: List<TransactionDto>): List<Tra
         return@withContext resultList
     }
 
-
+//TODO do not show sums if there is only one expenses and income.
 private fun createHeader(
     date: Long,
     income: BigDecimal,
