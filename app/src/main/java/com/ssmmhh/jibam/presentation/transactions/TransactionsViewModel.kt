@@ -76,7 +76,7 @@ constructor(
             query = query
         ).handleLoadingAndException(GET_TRANSACTION_LIST)
             .map {
-                return@map addHeaderToTransactions(it)
+                return@map addHeaderToTransactions(it,query)
             }
 
     private val _summeryMoney: LiveData<SummaryMoney> =

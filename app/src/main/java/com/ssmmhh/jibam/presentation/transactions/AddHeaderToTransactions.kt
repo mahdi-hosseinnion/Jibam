@@ -7,9 +7,15 @@ import kotlinx.coroutines.withContext
 import java.math.BigDecimal
 import java.util.*
 
-suspend fun addHeaderToTransactions(currentList: List<TransactionDto>): List<TransactionsRecyclerViewItem> =
+suspend fun addHeaderToTransactions(
+    currentList: List<TransactionDto>,
+    searchQuery: String
+): List<TransactionsRecyclerViewItem> =
     withContext(Dispatchers.IO) {
         if (currentList.isEmpty()) {
+            if (searchQuery.isNotEmpty()) {
+                return@withContext listOf(TransactionsRecyclerViewItem.NoResultFound)
+            }
             return@withContext listOf(TransactionsRecyclerViewItem.DatabaseIsEmpty)
         }
         val resultList = ArrayList<TransactionsRecyclerViewItem>()
