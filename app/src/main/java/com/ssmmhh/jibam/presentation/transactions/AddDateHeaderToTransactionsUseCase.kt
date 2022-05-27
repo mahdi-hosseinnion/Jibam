@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.math.BigDecimal
+import java.math.BigDecimal.ZERO
 import java.util.*
 import javax.inject.Inject
 
@@ -29,43 +30,54 @@ constructor(
                 }
                 return@withContext listOf(TransactionsRecyclerViewItem.DatabaseIsEmpty)
             }
-            val resultList = ArrayList<TransactionsRecyclerViewItem>()
+            val result = ArrayList<TransactionsRecyclerViewItem>()
             var headerDate = currentList[0].date
-            var incomeSum = BigDecimal.ZERO
-            var expensesSum = BigDecimal.ZERO
-            val tempList = ArrayList<TransactionsRecyclerViewItem>()
+            var headerIncomeSum = ZERO
+            var headerExpensesSum = ZERO
+            val headerTransactions = ArrayList<TransactionsRecyclerViewItem>()
             currentList.forEach { item ->
                 if (item.date.isTheSameDayAs(headerDate)) {
-                    //make new header and items
-                    tempList.add(item.toTransactionsRecyclerViewItem())
-                    if (item.money >= BigDecimal.ZERO) { //income
-                        incomeSum += item.money
+                    headerTransactions.add(item.toTransactionsRecyclerViewItem())
+                    if (item.money >= ZERO) { //income
+                        headerIncomeSum += item.money
                     } else { //expenses
-                        expensesSum += item.money
+                        headerExpensesSum += item.money
                     }
                 } else {
                     //add header and items
-                    resultList.add(createHeader(headerDate, incomeSum, expensesSum, tempList.size))
-                    resultList.addAll(tempList)
-                    //clear item to defualt
+                    result.add(
+                        createHeader(
+                            headerDate,
+                            headerIncomeSum,
+                            headerExpensesSum,
+                            headerTransactions.size
+                        )
+                    )
+                    result.addAll(headerTransactions)
+                    //reset header values.
                     headerDate = item.date
-                    tempList.clear()
-                    incomeSum = BigDecimal.ZERO
-                    expensesSum = BigDecimal.ZERO
-                    //make new header and items
-                    tempList.add(item.toTransactionsRecyclerViewItem())
-                    if (item.money >= BigDecimal.ZERO) { //income
-                        incomeSum += item.money
+                    if (item.money >= ZERO) { //income
+                        headerIncomeSum = item.money
+                        headerExpensesSum = ZERO
                     } else { //expenses
-                        expensesSum += item.money
+                        headerIncomeSum = ZERO
+                        headerExpensesSum = item.money
                     }
+                    headerTransactions.clear()
+                    headerTransactions.add(item.toTransactionsRecyclerViewItem())
                 }
             }
-            //add header and items
-            resultList.add(createHeader(headerDate, incomeSum, expensesSum, tempList.size))
-            resultList.addAll(tempList)
-            //clear item to defualt
-            return@withContext resultList
+            //add last header
+            result.add(
+                createHeader(
+                    headerDate,
+                    headerIncomeSum,
+                    headerExpensesSum,
+                    headerTransactions.size
+                )
+            )
+            result.addAll(headerTransactions)
+            return@withContext result
         }
 
     //TODO do not show sums if there is only one expenses and income.
