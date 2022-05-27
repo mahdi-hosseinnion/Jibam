@@ -92,10 +92,10 @@ abstract class BaseViewModel<_ViewState, _StateEvent : StateEvent>() : ViewModel
 
     fun <T> Flow<T>.handleLoadingAndException(eventName: String): Flow<T> =
         this
-            .distinctUntilChanged()
             .onStart {
                 _activeJobStack.add(eventName)
             }.catch { cause ->
+                _activeJobStack.remove(eventName)
                 addToMessageStack(throwable = cause)
             }
             .map {

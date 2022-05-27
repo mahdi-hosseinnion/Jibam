@@ -5,6 +5,7 @@ import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView
 
+//TODO ("Databind this view holder")
 class GenericViewHolder
 constructor(
     itemView: View,

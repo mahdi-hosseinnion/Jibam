@@ -1,6 +1,5 @@
 package com.ssmmhh.jibam.presentation.transactions
 
-import android.content.SharedPreferences
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.*
 import com.ssmmhh.jibam.R
@@ -13,13 +12,10 @@ import com.ssmmhh.jibam.presentation.common.BaseViewModel
 import com.ssmmhh.jibam.presentation.common.MonthManger
 import com.ssmmhh.jibam.presentation.transactions.state.TransactionsStateEvent
 import com.ssmmhh.jibam.presentation.transactions.state.TransactionsViewState
-import com.ssmmhh.jibam.presentation.transactions.state.TransactionsViewState.SearchViewState
-import com.ssmmhh.jibam.presentation.transactions.state.TransactionsViewState.TransactionsQueryRequirement
 import com.ssmmhh.jibam.util.Event
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
-import java.util.*
 import javax.inject.Inject
 
 
@@ -30,8 +26,6 @@ class TransactionsViewModel
 constructor(
     private val transactionRepository: TransactionRepository,
     private val monthManger: MonthManger,
-    private val currentLocale: Locale,
-    private val sharedPreferences: SharedPreferences
 ) : BaseViewModel<TransactionsViewState, TransactionsStateEvent>() {
 
     // Two-way databinding, exposing MutableLiveData
@@ -76,12 +70,13 @@ constructor(
             query = query
         ).handleLoadingAndException(GET_TRANSACTION_LIST)
             .map {
-                return@map addHeaderToTransactions(it,query)
+                return@map addHeaderToTransactions(it, query)
             }
+
+    val currentMonth: LiveData<Month> = monthManger.currentMonth.asLiveData()
 
     private val _summeryMoney: LiveData<SummaryMoney> =
         monthManger.currentMonth.flatMapLatest {
-            setCurrentMonth(it)
             getSummeryMoney(it.startOfMonth, it.endOfMonth)
         }.asLiveData()
 
@@ -111,9 +106,7 @@ constructor(
                 val result = transactionRepository.insertTransaction(stateEvent)
                 DataState(
                     stateMessage = result.stateMessage,
-                    data = TransactionsViewState(
-                        insertedTransactionRawId = result.data
-                    ),
+                    data = TransactionsViewState(),
                     stateEvent = result.stateEvent
                 )
             }
@@ -122,23 +115,14 @@ constructor(
                 val result = transactionRepository.deleteTransaction(stateEvent)
                 DataState(
                     stateMessage = getUndoSnackBarStateMessageForDeleteTransaction(),
-                    data = TransactionsViewState(
-                        successfullyDeletedTransactionIndicator = result.data
-                    ),
+                    data = TransactionsViewState(),
                     stateEvent = result.stateEvent
                 )
             }
         }
 
     override fun updateViewState(newViewState: TransactionsViewState): TransactionsViewState {
-        val outDate = getCurrentViewStateOrNew()
-        return TransactionsViewState(
-            insertedTransactionRawId = newViewState.insertedTransactionRawId
-                ?: outDate.insertedTransactionRawId,
-            successfullyDeletedTransactionIndicator = newViewState.successfullyDeletedTransactionIndicator
-                ?: outDate.successfullyDeletedTransactionIndicator,
-            currentMonth = newViewState.currentMonth ?: outDate.currentMonth,
-        )
+        return TransactionsViewState()
     }
 
     private fun getUndoSnackBarStateMessageForDeleteTransaction(): StateMessage {
@@ -212,11 +196,6 @@ constructor(
 
     fun isSearchInvisible(): Boolean = _searchViewState.value == SearchViewState.INVISIBLE
 
-    private fun setCurrentMonth(month: Month) {
-        setViewState(
-            TransactionsViewState(currentMonth = month)
-        )
-    }
 
     fun showMonthPickerBottomSheet(parentFragmentManager: FragmentManager) {
         monthManger.showMonthPickerBottomSheet(parentFragmentManager)
@@ -253,4 +232,13 @@ constructor(
         private const val GET_SUM_OF_INCOME = "GET_SUM_OF_INCOME"
         private const val SEARCH_ACTION_DEBOUNCE_TIME: Long = 250
     }
+}
+
+data class TransactionsQueryRequirement(
+    val query: String,
+    val month: Month
+)
+
+enum class SearchViewState {
+    VISIBLE, INVISIBLE
 }

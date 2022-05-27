@@ -149,7 +149,6 @@ class TransactionsListAdapter(
                 )
             }
             NO_RESULT_FOUND_VIEW_TYPE -> {
-                Log.e(TAG, "onCreateViewHolder: NO result  found with this query or filter ...")
                 GenericViewHolder(
                     LayoutInflater.from(parent.context).inflate(
                         R.layout.layout_no_results_found_list_item,
@@ -161,7 +160,6 @@ class TransactionsListAdapter(
                 )
             }
             DATABASE_IS_EMPTY_VIEW_TYPE -> {
-                Log.e(TAG, "onCreateViewHolder: Database is empty...")
                 GenericViewHolder(
                     LayoutInflater.from(parent.context).inflate(
                         R.layout.layout_no_results_found_in_database_list_item,

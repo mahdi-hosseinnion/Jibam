@@ -254,10 +254,8 @@ class TransactionsFragment(
 
     private fun subscribeObservers() {
 
-        viewModel.viewState.observe(viewLifecycleOwner) { vs ->
-            vs?.let { viewState ->
-                viewState.currentMonth?.let { setMonthFieldsValues(it) }
-            }
+        viewModel.currentMonth.observe(viewLifecycleOwner) {
+            it?.let { setMonthFieldsValues(it) }
         }
         viewModel.transactions.observe(viewLifecycleOwner) { transactionList ->
             recyclerAdapter.submitList(transactionList)
@@ -269,13 +267,12 @@ class TransactionsFragment(
 
             binding.txtIncome.text = separate3By3AndRoundIt(sm.income, currentLocale)
         }
-
         viewModel.searchViewState.observe(viewLifecycleOwner) {
             when (it) {
-                TransactionsViewState.SearchViewState.VISIBLE -> {
+                SearchViewState.VISIBLE -> {
                     enableSearchMode()
                 }
-                TransactionsViewState.SearchViewState.INVISIBLE -> {
+                SearchViewState.INVISIBLE -> {
                     disableSearchMode()
                 }
             }
