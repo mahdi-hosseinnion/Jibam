@@ -26,6 +26,7 @@ class TransactionsViewModel
 constructor(
     private val transactionRepository: TransactionRepository,
     private val monthManger: MonthManger,
+    private val addDateHeaderToTransactionsUseCase: AddDateHeaderToTransactionsUseCase,
 ) : BaseViewModel<TransactionsViewState, TransactionsStateEvent>() {
 
     // Two-way databinding, exposing MutableLiveData
@@ -70,7 +71,7 @@ constructor(
             query = query
         ).handleLoadingAndException(GET_TRANSACTION_LIST)
             .map {
-                return@map addHeaderToTransactions(it, query)
+                return@map addDateHeaderToTransactionsUseCase.invoke(it, query)
             }
 
     val currentMonth: LiveData<Month> = monthManger.currentMonth.asLiveData()
