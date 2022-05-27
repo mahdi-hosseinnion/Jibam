@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ssmmhh.jibam.di.factory.MainViewModelFactory
 import com.ssmmhh.jibam.di.key.MainViewModelKey
+import com.ssmmhh.jibam.presentation.addedittransaction.AddEditTransactionViewModel
 import com.ssmmhh.jibam.presentation.addedittransaction.detailedittransaction.DetailEditTransactionViewModel
 import com.ssmmhh.jibam.presentation.addedittransaction.inserttransaction.InsertTransactionViewModel
 import com.ssmmhh.jibam.presentation.categories.addcategoires.AddCategoryViewModel
@@ -96,6 +97,13 @@ abstract class MainViewModelModule {
     @MainViewModelKey(SettingViewModel::class)
     abstract fun bindSettingViewModel(
         settingViewModel: SettingViewModel
+    ): ViewModel
+
+    @Binds
+    @IntoMap
+    @MainViewModelKey(AddEditTransactionViewModel::class)
+    abstract fun bindAddEditTransactionViewModel(
+        addEditTransactionViewModel: AddEditTransactionViewModel
     ): ViewModel
 
 }

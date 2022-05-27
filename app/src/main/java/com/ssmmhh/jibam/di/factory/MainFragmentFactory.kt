@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
 import com.ssmmhh.jibam.presentation.aboutus.AboutUsFragment
+import com.ssmmhh.jibam.presentation.addedittransaction.AddEditTransactionFragment
 import com.ssmmhh.jibam.presentation.addedittransaction.detailedittransaction.DetailEditTransactionFragment
 import com.ssmmhh.jibam.presentation.addedittransaction.inserttransaction.InsertTransactionFragment
 import com.ssmmhh.jibam.presentation.categories.addcategoires.AddCategoryFragment
@@ -89,6 +90,11 @@ constructor(
                     viewModelFactory,
                     currentLocale,
                     sharedPreferences
+                )
+            }
+            AddEditTransactionFragment::class.java.name -> {
+                AddEditTransactionFragment(
+                    viewModelFactory,
                 )
             }
 
