@@ -13,11 +13,11 @@ import javax.inject.Inject
 
 class AddDateHeaderToTransactionsUseCase
 constructor(
-    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) {
 
     @Inject
-    constructor() : this(Dispatchers.IO)
+    constructor() : this(Dispatchers.Default)
 
     suspend fun invoke(
         currentList: List<TransactionDto>,
@@ -30,55 +30,56 @@ constructor(
                 }
                 return@withContext listOf(TransactionsRecyclerViewItem.DatabaseIsEmpty)
             }
-            val result = ArrayList<TransactionsRecyclerViewItem>()
-            var headerDate = currentList[0].date
-            var headerIncomeSum = ZERO
-            var headerExpensesSum = ZERO
-            val headerTransactions = ArrayList<TransactionsRecyclerViewItem>()
-            currentList.forEach { item ->
-                if (item.date.isTheSameDayAs(headerDate)) {
-                    headerTransactions.add(item.toTransactionsRecyclerViewItem())
-                    if (item.money >= ZERO) { //income
-                        headerIncomeSum += item.money
-                    } else { //expenses
-                        headerExpensesSum += item.money
-                    }
-                } else {
-                    //add header and items
-                    result.add(
-                        createHeader(
-                            headerDate,
-                            headerIncomeSum,
-                            headerExpensesSum,
-                            headerTransactions.size
+            return@withContext buildList {
+                var headerDate = currentList[0].date
+                var headerIncomeSum = ZERO
+                var headerExpensesSum = ZERO
+                val headerTransactions = ArrayList<TransactionsRecyclerViewItem>()
+                currentList.forEach { item ->
+                    if (item.date.isTheSameDayAs(headerDate)) {
+                        headerTransactions.add(item.toTransactionsRecyclerViewItem())
+                        if (item.money >= ZERO) { //income
+                            headerIncomeSum += item.money
+                        } else { //expenses
+                            headerExpensesSum += item.money
+                        }
+                    } else {
+                        //add header and items
+                        add(
+                            createHeader(
+                                headerDate,
+                                headerIncomeSum,
+                                headerExpensesSum,
+                                headerTransactions.size
+                            )
                         )
-                    )
-                    result.addAll(headerTransactions)
-                    //reset header values.
-                    headerDate = item.date
-                    if (item.money >= ZERO) { //income
-                        headerIncomeSum = item.money
-                        headerExpensesSum = ZERO
-                    } else { //expenses
-                        headerIncomeSum = ZERO
-                        headerExpensesSum = item.money
+                        addAll(headerTransactions)
+                        //reset header values.
+                        headerDate = item.date
+                        if (item.money >= ZERO) { //income
+                            headerIncomeSum = item.money
+                            headerExpensesSum = ZERO
+                        } else { //expenses
+                            headerIncomeSum = ZERO
+                            headerExpensesSum = item.money
+                        }
+                        headerTransactions.clear()
+                        headerTransactions.add(item.toTransactionsRecyclerViewItem())
                     }
-                    headerTransactions.clear()
-                    headerTransactions.add(item.toTransactionsRecyclerViewItem())
                 }
-            }
-            //add last header
-            result.add(
-                createHeader(
-                    headerDate,
-                    headerIncomeSum,
-                    headerExpensesSum,
-                    headerTransactions.size
+                //add last header
+                add(
+                    createHeader(
+                        headerDate,
+                        headerIncomeSum,
+                        headerExpensesSum,
+                        headerTransactions.size
+                    )
                 )
-            )
-            result.addAll(headerTransactions)
-            return@withContext result
+                addAll(headerTransactions)
+            }
         }
+
 
     //TODO do not show sums if there is only one expenses and income.
     private fun createHeader(
