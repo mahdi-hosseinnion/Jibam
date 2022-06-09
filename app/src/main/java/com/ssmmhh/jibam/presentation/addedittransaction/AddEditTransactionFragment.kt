@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.ssmmhh.jibam.databinding.FragmentAddEditTransactionBinding
 import com.ssmmhh.jibam.presentation.common.BaseFragment
+import com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
@@ -15,7 +16,7 @@ import kotlinx.coroutines.FlowPreview
 @ExperimentalCoroutinesApi
 class AddEditTransactionFragment(
     viewModelFactory: ViewModelProvider.Factory,
-) : BaseFragment() {
+) : BaseFragment(), ToolbarLayoutListener {
 
     private lateinit var binding: FragmentAddEditTransactionBinding
 
@@ -27,7 +28,7 @@ class AddEditTransactionFragment(
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAddEditTransactionBinding.inflate(inflater, container, false).apply {
-
+            listener = this@AddEditTransactionFragment
         }
         return binding.root
     }
@@ -52,4 +53,10 @@ class AddEditTransactionFragment(
             showProgressBar(viewModel.areAnyJobsActive())
         }
     }
+
+    override fun onClickOnNavigation(view: View) {
+        navigateBack()
+    }
+
+    override fun onClickOnMenuButton(view: View) {}
 }
