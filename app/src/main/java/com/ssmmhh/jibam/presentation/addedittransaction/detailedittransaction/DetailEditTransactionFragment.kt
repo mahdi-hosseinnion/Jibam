@@ -52,12 +52,12 @@ constructor(
 
     private val viewModel by viewModels<DetailEditTransactionViewModel> { viewModelFactory }
 
-    private val args: DetailEditTransactionFragmentArgs by navArgs()
+//    private val args: DetailEditTransactionFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupUi()
-        viewModel.getTransactionById(args.transactionId)
+//        viewModel.getTransactionById(args.transactionId)
         subscribeObservers()
     }
 

@@ -113,7 +113,7 @@ class DetailChartFragment(
 
     private fun navigateToAddTransactionFragment(transactionId: Int) {
         val action =
-            DetailChartFragmentDirections.actionDetailChartFragmentToDetailEditTransactionFragment(
+            DetailChartFragmentDirections.actionDetailChartFragmentToAddEditTransactionFragment(
                 transactionId = transactionId
             )
         findNavController().navigate(action)

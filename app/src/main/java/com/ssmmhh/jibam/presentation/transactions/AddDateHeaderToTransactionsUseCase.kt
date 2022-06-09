@@ -104,8 +104,7 @@ constructor(
     }
 
     private fun Long.isTheSameDayAs(other: Long): Boolean {
-        //The calendar type (solar hijri or gregorian) does not matter here Used to indicate that
-        // two date are in fact the same day.
+        //The calendar type (solar hijri or gregorian) does not matter here.
         //GregorianCalendar time zone by default is the device time zone.
         val thisCalendar = GregorianCalendar().apply {
             timeInMillis = this@isTheSameDayAs.toMilliSeconds()

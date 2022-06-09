@@ -333,7 +333,7 @@ class TransactionsFragment(
     private fun navigateToAddTransactionFragment() {
         //on category selected and bottomSheet hided
         val action =
-            TransactionsFragmentDirections.actionTransactionFragmentToCreateTransactionFragment()
+            TransactionsFragmentDirections.actionTransactionFragmentToAddEditTransactionFragment()
         findNavController().navigate(action)
     }
 
@@ -426,7 +426,7 @@ class TransactionsFragment(
 
     private fun navigateToDetailTransactionFragment(id: Int) {
         val action =
-            TransactionsFragmentDirections.actionTransactionFragmentToDetailEditTransactionFragment(
+            TransactionsFragmentDirections.actionTransactionFragmentToAddEditTransactionFragment(
                 transactionId = id
             )
         findNavController().navigate(action)
