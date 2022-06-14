@@ -95,6 +95,7 @@ constructor(
             AddEditTransactionFragment::class.java.name -> {
                 AddEditTransactionFragment(
                     viewModelFactory,
+                    requestManager
                 )
             }
 

@@ -5,31 +5,40 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.core.text.TextUtilsCompat
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.RequestManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.*
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.databinding.FragmentAddEditTransactionBinding
+import com.ssmmhh.jibam.presentation.addedittransaction.common.CategoryBottomSheetViewPagerAdapter
 import com.ssmmhh.jibam.presentation.common.BaseFragment
 import com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import java.util.*
 
 @FlowPreview
 @ExperimentalCoroutinesApi
 class AddEditTransactionFragment(
     viewModelFactory: ViewModelProvider.Factory,
+    private val requestManager: RequestManager,
 ) : BaseFragment(), ToolbarLayoutListener {
 
     private lateinit var binding: FragmentAddEditTransactionBinding
 
     private val viewModel by viewModels<AddEditTransactionViewModel> { viewModelFactory }
 
-    private val args: AddEditTransactionFragmentArgs by navArgs()
+    private val navigationArgs: AddEditTransactionFragmentArgs by navArgs()
 
     lateinit var selectCategoryBottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+
+    lateinit var categoryBottomSheetViewPagerAdapter: CategoryBottomSheetViewPagerAdapter
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,8 +53,9 @@ class AddEditTransactionFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        start(args.transactionId)
+        start(navigationArgs.transactionId)
         initializeSelectCategoryBottomSheet()
+        setupBottomSheetViewPager()
         subscribeObservers()
     }
 
@@ -67,6 +77,30 @@ class AddEditTransactionFragment(
             isHideable = true
             skipCollapsed = true
             state = STATE_HIDDEN
+        }
+
+    }
+
+    private fun setupBottomSheetViewPager() {
+        val isLayoutDirectionLeftToRight =
+            (TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == ViewCompat.LAYOUT_DIRECTION_LTR)
+        //viewpager
+        categoryBottomSheetViewPagerAdapter = CategoryBottomSheetViewPagerAdapter(
+            context = this.requireContext(),
+            categoryEntityList = null,
+            interaction = null,
+            requestManager = requestManager,
+            isLeftToRight = isLayoutDirectionLeftToRight,
+            selectedCategoryId = null
+        )
+
+
+        binding.bottomSheetViewpager.adapter = categoryBottomSheetViewPagerAdapter
+        binding.categoryTabLayout.layoutDirection = View.LAYOUT_DIRECTION_LTR
+        binding.categoryTabLayout.setupWithViewPager(binding.bottomSheetViewpager)
+        if (!isLayoutDirectionLeftToRight) {
+            binding.bottomSheetViewpager.currentItem =
+                CategoryBottomSheetViewPagerAdapter.VIEW_PAGER_SIZE
         }
     }
 
