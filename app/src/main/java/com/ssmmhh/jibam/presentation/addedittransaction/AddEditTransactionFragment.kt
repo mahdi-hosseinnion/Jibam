@@ -108,6 +108,9 @@ class AddEditTransactionFragment(
         viewModel.showSelectCategoryBottomSheet.observe(viewLifecycleOwner) {
             handleSelectCategoryBottomSheetState(it)
         }
+        viewModel.categories.observe(viewLifecycleOwner) {
+            it?.let { categoryBottomSheetViewPagerAdapter.submitData(it) }
+        }
     }
 
     private fun handleSelectCategoryBottomSheetState(showBottomSheet: Boolean) {

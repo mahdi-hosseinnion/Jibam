@@ -2,6 +2,7 @@ package com.ssmmhh.jibam.presentation.addedittransaction
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.distinctUntilChanged
 import com.ssmmhh.jibam.data.model.Category
 import com.ssmmhh.jibam.data.source.repository.cateogry.CategoryRepository
@@ -23,6 +24,9 @@ constructor(
 
     private val _transactionCategory = MutableLiveData<Category>(null)
     val transactionCategory: LiveData<Category> = _transactionCategory
+
+    val categories: LiveData<List<Category>> =
+        categoryRepository.observeAllOfCategories().asLiveData()
 
     private val _showSelectCategoryBottomSheet = MutableLiveData(false)
     val showSelectCategoryBottomSheet: LiveData<Boolean> =
