@@ -12,6 +12,10 @@
         <variable
             name="toolbarTitle"
             type="String" />
+
+        <variable
+            name="viewmodel"
+            type="com.ssmmhh.jibam.presentation.addedittransaction.AddEditTransactionViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -92,16 +96,15 @@
                     android:layout_margin="16dp"
                     android:layout_marginLeft="8dp"
                     android:gravity="center|left"
+                    android:text="@{viewmodel.transactionCategory.getCategoryNameFromStringFile(context)}"
                     android:textColor="@color/white"
                     app:iconTint="@color/white"
                     app:layout_constraintBottom_toBottomOf="@+id/topLinear"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/topLinear"
+                    app:loadWithResourceId="@{viewmodel.transactionCategory.image.getImageResourceId(context) }"
                     tools:icon="@drawable/ic_cat_food"
                     tools:text="Food" />
-
-                <!--                android:textColor="@color/white"-->
-                <!--                app:iconTint="@color/white"-->
 
 
                 <androidx.coordinatorlayout.widget.CoordinatorLayout

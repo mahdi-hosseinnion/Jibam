@@ -1,12 +1,15 @@
 package com.ssmmhh.jibam.presentation.util
 
 import android.text.method.ScrollingMovementMethod
+import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.os.ConfigurationCompat
 import androidx.databinding.BindingAdapter
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.util.DateUtils
 import com.ssmmhh.jibam.util.separate3By3
@@ -33,6 +36,17 @@ fun loadImageWithResourceIdGlide(view: ImageView, resId: Int) {
         .transition(DrawableTransitionOptions.withCrossFade())
         .error(R.drawable.ic_error)
         .into(view)
+}
+
+@BindingAdapter("app:loadWithResourceId")
+fun loadImageWithResourceIdGlide(fab: ExtendedFloatingActionButton, resId: Int?) {
+    try {
+        if (resId != null)
+            fab.icon = VectorDrawableCompat.create(fab.resources, resId, null)
+    } catch (e: Exception) {
+        //Catch:  Resources$NotFoundException: Resource ID #0x0.
+        Log.e("ExtendedFab", "loadImageWithResourceIdGlide: ${e.message}", e)
+    }
 }
 
 @BindingAdapter(

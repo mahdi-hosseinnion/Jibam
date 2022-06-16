@@ -32,7 +32,7 @@ constructor(
     val showSelectCategoryBottomSheet: LiveData<Boolean> =
         _showSelectCategoryBottomSheet.distinctUntilChanged()
 
-    private var isNewTransaction: Boolean = false
+    private var isNewTransaction: Boolean = true
 
     override suspend fun getResultByStateEvent(stateEvent: AddEditTransactionStateEvent): DataState<AddEditTransactionViewState> {
         return when (stateEvent) {
@@ -46,7 +46,7 @@ constructor(
     override fun initNewViewState(): AddEditTransactionViewState = AddEditTransactionViewState()
 
     fun startWithTransaction(transactionId: Int) {
-        isNewTransaction = true
+        isNewTransaction = false
         TODO("Not yet implemented")
     }
 
@@ -58,5 +58,9 @@ constructor(
         //Do not hide the select category bottom sheet, if the user did not select the category for the new transaction
         if (isNewTransaction && transactionCategory.value == null) return
         _showSelectCategoryBottomSheet.value = false
+    }
+
+    fun setTransactionCategory(category: Category) {
+        _transactionCategory.value = category
     }
 }

@@ -14,7 +14,9 @@ import com.bumptech.glide.RequestManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.*
 import com.ssmmhh.jibam.R
+import com.ssmmhh.jibam.data.model.Category
 import com.ssmmhh.jibam.databinding.FragmentAddEditTransactionBinding
+import com.ssmmhh.jibam.presentation.addedittransaction.common.CategoryBottomSheetListAdapter
 import com.ssmmhh.jibam.presentation.addedittransaction.common.CategoryBottomSheetViewPagerAdapter
 import com.ssmmhh.jibam.presentation.common.BaseFragment
 import com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener
@@ -27,7 +29,7 @@ import java.util.*
 class AddEditTransactionFragment(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager,
-) : BaseFragment(), ToolbarLayoutListener {
+) : BaseFragment(), ToolbarLayoutListener, CategoryBottomSheetListAdapter.Interaction {
 
     private lateinit var binding: FragmentAddEditTransactionBinding
 
@@ -46,7 +48,9 @@ class AddEditTransactionFragment(
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAddEditTransactionBinding.inflate(inflater, container, false).apply {
-            listener = this@AddEditTransactionFragment
+            this.listener = this@AddEditTransactionFragment
+            this.lifecycleOwner = this@AddEditTransactionFragment.viewLifecycleOwner
+            this.viewmodel = viewModel
         }
         return binding.root
     }
@@ -88,7 +92,7 @@ class AddEditTransactionFragment(
         categoryBottomSheetViewPagerAdapter = CategoryBottomSheetViewPagerAdapter(
             context = this.requireContext(),
             categoryEntityList = null,
-            interaction = null,
+            interaction = this,
             requestManager = requestManager,
             isLeftToRight = isLayoutDirectionLeftToRight,
             selectedCategoryId = null
@@ -167,4 +171,9 @@ class AddEditTransactionFragment(
         }
 
     override fun onClickOnMenuButton(view: View) {}
+
+    override fun onItemSelected(position: Int, item: Category) {
+        viewModel.setTransactionCategory(item)
+        viewModel.hideSelectCategoryBottomSheet()
+    }
 }
