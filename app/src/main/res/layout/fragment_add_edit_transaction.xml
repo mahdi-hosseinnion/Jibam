@@ -96,6 +96,7 @@
                     android:layout_margin="16dp"
                     android:layout_marginLeft="8dp"
                     android:gravity="center|left"
+                    android:onClick="@{(view) -> viewmodel.showSelectCategoryBottomSheet()}"
                     android:text="@{viewmodel.transactionCategory.getCategoryNameFromStringFile(context)}"
                     android:textColor="@color/white"
                     app:iconTint="@color/white"

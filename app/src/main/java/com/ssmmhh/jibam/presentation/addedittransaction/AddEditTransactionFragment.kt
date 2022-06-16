@@ -82,6 +82,9 @@ class AddEditTransactionFragment(
             skipCollapsed = true
             state = STATE_HIDDEN
         }
+        binding.bottomSheetCloseBtn.setOnClickListener {
+            viewModel.hideSelectCategoryBottomSheet()
+        }
 
     }
 
@@ -114,6 +117,10 @@ class AddEditTransactionFragment(
         }
         viewModel.categories.observe(viewLifecycleOwner) {
             it?.let { categoryBottomSheetViewPagerAdapter.submitData(it) }
+        }
+        viewModel.transactionCategory.observe(viewLifecycleOwner) {
+            selectCategoryBottomSheetBehavior.isDraggable = it != null
+            binding.bottomSheetCloseBtn.visibility = if (it != null) View.VISIBLE else View.GONE
         }
     }
 

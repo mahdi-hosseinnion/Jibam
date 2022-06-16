@@ -55,8 +55,6 @@ constructor(
     }
 
     fun hideSelectCategoryBottomSheet() {
-        //Do not hide the select category bottom sheet, if the user did not select the category for the new transaction
-        if (isNewTransaction && transactionCategory.value == null) return
         _showSelectCategoryBottomSheet.value = false
     }
 
