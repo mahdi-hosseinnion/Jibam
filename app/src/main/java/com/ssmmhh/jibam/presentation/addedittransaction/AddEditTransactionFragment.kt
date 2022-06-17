@@ -98,7 +98,7 @@ class AddEditTransactionFragment(
             interaction = this,
             requestManager = requestManager,
             isLeftToRight = isLayoutDirectionLeftToRight,
-            selectedCategoryId = null
+            selectedCategoryId = viewModel.transactionCategory.value?.id
         )
 
 

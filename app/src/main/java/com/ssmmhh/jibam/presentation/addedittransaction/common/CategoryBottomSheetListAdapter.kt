@@ -2,8 +2,6 @@ package com.ssmmhh.jibam.presentation.addedittransaction.common
 
 import android.graphics.Color
 import android.graphics.PorterDuff
-import android.graphics.drawable.Drawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.*
@@ -18,11 +16,14 @@ import com.ssmmhh.jibam.util.EspressoIdlingResources
 class CategoryBottomSheetListAdapter(
     private val requestManager: RequestManager,
     private val interaction: Interaction? = null,
-    private var selectedItemId: Int?
+    private var selectedItemId: Int?,
+    private val onItemSelected: () -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val TAG: String = "CategoryBottomSheetListAdapter"
     private val BLOG_ITEM = 0
+
+    private var selectedItemPosition: Int? = null
 
     val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Category>() {
 
@@ -51,6 +52,10 @@ class CategoryBottomSheetListAdapter(
             binding = binding,
             interaction = interaction,
             requestManager = requestManager,
+            onItemSelected = { id, position ->
+                onNewItemSelected(id, position)
+                onItemSelected()
+            }
         )
     }
 
@@ -118,9 +123,24 @@ class CategoryBottomSheetListAdapter(
         differ.submitList(blogList, commitCallback)
     }
 
-    fun submitSelectedId(id: Int?) {
+    /**
+     * Set previously selected category background to default.
+     */
+    private fun onNewItemSelected(id: Int, position: Int) {
         selectedItemId = id
-        notifyDataSetChanged()
+        selectedItemPosition?.let { notifyItemChanged(it) }
+        selectedItemPosition = position
+        notifyItemChanged(position)
+    }
+
+    /**
+     * Set selected category background to default.
+     */
+    fun deselectSelectedItem() {
+        if (selectedItemId == null) return
+        selectedItemId = null
+        selectedItemPosition?.let { notifyItemChanged(it) } ?: notifyDataSetChanged()
+        selectedItemPosition = null
     }
 
     class CategoryViewHolder
@@ -128,16 +148,19 @@ class CategoryBottomSheetListAdapter(
         val binding: LayoutCategoryListItemBinding,
         val requestManager: RequestManager,
         private val interaction: Interaction?,
+        private val onItemSelected: (id: Int, position: Int) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Category, selectedItemId: Int?) = with(itemView) {
+            setItemBackgroundToDefaultColor()
             itemView.setOnClickListener {
 
-                setSelectedBackground(item.id,item.image.backgroundColor)
+                setItemBackgroundTo(item.image.backgroundColor, R.color.white)
+                onItemSelected(item.id, adapterPosition)
                 interaction?.onItemSelected(adapterPosition, item)
             }
             if (item.id == selectedItemId && item.id > 0) {
-                setSelectedBackground(selectedItemId,item.image.backgroundColor)
+                setItemBackgroundTo(item.image.backgroundColor, R.color.white)
             }
 
             binding.categoryName.text = item.getCategoryNameFromStringFile(context)
@@ -153,26 +176,29 @@ class CategoryBottomSheetListAdapter(
 
         }
 
+        private fun setItemBackgroundToDefaultColor() {
+            setItemBackgroundTo(
+                itemView.resources.getColor(
+                    R.color.category_list_item_image_background_color
+                ), R.color.black
+            )
+        }
 
-        private fun setSelectedBackground(categoryId: Int,backgroundColor:String) {
-            try {
+        private fun setItemBackgroundTo(hexColor: String, imageTintColorId: Int) {
+            setItemBackgroundTo(Color.parseColor(hexColor), imageTintColorId)
+        }
 
-
-                val circle_drawable = binding.categoryImageFrame.background as Drawable
-
-                circle_drawable?.setColorFilter(
-                   Color.parseColor(backgroundColor), PorterDuff.Mode.SRC
-                )
-
-
-                //change tint to white
-                binding.categoryImage.setColorFilter(
-                    itemView.resources.getColor(R.color.white),
-                    PorterDuff.Mode.SRC_IN
-                )
-            } catch (e: Exception) {
-                Log.e("CategoryViewHolder", "setSelectedBackground: message: ${e.message}", e)
+        private fun setItemBackgroundTo(backgroundColor: Int, imageViewTintColorId: Int) {
+            //Change background color
+            binding.categoryImageFrame.background?.apply {
+                setColorFilter(backgroundColor, PorterDuff.Mode.SRC)
             }
+
+            //Change the image view tint color
+            binding.categoryImage.setColorFilter(
+                itemView.resources.getColor(imageViewTintColorId),
+                PorterDuff.Mode.SRC_IN
+            )
         }
 
 

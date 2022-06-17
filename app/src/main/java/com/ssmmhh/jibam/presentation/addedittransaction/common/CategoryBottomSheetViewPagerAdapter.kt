@@ -19,18 +19,25 @@ class CategoryBottomSheetViewPagerAdapter(
     requestManager: RequestManager,
     selectedCategoryId: Int?
 ) : PagerAdapter() {
-    private val expensesRecyclerViewAdapter = CategoryBottomSheetListAdapter(
-        requestManager,
-        interaction,
-        selectedItemId = selectedCategoryId
 
-    )
-    private val incomeRecyclerViewAdapter = CategoryBottomSheetListAdapter(
-        requestManager,
-        interaction,
-        selectedItemId = selectedCategoryId
-
-    )
+    private val expensesRecyclerViewAdapter: CategoryBottomSheetListAdapter =
+        CategoryBottomSheetListAdapter(
+            requestManager,
+            interaction,
+            selectedItemId = selectedCategoryId,
+            onItemSelected = {
+                incomeRecyclerViewAdapter.deselectSelectedItem()
+            }
+        )
+    private val incomeRecyclerViewAdapter: CategoryBottomSheetListAdapter =
+        CategoryBottomSheetListAdapter(
+            requestManager,
+            interaction,
+            selectedItemId = selectedCategoryId,
+            onItemSelected = {
+                expensesRecyclerViewAdapter.deselectSelectedItem()
+            }
+        )
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val view: View = LayoutInflater.from(context)
@@ -99,11 +106,7 @@ class CategoryBottomSheetViewPagerAdapter(
         incomeRecyclerViewAdapter.submitList(categoryEntityList?.filter { it.isIncomeCategory })
     }
 
-    fun submitSelectedItemId(id: Int?) {
-
-        expensesRecyclerViewAdapter.submitSelectedId(id)
-        incomeRecyclerViewAdapter.submitSelectedId(id)
-    }
+    fun submitSelectedItemId(id: Int?) {}
 
     companion object {
         const val VIEW_PAGER_SIZE = 2
