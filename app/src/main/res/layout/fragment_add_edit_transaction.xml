@@ -208,6 +208,7 @@
                                 android:gravity="top"
                                 android:inputType="textMultiLine"
                                 android:maxLines="4"
+                                android:text="@={viewmodel.transactionMemo}"
                                 android:minLines="2" />
                         </com.google.android.material.textfield.TextInputLayout>
 

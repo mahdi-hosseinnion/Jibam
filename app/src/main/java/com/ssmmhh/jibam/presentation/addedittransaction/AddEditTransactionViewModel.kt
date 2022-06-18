@@ -28,12 +28,16 @@ constructor(
     private val _transactionDate = MutableLiveData<GregorianCalendar?>(null)
     val transactionDate: LiveData<GregorianCalendar?> = _transactionDate
 
+    // Two-way databinding, exposing MutableLiveData
+    val transactionMemo = MutableLiveData<String>()
+
     val categories: LiveData<List<Category>> =
         categoryRepository.observeAllOfCategories().asLiveData()
 
     private val _showSelectCategoryBottomSheet = MutableLiveData(false)
     val showSelectCategoryBottomSheet: LiveData<Boolean> =
         _showSelectCategoryBottomSheet.distinctUntilChanged()
+
     private var isNewTransaction: Boolean = true
 
     override suspend fun getResultByStateEvent(stateEvent: AddEditTransactionStateEvent): DataState<AddEditTransactionViewState> {
@@ -53,6 +57,7 @@ constructor(
     }
 
     fun startNewTransaction() {
+        isNewTransaction = true
         showSelectCategoryBottomSheet()
         _transactionDate.value = GregorianCalendar()
 
