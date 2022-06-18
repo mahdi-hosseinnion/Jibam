@@ -76,12 +76,15 @@ class AddEditTransactionFragment(
         if (transactionId >= 0) {
             //Transaction Detail
             binding.toolbarTitle = getString(R.string.details)
+            binding.fabSubmit.text = getString(R.string.update)
             viewModel.startWithTransaction(transactionId)
         } else {
             //Add new transaction (transactionId will be -1)
             binding.toolbarTitle = getString(R.string.add_transaction)
+            binding.fabSubmit.text = getString(R.string.save)
             viewModel.startNewTransaction()
         }
+        binding.fabSubmit.extend()
     }
 
     private fun initializeSelectCategoryBottomSheet() {

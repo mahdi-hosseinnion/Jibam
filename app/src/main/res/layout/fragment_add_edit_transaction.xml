@@ -208,8 +208,8 @@
                                 android:gravity="top"
                                 android:inputType="textMultiLine"
                                 android:maxLines="4"
-                                android:text="@={viewmodel.transactionMemo}"
-                                android:minLines="2" />
+                                android:minLines="2"
+                                android:text="@={viewmodel.transactionMemo}" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.ssmmhh.jibam.presentation.addedittransaction.common.CalculatorKeyboard
@@ -233,7 +233,7 @@
                         android:layout_gravity="bottom|end"
                         android:layout_margin="16dp"
                         android:visibility="gone"
-                        app:srcCompat="@drawable/ic_check_green_24dp" />
+                        app:icon="@drawable/ic_check_green_24dp" />
 
 
                 </androidx.coordinatorlayout.widget.CoordinatorLayout>
