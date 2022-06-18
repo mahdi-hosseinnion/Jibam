@@ -1,5 +1,6 @@
 package com.ssmmhh.jibam.presentation.addedittransaction
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,13 +16,20 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.*
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.model.Category
+import com.ssmmhh.jibam.data.model.DateHolderWithWeekDay
 import com.ssmmhh.jibam.databinding.FragmentAddEditTransactionBinding
 import com.ssmmhh.jibam.presentation.addedittransaction.common.CategoryBottomSheetListAdapter
 import com.ssmmhh.jibam.presentation.addedittransaction.common.CategoryBottomSheetViewPagerAdapter
 import com.ssmmhh.jibam.presentation.common.BaseFragment
 import com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener
+import com.ssmmhh.jibam.util.DateUtils
+import com.ssmmhh.jibam.util.DateUtils.toSeconds
+import com.ssmmhh.jibam.util.isCalendarSolar
+import com.ssmmhh.jibam.util.toLocaleString
+import com.ssmmhh.jibam.util.toLocaleStringWithTwoDigits
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import java.text.SimpleDateFormat
 import java.util.*
 
 @FlowPreview
@@ -29,6 +37,7 @@ import java.util.*
 class AddEditTransactionFragment(
     viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager,
+    private val sharedPreferences: SharedPreferences,
 ) : BaseFragment(), ToolbarLayoutListener, CategoryBottomSheetListAdapter.Interaction {
 
     private lateinit var binding: FragmentAddEditTransactionBinding
@@ -71,7 +80,7 @@ class AddEditTransactionFragment(
         } else {
             //Add new transaction (transactionId will be -1)
             binding.toolbarTitle = getString(R.string.add_transaction)
-            viewModel.showSelectCategoryBottomSheet()
+            viewModel.startNewTransaction()
         }
     }
 
@@ -122,6 +131,12 @@ class AddEditTransactionFragment(
             selectCategoryBottomSheetBehavior.isDraggable = it != null
             binding.bottomSheetCloseBtn.visibility = if (it != null) View.VISIBLE else View.GONE
         }
+        viewModel.transactionDate.observe(viewLifecycleOwner) {
+            it?.let { calendar ->
+                setTimeToEditText(calendar)
+                setDateToEditText(calendar)
+            }
+        }
     }
 
     private fun handleSelectCategoryBottomSheetState(showBottomSheet: Boolean) {
@@ -142,6 +157,35 @@ class AddEditTransactionFragment(
         }
     }
 
+    private fun setTimeToEditText(calendar: GregorianCalendar) {
+        val time = SimpleDateFormat(TIME_PATTERN, locale).format(calendar.time)
+        binding.edtTime.setText(time)
+    }
+
+
+    private fun setDateToEditText(calendar: GregorianCalendar) {
+
+        val isCalendarSolarHijri = sharedPreferences.isCalendarSolar(locale)
+
+        val date: DateHolderWithWeekDay = DateUtils.convertUnixTimeToDate(
+            calendar.timeInMillis.toSeconds(),
+            isCalendarSolarHijri
+        )
+
+        val dayOfWeekStr = date.getDayOfWeekName(resources)
+        val dayStr = date.day.toLocaleStringWithTwoDigits()
+        val monthStr = date.month.toLocaleStringWithTwoDigits()
+        val yearStr = date.year.toLocaleString()
+
+        val result = if (isCalendarSolarHijri) {
+            //Solar hijri calendar date format
+            "$yearStr/$monthStr/$dayStr ($dayOfWeekStr)"
+        } else {
+            //Gregorian calendar date format
+            "$monthStr/$dayStr/$yearStr ($dayOfWeekStr)"
+        }
+        binding.edtDateSp.setText(result)
+    }
 
     override fun handleStateMessages() {
         viewModel.stateMessage.observe(viewLifecycleOwner) {
@@ -182,5 +226,9 @@ class AddEditTransactionFragment(
     override fun onItemSelected(position: Int, item: Category) {
         viewModel.setTransactionCategory(item)
         viewModel.hideSelectCategoryBottomSheet()
+    }
+
+    companion object {
+        const val TIME_PATTERN = "KK:mm aa"
     }
 }
