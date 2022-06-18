@@ -2,6 +2,7 @@ package com.ssmmhh.jibam.presentation.util
 
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.os.ConfigurationCompat
@@ -102,4 +103,13 @@ fun normalDatePattern(
     } else {
         "${dateHolder.month.toLocaleStringWithTwoDigits()}/${dateHolder.day.toLocaleStringWithTwoDigits()}/${dateHolder.year.toLocaleString()}"
     }
+}
+
+@BindingAdapter("app:disableContentInteraction")
+fun disableContentInteraction(edt: EditText, placeHolder: Boolean) {
+    edt.keyListener = null
+    edt.isFocusable = false
+    edt.isFocusableInTouchMode = false
+    edt.isCursorVisible = false
+    edt.clearFocus()
 }

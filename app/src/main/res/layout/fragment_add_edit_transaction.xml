@@ -149,7 +149,8 @@
                                 android:gravity="center|start"
                                 android:inputType="none"
                                 android:padding="8dp"
-                                android:textSize="16sp" />
+                                android:textSize="16sp"
+                                app:disableContentInteraction="@{true}" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
@@ -175,11 +176,11 @@
                                 android:layout_gravity="center|start"
                                 android:clickable="true"
                                 android:focusable="true"
-
                                 android:gravity="center|start"
                                 android:inputType="none"
                                 android:padding="8dp"
-                                android:textSize="16sp" />
+                                android:textSize="16sp"
+                                app:disableContentInteraction="@{true}" />
                         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -235,13 +236,15 @@
 
 
                 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
                 <androidx.coordinatorlayout.widget.CoordinatorLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent">
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
                     <LinearLayout
                         android:id="@+id/select_category_bottom_sheet"
                         style="?attr/bottomSheetStyle"
