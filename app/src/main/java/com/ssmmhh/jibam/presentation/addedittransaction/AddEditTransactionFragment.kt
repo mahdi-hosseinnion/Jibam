@@ -3,7 +3,9 @@ package com.ssmmhh.jibam.presentation.addedittransaction
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.text.Editable
 import android.text.InputType
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,11 +27,8 @@ import com.ssmmhh.jibam.presentation.addedittransaction.common.CategoryBottomShe
 import com.ssmmhh.jibam.presentation.addedittransaction.common.CategoryBottomSheetViewPagerAdapter
 import com.ssmmhh.jibam.presentation.common.BaseFragment
 import com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener
-import com.ssmmhh.jibam.util.DateUtils
+import com.ssmmhh.jibam.util.*
 import com.ssmmhh.jibam.util.DateUtils.toSeconds
-import com.ssmmhh.jibam.util.isCalendarSolar
-import com.ssmmhh.jibam.util.toLocaleString
-import com.ssmmhh.jibam.util.toLocaleStringWithTwoDigits
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.text.SimpleDateFormat
@@ -144,6 +143,7 @@ class AddEditTransactionFragment(
             setOnClickListener {
                 openCalculatorKeyboard()
             }
+            addTextChangedListener(separateNumber3By3TextChangeListener)
 
         }
         binding.calculatorKeyboard.attachEditText(binding.edtMoney)
@@ -262,6 +262,36 @@ class AddEditTransactionFragment(
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         }
+
+    private val separateNumber3By3TextChangeListener = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+        override fun afterTextChanged(s: Editable?) {
+            binding.edtMoney.removeTextChangedListener(this)
+            //separate text in edtMoney 3by 3 and set it back
+            val separated3By3Text = separateCalculatorText3By3(s.toString(), locale)
+            val selectionPositionBeforeChangeText = binding.edtMoney.selectionStart
+            binding.edtMoney.setText(separated3By3Text)
+
+            val countOfSeparatorBeforeChange = (s.toString()).count { it == NUMBER_SEPARATOR }
+            val countOfSeparatorAfterChange = separated3By3Text.count { it == NUMBER_SEPARATOR }
+            try {
+                //we use this code to determine 'newSelectionPosition' according to the count of
+                // 'NUMBER_SEPARATOR' added to text
+                val newSelectionPosition = selectionPositionBeforeChangeText.plus(
+                    countOfSeparatorAfterChange.minus(countOfSeparatorBeforeChange)
+                )
+                binding.edtMoney.setSelection(newSelectionPosition)
+            } catch (e: Exception) {
+                binding.edtMoney.setSelection(binding.edtMoney.text.length)
+            }
+            binding.edtMoney.addTextChangedListener(this)
+
+        }
+
+    }
 
     override fun onClickOnMenuButton(view: View) {}
 
