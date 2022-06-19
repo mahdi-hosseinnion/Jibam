@@ -65,6 +65,9 @@ constructor(
     private val _showTimePickerDialog = MutableLiveData(false)
     val showTimePickerDialog: LiveData<Boolean> = _showTimePickerDialog
 
+    private val _showDatePickerDialog = MutableLiveData(false)
+    val showDatePickerDialog: LiveData<Boolean> = _showDatePickerDialog
+
     private var isNewTransaction: Boolean = true
 
     /**
@@ -121,9 +124,24 @@ constructor(
         _showTimePickerDialog.value = false
     }
 
-    fun updateTransactionDateTime(hourOfDay: Int, minute: Int) {
+    fun showDatePickerDialog() {
+        _showDatePickerDialog.value = true
+    }
+
+    fun hideDatePickerDialog() {
+        _showDatePickerDialog.value = false
+    }
+
+    fun setTransactionDateTime(hourOfDay: Int, minute: Int) {
         val date = _transactionDate.value ?: return
         date.set(GregorianCalendar.HOUR_OF_DAY, hourOfDay)
         date.set(GregorianCalendar.MINUTE, minute)
+        _transactionDate.value = date
+    }
+
+    fun setTransactionDate(year: Int, month: Int, dayOfMonth: Int) {
+        val date = _transactionDate.value ?: return
+        date.set(year, month, dayOfMonth)
+        _transactionDate.value = date
     }
 }

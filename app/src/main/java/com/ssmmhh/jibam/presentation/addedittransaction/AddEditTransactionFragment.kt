@@ -1,7 +1,9 @@
 package com.ssmmhh.jibam.presentation.addedittransaction
 
+import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
@@ -13,11 +15,13 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.TimePicker
+import android.widget.Toast
 import androidx.core.text.TextUtilsCompat
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
+import com.alirezaafkar.sundatepicker.DatePicker
 import com.bumptech.glide.RequestManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.*
@@ -185,6 +189,10 @@ class AddEditTransactionFragment(
             if (it)
                 showTimePickerDialog()
         }
+        viewModel.showDatePickerDialog.observe(viewLifecycleOwner) {
+            if (it)
+                showDatePickerDialog()
+        }
 
     }
 
@@ -239,7 +247,7 @@ class AddEditTransactionFragment(
     private fun showTimePickerDialog() {
         val currentTime = viewModel.transactionDate.value ?: return
         val onTimeSet: (TimePicker, Int, Int) -> Unit = { _, hourOfDay, minute ->
-            viewModel.updateTransactionDateTime(hourOfDay, minute)
+            viewModel.setTransactionDateTime(hourOfDay, minute)
         }
         val dialog = TimePickerDialog(
             this.requireContext(),
@@ -254,6 +262,68 @@ class AddEditTransactionFragment(
         dialog.show()
 
 
+    }
+
+    private fun showDatePickerDialog() {
+
+        val currentDate = viewModel.transactionDate.value ?: return
+
+        if (sharedPreferences.isCalendarSolar(locale)) {
+            showSolarHijriDatePicker(currentDate)
+        } else {
+            showGregorianDatePicker(currentDate)
+        }
+    }
+
+    private fun showSolarHijriDatePicker(calender: GregorianCalendar) {
+        val dialog = DatePicker.Builder()
+            .date(calender)
+            .build { _, calendar, _, _, _ ->
+                if (calendar != null) {
+                    viewModel.setTransactionDate(
+                        year = calendar[Calendar.YEAR],
+                        month = calendar[Calendar.MONTH],
+                        dayOfMonth = calendar[Calendar.DAY_OF_MONTH]
+                    )
+                } else {
+                    Toast.makeText(
+                        this.requireContext(),
+                        getString(R.string.unable_to_get_date),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        dialog.onDismiss(object : DialogInterface {
+            override fun cancel() {}
+
+            override fun dismiss() {
+                viewModel.hideDatePickerDialog()
+            }
+        })
+        dialog.show(parentFragmentManager, "ShamsiDatePicker")
+    }
+
+
+    private fun showGregorianDatePicker(calender: GregorianCalendar) {
+
+        val datePickerDialog =
+            DatePickerDialog(
+                this.requireContext(),
+                { _, year, monthOfYear, dayOfMonth ->
+                    viewModel.setTransactionDate(
+                        year = year,
+                        month = monthOfYear,
+                        dayOfMonth = dayOfMonth
+                    )
+                },
+                calender.get(Calendar.YEAR),
+                calender.get(Calendar.MONTH),
+                calender.get(Calendar.DAY_OF_MONTH)
+            )
+        datePickerDialog.setOnDismissListener {
+            viewModel.hideDatePickerDialog()
+        }
+        datePickerDialog.show()
     }
 
     override fun handleStateMessages() {
