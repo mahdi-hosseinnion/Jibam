@@ -1,5 +1,6 @@
 package com.ssmmhh.jibam.presentation.addedittransaction
 
+import android.app.TimePickerDialog
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -11,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
+import android.widget.TimePicker
 import androidx.core.text.TextUtilsCompat
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.viewModels
@@ -179,6 +181,11 @@ class AddEditTransactionFragment(
                 setDateToEditText(calendar)
             }
         }
+        viewModel.showTimePickerDialog.observe(viewLifecycleOwner) {
+            if (it)
+                showTimePickerDialog()
+        }
+
     }
 
     private fun handleSelectCategoryBottomSheetState(showBottomSheet: Boolean) {
@@ -227,6 +234,26 @@ class AddEditTransactionFragment(
             "$monthStr/$dayStr/$yearStr ($dayOfWeekStr)"
         }
         binding.edtDateSp.setText(result)
+    }
+
+    private fun showTimePickerDialog() {
+        val currentTime = viewModel.transactionDate.value ?: return
+        val onTimeSet: (TimePicker, Int, Int) -> Unit = { _, hourOfDay, minute ->
+            viewModel.updateTransactionDateTime(hourOfDay, minute)
+        }
+        val dialog = TimePickerDialog(
+            this.requireContext(),
+            onTimeSet,
+            currentTime.get(GregorianCalendar.HOUR_OF_DAY),
+            currentTime.get(GregorianCalendar.MINUTE),
+            false
+        )
+        dialog.setOnDismissListener {
+            viewModel.hideTimePickerDialog()
+        }
+        dialog.show()
+
+
     }
 
     override fun handleStateMessages() {

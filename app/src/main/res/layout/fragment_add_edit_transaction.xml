@@ -183,6 +183,7 @@
                                 android:focusable="true"
                                 android:gravity="center|start"
                                 android:inputType="none"
+                                android:onClick="@{(view) -> viewmodel.showTimePickerDialog()}"
                                 android:padding="8dp"
                                 android:textSize="16sp"
                                 app:disableContentInteraction="@{true}" />

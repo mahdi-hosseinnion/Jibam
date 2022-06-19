@@ -62,7 +62,15 @@ constructor(
     val showSelectCategoryBottomSheet: LiveData<Boolean> =
         _showSelectCategoryBottomSheet.distinctUntilChanged()
 
+    private val _showTimePickerDialog = MutableLiveData(false)
+    val showTimePickerDialog: LiveData<Boolean> = _showTimePickerDialog
+
     private var isNewTransaction: Boolean = true
+
+    /**
+     * Prevent start functions from starting after configuration change.
+     */
+    private var isThisTheFirstLaunch: Boolean = true
 
     override suspend fun getResultByStateEvent(stateEvent: AddEditTransactionStateEvent): DataState<AddEditTransactionViewState> {
         return when (stateEvent) {
@@ -76,11 +84,17 @@ constructor(
     override fun initNewViewState(): AddEditTransactionViewState = AddEditTransactionViewState()
 
     fun startWithTransaction(transactionId: Int) {
+        if (!isThisTheFirstLaunch) return
+        isThisTheFirstLaunch = false
+
         isNewTransaction = false
         TODO("Not yet implemented")
     }
 
     fun startNewTransaction() {
+        if (!isThisTheFirstLaunch) return
+        isThisTheFirstLaunch = false
+
         isNewTransaction = true
         showSelectCategoryBottomSheet()
         _transactionDate.value = GregorianCalendar()
@@ -97,5 +111,19 @@ constructor(
 
     fun setTransactionCategory(category: Category) {
         _transactionCategory.value = category
+    }
+
+    fun showTimePickerDialog() {
+        _showTimePickerDialog.value = true
+    }
+
+    fun hideTimePickerDialog() {
+        _showTimePickerDialog.value = false
+    }
+
+    fun updateTransactionDateTime(hourOfDay: Int, minute: Int) {
+        val date = _transactionDate.value ?: return
+        date.set(GregorianCalendar.HOUR_OF_DAY, hourOfDay)
+        date.set(GregorianCalendar.MINUTE, minute)
     }
 }
