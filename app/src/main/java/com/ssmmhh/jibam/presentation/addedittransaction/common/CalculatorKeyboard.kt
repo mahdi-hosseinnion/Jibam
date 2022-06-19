@@ -1,14 +1,15 @@
 package com.ssmmhh.jibam.presentation.addedittransaction.common
 
 import android.content.Context
-import android.content.res.Resources
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.ExtractedTextRequest
 import android.view.inputmethod.InputConnection
 import android.widget.Button
+import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.annotation.StringRes
 import com.ssmmhh.jibam.R
@@ -33,6 +34,8 @@ class CalculatorKeyboard(
     var text = StringBuilder("")
 
     var calculatorInteraction: CalculatorInteraction? = null
+
+    private var onClickedOnEqual: () -> Unit = {}
 
     private fun getString(@StringRes resId: Int): String = resources.getString(resId)
 
@@ -75,7 +78,28 @@ class CalculatorKeyboard(
 
     // This will map the button resource id to the String value that we want to
     // input when that button is clicked.
-    private var keyValues: Map<Int, String>
+    private val keyValues: Map<Int, String> = mapOf(
+        R.id.btn_c to CLEAR,
+        R.id.btn_clearAll to CLEAR_ALL,
+        R.id.btn_division to DIVISION,
+        R.id.btn_times to TIMES,
+        R.id.btn_mines to MINES,
+        R.id.btn_plus to PLUS,
+        R.id.btn_period to PERIOD,
+        R.id.btn_equal to EQUAL,
+        R.id.btn_1 to getString(R.string._1),
+        R.id.btn_2 to getString(R.string._2),
+        R.id.btn_3 to getString(R.string._3),
+        R.id.btn_4 to getString(R.string._4),
+        R.id.btn_5 to getString(R.string._5),
+        R.id.btn_6 to getString(R.string._6),
+        R.id.btn_7 to getString(R.string._7),
+        R.id.btn_8 to getString(R.string._8),
+        R.id.btn_9 to getString(R.string._9),
+        R.id.btn_0 to getString(R.string._0),
+        R.id.btn_00 to getString(R.string._00)
+    )
+
 
     // Our communication link to the EditText
     var inputConnection: InputConnection? = null
@@ -128,46 +152,6 @@ class CalculatorKeyboard(
         mButtonPlus.setOnClickListener(this)
         mButtonPeriod.setOnClickListener(this)
         mButtonEqual.setOnClickListener(this)
-
-        keyValues = mapOf()
-
-    }
-
-    fun setTextToAllViews() {
-        //text
-        mButton1.text = getString(R.string._1)
-        mButton2.text = getString(R.string._2)
-        mButton3.text = getString(R.string._3)
-        mButton4.text = getString(R.string._4)
-        mButton5.text = getString(R.string._5)
-        mButton6.text = getString(R.string._6)
-        mButton7.text = getString(R.string._7)
-        mButton8.text = getString(R.string._8)
-        mButton9.text = getString(R.string._9)
-        mButton0.text = getString(R.string._0)
-        mButton00.text = getString(R.string._00)
-        // map buttons IDs to input strings
-        keyValues = mapOf(
-            R.id.btn_c to CLEAR,
-            R.id.btn_clearAll to CLEAR_ALL,
-            R.id.btn_division to DIVISION,
-            R.id.btn_times to TIMES,
-            R.id.btn_mines to MINES,
-            R.id.btn_plus to PLUS,
-            R.id.btn_period to PERIOD,
-            R.id.btn_equal to "=",
-            R.id.btn_1 to getString(R.string._1),
-            R.id.btn_2 to getString(R.string._2),
-            R.id.btn_3 to getString(R.string._3),
-            R.id.btn_4 to getString(R.string._4),
-            R.id.btn_5 to getString(R.string._5),
-            R.id.btn_6 to getString(R.string._6),
-            R.id.btn_7 to getString(R.string._7),
-            R.id.btn_8 to getString(R.string._8),
-            R.id.btn_9 to getString(R.string._9),
-            R.id.btn_0 to getString(R.string._0),
-            R.id.btn_00 to getString(R.string._00)
-        )
     }
 
     companion object {
@@ -179,6 +163,7 @@ class CalculatorKeyboard(
         const val PLUS = "+"
         const val MINES = "-"
         const val PERIOD = "."
+        const val EQUAL = "="
 
         val listOfSigns = listOf(
             DIVISION,
@@ -197,6 +182,7 @@ class CalculatorKeyboard(
 
     // TODO ("Refactor this function")
     override fun onClick(v: View?) {
+        Log.d(TAG, "onClick: with ${keyValues[v?.id]}")
         // do nothing if the InputConnection has not been set yet
         if (inputConnection == null || v == null) {
             Log.e(TAG, "onClick: inputConnection: $inputConnection & v: $v")
@@ -204,6 +190,7 @@ class CalculatorKeyboard(
         }
         if (v.id == R.id.btn_equal) {
             calculatorInteraction?.onEqualClicked()
+            onClickedOnEqual()
             return
         }
         // Delete text or input key value
@@ -341,6 +328,15 @@ class CalculatorKeyboard(
         Log.d(TAG, "onClick: text: -${text.toString()}-")
     }
 
+    fun attachEditText(editText: EditText) {
+        this.inputConnection = editText.onCreateInputConnection(EditorInfo())
+    }
+
+    fun setOnEqualButtonClicked(onClickedOnEqual: () -> Unit) {
+        this.onClickedOnEqual = onClickedOnEqual
+    }
+
+    //Deprecated stuff
     interface CalculatorInteraction {
         fun onEqualClicked()
     }

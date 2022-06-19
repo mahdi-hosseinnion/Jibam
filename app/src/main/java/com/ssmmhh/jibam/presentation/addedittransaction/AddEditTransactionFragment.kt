@@ -1,10 +1,13 @@
 package com.ssmmhh.jibam.presentation.addedittransaction
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import androidx.core.text.TextUtilsCompat
 import androidx.core.view.ViewCompat
@@ -69,6 +72,7 @@ class AddEditTransactionFragment(
         start(navigationArgs.transactionId)
         initializeSelectCategoryBottomSheet()
         setupBottomSheetViewPager()
+        setupCalculatorKeyboard()
         subscribeObservers()
     }
 
@@ -121,6 +125,41 @@ class AddEditTransactionFragment(
             binding.bottomSheetViewpager.currentItem =
                 CategoryBottomSheetViewPagerAdapter.VIEW_PAGER_SIZE
         }
+    }
+
+    private fun setupCalculatorKeyboard() {
+        // prevent system keyboard from appearing when EditText is tapped
+        binding.edtMoney.apply {
+            setRawInputType(InputType.TYPE_CLASS_TEXT)
+            setTextIsSelectable(true)
+            //Prevents the device keyboard from popping up and keeps the cursor visible.
+            setOnTouchListener { view, motionEvent ->
+                val inType: Int = inputType // Backup the input type
+                binding.edtMoney.inputType = InputType.TYPE_NULL // Disable standard keyboard
+                binding.edtMoney.onTouchEvent(motionEvent)               // Call native handler
+                binding.edtMoney.inputType = inType // Restore input type
+                view.performClick()
+                return@setOnTouchListener true // Consume touch event
+            }
+            setOnClickListener {
+                openCalculatorKeyboard()
+            }
+
+        }
+        binding.calculatorKeyboard.attachEditText(binding.edtMoney)
+        binding.calculatorKeyboard.setOnEqualButtonClicked {
+
+        }
+
+    }
+
+    private fun openCalculatorKeyboard() {
+        //Hide device's soft keyboard
+        (requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).apply {
+            hideSoftInputFromWindow(view?.windowToken, 0)
+        }
+        //Open calculator keyboard
+        binding.calculatorKeyboard.visibility = View.VISIBLE
     }
 
     private fun subscribeObservers() {

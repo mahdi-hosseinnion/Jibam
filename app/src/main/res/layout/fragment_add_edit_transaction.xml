@@ -213,7 +213,7 @@
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.ssmmhh.jibam.presentation.addedittransaction.common.CalculatorKeyboard
-                            android:id="@+id/keyboard"
+                            android:id="@+id/calculator_keyboard"
                             android:layout_width="match_parent"
                             android:layout_height="252dp"
                             android:elevation="4dp"

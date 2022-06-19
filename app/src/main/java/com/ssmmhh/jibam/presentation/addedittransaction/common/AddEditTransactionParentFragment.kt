@@ -122,7 +122,7 @@ constructor(
         val ic: InputConnection = binding.edtMoney.onCreateInputConnection(EditorInfo())
         binding.keyboard.inputConnection = ic
         binding.keyboard.calculatorInteraction = this
-        binding.keyboard.setTextToAllViews()
+//        binding.keyboard.setTextToAllViews()
         //controll visibity
 
         binding.edtMoney.setOnTouchListener { view, motionEvent ->
