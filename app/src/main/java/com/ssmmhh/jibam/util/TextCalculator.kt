@@ -7,16 +7,14 @@ import com.ssmmhh.jibam.presentation.addedittransaction.common.CalculatorKeyboar
 import com.ssmmhh.jibam.presentation.addedittransaction.common.CalculatorKeyboard.Companion.TIMES
 
 //TODO (Add restriction to prevent divide by zero exception)
-class TextCalculator {
+object TextCalculator {
 
-    companion object {
-        private const val TAG = "TextCalculator"
-        private const val GENERIC_ERROR = "Unknown error :/"
-        private const val OUT_OF_RANGE_ERROR = "this number is too big"
-        private const val ERROR_EMPTY_STRING = "EmptyString"
-        val operatorSymbols = listOf(TIMES, DIVISION, PLUS, MINES)
+    private const val TAG = "TextCalculator"
+    private const val GENERIC_ERROR = "Unknown error :/"
+    private const val OUT_OF_RANGE_ERROR = "this number is too big"
+    private const val ERROR_EMPTY_STRING = "EmptyString"
+    val operatorSymbols = listOf(TIMES, DIVISION, PLUS, MINES)
 
-    }
 
     fun calculateResult(value1: String): String {
         var value = value1

@@ -78,7 +78,7 @@ constructor(
         _binding = null
     }
 
-    val textCalculator = TextCalculator()
+    val textCalculator = TextCalculator
 
     lateinit var btmsheetViewPagerAdapter: CategoryBottomSheetViewPagerAdapter
 

@@ -1,9 +1,6 @@
 package com.ssmmhh.jibam.presentation.addedittransaction
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.distinctUntilChanged
+import androidx.lifecycle.*
 import com.ssmmhh.jibam.data.model.Category
 import com.ssmmhh.jibam.data.source.repository.cateogry.CategoryRepository
 import com.ssmmhh.jibam.data.source.repository.tranasction.TransactionRepository
@@ -11,6 +8,8 @@ import com.ssmmhh.jibam.data.util.DataState
 import com.ssmmhh.jibam.presentation.addedittransaction.state.AddEditTransactionStateEvent
 import com.ssmmhh.jibam.presentation.addedittransaction.state.AddEditTransactionViewState
 import com.ssmmhh.jibam.presentation.common.BaseViewModel
+import com.ssmmhh.jibam.util.*
+import kotlinx.coroutines.flow.combine
 import java.util.*
 import javax.inject.Inject
 
@@ -31,8 +30,33 @@ constructor(
     // Two-way databinding, exposing MutableLiveData
     val transactionMemo = MutableLiveData<String>()
 
+    // Two-way databinding, exposing MutableLiveData
+    val calculatorText = MutableLiveData<String>()
+
     val categories: LiveData<List<Category>> =
         categoryRepository.observeAllOfCategories().asLiveData()
+
+    val calculatorResult: LiveData<String> = calculatorText.map {
+        val text = it.toString().remove3By3Separators()
+        if (text.isEmpty()) return@map text
+
+        val calculatedResult = TextCalculator.calculateResult(text)
+        val finalNumberText = localizeDoubleNumber(calculatedResult.toDoubleOrNull(), currentLocale)
+            ?: return@map ""
+        return@map finalNumberText
+            .convertFarsiDigitsToEnglishDigits()
+            .toBigDecimalOrNull()
+            ?.let { separate3By3(it, currentLocale) }
+            ?: ""
+    }
+
+    val isCalculatorResultVisible: LiveData<Boolean> =
+        combine(
+            calculatorText.asFlow(),
+            calculatorResult.asFlow()
+        ) { text, result ->
+            return@combine text != result
+        }.asLiveData()
 
     private val _showSelectCategoryBottomSheet = MutableLiveData(false)
     val showSelectCategoryBottomSheet: LiveData<Boolean> =

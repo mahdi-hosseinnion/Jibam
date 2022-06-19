@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="listener"
             type="com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener" />
@@ -67,6 +69,7 @@
                         android:paddingRight="32dp"
                         android:paddingBottom="4dp"
                         android:scrollHorizontally="true"
+                        android:text="@={viewmodel.calculatorText}"
                         android:textColor="?attr/colorOnPrimary"
                         android:textDirection="ltr"
                         android:textSize="32sp"
@@ -84,8 +87,10 @@
                         android:maxLines="1"
                         android:padding="4dp"
                         android:scrollHorizontally="true"
+                        android:text="@{viewmodel.calculatorResult}"
                         android:textColor="@color/black"
                         android:textSize="22sp"
+                        android:visibility="@{viewmodel.isCalculatorResultVisible ? View.VISIBLE : View.INVISIBLE}"
                         tools:text="103" />
                 </LinearLayout>
 
