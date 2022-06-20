@@ -3,7 +3,6 @@ package com.ssmmhh.jibam.presentation.addedittransaction
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
@@ -275,9 +274,11 @@ class AddEditTransactionFragment(
         }
     }
 
+
     private fun showSolarHijriDatePicker(calender: GregorianCalendar) {
-        val dialog = DatePicker.Builder()
+        DatePicker.Builder()
             .date(calender)
+            .setRetainInstance(true)
             .build { _, calendar, _, _, _ ->
                 if (calendar != null) {
                     viewModel.setTransactionDate(
@@ -292,15 +293,10 @@ class AddEditTransactionFragment(
                         Toast.LENGTH_LONG
                     ).show()
                 }
-            }
-        dialog.onDismiss(object : DialogInterface {
-            override fun cancel() {}
-
-            override fun dismiss() {
-                viewModel.hideDatePickerDialog()
-            }
-        })
-        dialog.show(parentFragmentManager, "ShamsiDatePicker")
+            }.show(childFragmentManager, "ShamsiDatePicker")
+        //Date picker automatically retains its instance during configuration changes, so it does
+        // not need setOnDismissListener
+        viewModel.hideDatePickerDialog()
     }
 
 
