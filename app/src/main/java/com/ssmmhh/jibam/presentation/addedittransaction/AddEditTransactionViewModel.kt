@@ -1,10 +1,14 @@
 package com.ssmmhh.jibam.presentation.addedittransaction
 
 import androidx.lifecycle.*
+import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.model.Category
 import com.ssmmhh.jibam.data.source.repository.cateogry.CategoryRepository
 import com.ssmmhh.jibam.data.source.repository.tranasction.TransactionRepository
 import com.ssmmhh.jibam.data.util.DataState
+import com.ssmmhh.jibam.data.util.DiscardOrSaveCallback
+import com.ssmmhh.jibam.data.util.MessageType
+import com.ssmmhh.jibam.data.util.UIComponentType
 import com.ssmmhh.jibam.presentation.addedittransaction.state.AddEditTransactionStateEvent
 import com.ssmmhh.jibam.presentation.addedittransaction.state.AddEditTransactionViewState
 import com.ssmmhh.jibam.presentation.common.BaseViewModel
@@ -67,6 +71,9 @@ constructor(
 
     private val _showDatePickerDialog = MutableLiveData(false)
     val showDatePickerDialog: LiveData<Boolean> = _showDatePickerDialog
+
+    private val _navigateBackEvent = MutableLiveData<Event<Unit>>()
+    val navigateBackEvent: LiveData<Event<Unit>> = _navigateBackEvent
 
     private var isNewTransaction: Boolean = true
 
@@ -143,5 +150,28 @@ constructor(
         val date = _transactionDate.value ?: return
         date.set(year, month, dayOfMonth)
         _transactionDate.value = date
+    }
+
+    fun showDiscardOrSaveDialog() {
+        val callback = object : DiscardOrSaveCallback {
+            override fun save() {
+                insertTransaction()
+            }
+
+            override fun discard() {
+                _navigateBackEvent.value = Event(Unit)
+            }
+
+            override fun cancel() {}
+        }
+        addToMessageStack(
+            message = intArrayOf(R.string.you_changes_have_not_saved),
+            uiComponentType = UIComponentType.DiscardOrSaveDialog(callback),
+            messageType = MessageType.Info
+        )
+    }
+
+    private fun insertTransaction() {
+
     }
 }

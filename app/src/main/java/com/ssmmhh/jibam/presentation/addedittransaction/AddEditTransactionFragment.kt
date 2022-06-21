@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.TimePicker
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.text.TextUtilsCompat
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.viewModels
@@ -103,6 +104,10 @@ class AddEditTransactionFragment(
                 closeCalculatorKeyboard()
             }
         }
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            discardDialogBackStackListener
+        )
     }
 
     private fun initializeSelectCategoryBottomSheet() {
@@ -206,6 +211,9 @@ class AddEditTransactionFragment(
         viewModel.showDatePickerDialog.observe(viewLifecycleOwner) {
             if (it)
                 showDatePickerDialog()
+        }
+        viewModel.navigateBackEvent.observe(viewLifecycleOwner) {
+            navigateBack()
         }
 
     }
@@ -354,9 +362,6 @@ class AddEditTransactionFragment(
         }
     }
 
-    override fun onClickOnNavigation(view: View) {
-        navigateBack()
-    }
 
     private val selectCategoryBottomSheetBehaviorCallback =
         object : BottomSheetBehavior.BottomSheetCallback() {
@@ -401,12 +406,30 @@ class AddEditTransactionFragment(
 
     }
 
-    override fun onClickOnMenuButton(view: View) {}
+    //Shows discard or save dialog when user attempt to navigate back.
+    private val discardDialogBackStackListener = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            //check for search view
+            if (viewModel.transactionCategory.value != null) {
+                viewModel.showDiscardOrSaveDialog()
+            } else {
+                navigateBack()
+            }
+        }
+
+    }
 
     override fun onItemSelected(position: Int, item: Category) {
         viewModel.setTransactionCategory(item)
         viewModel.hideSelectCategoryBottomSheet()
     }
+
+    override fun onClickOnNavigation(view: View) {
+        discardDialogBackStackListener.handleOnBackPressed()
+    }
+
+    override fun onClickOnMenuButton(view: View) {}
+
 
     companion object {
         const val TIME_PATTERN = "KK:mm aa"
