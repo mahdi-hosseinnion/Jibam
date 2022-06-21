@@ -219,16 +219,6 @@
                                 android:text="@={viewmodel.transactionMemo}" />
                         </com.google.android.material.textfield.TextInputLayout>
 
-                        <com.ssmmhh.jibam.presentation.addedittransaction.common.CalculatorKeyboard
-                            android:id="@+id/calculator_keyboard"
-                            android:layout_width="match_parent"
-                            android:layout_height="252dp"
-                            android:elevation="4dp"
-                            android:layoutDirection="ltr"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent" />
-
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -240,9 +230,18 @@
                         android:layout_gravity="bottom|end"
                         android:layout_margin="16dp"
                         android:visibility="gone"
-                        app:icon="@drawable/ic_check_green_24dp" />
+                        app:icon="@drawable/ic_check_green_24dp"
+                        app:layout_dodgeInsetEdges="bottom" />
 
 
+                    <com.ssmmhh.jibam.presentation.addedittransaction.common.CalculatorKeyboard
+                        android:id="@+id/calculator_keyboard"
+                        android:layout_width="match_parent"
+                        android:layout_height="252dp"
+                        android:layout_gravity="bottom"
+                        android:elevation="4dp"
+                        android:layoutDirection="ltr"
+                        app:layout_insetEdge="bottom" />
                 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
                 <androidx.coordinatorlayout.widget.CoordinatorLayout

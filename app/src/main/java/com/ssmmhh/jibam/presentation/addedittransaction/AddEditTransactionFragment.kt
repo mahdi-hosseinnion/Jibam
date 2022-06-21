@@ -31,7 +31,7 @@ import com.ssmmhh.jibam.databinding.FragmentAddEditTransactionBinding
 import com.ssmmhh.jibam.presentation.addedittransaction.common.CategoryBottomSheetListAdapter
 import com.ssmmhh.jibam.presentation.addedittransaction.common.CategoryBottomSheetViewPagerAdapter
 import com.ssmmhh.jibam.presentation.common.BaseFragment
-import com.ssmmhh.jibam.presentation.util.*
+import com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener
 import com.ssmmhh.jibam.util.*
 import com.ssmmhh.jibam.util.DateUtils.toSeconds
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -176,17 +176,10 @@ class AddEditTransactionFragment(
         //Open calculator keyboard
         binding.calculatorKeyboard.visibility = View.VISIBLE
 
-        increaseFabDefaultBottomMarginBy(binding.calculatorKeyboard.height)
     }
 
     private fun closeCalculatorKeyboard() {
         binding.calculatorKeyboard.visibility = View.GONE
-        increaseFabDefaultBottomMarginBy(0)
-    }
-
-    private fun increaseFabDefaultBottomMarginBy(margin: Int) {
-        val sixteenDp = convertDpToPx(16)
-        binding.fabSubmit.setMargins(sixteenDp, sixteenDp, sixteenDp, sixteenDp + margin)
     }
 
     private fun subscribeObservers() {
