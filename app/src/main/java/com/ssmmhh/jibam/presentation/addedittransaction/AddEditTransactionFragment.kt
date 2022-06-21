@@ -168,7 +168,9 @@ class AddEditTransactionFragment(
         }
         binding.calculatorKeyboard.attachEditText(binding.edtMoney)
         binding.calculatorKeyboard.setOnEqualButtonClicked {
-
+            binding.calculatorKeyboard.preloadKeyboard(
+                viewModel.calculatorResult.value.toString().removeSeparateSign()
+            )
         }
 
     }
