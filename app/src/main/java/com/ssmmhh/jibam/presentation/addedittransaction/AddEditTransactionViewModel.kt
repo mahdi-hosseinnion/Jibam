@@ -1,9 +1,11 @@
 package com.ssmmhh.jibam.presentation.addedittransaction
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.*
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.model.Category
+import com.ssmmhh.jibam.data.model.Image
 import com.ssmmhh.jibam.data.model.Transaction
 import com.ssmmhh.jibam.data.source.repository.cateogry.CategoryRepository
 import com.ssmmhh.jibam.data.source.repository.tranasction.TransactionRepository
@@ -15,11 +17,13 @@ import com.ssmmhh.jibam.presentation.addedittransaction.state.AddEditTransaction
 import com.ssmmhh.jibam.presentation.addedittransaction.state.AddEditTransactionViewState
 import com.ssmmhh.jibam.presentation.common.BaseViewModel
 import com.ssmmhh.jibam.util.*
+import com.ssmmhh.jibam.util.DateUtils.toMilliSeconds
 import com.ssmmhh.jibam.util.DateUtils.toSeconds
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.withContext
+import java.math.BigDecimal
 import java.math.BigDecimal.ZERO
 import java.util.*
 import javax.inject.Inject
@@ -109,7 +113,39 @@ constructor(
                     stateEvent = result.stateEvent
                 )
             }
+            is AddEditTransactionStateEvent.GetTransactionById -> {
+                val result = transactionRepository.getTransactionById(stateEvent)
+                withContext(Main) {
+                    loadTransaction(result.data)
+                }
+                DataState(
+                    stateMessage = result.stateMessage,
+                    data = AddEditTransactionViewState(),
+                    stateEvent = result.stateEvent
+                )
+            }
+            is AddEditTransactionStateEvent.GetCategoryById -> {
+                //TODO no implemnted yet("GetCategoryById")
+                //TODO("Not emplemnted yet")
+                throw Exception("GetCategoryById")
+            }
         }
+    }
+
+    private fun loadTransaction(transaction: Transaction?) {
+        if (transaction == null) {
+            Log.e(TAG, "loadTransaction: Transaction is Null.")
+            showErrorSnackBar(R.string.unable_to_get_the_transaciton)
+            return
+        }
+        calculatorText.value = transaction.money.toPlainString()
+        transactionMemo.value = transaction.memo
+        _transactionDate.value = GregorianCalendar().apply {
+            timeInMillis = transaction.date.toMilliSeconds()
+        }
+        launchNewJob(
+            AddEditTransactionStateEvent.GetCategoryById(transaction.categoryId)
+        )
     }
 
     override fun updateViewState(newViewState: AddEditTransactionViewState): AddEditTransactionViewState =
@@ -122,7 +158,9 @@ constructor(
         isThisTheFirstLaunch = false
 
         isNewTransaction = false
-        TODO("Not yet implemented")
+        launchNewJob(
+            stateEvent = AddEditTransactionStateEvent.GetTransactionById(transactionId)
+        )
     }
 
     fun startNewTransaction() {

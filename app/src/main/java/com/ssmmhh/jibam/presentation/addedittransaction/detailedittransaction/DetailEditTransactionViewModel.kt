@@ -47,9 +47,7 @@ constructor(
     override suspend fun getResultByStateEvent(
         stateEvent: DetailEditTransactionStateEvent
     ): DataState<DetailEditTransactionViewState> = when (stateEvent) {
-        is DetailEditTransactionStateEvent.GetTransactionById -> transactionRepository.getTransactionById(
-            stateEvent
-        )
+        is DetailEditTransactionStateEvent.GetTransactionById -> DataState.data()
         is DetailEditTransactionStateEvent.GetAllOfCategories -> {
             val result = categoryRepository.getAllOfCategories(
                 stateEvent

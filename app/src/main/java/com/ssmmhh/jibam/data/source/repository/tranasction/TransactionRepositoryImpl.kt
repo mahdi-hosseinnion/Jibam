@@ -4,6 +4,7 @@ import android.content.res.Resources
 import androidx.annotation.StringRes
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.model.ChartData
+import com.ssmmhh.jibam.data.model.Transaction
 import com.ssmmhh.jibam.data.source.local.dao.TransactionDao
 import com.ssmmhh.jibam.data.source.local.dto.ChartDataDto
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
@@ -13,6 +14,7 @@ import com.ssmmhh.jibam.data.source.repository.safeCacheCall
 import com.ssmmhh.jibam.data.util.*
 import com.ssmmhh.jibam.presentation.addedittransaction.detailedittransaction.state.DetailEditTransactionStateEvent
 import com.ssmmhh.jibam.presentation.addedittransaction.detailedittransaction.state.DetailEditTransactionViewState
+import com.ssmmhh.jibam.presentation.addedittransaction.state.AddEditTransactionStateEvent
 import com.ssmmhh.jibam.presentation.common.state.DeleteTransactionStateEvent
 import com.ssmmhh.jibam.presentation.common.state.InsertNewTransactionStateEvent
 import kotlinx.coroutines.flow.Flow
@@ -204,26 +206,24 @@ constructor(
 
 
     override suspend fun getTransactionById(
-        stateEvent: DetailEditTransactionStateEvent.GetTransactionById
-    ): DataState<DetailEditTransactionViewState> {
+        stateEvent: AddEditTransactionStateEvent.GetTransactionById
+    ): DataState<Transaction> {
         val cacheResult = safeCacheCall {
             transactionDao.getTransactionById(stateEvent.transactionId)
         }
 
-        return object : CacheResponseHandler<DetailEditTransactionViewState, TransactionDto>(
+        return object : CacheResponseHandler<Transaction, TransactionDto>(
             response = cacheResult,
             stateEvent = stateEvent
         ) {
-            override suspend fun handleSuccess(resultObj: TransactionDto): DataState<DetailEditTransactionViewState> {
+            override suspend fun handleSuccess(resultObj: TransactionDto): DataState<Transaction> {
                 return DataState.data(
                     response = buildResponse(
                         message = null,
                         UIComponentType.None,
                         MessageType.Success
                     ),
-                    data = DetailEditTransactionViewState(
-                        defaultTransaction = resultObj
-                    )
+                    data = resultObj.toTransaction()
                 )
             }
         }.getResult()

@@ -1,12 +1,14 @@
 package com.ssmmhh.jibam.data.source.repository.tranasction
 
 import com.ssmmhh.jibam.data.model.ChartData
+import com.ssmmhh.jibam.data.model.Transaction
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
 import com.ssmmhh.jibam.presentation.addedittransaction.detailedittransaction.state.DetailEditTransactionStateEvent
 import com.ssmmhh.jibam.presentation.addedittransaction.detailedittransaction.state.DetailEditTransactionViewState
 import com.ssmmhh.jibam.presentation.common.state.DeleteTransactionStateEvent
 import com.ssmmhh.jibam.presentation.common.state.InsertNewTransactionStateEvent
 import com.ssmmhh.jibam.data.util.DataState
+import com.ssmmhh.jibam.presentation.addedittransaction.state.AddEditTransactionStateEvent
 import kotlinx.coroutines.flow.Flow
 import java.math.BigDecimal
 
@@ -53,8 +55,8 @@ interface TransactionRepository {
     ): DataState<DetailEditTransactionViewState>
 
     suspend fun getTransactionById(
-        stateEvent: DetailEditTransactionStateEvent.GetTransactionById
-    ): DataState<DetailEditTransactionViewState>
+        stateEvent: AddEditTransactionStateEvent.GetTransactionById
+    ): DataState<Transaction>
 
 
 }

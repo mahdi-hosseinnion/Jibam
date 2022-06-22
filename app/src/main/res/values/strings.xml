@@ -343,5 +343,7 @@
     <string name="unable_to_get_categories_from_database">Unable to get categories from database</string>
     <string name="unknown">unknown</string>
     <string name="enter_date_and_time_for_transaction">Please enter the date and time for the transaction</string>
+    <string name="unable_to_get_the_transaciton">Unable to get the transaction</string>
+    <string name="unable_to_get_the_category">Unable to get the category</string>
 
 </resources>
