@@ -85,7 +85,7 @@ class AddEditTransactionFragment(
     private fun start(transactionId: Int) {
         if (transactionId >= 0) {
             //Transaction Detail
-            binding.toolbarTitle = getString(R.string.details)
+            binding.toolbarTitle = getString(R.string.edit_transaction)
             binding.fabSubmit.text = getString(R.string.update)
             viewModel.startWithTransaction(transactionId)
         } else {
@@ -432,6 +432,10 @@ class AddEditTransactionFragment(
 
     override fun onClickOnMenuButton(view: View) {}
 
+    override fun navigateBack() {
+        activityCommunicationListener.hideSoftKeyboard()
+        super.navigateBack()
+    }
 
     companion object {
         const val TIME_PATTERN = "KK:mm aa"
