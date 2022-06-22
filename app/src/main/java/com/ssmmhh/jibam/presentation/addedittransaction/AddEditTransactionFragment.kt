@@ -108,6 +108,13 @@ class AddEditTransactionFragment(
             viewLifecycleOwner,
             discardDialogBackStackListener
         )
+        binding.fabSubmit.setOnClickListener {
+            if (viewModel.isNewTransaction) {
+                viewModel.insertTransaction()
+            } else {
+                viewModel.updateTransaction()
+            }
+        }
     }
 
     private fun initializeSelectCategoryBottomSheet() {

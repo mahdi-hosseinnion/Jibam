@@ -154,10 +154,10 @@ constructor(
     fun getTransactionCategory(): Category? = getCurrentViewStateOrNew().categoryEntity
 
     fun insertTransaction(entity: TransactionEntity) {
-        launchNewJob(
+     /*   launchNewJob(
             InsertTransactionStateEvent.InsertTransaction(
                 transactionEntity = entity
             )
-        )
+        )*/
     }
 }

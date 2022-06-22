@@ -342,5 +342,6 @@
     <string name="unable_to_change_order_of_selected_category">Unable to change order of selected category</string>
     <string name="unable_to_get_categories_from_database">Unable to get categories from database</string>
     <string name="unknown">unknown</string>
+    <string name="enter_date_and_time_for_transaction">Please enter the date and time for the transaction</string>
 
 </resources>

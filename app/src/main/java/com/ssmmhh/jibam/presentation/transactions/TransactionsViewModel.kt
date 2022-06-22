@@ -161,7 +161,7 @@ constructor(
     private fun insertDeletedTransaction(deletedTransaction: TransactionDto) {
         launchNewJob(
             TransactionsStateEvent.InsertTransaction(
-                deletedTransaction.toTransactionEntity()
+                deletedTransaction.toTransaction()
             )
         )
         deletedTransactionItem = null

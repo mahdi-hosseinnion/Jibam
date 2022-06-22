@@ -1,6 +1,7 @@
 package com.ssmmhh.jibam.presentation.chart.detailchart.state
 
 import com.ssmmhh.jibam.R
+import com.ssmmhh.jibam.data.model.Transaction
 import com.ssmmhh.jibam.data.source.local.entity.TransactionEntity
 import com.ssmmhh.jibam.presentation.common.state.DeleteTransactionStateEvent
 import com.ssmmhh.jibam.presentation.common.state.InsertNewTransactionStateEvent
@@ -21,12 +22,12 @@ sealed class DetailChartStateEvent : StateEvent {
     }
 
     data class InsertTransaction(
-        override val transactionEntity: TransactionEntity
+        override val transaction: Transaction
     ) : DetailChartStateEvent(), InsertNewTransactionStateEvent {
         override val errorInfo: Int = R.string.unable_to_insert_transaction
 
         override val getId: String =
-            "InsertTransaction $transactionEntity + ${this.hashCode()}"
+            "InsertTransaction $transaction + ${this.hashCode()}"
 
     }
 

@@ -75,11 +75,11 @@ constructor(
 
     fun insertTransaction(transaction: TransactionDto) {
 
-        launchNewJob(
+       /* launchNewJob(
             DetailChartStateEvent.InsertTransaction(
                 transactionEntity = transaction.toTransactionEntity()
             )
-        )
+        )*/
     }
 
     override suspend fun getResultByStateEvent(stateEvent: DetailChartStateEvent): DataState<DetailChartViewState> =

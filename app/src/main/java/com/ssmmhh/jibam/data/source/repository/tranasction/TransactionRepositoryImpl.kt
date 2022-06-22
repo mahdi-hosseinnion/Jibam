@@ -93,7 +93,9 @@ constructor(
     ): DataState<Long> {
 
         val cacheResult = safeCacheCall {
-            transactionDao.insertTransaction(stateEvent.transactionEntity)
+            transactionDao.insertTransaction(
+                stateEvent.transaction.toTransactionDto().toTransactionEntity()
+            )
         }
 
         return object : CacheResponseHandler<Long, Long>(

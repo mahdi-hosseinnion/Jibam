@@ -1,8 +1,10 @@
 package com.ssmmhh.jibam.presentation.addedittransaction
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.*
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.model.Category
+import com.ssmmhh.jibam.data.model.Transaction
 import com.ssmmhh.jibam.data.source.repository.cateogry.CategoryRepository
 import com.ssmmhh.jibam.data.source.repository.tranasction.TransactionRepository
 import com.ssmmhh.jibam.data.util.DataState
@@ -13,7 +15,12 @@ import com.ssmmhh.jibam.presentation.addedittransaction.state.AddEditTransaction
 import com.ssmmhh.jibam.presentation.addedittransaction.state.AddEditTransactionViewState
 import com.ssmmhh.jibam.presentation.common.BaseViewModel
 import com.ssmmhh.jibam.util.*
+import com.ssmmhh.jibam.util.DateUtils.toSeconds
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.withContext
+import java.math.BigDecimal.ZERO
 import java.util.*
 import javax.inject.Inject
 
@@ -72,10 +79,14 @@ constructor(
     private val _showDatePickerDialog = MutableLiveData(false)
     val showDatePickerDialog: LiveData<Boolean> = _showDatePickerDialog
 
+    private val _isSubmitFabEnabled = MutableLiveData(true)
+    val isSubmitFabEnabled: LiveData<Boolean> = _isSubmitFabEnabled
+
     private val _navigateBackEvent = MutableLiveData<Event<Unit>>()
     val navigateBackEvent: LiveData<Event<Unit>> = _navigateBackEvent
 
-    private var isNewTransaction: Boolean = true
+    var isNewTransaction: Boolean = true
+        private set
 
     /**
      * Prevent start functions from starting after configuration change.
@@ -84,7 +95,20 @@ constructor(
 
     override suspend fun getResultByStateEvent(stateEvent: AddEditTransactionStateEvent): DataState<AddEditTransactionViewState> {
         return when (stateEvent) {
-            else -> DataState.data()
+            is AddEditTransactionStateEvent.InsertTransaction -> {
+                val result = transactionRepository.insertTransaction(stateEvent)
+                withContext(Main) {
+                    if (result.stateMessage?.response?.messageType == MessageType.Success) {
+                        _navigateBackEvent.value = Event(Unit)
+                    }
+                    _isSubmitFabEnabled.value = true
+                }
+                DataState(
+                    stateMessage = result.stateMessage,
+                    data = AddEditTransactionViewState(),
+                    stateEvent = result.stateEvent
+                )
+            }
         }
     }
 
@@ -140,14 +164,22 @@ constructor(
     }
 
     fun setTransactionDateTime(hourOfDay: Int, minute: Int) {
-        val date = _transactionDate.value ?: return
+        val date = _transactionDate.value ?: if (isNewTransaction)
+            GregorianCalendar()
+        else
+            throw RuntimeException("setTransactionDate() was called but _transactionDate is null.")
+
         date.set(GregorianCalendar.HOUR_OF_DAY, hourOfDay)
         date.set(GregorianCalendar.MINUTE, minute)
         _transactionDate.value = date
     }
 
     fun setTransactionDate(year: Int, month: Int, dayOfMonth: Int) {
-        val date = _transactionDate.value ?: return
+        val date = _transactionDate.value ?: if (isNewTransaction)
+            GregorianCalendar()
+        else
+            throw RuntimeException("setTransactionDate() was called but _transactionDate is null.")
+
         date.set(year, month, dayOfMonth)
         _transactionDate.value = date
     }
@@ -155,7 +187,11 @@ constructor(
     fun showDiscardOrSaveDialog() {
         val callback = object : DiscardOrSaveCallback {
             override fun save() {
-                insertTransaction()
+                if (isNewTransaction) {
+                    insertTransaction()
+                } else {
+                    updateTransaction()
+                }
             }
 
             override fun discard() {
@@ -171,7 +207,64 @@ constructor(
         )
     }
 
-    private fun insertTransaction() {
+    fun insertTransaction() {
+        _isSubmitFabEnabled.value = false
+        getTransactionIfItsReadyToInsert()?.let {
+            launchNewJob(AddEditTransactionStateEvent.InsertTransaction(it))
+        } ?: kotlin.run {
+            _isSubmitFabEnabled.value = true
+        }
+    }
+
+    /**
+     * Returns a transaction if all of necessary fields are filled, otherwise null.
+     */
+    private fun getTransactionIfItsReadyToInsert(): Transaction? {
+
+        val calculatedResult = calculatorResult.value.toString().removeSeparateSign()
+        if (calculatedResult.isEmpty()) {
+            showErrorSnackBar(R.string.pls_insert_some_money)
+            return null
+        }
+
+        val money = calculatedResult.toBigDecimalOrNull()
+        if (money == null || money < ZERO) {
+            showErrorSnackBar(R.string.pls_insert_valid_amount_of_money)
+            return null
+        }
+
+        val category = transactionCategory.value
+        if (category == null) {
+            showErrorSnackBar(R.string.pls_select_category)
+            return null
+        }
+        val date = transactionDate.value?.timeInMillis?.toSeconds()
+        if (date == null) {
+            showErrorSnackBar(R.string.enter_date_and_time_for_transaction)
+            return null
+        }
+        return Transaction(
+            id = 0,
+            money = if (category.isIncomeCategory) money else money.negate(),
+            memo = transactionMemo.value,
+            categoryId = category.id,
+            categoryName = category.name,
+            categoryImage = category.image,
+            date = date,
+        )
+
+    }
+
+    private fun showErrorSnackBar(@StringRes message: Int) {
+        //TODO ("show snack bar")
+        addToMessageStack(
+            message = intArrayOf(message),
+            uiComponentType = UIComponentType.Toast,
+            messageType = MessageType.Error
+        )
+    }
+
+    fun updateTransaction() {
 
     }
 }
