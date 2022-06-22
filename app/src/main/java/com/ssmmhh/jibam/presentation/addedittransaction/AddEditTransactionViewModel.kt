@@ -125,9 +125,15 @@ constructor(
                 )
             }
             is AddEditTransactionStateEvent.GetCategoryById -> {
-                //TODO no implemnted yet("GetCategoryById")
-                //TODO("Not emplemnted yet")
-                throw Exception("GetCategoryById")
+                val result = categoryRepository.getCategoryById(stateEvent)
+                withContext(Main) {
+                    _transactionCategory.value = result.data
+                }
+                DataState(
+                    stateMessage = result.stateMessage,
+                    data = AddEditTransactionViewState(),
+                    stateEvent = result.stateEvent
+                )
             }
         }
     }

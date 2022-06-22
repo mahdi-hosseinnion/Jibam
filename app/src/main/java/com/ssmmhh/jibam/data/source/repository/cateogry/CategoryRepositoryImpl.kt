@@ -2,11 +2,15 @@ package com.ssmmhh.jibam.data.source.repository.cateogry
 
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.model.Category
+import com.ssmmhh.jibam.data.model.Transaction
 import com.ssmmhh.jibam.data.source.local.dao.CategoriesDao
 import com.ssmmhh.jibam.data.source.local.dto.CategoryDto
+import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
 import com.ssmmhh.jibam.data.source.local.entity.CategoryImageEntity
+import com.ssmmhh.jibam.data.source.repository.buildResponse
 import com.ssmmhh.jibam.data.source.repository.safeCacheCall
 import com.ssmmhh.jibam.data.util.*
+import com.ssmmhh.jibam.presentation.addedittransaction.state.AddEditTransactionStateEvent
 import com.ssmmhh.jibam.presentation.categories.addcategoires.state.AddCategoryStateEvent
 import com.ssmmhh.jibam.presentation.categories.addcategoires.state.AddCategoryViewState
 import com.ssmmhh.jibam.presentation.categories.viewcategories.state.ViewCategoriesStateEvent
@@ -216,4 +220,26 @@ constructor(
             categoriesDao.updateOrder(categoryId, newOrder)
         }
 
+    override suspend fun getCategoryById(stateEvent: AddEditTransactionStateEvent.GetCategoryById): DataState<Category> {
+
+        val cacheResult = safeCacheCall {
+            categoriesDao.getCategoryById(stateEvent.categoryId)
+        }
+
+        return object : CacheResponseHandler<Category, CategoryDto>(
+            response = cacheResult,
+            stateEvent = stateEvent
+        ) {
+            override suspend fun handleSuccess(resultObj: CategoryDto): DataState<Category> {
+                return DataState.data(
+                    response = buildResponse(
+                        message = null,
+                        UIComponentType.None,
+                        MessageType.Success
+                    ),
+                    data = resultObj.toCategory(),
+                )
+            }
+        }.getResult()
+    }
 }
