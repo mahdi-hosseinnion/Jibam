@@ -89,6 +89,9 @@ constructor(
     private val _navigateBackEvent = MutableLiveData<Event<Unit>>()
     val navigateBackEvent: LiveData<Event<Unit>> = _navigateBackEvent
 
+    private val _loadCalculatorKeyboardWith = MutableLiveData<Event<String>>()
+    val loadCalculatorKeyboardWith: LiveData<Event<String>> = _loadCalculatorKeyboardWith
+
     var isNewTransaction: Boolean = true
         private set
 
@@ -144,11 +147,12 @@ constructor(
             showErrorSnackBar(R.string.unable_to_get_the_transaciton)
             return
         }
-        calculatorText.value = transaction.money.toPlainString()
+        _loadCalculatorKeyboardWith.value = Event(transaction.money.abs().toPlainString())
         transactionMemo.value = transaction.memo
         _transactionDate.value = GregorianCalendar().apply {
             timeInMillis = transaction.date.toMilliSeconds()
         }
+        //Get transaction's category
         launchNewJob(
             AddEditTransactionStateEvent.GetCategoryById(transaction.categoryId)
         )

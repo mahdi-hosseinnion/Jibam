@@ -221,9 +221,13 @@ class AddEditTransactionFragment(
             if (it)
                 showDatePickerDialog()
         }
-        viewModel.navigateBackEvent.observe(viewLifecycleOwner) {
+        viewModel.navigateBackEvent.observe(viewLifecycleOwner, EventObserver {
             navigateBack()
-        }
+        })
+        viewModel.loadCalculatorKeyboardWith.observe(viewLifecycleOwner, EventObserver {
+            binding.calculatorKeyboard.preloadKeyboard(it)
+        })
+
 
     }
 
