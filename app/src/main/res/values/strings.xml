@@ -334,7 +334,7 @@
     <string name="cache_unknown_error">Unknown cache error</string>
     <string name="unable_to_get_the_transaction">Unable to get the transaction</string>
     <string name="unable_to_get_all_of_categories">Unable to get all of categories</string>
-    <string name="unable_to_update_transaction">Unable to update transaction</string>
+    <string name="unable_to_update_transaction">Unable to update the transaction</string>
     <string name="unable_to_delete_transaction">Unable to delete transaction</string>
     <string name="unable_to_insert_transaction">Unable to insert transaction</string>
     <string name="unable_to_insert_this_category">Unable to insert this category</string>

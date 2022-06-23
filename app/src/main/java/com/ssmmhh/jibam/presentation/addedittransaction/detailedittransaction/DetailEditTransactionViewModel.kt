@@ -58,9 +58,10 @@ constructor(
                 stateEvent = result.stateEvent
             )
         }
-        is DetailEditTransactionStateEvent.UpdateTransaction -> transactionRepository.updateTransaction(
-            stateEvent
-        )
+        is DetailEditTransactionStateEvent.UpdateTransaction -> {
+            DataState.data()
+        }
+
         is DetailEditTransactionStateEvent.DeleteTransaction -> {
             val result = transactionRepository.deleteTransaction(
                 stateEvent

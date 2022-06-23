@@ -5,7 +5,6 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.*
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.model.Category
-import com.ssmmhh.jibam.data.model.Image
 import com.ssmmhh.jibam.data.model.Transaction
 import com.ssmmhh.jibam.data.source.repository.cateogry.CategoryRepository
 import com.ssmmhh.jibam.data.source.repository.tranasction.TransactionRepository
@@ -20,10 +19,8 @@ import com.ssmmhh.jibam.util.*
 import com.ssmmhh.jibam.util.DateUtils.toMilliSeconds
 import com.ssmmhh.jibam.util.DateUtils.toSeconds
 import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.withContext
-import java.math.BigDecimal
 import java.math.BigDecimal.ZERO
 import java.util.*
 import javax.inject.Inject
@@ -95,6 +92,9 @@ constructor(
     var isNewTransaction: Boolean = true
         private set
 
+    var transactionId: Int? = null
+        private set
+
     /**
      * Prevent start functions from starting after configuration change.
      */
@@ -119,7 +119,7 @@ constructor(
             is AddEditTransactionStateEvent.GetTransactionById -> {
                 val result = transactionRepository.getTransactionById(stateEvent)
                 withContext(Main) {
-                    loadTransaction(result.data)
+                    loadEditTransaction(result.data)
                 }
                 DataState(
                     stateMessage = result.stateMessage,
@@ -138,15 +138,32 @@ constructor(
                     stateEvent = result.stateEvent
                 )
             }
+            is AddEditTransactionStateEvent.UpdateTransaction -> {
+                val result = transactionRepository.updateTransaction(
+                    stateEvent
+                )
+                withContext(Main) {
+                    if (result.stateMessage?.response?.messageType == MessageType.Success) {
+                        _navigateBackEvent.value = Event(Unit)
+                    }
+                    _isSubmitFabEnabled.value = true
+                }
+                result
+            }
         }
     }
 
-    private fun loadTransaction(transaction: Transaction?) {
+    /**
+     * After getting the transaction from the database (to edit it), this function will load the
+     *  data into the stateHolders.
+     */
+    private fun loadEditTransaction(transaction: Transaction?) {
         if (transaction == null) {
             Log.e(TAG, "loadTransaction: Transaction is Null.")
             showErrorSnackBar(R.string.unable_to_get_the_transaciton)
             return
         }
+        transactionId = transaction.id
         _loadCalculatorKeyboardWith.value = Event(transaction.money.abs().toPlainString())
         transactionMemo.value = transaction.memo
         _transactionDate.value = GregorianCalendar().apply {
@@ -257,7 +274,7 @@ constructor(
 
     fun insertTransaction() {
         _isSubmitFabEnabled.value = false
-        getTransactionIfItsReadyToInsert()?.let {
+        getTransactionIfItIsReadyToInsert()?.let {
             launchNewJob(AddEditTransactionStateEvent.InsertTransaction(it))
         } ?: kotlin.run {
             _isSubmitFabEnabled.value = true
@@ -267,7 +284,7 @@ constructor(
     /**
      * Returns a transaction if all of necessary fields are filled, otherwise null.
      */
-    private fun getTransactionIfItsReadyToInsert(): Transaction? {
+    private fun getTransactionIfItIsReadyToInsert(): Transaction? {
 
         val calculatedResult = calculatorResult.value.toString().removeSeparateSign()
         if (calculatedResult.isEmpty()) {
@@ -313,6 +330,20 @@ constructor(
     }
 
     fun updateTransaction() {
+        _isSubmitFabEnabled.value = false
+        getTransactionIfItIsReadyToUpdate()?.let {
+            launchNewJob(AddEditTransactionStateEvent.UpdateTransaction(it))
+        } ?: kotlin.run {
+            _isSubmitFabEnabled.value = true
+        }
+    }
 
+    private fun getTransactionIfItIsReadyToUpdate(): Transaction? {
+        val id = transactionId
+        if (id == null) {
+            showErrorSnackBar(R.string.unable_to_update_transaction)
+            return null
+        }
+        return getTransactionIfItIsReadyToInsert()?.copy(id = id)
     }
 }

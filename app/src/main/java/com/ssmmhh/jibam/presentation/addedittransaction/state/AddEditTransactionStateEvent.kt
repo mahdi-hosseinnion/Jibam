@@ -38,4 +38,13 @@ sealed class AddEditTransactionStateEvent : StateEvent {
         override val getId: String =
             "GetCategoryById id: $categoryId ${this.hashCode()}"
     }
+
+    class UpdateTransaction(
+        val transaction: Transaction
+    ) : AddEditTransactionStateEvent() {
+        override val errorInfo: Int = R.string.unable_to_update_transaction
+
+        override val getId: String =
+            "AddEditTransactionStateEvent: $transaction ${this.hashCode()}"
+    }
 }

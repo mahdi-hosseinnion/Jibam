@@ -15,6 +15,7 @@ import com.ssmmhh.jibam.data.util.*
 import com.ssmmhh.jibam.presentation.addedittransaction.detailedittransaction.state.DetailEditTransactionStateEvent
 import com.ssmmhh.jibam.presentation.addedittransaction.detailedittransaction.state.DetailEditTransactionViewState
 import com.ssmmhh.jibam.presentation.addedittransaction.state.AddEditTransactionStateEvent
+import com.ssmmhh.jibam.presentation.addedittransaction.state.AddEditTransactionViewState
 import com.ssmmhh.jibam.presentation.common.state.DeleteTransactionStateEvent
 import com.ssmmhh.jibam.presentation.common.state.InsertNewTransactionStateEvent
 import kotlinx.coroutines.flow.Flow
@@ -129,17 +130,19 @@ constructor(
     }
 
     override suspend fun updateTransaction(
-        stateEvent: DetailEditTransactionStateEvent.UpdateTransaction
-    ): DataState<DetailEditTransactionViewState> {
+        stateEvent: AddEditTransactionStateEvent.UpdateTransaction
+    ): DataState<AddEditTransactionViewState> {
 
         val cacheResult = safeCacheCall {
-            transactionDao.updateTransaction(transactionEntity = stateEvent.transactionEntity)
+            transactionDao.updateTransaction(
+                transactionEntity = stateEvent.transaction.toTransactionDto().toTransactionEntity()
+            )
         }
-        return object : CacheResponseHandler<DetailEditTransactionViewState, Int>(
+        return object : CacheResponseHandler<AddEditTransactionViewState, Int>(
             response = cacheResult,
             stateEvent = stateEvent
         ) {
-            override suspend fun handleSuccess(resultObj: Int): DataState<DetailEditTransactionViewState> {
+            override suspend fun handleSuccess(resultObj: Int): DataState<AddEditTransactionViewState> {
                 return if (resultObj > 0) {
                     DataState.data(
                         response = buildResponse(
