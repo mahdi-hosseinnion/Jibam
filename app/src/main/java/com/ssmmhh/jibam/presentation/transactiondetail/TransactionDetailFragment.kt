@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.navArgs
 import com.ssmmhh.jibam.databinding.FragmentTransactionDetailBinding
 import com.ssmmhh.jibam.presentation.common.BaseFragment
 import com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener
@@ -22,6 +23,8 @@ class TransactionDetailFragment(
 
     private val viewModel by viewModels<TransactionDetailViewModel> { viewModelFactory }
 
+    private val navigationArgs: TransactionDetailFragmentArgs by navArgs()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -31,6 +34,11 @@ class TransactionDetailFragment(
             listener = this@TransactionDetailFragment
         }
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.start(navigationArgs.transactionId)
     }
 
     override fun handleStateMessages() {
