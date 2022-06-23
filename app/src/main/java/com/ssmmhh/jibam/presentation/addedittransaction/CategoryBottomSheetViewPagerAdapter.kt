@@ -1,4 +1,4 @@
-package com.ssmmhh.jibam.presentation.addedittransaction.common
+package com.ssmmhh.jibam.presentation.addedittransaction
 
 import android.content.Context
 import android.view.LayoutInflater

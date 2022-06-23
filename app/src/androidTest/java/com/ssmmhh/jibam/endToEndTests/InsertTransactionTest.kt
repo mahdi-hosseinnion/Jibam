@@ -1,7 +1,6 @@
 package com.ssmmhh.jibam.endToEndTests
 
 import android.content.SharedPreferences
-import android.content.res.Resources
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
@@ -12,7 +11,7 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.presentation.MainActivity
-import com.ssmmhh.jibam.presentation.addedittransaction.common.CategoryBottomSheetListAdapter.CategoryViewHolder
+import com.ssmmhh.jibam.presentation.addedittransaction.CategoryBottomSheetListAdapter.CategoryViewHolder
 import com.ssmmhh.jibam.util.EspressoIdlingResources
 import com.ssmmhh.jibam.util.PreferenceKeys
 import com.ssmmhh.jibam.utils.*

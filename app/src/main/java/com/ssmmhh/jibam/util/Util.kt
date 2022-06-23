@@ -5,11 +5,10 @@ import android.content.SharedPreferences
 import android.content.res.Resources
 import android.util.Log
 import android.util.TypedValue
-import androidx.core.os.ConfigurationCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.presentation.addedittransaction.common.CalculatorKeyboard
+import com.ssmmhh.jibam.presentation.addedittransaction.CalculatorKeyboard
 import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.text.NumberFormat

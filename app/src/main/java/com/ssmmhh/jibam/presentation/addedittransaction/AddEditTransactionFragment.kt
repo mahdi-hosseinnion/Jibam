@@ -29,8 +29,6 @@ import com.ssmmhh.jibam.R
 import com.ssmmhh.jibam.data.model.Category
 import com.ssmmhh.jibam.data.model.DateHolderWithWeekDay
 import com.ssmmhh.jibam.databinding.FragmentAddEditTransactionBinding
-import com.ssmmhh.jibam.presentation.addedittransaction.common.CategoryBottomSheetListAdapter
-import com.ssmmhh.jibam.presentation.addedittransaction.common.CategoryBottomSheetViewPagerAdapter
 import com.ssmmhh.jibam.presentation.common.BaseFragment
 import com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener
 import com.ssmmhh.jibam.util.*
