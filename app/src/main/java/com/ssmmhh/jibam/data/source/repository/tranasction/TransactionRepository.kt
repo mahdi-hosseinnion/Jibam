@@ -59,5 +59,5 @@ interface TransactionRepository {
 
     fun observeTransaction(
         transactionId: Int
-    ): Flow<Transaction>
+    ): Flow<Transaction?>
 }

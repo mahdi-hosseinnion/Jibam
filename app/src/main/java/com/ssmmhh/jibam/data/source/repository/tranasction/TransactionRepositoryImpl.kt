@@ -230,5 +230,7 @@ constructor(
         }.getResult()
     }
 
-
+    override fun observeTransaction(transactionId: Int): Flow<Transaction?> {
+        return transactionDao.observeTransaction(transactionId).map { it?.toTransaction() }
+    }
 }
