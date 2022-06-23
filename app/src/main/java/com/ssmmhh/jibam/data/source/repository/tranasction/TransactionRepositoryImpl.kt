@@ -12,8 +12,6 @@ import com.ssmmhh.jibam.data.source.local.entity.CategoryEntity
 import com.ssmmhh.jibam.data.source.repository.buildResponse
 import com.ssmmhh.jibam.data.source.repository.safeCacheCall
 import com.ssmmhh.jibam.data.util.*
-import com.ssmmhh.jibam.presentation.addedittransaction.detailedittransaction.state.DetailEditTransactionStateEvent
-import com.ssmmhh.jibam.presentation.addedittransaction.detailedittransaction.state.DetailEditTransactionViewState
 import com.ssmmhh.jibam.presentation.addedittransaction.state.AddEditTransactionStateEvent
 import com.ssmmhh.jibam.presentation.addedittransaction.state.AddEditTransactionViewState
 import com.ssmmhh.jibam.presentation.common.state.DeleteTransactionStateEvent

@@ -5,8 +5,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.ssmmhh.jibam.di.factory.MainViewModelFactory
 import com.ssmmhh.jibam.di.key.MainViewModelKey
 import com.ssmmhh.jibam.presentation.addedittransaction.AddEditTransactionViewModel
-import com.ssmmhh.jibam.presentation.addedittransaction.detailedittransaction.DetailEditTransactionViewModel
-import com.ssmmhh.jibam.presentation.addedittransaction.inserttransaction.InsertTransactionViewModel
 import com.ssmmhh.jibam.presentation.categories.addcategoires.AddCategoryViewModel
 import com.ssmmhh.jibam.presentation.categories.viewcategories.ViewCategoriesViewModel
 import com.ssmmhh.jibam.presentation.chart.chart.ChartViewModel
@@ -63,24 +61,6 @@ abstract class MainViewModelModule {
     @MainViewModelKey(DetailChartViewModel::class)
     abstract fun bindDetailChartViewModel(
         detailChartViewModel: DetailChartViewModel
-    ): ViewModel
-
-    @FlowPreview
-    @ExperimentalCoroutinesApi
-    @Binds
-    @IntoMap
-    @MainViewModelKey(InsertTransactionViewModel::class)
-    abstract fun bindInsertTransactionViewModel(
-        insertTransactionViewModel: InsertTransactionViewModel
-    ): ViewModel
-
-    @FlowPreview
-    @ExperimentalCoroutinesApi
-    @Binds
-    @IntoMap
-    @MainViewModelKey(DetailEditTransactionViewModel::class)
-    abstract fun bindDetailEditTransactionViewModel(
-        detailEditTransactionViewModel: DetailEditTransactionViewModel
     ): ViewModel
 
     @FlowPreview

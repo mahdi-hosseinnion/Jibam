@@ -6,8 +6,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
 import com.ssmmhh.jibam.presentation.aboutus.AboutUsFragment
 import com.ssmmhh.jibam.presentation.addedittransaction.AddEditTransactionFragment
-import com.ssmmhh.jibam.presentation.addedittransaction.detailedittransaction.DetailEditTransactionFragment
-import com.ssmmhh.jibam.presentation.addedittransaction.inserttransaction.InsertTransactionFragment
 import com.ssmmhh.jibam.presentation.categories.addcategoires.AddCategoryFragment
 import com.ssmmhh.jibam.presentation.categories.viewcategories.ViewCategoriesFragment
 import com.ssmmhh.jibam.presentation.chart.chart.ChartFragment
@@ -45,24 +43,6 @@ constructor(
                 )
             }
 
-            InsertTransactionFragment::class.java.name -> {
-                InsertTransactionFragment(
-                    viewModelFactory,
-                    requestManager,
-                    currentLocale,
-                    sharedPreferences,
-                    sharedPrefsEditor
-                )
-            }
-            DetailEditTransactionFragment::class.java.name -> {
-                DetailEditTransactionFragment(
-                    viewModelFactory,
-                    requestManager,
-                    currentLocale,
-                    sharedPreferences,
-                    sharedPrefsEditor
-                )
-            }
             AddCategoryFragment::class.java.name -> {
                 AddCategoryFragment(viewModelFactory)
             }
