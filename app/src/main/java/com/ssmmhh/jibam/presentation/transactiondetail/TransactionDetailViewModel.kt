@@ -20,7 +20,7 @@ constructor(
 
     private val _transactionId = MutableLiveData<Int>()
 
-    val transaction: LiveData<Transaction> = _transactionId.switchMap {
+    val transaction: LiveData<Transaction?> = _transactionId.switchMap {
         return@switchMap transactionRepository.observeTransaction(it)
             .handleLoadingAndException("observeTransaction")
             .asLiveData()

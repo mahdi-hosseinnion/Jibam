@@ -2,11 +2,13 @@ package com.ssmmhh.jibam.presentation.transactiondetail
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.SurfaceControl
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
+import com.ssmmhh.jibam.data.model.Transaction
 import com.ssmmhh.jibam.databinding.FragmentTransactionDetailBinding
 import com.ssmmhh.jibam.presentation.common.BaseFragment
 import com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener
@@ -32,6 +34,8 @@ class TransactionDetailFragment(
     ): View? {
         binding = FragmentTransactionDetailBinding.inflate(inflater, container, false).apply {
             listener = this@TransactionDetailFragment
+            this.viewmodel = viewModel
+            this.lifecycleOwner = this@TransactionDetailFragment.viewLifecycleOwner
         }
         return binding.root
     }

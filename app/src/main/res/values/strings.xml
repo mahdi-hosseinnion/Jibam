@@ -345,5 +345,9 @@
     <string name="enter_date_and_time_for_transaction">Please enter the date and time for the transaction</string>
     <string name="unable_to_get_the_transaciton">Unable to get the transaction</string>
     <string name="unable_to_get_the_category">Unable to get the category</string>
+    <string name="money_">Money:</string>
+    <string name="memo_">Memo:</string>
+    <string name="date_">Date:</string>
+    <string name="category_">Category:</string>
 
 </resources>
