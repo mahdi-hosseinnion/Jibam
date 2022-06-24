@@ -2,14 +2,12 @@ package com.ssmmhh.jibam.presentation.transactiondetail
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.SurfaceControl
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.ssmmhh.jibam.data.model.Transaction
 import com.ssmmhh.jibam.databinding.FragmentTransactionDetailBinding
 import com.ssmmhh.jibam.presentation.common.BaseFragment
 import com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener
@@ -38,6 +36,7 @@ class TransactionDetailFragment(
             listener = this@TransactionDetailFragment
             this.viewmodel = viewModel
             this.lifecycleOwner = this@TransactionDetailFragment.viewLifecycleOwner
+            this.toolbar.topAppBarImgBtn.visibility = View.VISIBLE
         }
         return binding.root
     }
@@ -51,6 +50,9 @@ class TransactionDetailFragment(
     private fun subscribeObservers() {
         viewModel.navigateToEditTransactionEvent.observe(viewLifecycleOwner, EventObserver {
             navigateToEditTransaction()
+        })
+        viewModel.navigateBackEvent.observe(viewLifecycleOwner, EventObserver {
+            navigateBack()
         })
     }
 
@@ -83,6 +85,6 @@ class TransactionDetailFragment(
     }
 
     override fun onClickOnMenuButton(view: View) {
-        TODO("Not yet implemented")
+        viewModel.showAreYouSureDialogBeforeDelete()
     }
 }
