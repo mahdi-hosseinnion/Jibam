@@ -7,11 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.ssmmhh.jibam.data.model.Transaction
 import com.ssmmhh.jibam.databinding.FragmentTransactionDetailBinding
 import com.ssmmhh.jibam.presentation.common.BaseFragment
 import com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener
+import com.ssmmhh.jibam.util.EventObserver
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
@@ -43,6 +45,21 @@ class TransactionDetailFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.start(navigationArgs.transactionId)
+        subscribeObservers()
+    }
+
+    private fun subscribeObservers() {
+        viewModel.navigateToEditTransactionEvent.observe(viewLifecycleOwner, EventObserver {
+            navigateToEditTransaction()
+        })
+    }
+
+    private fun navigateToEditTransaction() {
+        val action =
+            TransactionDetailFragmentDirections.actionTransactionDetailFragmentToAddEditTransactionFragment(
+                navigationArgs.transactionId
+            )
+        findNavController().navigate(action)
     }
 
     override fun handleStateMessages() {

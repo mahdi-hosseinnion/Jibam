@@ -10,6 +10,7 @@ import com.ssmmhh.jibam.data.util.DataState
 import com.ssmmhh.jibam.presentation.common.BaseViewModel
 import com.ssmmhh.jibam.presentation.transactiondetail.state.TransactionDetailStateEvent
 import com.ssmmhh.jibam.presentation.transactiondetail.state.TransactionDetailViewState
+import com.ssmmhh.jibam.util.Event
 import javax.inject.Inject
 
 class TransactionDetailViewModel
@@ -19,6 +20,9 @@ constructor(
 ) : BaseViewModel<TransactionDetailViewState, TransactionDetailStateEvent>() {
 
     private val _transactionId = MutableLiveData<Int>()
+
+    private val _navigateToEditTransactionEvent = MutableLiveData<Event<Unit>>()
+    val navigateToEditTransactionEvent: LiveData<Event<Unit>> = _navigateToEditTransactionEvent
 
     val transaction: LiveData<Transaction?> = _transactionId.switchMap {
         return@switchMap transactionRepository.observeTransaction(it)
@@ -37,5 +41,9 @@ constructor(
 
     fun start(transactionId: Int) {
         _transactionId.value = transactionId
+    }
+
+    fun openEditTransaction() {
+        _navigateToEditTransactionEvent.value = Event(Unit)
     }
 }
