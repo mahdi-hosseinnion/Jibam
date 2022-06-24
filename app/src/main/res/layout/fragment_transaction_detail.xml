@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <import type="android.graphics.Color" />
 
         <import type="java.math.BigDecimal" />
@@ -37,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:elevation="8dp"
-            app:cardBackgroundColor="#E6F8FF"
+            app:cardBackgroundColor="#EBFAFF"
             app:cardCornerRadius="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -53,7 +55,8 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="16dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -61,9 +64,9 @@
                         android:layout_height="56dp"
                         android:foregroundGravity="center"
                         android:gravity="center"
-                        android:textSize="16sp"
                         android:text="@string/category_"
-                        android:textColor="#4B4B4B" />
+                        android:textColor="#4B4B4B"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -79,10 +82,9 @@
                         android:layout_height="56dp"
                         android:foregroundGravity="center"
                         android:gravity="center"
-                        android:textSize="16sp"
-                        android:textColor="#4B4B4B"
                         android:text="@string/date_"
-                        />
+                        android:textColor="#4B4B4B"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -90,16 +92,15 @@
                         android:foregroundGravity="center"
                         android:gravity="center"
                         android:text="@string/memo_"
-                        android:textSize="16sp"
+
                         android:textColor="#4B4B4B"
-                        />
+                        android:textSize="16sp"
+                        android:visibility="@{viewmodel.transaction.memo == null ? View.GONE : View.VISIBLE}" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
                     android:orientation="vertical">
 
 
@@ -114,7 +115,6 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_gravity="center"
-                            android:layout_marginStart="8dp"
                             android:layout_marginTop="8dp"
                             android:layout_marginEnd="12dp"
                             android:layout_marginBottom="8dp"
@@ -140,7 +140,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:foregroundGravity="center"
-                            android:gravity="center"
+                            android:gravity="center|start"
                             android:text="@{viewmodel.transaction.getCategoryNameFromStringFile(context)}"
                             android:textColor="@color/on_card_surface"
                             android:textSize="16sp"
@@ -152,7 +152,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="56dp"
                         android:foregroundGravity="center"
-                        android:gravity="center"
+                        android:gravity="center|start"
                         android:textColor="@{(viewmodel.transaction.money.compareTo(BigDecimal.ZERO) == 1) ? @color/blue_500 : @color/red_500}"
                         android:textSize="16sp"
                         app:groupNumberByThreeThenSetAsText="@{viewmodel.transaction.money}"
@@ -164,7 +164,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="56dp"
                         android:foregroundGravity="center"
-                        android:gravity="center"
+                        android:gravity="center|start"
                         android:text="@{String.valueOf(viewmodel.transaction.date)}"
                         android:textColor="@color/on_card_surface"
                         android:textSize="16sp"
@@ -175,10 +175,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="56dp"
                         android:foregroundGravity="center"
-                        android:gravity="center"
+                        android:gravity="center|start"
                         android:text="@{viewmodel.transaction.memo}"
                         android:textColor="@color/on_card_surface"
                         android:textSize="16sp"
+                        android:visibility="@{viewmodel.transaction.memo == null ? View.GONE : View.VISIBLE}"
                         tools:text="In ali abldad kharid shod" />
                 </LinearLayout>
             </LinearLayout>
