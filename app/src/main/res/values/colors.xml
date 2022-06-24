@@ -36,5 +36,6 @@
 
     <color name="edit_text_outline_color">#666666</color>
     <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">@color/edit_text_outline_color</color>
+    <color name="on_card_surface">#212121</color>
     <!--    <color name="category_background_color_">#FF000000</color> defualt color-->
 </resources>
