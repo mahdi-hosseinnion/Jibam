@@ -19,6 +19,9 @@
             name="viewmodel"
             type="com.ssmmhh.jibam.presentation.transactiondetail.TransactionDetailViewModel" />
 
+        <variable
+            name="isCalendarSolarHijri"
+            type="boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -165,9 +168,10 @@
                         android:layout_height="56dp"
                         android:foregroundGravity="center"
                         android:gravity="center|start"
-                        android:text="@{String.valueOf(viewmodel.transaction.date)}"
                         android:textColor="@color/on_card_surface"
                         android:textSize="16sp"
+                        app:completeDateAndTime="@{viewmodel.transaction.date}"
+                        app:isCalendarSolarHijri="@{isCalendarSolarHijri}"
                         tools:text="Wensday 29/08/2020 6:40 PM" />
 
 
@@ -189,8 +193,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:src="@drawable/ic_round_edit_24"
             android:onClick="@{(view) -> viewmodel.openEditTransaction()}"
+            android:src="@drawable/ic_round_edit_24"
             app:fabSize="normal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />

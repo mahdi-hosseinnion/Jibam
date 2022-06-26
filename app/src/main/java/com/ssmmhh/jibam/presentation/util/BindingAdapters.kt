@@ -1,5 +1,6 @@
 package com.ssmmhh.jibam.presentation.util
 
+import android.content.res.Resources
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.widget.EditText
@@ -12,11 +13,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.ssmmhh.jibam.R
-import com.ssmmhh.jibam.util.DateUtils
-import com.ssmmhh.jibam.util.separate3By3
-import com.ssmmhh.jibam.util.toLocaleString
-import com.ssmmhh.jibam.util.toLocaleStringWithTwoDigits
+import com.ssmmhh.jibam.data.model.DateHolderWithWeekDay
+import com.ssmmhh.jibam.util.*
+import com.ssmmhh.jibam.util.DateUtils.toMilliSeconds
 import java.math.BigDecimal
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 /**
@@ -112,4 +114,45 @@ fun disableContentInteraction(edt: EditText, placeHolder: Boolean) {
     edt.isFocusableInTouchMode = false
     edt.isCursorVisible = false
     edt.clearFocus()
+}
+
+@BindingAdapter(
+    value = ["app:completeDateAndTime", "app:isCalendarSolarHijri"],
+    requireAll = true
+)
+fun completeDateAndTime(view: TextView, unixTimeInSeconds: Long, isCalendarSolarHijri: Boolean) {
+    val time = SimpleDateFormat("KK:mm aa").format(Date(unixTimeInSeconds.toMilliSeconds()))
+    val date = getTheDate(
+        unixTimeInSeconds,
+        isCalendarSolarHijri,
+        view.context.resources
+    )
+    view.text = "$date $time"
+}
+
+private fun getTheDate(
+    unixTimeInSeconds: Long,
+    isCalendarSolarHijri: Boolean,
+    resources: Resources
+): String {
+
+    val date: DateHolderWithWeekDay = DateUtils.convertUnixTimeToDate(
+        unixTimeInSeconds,
+        isCalendarSolarHijri
+    )
+
+    //TODO("Retrieve the full form of the day of the week name in English (ex: Monday, not Mon)")
+    val dayOfWeekStr = date.getDayOfWeekName(resources)
+    val dayStr = date.day.toLocaleStringWithTwoDigits()
+    val month = date.getAbbreviationFormOfMonthName(resources)
+    val yearStr = date.year.toLocaleString()
+
+    return if (isCalendarSolarHijri) {
+        //Solar hijri calendar date format
+        "$dayOfWeekStr, $dayStr $month $yearStr"
+    } else {
+        //Gregorian calendar date format
+        //Output example: Sun, 26 Jun 2022.
+        "$dayOfWeekStr, $dayStr $month $yearStr"
+    }
 }

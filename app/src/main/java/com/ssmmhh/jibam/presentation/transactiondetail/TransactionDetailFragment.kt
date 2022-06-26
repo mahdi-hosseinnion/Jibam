@@ -1,5 +1,6 @@
 package com.ssmmhh.jibam.presentation.transactiondetail
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import com.ssmmhh.jibam.databinding.FragmentTransactionDetailBinding
 import com.ssmmhh.jibam.presentation.common.BaseFragment
 import com.ssmmhh.jibam.presentation.util.ToolbarLayoutListener
 import com.ssmmhh.jibam.util.EventObserver
+import com.ssmmhh.jibam.util.isCalendarSolar
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
@@ -19,6 +21,7 @@ import kotlinx.coroutines.FlowPreview
 @ExperimentalCoroutinesApi
 class TransactionDetailFragment(
     viewModelFactory: ViewModelProvider.Factory,
+    private val sharedPreferences: SharedPreferences,
 ) : BaseFragment(), ToolbarLayoutListener {
 
     private lateinit var binding: FragmentTransactionDetailBinding
@@ -37,6 +40,7 @@ class TransactionDetailFragment(
             this.viewmodel = viewModel
             this.lifecycleOwner = this@TransactionDetailFragment.viewLifecycleOwner
             this.toolbar.topAppBarImgBtn.visibility = View.VISIBLE
+            this.isCalendarSolarHijri = sharedPreferences.isCalendarSolar(locale)
         }
         return binding.root
     }

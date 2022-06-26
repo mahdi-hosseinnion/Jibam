@@ -83,6 +83,7 @@ constructor(
             TransactionDetailFragment::class.java.name -> {
                 TransactionDetailFragment(
                     viewModelFactory,
+                    sharedPreferences,
                 )
             }
 
