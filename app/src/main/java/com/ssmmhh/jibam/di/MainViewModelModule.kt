@@ -10,6 +10,7 @@ import com.ssmmhh.jibam.presentation.categories.viewcategories.ViewCategoriesVie
 import com.ssmmhh.jibam.presentation.chart.chart.ChartViewModel
 import com.ssmmhh.jibam.presentation.chart.detailchart.DetailChartViewModel
 import com.ssmmhh.jibam.presentation.setting.SettingViewModel
+import com.ssmmhh.jibam.presentation.transactiondetail.TransactionDetailViewModel
 import com.ssmmhh.jibam.presentation.transactions.TransactionsViewModel
 import dagger.Binds
 import dagger.Module
@@ -84,6 +85,13 @@ abstract class MainViewModelModule {
     @MainViewModelKey(AddEditTransactionViewModel::class)
     abstract fun bindAddEditTransactionViewModel(
         addEditTransactionViewModel: AddEditTransactionViewModel
+    ): ViewModel
+
+    @Binds
+    @IntoMap
+    @MainViewModelKey(TransactionDetailViewModel::class)
+    abstract fun bindTransactionDetailViewModel(
+        transactionDetailViewModel: TransactionDetailViewModel
     ): ViewModel
 
 }

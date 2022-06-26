@@ -11,6 +11,7 @@ import com.ssmmhh.jibam.presentation.categories.viewcategories.ViewCategoriesFra
 import com.ssmmhh.jibam.presentation.chart.chart.ChartFragment
 import com.ssmmhh.jibam.presentation.chart.detailchart.DetailChartFragment
 import com.ssmmhh.jibam.presentation.setting.SettingFragment
+import com.ssmmhh.jibam.presentation.transactiondetail.TransactionDetailFragment
 import com.ssmmhh.jibam.presentation.transactions.TransactionsFragment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -76,6 +77,12 @@ constructor(
                 AddEditTransactionFragment(
                     viewModelFactory,
                     requestManager,
+                    sharedPreferences,
+                )
+            }
+            TransactionDetailFragment::class.java.name -> {
+                TransactionDetailFragment(
+                    viewModelFactory,
                     sharedPreferences,
                 )
             }

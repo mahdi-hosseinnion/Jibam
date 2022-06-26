@@ -426,7 +426,7 @@ class TransactionsFragment(
 
     private fun navigateToDetailTransactionFragment(id: Int) {
         val action =
-            TransactionsFragmentDirections.actionTransactionFragmentToAddEditTransactionFragment(
+            TransactionsFragmentDirections.actionTransactionFragmentToTransactionDetailFragment(
                 transactionId = id
             )
         findNavController().navigate(action)

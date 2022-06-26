@@ -57,5 +57,7 @@ interface TransactionRepository {
         stateEvent: AddEditTransactionStateEvent.GetTransactionById
     ): DataState<Transaction>
 
-
+    fun observeTransaction(
+        transactionId: Int
+    ): Flow<Transaction?>
 }

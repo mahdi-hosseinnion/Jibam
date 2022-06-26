@@ -1,6 +1,7 @@
 package com.ssmmhh.jibam.data.source.local.dao
 
 import androidx.room.*
+import com.ssmmhh.jibam.data.model.Transaction
 import com.ssmmhh.jibam.data.source.local.dto.ChartDataDto
 import com.ssmmhh.jibam.data.source.local.dto.TransactionDto
 import com.ssmmhh.jibam.data.source.local.entity.TransactionEntity
@@ -211,4 +212,28 @@ interface TransactionDao {
         fromDate: Long,
         toDate: Long
     ): Flow<List<ChartDataDto>>
+
+    /**
+     * Observe transaction by id.
+     * Left join on categories and categoryImages table by transaction's categoryId and category's
+     * id.
+     *
+     * @param [id], The id of transaction
+     * @return Transaction with id or null if there is not any transaction with id.
+     */
+    @Query(
+        value =
+        """
+            SELECT transactions.*, 
+            categories.name as categoryName, 
+            categories.id as categoryId, 
+            categoryImages.resName as categoryImage, 
+            categoryImages.backgroundColor as categoryImageColor 
+            FROM transactions 
+            LEFT JOIN categories ON transactions.categoryId = categories.id 
+            LEFT JOIN categoryImages ON categories.imageId = categoryImages.id 
+            WHERE transactions.id = :id 
+        """
+    )
+    fun observeTransaction(id: Int): Flow<TransactionDto?>
 }
