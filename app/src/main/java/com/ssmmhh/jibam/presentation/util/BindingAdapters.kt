@@ -121,6 +121,9 @@ fun disableContentInteraction(edt: EditText, placeHolder: Boolean) {
     requireAll = true
 )
 fun completeDateAndTime(view: TextView, unixTimeInSeconds: Long, isCalendarSolarHijri: Boolean) {
+    //Databinding default value when unixTimeInSeconds is null.
+    if (unixTimeInSeconds == 0L) return
+
     val time = SimpleDateFormat("KK:mm aa").format(Date(unixTimeInSeconds.toMilliSeconds()))
     val date = getTheDate(
         unixTimeInSeconds,
