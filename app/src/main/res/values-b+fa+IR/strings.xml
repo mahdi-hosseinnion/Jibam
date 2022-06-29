@@ -8,7 +8,6 @@
     <string name="with">به همراه</string>
     <string name="select_category">یک دسته انتخاب کنید</string>
 
-    <string name="empty" />
     <string name="money">پول</string>
     <string name="note">یادداشت</string>
     <string name="total_balance">جمع کل</string>
@@ -316,4 +315,37 @@
     <string name="category_image">تصویر دسته بندی</string>
     <string name="close_category_list">بستن لیست دسته بندی ها</string>
     <string name="invalid_number_error">عدد اشتباه</string>
+
+    <string name="empty">""</string>
+
+    <string name="navigate_back_cd">برگرد به عقب</string>
+    <string name="navigation_drawer_cd">منو کشویی</string>
+    <!--    Error messages-->
+    <string name="error_reason">"\n\nعلت: "</string>
+    <string name="unknown_error">خطا ناشناخته شماره ۲</string>
+    <string name="error_reason_data_is_null">\n\nعلت : هیچ اطلاعاتی یافت نشد</string>
+    <string name="error_reason_unknown_database_error">\n\nعلت: خطای ناشناخته در دیتابیس"</string>
+    <string name="unable_to_get_categories_to_update_them">دسته بندی ها یافت نشدند.</string>
+    <string name="there_is_no_category_in_database">هیچ دسته بندی در دیتابیس وجود ندارد.</string>
+    <string name="at_least_on_of_the_categories_order_did_not_updated">حداقل ترتیب یکی از دسته بندی ها درست تغییر داشته نشد.</string>
+    <string name="something_went_wrong_cannot_return_deleted_transaction_back">خطایی رخ داده است. نمیتوان تراکنش حذف شده را برگرداند.</string>
+    <string name="cache_timeout">برقراری ارتباط با محل ذخیره خیلی طول کشید.</string>
+    <string name="cache_unknown_error">خطای ناشناخته ای در ارتباط با محل ذخیره رخ داده است</string>
+    <string name="unable_to_get_the_transaction">نمیتوانیم تراکنش را پیدا کنیم.</string>
+    <string name="unable_to_get_all_of_categories">نمیتوانیم دسته بندی ها را پیدا کنیم.</string>
+    <string name="unable_to_update_transaction">خطایی در هنگام بروزرسانی تراکنش رخ داد.</string>
+    <string name="unable_to_delete_transaction">تراکنش حذف نشد.</string>
+    <string name="unable_to_insert_transaction">تراکنش اضافه نشد.</string>
+    <string name="unable_to_insert_this_category">دسته بندی اضافه نشد.</string>
+    <string name="unable_to_delete_category">دسته بندی حذف نشد</string>
+    <string name="unable_to_change_order_of_selected_category">نمیتوان ترتیب دسته بندی انتخاب شده را تغییر داد.</string>
+    <string name="unable_to_get_categories_from_database">نمیتوان دسته بندی ها را گرفت.</string>
+    <string name="unknown">ناشناخته</string>
+    <string name="enter_date_and_time_for_transaction">تاریخ و زمان برای تراکنش وارد کنید.</string>
+    <string name="unable_to_get_the_transaciton">نمیتوان تراکنش را گرفت.</string>
+    <string name="unable_to_get_the_category">نمیتوان دسته بندی را گفت</string>
+    <string name="money_">مقدار پول:</string>
+    <string name="memo_">یادداشت:</string>
+    <string name="date_">تاریخ: </string>
+    <string name="category_">دسته بندي:</string>
 </resources><!--source https://developer.android.com/training/basics/supporting-devices/languages-->
